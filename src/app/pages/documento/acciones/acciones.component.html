@@ -1,0 +1,27 @@
+<div class="container mt-2" style="height: 100%;">
+  <mat-card class="example-card" style="height: 98%;">
+    <mat-card-title>Visualizacion de documento</mat-card-title>
+    <mat-card-content style="height: 95%;">
+      <div class="row" style="height: 100%;">
+        <div  class="col-10"  >
+          <iframe id="embeddedPage" style="width: 100%; height: 100%"></iframe>
+        </div>
+        <div class="col-2 mt-1">
+          <div class="example-button-row" >
+            <button type="button" class="btn btn-success form-control d-flex justify-content-center align-items-center"  >
+              <i class="fas fa-calendar-day"></i><span>Decretar</span>
+            </button>
+            <button mat-raised-button class="form-control d-flex justify-content-center align-items-center"
+                    color="primary" [routerLink]="['/archivar', idDocumento]">
+              <i class="fas fa-archive"></i> Archivar
+            </button>
+            <button mat-raised-button class="form-control" color="accent" (click)="devolver(idDocumento)" >Devolver</button>
+            <button type="button" class="btn btn-secondary form-control" >Seguimiento</button>
+            <button mat-raised-button class="form-control" color="warn" routerLink="/" >Salir</button>
+          </div>
+        </div>
+      </div>
+  </mat-card-content>
+  </mat-card>
+</div>
+

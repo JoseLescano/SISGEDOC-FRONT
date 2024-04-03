@@ -1,0 +1,20 @@
+export class Organizacion{
+  vid:number;
+  codigoInterno:string;
+  nivel:number;
+  acronimo:string;
+  nombreLargo:string;
+  estado:string;
+  tipoOrganizacion:string;
+  emu:string;
+  logo:string;
+  vidParent:number;
+  codigoUnidadCopere:string;
+  indicativo:string;
+  ubigeo:string;
+  cargo:string;
+  fechaRegistro:string;
+  fechaModificacion:string;
+  usuarioRegistro:string;
+  usuarioModifica:string;
+}

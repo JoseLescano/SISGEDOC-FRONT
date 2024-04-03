@@ -1,0 +1,41 @@
+<div class="example-container">
+  <mat-sidenav-container class="example-sidenav-container">
+      <mat-sidenav id="sidenav" #sidenav style="width: 220px" mode=side opened="true" disableClose="true">
+          <br>
+          <div fxLayout="row" fxLayoutAlign="center center">
+              <img src="assets/ep.png" alt="Descripción de la imagen" width="150" height="150">
+          </div>
+          <br>
+          <mat-divider></mat-divider>
+          <!-- @for (m of menus; track $index) {
+          <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="{{m.url}}">
+              <mat-icon id="iconn">{{m.icon}}</mat-icon>
+              <span id="name">{{m.name}}</span>
+          </button>
+          } -->
+      </mat-sidenav>
+      <mat-sidenav-content>
+          <mat-toolbar>
+              <button mat-icon-button (click)="sidenav.toggle()">
+                  <mat-icon *ngIf="!sidenav.opened">menu</mat-icon>
+                  <mat-icon *ngIf="sidenav.opened">menu</mat-icon>
+              </button>
+              <div class="center">
+                  <h1>SISTEMA DE GESTIÓN DOCUMENTARIO - SISGEDO</h1>
+              </div>
+              <span class="example-spacer"></span>
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                  <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="sidenav.opened = false" >
+                      <mat-icon>exit_to_app</mat-icon>
+                      <span>Cerrar Sesión</span>
+                  </button>
+              </mat-menu>
+          </mat-toolbar>
+          <router-outlet></router-outlet>
+      </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
+<!-- (click)="logout()" -->
