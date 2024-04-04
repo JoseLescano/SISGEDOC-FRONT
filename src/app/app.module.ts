@@ -17,6 +17,8 @@ import { AngularMaterialModule } from './angular-material/angular-material.modul
 import { DecetarComponent } from './pages/documento/decetar/decetar.component';
 import { RegistrarComponent } from './pages/documento/archivar/registrar/registrar.component';
 import { HeaderComponent } from './pages/header/header.component';
+import { CrearDocumentoComponent } from './pages/documento/crear-documento/crear-documento.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,7 @@ import { HeaderComponent } from './pages/header/header.component';
     DecetarComponent,
     RegistrarComponent,
     HeaderComponent,
+    CrearDocumentoComponent,
 
   ],
   imports: [
@@ -34,7 +37,8 @@ import { HeaderComponent } from './pages/header/header.component';
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    AngularMaterialModule
+    AngularMaterialModule,
+    ReactiveFormsModule
   ],
   exports:[],
   providers: [DocumentoService],

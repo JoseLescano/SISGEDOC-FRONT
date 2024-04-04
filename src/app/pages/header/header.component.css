@@ -14,7 +14,7 @@
   flex: 1 1 auto;
 }
 .mat-toolbar {
-background: linear-gradient(45deg, #000000, #0d1975);
+background: linear-gradient(45deg, #000000, #675b45);
   color: #fff;
 }
 
@@ -43,7 +43,7 @@ background: linear-gradient(45deg, #000000, #0d1975);
 }
 
 .myButton:hover {
-background: #160d75;
+background: #675b45;
    color: rgb(255, 255, 255); /* Cambiar color de texto al pasar el cursor */
 }
 

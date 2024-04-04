@@ -3,7 +3,7 @@
       <mat-sidenav id="sidenav" #sidenav style="width: 220px" mode=side opened="true" disableClose="true">
           <br>
           <div fxLayout="row" fxLayoutAlign="center center">
-              <img src="assets/ep.png" alt="Descripción de la imagen" width="150" height="150">
+              <img src="assets/Logo-cinfe.png" alt="Descripción de la imagen" width="50" height="50">
           </div>
           <br>
           <mat-divider></mat-divider>
@@ -13,6 +13,26 @@
               <span id="name">{{m.name}}</span>
           </button>
           } -->
+          <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="/">
+            <!-- <mat-icon id="iconn">{{m.icon}}</mat-icon> -->
+            <i class="fas fa-folder-open"></i>
+              <span id="name"  style="font-size: 12px;">DOC. RECIBIDOS</span>
+          </button>
+          <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="/">
+            <!-- <mat-icon id="iconn">{{m.icon}}</mat-icon> -->
+            <i class="fas fa-file-signature"></i>
+              <span id="name"  style="font-size: 12px;">DOC. PARA LA FIRMA</span>
+          </button>
+          <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="/">
+            <!-- <mat-icon id="iconn">{{m.icon}}</mat-icon> -->
+            <i class="fas fa-pen-square"></i>
+              <span id="name"  style="font-size: 12px;">DOC. PARA CORREGIR</span>
+          </button>
+          <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="crear-documento">
+            <!-- <mat-icon id="iconn">{{m.icon}}</mat-icon> -->
+            <i class="far fa-file-alt"></i>
+              <span id="name"  style="font-size: 12px;">CREAR DOCUMENTO</span>
+          </button>
       </mat-sidenav>
       <mat-sidenav-content>
           <mat-toolbar>
@@ -21,7 +41,7 @@
                   <mat-icon *ngIf="sidenav.opened">menu</mat-icon>
               </button>
               <div class="center">
-                  <h1>SISTEMA DE GESTIÓN DOCUMENTARIO - SISGEDO</h1>
+                  <h1>SISTEMA DE GESTIÓN DOCUMENTARIA DEL EJÉRCITO - SISGEDO</h1>
               </div>
               <span class="example-spacer"></span>
               <button mat-icon-button [matMenuTriggerFor]="menu">

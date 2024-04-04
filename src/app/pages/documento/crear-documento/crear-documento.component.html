@@ -1,0 +1,94 @@
+<mat-card class="mt-2">
+    <mat-card-header>
+      <mat-card-title>CREAR DOCUMENTO</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <form class="row g-3" [formGroup]="form" (ngSubmit)="operate()" novalidate >
+            <div class="col-md-3">
+                <mat-form-field appearance="fill" class="example-full-width">
+                    <mat-label>FIRMANTE</mat-label>
+                    <input type="text" matInput formControlName="firmante" [matAutocomplete]="auto" [formControl]="firmanteControl"  >
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="showFirmantes" autoActiveFirstOption (optionSelected)="getIndicativo($event.option.value)" >
+                        <mat-option *ngFor="let c of firmanteFilter$ |async" [value]="c"  >
+                            {{ c.acronimo }}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <div *ngIf="form.get('firmante').errors && form.get('firmante').dirty" >
+                        <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('firmante').hasError('required')">* Field is required</small>             
+                    </div>              
+                </mat-form-field>
+                <!-- <div class="mt-2">
+                    <span>ss</span>
+                    <button mat-icon-button >
+                      <mat-icon>cancel</mat-icon>
+                    </button>
+                  </div> -->
+            </div>
+            <div class="col-md-3">
+                <mat-form-field appearance="fill" class="example-full-width">
+                    <mat-label>TIPO DOCUMENTO</mat-label>
+                    <mat-select matInput >
+                      <mat-option  *ngFor="let c of clases">
+                        {{c.nombre}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error >Please choose an animal</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field appearance="fill" class="example-full-width">
+                    <mat-label>NÚMERO</mat-label>
+                    <input matInput placeholder="pat@example.com" disabled required>
+                    <mat-error></mat-error>
+                  </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field appearance="fill" class="example-full-width">
+                    <mat-label>INDICATIVO</mat-label>
+                    <input matInput type="text" formControlName="indicativo">
+                    <mat-error ></mat-error>
+                  </mat-form-field>
+            </div>
+            <div class="col-md-6">
+                <mat-form-field appearance="fill" class="example-full-width">
+                    <mat-label>UU. DESTINARIO(S):</mat-label>
+                    <mat-select  required>
+                      <mat-option>--</mat-option>
+                      <mat-option  >
+                        
+                      </mat-option>
+                    </mat-select>
+                    <mat-error >Please choose an animal</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-6">
+                <mat-form-field appearance="fill" class="example-full-width">
+                    <mat-label>COPIA INFORMATIVA</mat-label>
+                    <mat-select  required>
+                      <mat-option>--</mat-option>
+                      <mat-option  >
+                        
+                      </mat-option>
+                    </mat-select>
+                    <mat-error >Please choose an animal</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-12">
+                <mat-form-field appearance="fill" class="example-full-width">
+                    <mat-label>ASUNTO</mat-label>
+                    <textarea matInput formControlName="asunto" rows="4"></textarea>
+                </mat-form-field>
+            </div>
+            <div class="col-md-12">
+                <mat-form-field appearance="fill" class="example-full-width">
+                    <mat-label>OBSERVACIONES</mat-label>
+                    <textarea matInput formControlName="observaciones" rows="3"></textarea>
+                </mat-form-field>
+            </div>
+        </form>
+    </mat-card-content>
+    <mat-card-actions align="end">
+        <button mat-flat-button color="primary">GUARDAR</button>
+        <button mat-flat-button color="warn">CANCELAR</button>
+    </mat-card-actions>
+</mat-card>

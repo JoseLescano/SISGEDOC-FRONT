@@ -4,6 +4,7 @@ import { PendienteComponent } from './pages/documento/pendiente/pendiente.compon
 import { DecetarComponent } from './pages/documento/decetar/decetar.component';
 import { AccionesComponent } from './pages/documento/acciones/acciones.component';
 import { RegistrarComponent } from './pages/documento/archivar/registrar/registrar.component';
+import { CrearDocumentoComponent } from './pages/documento/crear-documento/crear-documento.component';
 
 const routes: Routes = [
   {path:'', redirectTo:'pendientes', pathMatch:'full' },
@@ -11,6 +12,7 @@ const routes: Routes = [
   {path:'decretar', component:DecetarComponent},
   { path: 'acciones/:codigoDocumento', component: AccionesComponent },
   { path: 'archivar/:codigoDocumento', component: RegistrarComponent },
+  { path: 'crear-documento', component: CrearDocumentoComponent },
 ];
 
 @NgModule({

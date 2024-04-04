@@ -1,12 +1,12 @@
-<div class="container mt-2">
-  <mat-card>
+<div class="alert alert-primary mt-3" role="alert" *ngIf="dataSource == null">
+  No se encontró <strong>base de datos</strong> registadas
+</div>
+<!-- <div class="container mt-2"> -->
+<mat-card *ngIf="dataSource != null">
     <mat-form-field appearance="fill">
       <mat-label>Filter</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
     </mat-form-field>
-    <div class="alert alert-primary mt-3" role="alert" *ngIf="dataSource == null">
-      No se encontró <strong>base de datos</strong> registadas
-    </div>
 
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource" matSort >
@@ -71,4 +71,4 @@
       <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
     </div>
 </mat-card>
-</div>
+<!-- </div> -->
