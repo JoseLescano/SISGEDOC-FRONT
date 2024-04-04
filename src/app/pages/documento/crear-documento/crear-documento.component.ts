@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Observable, map } from 'rxjs';
 import { Clase } from 'src/app/_model/clase';
 import { Organizacion } from 'src/app/_model/organizacion';
@@ -27,6 +26,8 @@ export class CrearDocumentoComponent implements OnInit {
 
   clases:Clase[];
 
+  codigoOrganizacion:any='33';
+
   // =======================================================================================================
 
   constructor(private organizacionService: OrganizacionService,
@@ -34,13 +35,12 @@ export class CrearDocumentoComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.organizacionService.findFirmantes('3302010102').subscribe((response:any)=> {
-      this.firmantes = response.data;
-    });
+    this.organizacionService.findFirmantes(this.codigoOrganizacion).subscribe((response:any)=>  this.firmantes = response.data );
     this.firmanteFilter$ = this.firmanteControl.valueChanges.pipe(map(val => this.filterfirmantes(val)));
-    this.claseService.listar().subscribe((response:any)=>{
-      debugger;
-      this.clases = response.data
+    this.claseService.listar().subscribe((response:any)=> this.clases = response.data );
+    this.organizacionService.destinatariosExternoByCodigo(this.codigoOrganizacion).subscribe((response:any)=> {
+      this.organizacionesDestino = response.data;
+      this.copiasInformativas = response.data;
     });
   }
 
@@ -51,8 +51,9 @@ export class CrearDocumentoComponent implements OnInit {
 
     this.form = new FormGroup({
       'firmante': this.firmanteControl,
+      'tipoDocumento': new FormControl('', [Validators.required]),
       'indicativo': new FormControl('', [Validators.required]),
-      'asunto': new FormControl('', [Validators.required]),
+      'asunto': new FormControl('', [Validators.required, Validators.minLength(10)]),
       'observaciones': new FormControl('', [Validators.required]),
     });
 
@@ -60,10 +61,10 @@ export class CrearDocumentoComponent implements OnInit {
 
   filterfirmantes(val: any){
     if(val.vid>0){
-      return this.firmantes.filter(el => 
+      return this.firmantes.filter(el =>
         el.acronimo.toLowerCase().includes(val.acronimo.toLowerCase()));
     }else {
-      return this.firmantes.filter(el => 
+      return this.firmantes.filter(el =>
         el.acronimo.toLowerCase().includes(val?.toLowerCase()));
     }
   }

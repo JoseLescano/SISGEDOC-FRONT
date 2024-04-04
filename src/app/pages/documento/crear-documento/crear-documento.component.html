@@ -14,8 +14,8 @@
                         </mat-option>
                     </mat-autocomplete>
                     <div *ngIf="form.get('firmante').errors && form.get('firmante').dirty" >
-                        <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('firmante').hasError('required')">* Field is required</small>             
-                    </div>              
+                        <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('firmante').hasError('required')">* Field is required</small>
+                    </div>
                 </mat-form-field>
                 <!-- <div class="mt-2">
                     <span>ss</span>
@@ -27,8 +27,8 @@
             <div class="col-md-3">
                 <mat-form-field appearance="fill" class="example-full-width">
                     <mat-label>TIPO DOCUMENTO</mat-label>
-                    <mat-select matInput >
-                      <mat-option  *ngFor="let c of clases">
+                    <mat-select matInput formControlName="tipoDocumento" >
+                      <mat-option  *ngFor="let c of clases"  [value]="c">
                         {{c.nombre}}
                       </mat-option>
                     </mat-select>
@@ -52,10 +52,9 @@
             <div class="col-md-6">
                 <mat-form-field appearance="fill" class="example-full-width">
                     <mat-label>UU. DESTINARIO(S):</mat-label>
-                    <mat-select  required>
-                      <mat-option>--</mat-option>
-                      <mat-option  >
-                        
+                    <mat-select >
+                      <mat-option  *ngFor="let c of organizacionesDestino"  [value]="c">
+                        {{c.acronimo}}
                       </mat-option>
                     </mat-select>
                     <mat-error >Please choose an animal</mat-error>
@@ -64,10 +63,9 @@
             <div class="col-md-6">
                 <mat-form-field appearance="fill" class="example-full-width">
                     <mat-label>COPIA INFORMATIVA</mat-label>
-                    <mat-select  required>
-                      <mat-option>--</mat-option>
-                      <mat-option  >
-                        
+                    <mat-select >
+                      <mat-option *ngFor="let c of copiasInformativas" [value]="c">
+                        {{c.acronimo}}
                       </mat-option>
                     </mat-select>
                     <mat-error >Please choose an animal</mat-error>
@@ -77,6 +75,10 @@
                 <mat-form-field appearance="fill" class="example-full-width">
                     <mat-label>ASUNTO</mat-label>
                     <textarea matInput formControlName="asunto" rows="4"></textarea>
+                    <div *ngIf="form.get('asunto').errors && form.get('asunto').dirty" >
+                      <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('asunto').hasError('required')">* Field is required</small>
+                      <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('asunto').hasError('minlength')">** Min of 10 characters</small>
+                  </div>
                 </mat-form-field>
             </div>
             <div class="col-md-12">
@@ -88,7 +90,8 @@
         </form>
     </mat-card-content>
     <mat-card-actions align="end">
-        <button mat-flat-button color="primary">GUARDAR</button>
+        <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">GUARDAR</button>
         <button mat-flat-button color="warn">CANCELAR</button>
     </mat-card-actions>
+    <div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{form.value | json}}</div>
 </mat-card>
