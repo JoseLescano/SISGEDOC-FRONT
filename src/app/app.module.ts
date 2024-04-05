@@ -10,15 +10,20 @@ import { HttpClientModule } from '@angular/common/http';
 import { AccionesComponent } from './pages/documento/acciones/acciones.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
 import { AngularMaterialModule } from './angular-material/angular-material.module';
 import { DecetarComponent } from './pages/documento/decetar/decetar.component';
 import { RegistrarComponent } from './pages/documento/archivar/registrar/registrar.component';
 import { HeaderComponent } from './pages/header/header.component';
 import { CrearDocumentoComponent } from './pages/documento/crear-documento/crear-documento.component';
 import { ReactiveFormsModule } from '@angular/forms';
+
+
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { ClaseService } from './_service/clase.service';
+import { OrganizacionService } from './_service/organizacion.service';
+
+import { MatPaginator } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -30,6 +35,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     RegistrarComponent,
     HeaderComponent,
     CrearDocumentoComponent,
+    
 
   ],
   imports: [
@@ -38,10 +44,13 @@ import { ReactiveFormsModule } from '@angular/forms';
     HttpClientModule,
     BrowserAnimationsModule,
     AngularMaterialModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgSelectModule,
+    FormsModule,
+    
   ],
   exports:[],
-  providers: [DocumentoService],
+  providers: [DocumentoService, ClaseService, OrganizacionService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

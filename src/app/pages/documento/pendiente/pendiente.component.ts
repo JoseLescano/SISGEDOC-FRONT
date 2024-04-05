@@ -1,12 +1,11 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Documento } from 'src/app/_model/documento.model';
 import { DocumentoService } from 'src/app/_service/documento.service';
 import { AccionesComponent } from '../acciones/acciones.component';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort, SortDirection} from '@angular/material/sort';
 
 
 
@@ -20,18 +19,19 @@ export class PendienteComponent implements OnInit, AfterViewInit {
 
   documentos : Documento[];
 
-  displayedColumns: string[] = ['#', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'FechaReg.', 'Acciones'];
-  dataSource: MatTableDataSource<Documento> = null;
+  displayedColumns: string[] = ['Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'FechaReg.', 'Acciones'];
+  dataSource: MatTableDataSource<Documento>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private documentoService: DocumentoService,
-              public dialog: MatDialog, private _liveAnnouncer: LiveAnnouncer) {
+              public dialog: MatDialog) {
   }
 
   ngOnInit(): void {
-    this.documentoService.findByOrganizacionDestino('3302010102').subscribe((data: any)=> {
+    this.documentoService.findByOrganizacionDestino('33').subscribe((data: any)=> {
+      debugger;
       this.createTable(data);
     });
   }
@@ -62,18 +62,6 @@ export class PendienteComponent implements OnInit, AfterViewInit {
     this.dataSource = new MatTableDataSource(documento);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-  }
-
-  announceSortChange(sortState: any) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
   }
 
 }

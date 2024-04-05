@@ -30,6 +30,17 @@ td, th {
   justify-content: center;
   width: 120px;
 }
-th.mat-sort-header-sorted {
-  color: black;
+
+.mat-column-Nro{
+  width: 32px;
+  border-right: 1px solid currentColor;
+  padding-right: 24px;
+  text-align: center;
+}
+
+.mat-column-Asunto {
+  padding-left: 16px;
+  padding-right: 16px;
+  font-size: 14px;
+  width: 40%;
 }

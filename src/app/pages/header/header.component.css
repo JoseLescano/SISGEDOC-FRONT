@@ -31,7 +31,8 @@ background: linear-gradient(45deg, #000000, #675b45);
   width: 100%;
   display: flex; /* Utilizamos flexbox para alinear contenido */
   align-items: center; /* Centrar verticalmente el contenido */
-  text-align: left;
+  text-align: center;
+  justify-items: center;
   color: white;
   background-color: #000000;
   border: none;
@@ -47,7 +48,7 @@ background: #675b45;
    color: rgb(255, 255, 255); /* Cambiar color de texto al pasar el cursor */
 }
 
-.myButton mat-icon {
+.myButton .mat-icon {
   color: white; /* Color del icono blanco */
-  margin-right: 10px; /* Añadir espacio entre el icono y el texto */
+  margin-right: 5px; /* Añadir espacio entre el icono y el texto */
 }

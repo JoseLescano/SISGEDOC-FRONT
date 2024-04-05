@@ -5,30 +5,29 @@
     <mat-card-content>
         <form class="row g-3" [formGroup]="form" (ngSubmit)="operate()" novalidate >
             <div class="col-md-3">
-                <mat-form-field appearance="fill" class="example-full-width">
-                    <mat-label>FIRMANTE</mat-label>
-                    <input type="text" matInput formControlName="firmante" [matAutocomplete]="auto" [formControl]="firmanteControl"  >
+                <!-- <mat-form-field appearance="fill" class="example-full-width"> -->
+                    <!-- <mat-label>FIRMANTE</mat-label> -->
+                    <!-- <input type="text" matInput formControlName="firmante" [matAutocomplete]="auto" [formControl]="firmanteControl"  >
                     <mat-autocomplete #auto="matAutocomplete" [displayWith]="showFirmantes" autoActiveFirstOption (optionSelected)="getIndicativo($event.option.value)" >
                         <mat-option *ngFor="let c of firmanteFilter$ |async" [value]="c"  >
                             {{ c.acronimo }}
                         </mat-option>
-                    </mat-autocomplete>
+                    </mat-autocomplete> -->
+                    <ng-select  [virtualScroll]=true formControlName="firmante" (change)="getIndicativo()" >
+                      <ng-option *ngFor="let c of firmantes" [value]="c" >
+                        {{c.acronimo}}
+                      </ng-option>
+                    </ng-select>
                     <div *ngIf="form.get('firmante').errors && form.get('firmante').dirty" >
                         <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('firmante').hasError('required')">* Field is required</small>
                     </div>
-                </mat-form-field>
-                <!-- <div class="mt-2">
-                    <span>ss</span>
-                    <button mat-icon-button >
-                      <mat-icon>cancel</mat-icon>
-                    </button>
-                  </div> -->
+                <!-- </mat-form-field> -->
             </div>
             <div class="col-md-3">
                 <mat-form-field appearance="fill" class="example-full-width">
                     <mat-label>TIPO DOCUMENTO</mat-label>
                     <mat-select matInput formControlName="tipoDocumento" >
-                      <mat-option  *ngFor="let c of clases"  [value]="c">
+                      <mat-option  *ngFor="let c of clases"  [value]="c.codigo">
                         {{c.nombre}}
                       </mat-option>
                     </mat-select>
@@ -50,7 +49,7 @@
                   </mat-form-field>
             </div>
             <div class="col-md-6">
-                <mat-form-field appearance="fill" class="example-full-width">
+                <!-- <mat-form-field appearance="fill" class="example-full-width">
                     <mat-label>UU. DESTINARIO(S):</mat-label>
                     <mat-select >
                       <mat-option  *ngFor="let c of organizacionesDestino"  [value]="c">
@@ -58,18 +57,24 @@
                       </mat-option>
                     </mat-select>
                     <mat-error >Please choose an animal</mat-error>
-                </mat-form-field>
+                </mat-form-field> -->
+                <ng-select [multiple]=true placeholder="SELECCIONE DESTINARIO(S)" [virtualScroll]=true formControlName="destinatarios"  >
+                  <ng-option *ngFor="let c of organizacionesDestino" [value]="c.codigoInterno" >{{c.acronimo}}</ng-option>
+                </ng-select>
             </div>
             <div class="col-md-6">
-                <mat-form-field appearance="fill" class="example-full-width">
+                <!-- <mat-form-field appearance="fill" class="example-full-width">
                     <mat-label>COPIA INFORMATIVA</mat-label>
                     <mat-select >
-                      <mat-option *ngFor="let c of copiasInformativas" [value]="c">
+                      <mat-option *ngFor="let c of copiasInformativas" [value]="c.codigoInterno">
                         {{c.acronimo}}
                       </mat-option>
                     </mat-select>
                     <mat-error >Please choose an animal</mat-error>
-                </mat-form-field>
+                </mat-form-field> -->
+                <ng-select [multiple]=true placeholder="SELECCIONE COPIA(S) INFORMATIVA(S)" [virtualScroll]=true formControlName="copiaInformativa"  >
+                  <ng-option *ngFor="let c of copiasInformativas" [value]="c.codigoInterno" >{{c.acronimo}}</ng-option>
+                </ng-select>
             </div>
             <div class="col-md-12">
                 <mat-form-field appearance="fill" class="example-full-width">
@@ -95,3 +100,13 @@
     </mat-card-actions>
     <div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{form.value | json}}</div>
 </mat-card>
+
+
+<!-- <ng-select [items]="organizacionesDestino" 
+           bindLabel="acronimo"
+           bindValue="codigoInterno" [multiple]=true >
+</ng-select> -->
+
+<!-- <ng-select [multiple]=true >
+  <ng-option *ngFor="let c of organizacionesDestino" [value]="c" >{{c.acronimo}}</ng-option>
+</ng-select> -->
