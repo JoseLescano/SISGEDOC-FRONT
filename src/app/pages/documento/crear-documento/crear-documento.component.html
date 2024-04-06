@@ -18,20 +18,21 @@
                         {{c.acronimo}}
                       </ng-option>
                     </ng-select>
-                    <div *ngIf="form.get('firmante').errors && form.get('firmante').dirty" >
-                        <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('firmante').hasError('required')">* Field is required</small>
-                    </div>
+                    <!-- <div *ngIf="form.get('firmante').errors && form.get('firmante').dirty" > -->
+                        <mat-error *ngIf="form.get('firmante').hasError('required')">* Field is required</mat-error>
+                    <!-- </div> -->
                 <!-- </mat-form-field> -->
             </div>
             <div class="col-md-3">
                 <mat-form-field appearance="fill" class="example-full-width">
                     <mat-label>TIPO DOCUMENTO</mat-label>
                     <mat-select matInput formControlName="tipoDocumento" >
+                      <mat-option>SELECCIONE</mat-option>
                       <mat-option  *ngFor="let c of clases"  [value]="c.codigo">
                         {{c.nombre}}
                       </mat-option>
                     </mat-select>
-                    <mat-error >Please choose an animal</mat-error>
+                    <mat-error >Campo requerido</mat-error>
                 </mat-form-field>
             </div>
             <div class="col-md-3">
@@ -79,7 +80,7 @@
             <div class="col-md-12">
                 <mat-form-field appearance="fill" class="example-full-width">
                     <mat-label>ASUNTO</mat-label>
-                    <textarea matInput formControlName="asunto" rows="4"></textarea>
+                    <textarea matInput formControlName="asunto" rows="3"></textarea>
                     <div *ngIf="form.get('asunto').errors && form.get('asunto').dirty" >
                       <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('asunto').hasError('required')">* Field is required</small>
                       <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('asunto').hasError('minlength')">** Min of 10 characters</small>
@@ -102,7 +103,7 @@
 </mat-card>
 
 
-<!-- <ng-select [items]="organizacionesDestino" 
+<!-- <ng-select [items]="organizacionesDestino"
            bindLabel="acronimo"
            bindValue="codigoInterno" [multiple]=true >
 </ng-select> -->

@@ -54,7 +54,7 @@ export class CrearDocumentoComponent implements OnInit {
       'tipoDocumento': new FormControl('', [Validators.required]),
       'indicativo': new FormControl('', [Validators.required]),
       'destinatarios': new FormControl(new Array<String>,[Validators.required]),
-      'copiaInformativa': new FormControl('',[Validators.required]),
+      'copiaInformativa': new FormControl(new Array<String>,[Validators.required]),
       'asunto': new FormControl('', [Validators.required, Validators.minLength(10)]),
       'observaciones': new FormControl('', [Validators.required]),
     });
@@ -75,7 +75,7 @@ export class CrearDocumentoComponent implements OnInit {
   getIndicativo(){
     debugger;
     let organizacion  = this.form.get('firmante').value;
-    
+
     // const selectedOption = this.firmantes.find(option => option.codigoInterno.includes(event.option.value ));
     this.form.get('indicativo').setValue(organizacion.indicativo);
   }
@@ -83,7 +83,7 @@ export class CrearDocumentoComponent implements OnInit {
 
   showFirmantes(val: any){
     return val ? `${val.acronimo}`: val;
-    
+
   }
 
   operate(){
