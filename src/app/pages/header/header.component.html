@@ -7,31 +7,26 @@
           </div>
           <br>
           <mat-divider></mat-divider>
-          <!-- @for (m of menus; track $index) {
-          <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="{{m.url}}">
-              <mat-icon id="iconn">{{m.icon}}</mat-icon>
-              <span id="name">{{m.name}}</span>
-          </button>
-          } -->
           <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="/">
-            <!-- <mat-icon id="iconn">{{m.icon}}</mat-icon> -->
             <i class="fas fa-folder-open"></i>
               <span id="name"  style="font-size: 12px;">DOC. RECIBIDOS</span>
           </button>
           <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="/">
-            <!-- <mat-icon id="iconn">{{m.icon}}</mat-icon> -->
             <i class="fas fa-file-signature"></i>
               <span id="name"  style="font-size: 12px;">DOC. PARA LA FIRMA</span>
           </button>
           <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="/">
-            <!-- <mat-icon id="iconn">{{m.icon}}</mat-icon> -->
             <i class="fas fa-pen-square mat-icon" ></i>
             <span id="name"  style="font-size: 12px;">DOC. PARA CORREGIR</span>
           </button>
           <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="crear-documento">
-            <!-- <mat-icon id="iconn">{{m.icon}}</mat-icon> -->
             <i class="far fa-file-alt"></i>
               <span id="name"  style="font-size: 12px;">CREAR DOCUMENTO</span>
+          </button>
+
+          <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="resetear-authentificacion">
+            <i class="fas fa-users-cog"></i>
+              <span id="name"  style="font-size: 12px;">RESETEAR AUTENTIFACION</span>
           </button>
       </mat-sidenav>
       <mat-sidenav-content>
@@ -57,5 +52,5 @@
           <router-outlet></router-outlet>
       </mat-sidenav-content>
   </mat-sidenav-container>
-</div>
+</div> 
 <!-- (click)="logout()" -->

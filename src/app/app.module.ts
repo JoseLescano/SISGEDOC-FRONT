@@ -23,7 +23,10 @@ import { FormsModule } from '@angular/forms';
 import { ClaseService } from './_service/clase.service';
 import { OrganizacionService } from './_service/organizacion.service';
 
+import {MatTooltipModule} from '@angular/material/tooltip';
 import { MatPaginator } from '@angular/material/paginator';
+import { DobleAutentificacionComponent } from './pages/doble-autentificacion/doble-autentificacion.component';
+
 
 @NgModule({
   declarations: [
@@ -35,6 +38,7 @@ import { MatPaginator } from '@angular/material/paginator';
     RegistrarComponent,
     HeaderComponent,
     CrearDocumentoComponent,
+    DobleAutentificacionComponent,
     
 
   ],
@@ -47,6 +51,7 @@ import { MatPaginator } from '@angular/material/paginator';
     ReactiveFormsModule,
     NgSelectModule,
     FormsModule,
+    MatTooltipModule
     
   ],
   exports:[],

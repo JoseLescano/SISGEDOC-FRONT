@@ -1,3 +1,4 @@
+ 
 .example-container {
   display: flex;
   flex-direction: column;
@@ -29,8 +30,8 @@ background: linear-gradient(45deg, #000000, #675b45);
 
 .myButton {
   width: 100%;
-  display: flex; /* Utilizamos flexbox para alinear contenido */
-  align-items: center; /* Centrar verticalmente el contenido */
+  display: flex; 
+  align-items: center; 
   text-align: center;
   justify-items: center;
   color: white;
@@ -40,15 +41,15 @@ background: linear-gradient(45deg, #000000, #675b45);
   margin: 5px 0;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s ease; /* Transición suave para el cambio de color de fondo */
+  transition: background-color 0.3s ease; 
 }
 
 .myButton:hover {
 background: #675b45;
-   color: rgb(255, 255, 255); /* Cambiar color de texto al pasar el cursor */
+   color: rgb(255, 255, 255); 
 }
 
 .myButton .mat-icon {
-  color: white; /* Color del icono blanco */
-  margin-right: 5px; /* Añadir espacio entre el icono y el texto */
-}
+  color: white; 
+  margin-right: 5px; 
+} 
