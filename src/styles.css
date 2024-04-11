@@ -2,7 +2,24 @@
 @import "~@ng-select/ng-select/themes/material.theme.css";
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; 
-    
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
+
 }
 
+table {
+  width: 100%;
+}
+
+
+.mat-header-row
+{
+  background-color: black;
+
+}
+.mat-table {
+  border: 1px solid rgba(0, 0, 0, .87);
+}
+
+.mat-header-cell{
+  color: #fff;
+}

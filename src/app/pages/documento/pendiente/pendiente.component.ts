@@ -17,8 +17,6 @@ import {MatSort, SortDirection} from '@angular/material/sort';
 })
 export class PendienteComponent implements OnInit, AfterViewInit {
 
-  documentos : Documento[];
-
   displayedColumns: string[] = ['Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'FechaReg.', 'Acciones'];
   dataSource: MatTableDataSource<Documento>;
 
@@ -30,7 +28,7 @@ export class PendienteComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.documentoService.findByOrganizacionDestino('33').subscribe((data: any)=> {
+    this.documentoService.findByOrganizacionDestino('0309').subscribe((data: any)=> {
       debugger;
       this.createTable(data);
     });

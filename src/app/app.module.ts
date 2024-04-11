@@ -26,7 +26,7 @@ import { OrganizacionService } from './_service/organizacion.service';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { MatPaginator } from '@angular/material/paginator';
 import { DobleAutentificacionComponent } from './pages/doble-autentificacion/doble-autentificacion.component';
-
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -39,7 +39,7 @@ import { DobleAutentificacionComponent } from './pages/doble-autentificacion/dob
     HeaderComponent,
     CrearDocumentoComponent,
     DobleAutentificacionComponent,
-    
+
 
   ],
   imports: [
@@ -51,8 +51,9 @@ import { DobleAutentificacionComponent } from './pages/doble-autentificacion/dob
     ReactiveFormsModule,
     NgSelectModule,
     FormsModule,
-    MatTooltipModule
-    
+    MatTooltipModule,
+    MatProgressBarModule
+
   ],
   exports:[],
   providers: [DocumentoService, ClaseService, OrganizacionService],

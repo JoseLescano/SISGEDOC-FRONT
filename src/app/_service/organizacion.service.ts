@@ -16,7 +16,7 @@ export class OrganizacionService extends GenericService<Organizacion> {
     super(http, `${environment.HOST}organizaciones/`)
   }
 
-  setOrganizaconCambio(data:Organizacion[]){
+  setOrganizacionCambio(data:Organizacion[]){
     this.organizacionCambio.next(data);
   }
 

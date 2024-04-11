@@ -16,12 +16,12 @@
                     </mat-autocomplete> -->
                     <ng-select  [virtualScroll]=true formControlName="firmante" (change)="getIndicativo()" >
                       <ng-option *ngFor="let c of firmantes" [value]="c" >
-                        {{c.acronimo}}
+                        {{c.nombreLargo}}
                       </ng-option>
                     </ng-select>
                     <div *ngIf="form.get('firmante').errors && form.get('firmante').dirty" class="mt-1" >
                       <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('firmante').hasError('required')">*Campo requerido</small>
-                    </div> 
+                    </div>
                 <!-- </mat-form-field> -->
             </div>
             <div class="col-md-3">
@@ -65,7 +65,7 @@
                 </ng-select>
                 <div *ngIf="form.get('destinatarios').errors && form.get('destinatarios').dirty" class="mt-1" >
                       <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('destinatarios').hasError('destinatarios')">*Campo requerido</small>
-                </div> 
+                </div>
             </div>
             <div class="col-md-6">
                 <!-- <mat-form-field appearance="fill" class="example-full-width">
@@ -101,7 +101,7 @@
             <div class="col-md-4 ">
                 <button mat-flat-button color="primary" style="width: 50%; height: 100%;  height: 50px;" (click)="generarPlantilla()" >
                     <i class="far fa-file-word" style="font-size: 30px;"></i>
-                </button>           
+                </button>
             </div>
         </form>
     </mat-card-content>
