@@ -61,17 +61,19 @@ export class DobleAutentificacionComponent implements OnInit, AfterViewInit {
     this.personaService.findByCampo(this.campoIngresado).subscribe((data:any)=>{
       this.persona = data;
       this.nombreCompleado = this.persona.apellidos+  ' ' + this.persona.nombres;
-
-      this.perfilService.findByUsuario(this.persona.usuario_CHASQUI).subscribe((data:any)=>{
-        this.createTable(data);
-      });
-
+      this.buscarPerfiles();
       this.cargando=false;
     }, (error: any)=> {
       this.persona = null;
       this.cargando=false;
       Swal.fire('Sin resultados', `No se encuentra información`, 'info');
     })
+  }
+
+  buscarPerfiles(){
+    this.perfilService.findByUsuario(this.persona.usuario_CHASQUI).subscribe((data:any)=>{
+      this.createTable(data);
+    });
   }
 
   limpiar(){
@@ -89,12 +91,11 @@ export class DobleAutentificacionComponent implements OnInit, AfterViewInit {
 
   eliminarPerfil(codigo:any){
     this.cargando=true;
-    this.perfilService.eliminar(codigo).pipe(switchMap(()=> {
-      return this.perfilService.findByUsuario(this.persona.usuario_CHASQUI);
-    })).subscribe((data:any)=> {
-      this.perfilService.setPerfilCambio(data);
+    this.perfilService.eliminar(codigo).subscribe(data=> {
+      this.buscarPerfiles();
       Swal.fire('SE ELIMINO PERFIL', `Se elimino perfil del usuario con éxito`, 'info');
     });
+    
     this.cargando=false;
   }
 

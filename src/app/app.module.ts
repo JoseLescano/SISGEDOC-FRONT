@@ -27,6 +27,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { MatPaginator } from '@angular/material/paginator';
 import { DobleAutentificacionComponent } from './pages/doble-autentificacion/doble-autentificacion.component';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { BuscarDocumentoComponent } from './pages/documento/buscar-documento/buscar-documento.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     HeaderComponent,
     CrearDocumentoComponent,
     DobleAutentificacionComponent,
+    BuscarDocumentoComponent,
 
 
   ],

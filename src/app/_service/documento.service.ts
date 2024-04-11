@@ -32,4 +32,8 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get(`${environment.HOST}documentos/viewPDF/${vidDocumento}`);
   }
 
+  findDecretados(codigoOrganizacion:any, fechaI?:any, fechaF?:any){
+    return this.http.get<Documento[]>(`${environment.HOST}documentos/findDecretados`, { params: { codigoInterno: codigoOrganizacion, fi:fechaI, ff:fechaF }});
+  }
+
 }

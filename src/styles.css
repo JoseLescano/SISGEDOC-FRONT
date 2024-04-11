@@ -6,10 +6,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
 
 }
 
-table {
+.example-full-width {
   width: 100%;
 }
 
+
+table {
+  width: 100%;
+}
 
 .mat-header-row
 {
@@ -23,3 +27,5 @@ table {
 .mat-header-cell{
   color: #fff;
 }
+
+

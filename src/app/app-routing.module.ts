@@ -6,6 +6,7 @@ import { AccionesComponent } from './pages/documento/acciones/acciones.component
 import { RegistrarComponent } from './pages/documento/archivar/registrar/registrar.component';
 import { CrearDocumentoComponent } from './pages/documento/crear-documento/crear-documento.component';
 import { DobleAutentificacionComponent } from './pages/doble-autentificacion/doble-autentificacion.component';
+import { BuscarDocumentoComponent } from './pages/documento/buscar-documento/buscar-documento.component';
 
 const routes: Routes = [
   {path:'', redirectTo:'pendientes', pathMatch:'full' },
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'archivar/:codigoDocumento', component: RegistrarComponent },
   { path: 'crear-documento', component: CrearDocumentoComponent },
   { path: 'resetear-authentificacion', component: DobleAutentificacionComponent },
+  { path: 'buscar-documento', component: BuscarDocumentoComponent },
 ];
 
 @NgModule({
