@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -8,7 +9,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   @ViewChild('sidenav') sidenav: MatSidenav;
   isExpanded = true;
@@ -29,6 +30,11 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  toggleSidenavAndInit(tipoReporte: number): void {
+    this.sidenav.toggle();
+    this.router.navigate(['/buscar-documento/' + tipoReporte]);
   }
 
 }

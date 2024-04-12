@@ -36,4 +36,12 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get<Documento[]>(`${environment.HOST}documentos/findDecretados`, { params: { codigoInterno: codigoOrganizacion, fi:fechaI, ff:fechaF }});
   }
 
+  findArchivadosByOrganizacion(codigoInterno:any){
+    return this.http.get<Documento[]>(`${environment.HOST}documentos/findArchivadosByOrganizacion/${codigoInterno}`);
+  }
+
+  findDerivadosByOrganizacion(codigoInterno:any){
+    return this.http.get<Documento[]>(`${environment.HOST}documentos/findDerivadosByOrganizacion/${codigoInterno}`);
+  }
+
 }

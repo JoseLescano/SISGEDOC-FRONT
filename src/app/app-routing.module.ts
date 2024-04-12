@@ -16,7 +16,7 @@ const routes: Routes = [
   { path: 'archivar/:codigoDocumento', component: RegistrarComponent },
   { path: 'crear-documento', component: CrearDocumentoComponent },
   { path: 'resetear-authentificacion', component: DobleAutentificacionComponent },
-  { path: 'buscar-documento', component: BuscarDocumentoComponent },
+  { path: 'buscar-documento/:tipoReporte', component: BuscarDocumentoComponent },
 ];
 
 @NgModule({

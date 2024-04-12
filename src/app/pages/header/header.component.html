@@ -32,11 +32,11 @@
             <i class="fas fa-folder-open"></i>
             <span id="name"  style="font-size: 12px;">BUSCAR DOCUMENTO</span>
           </button>
-          <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="buscar-documento">
+          <button class="myButton" [routerLinkActive]="['active']" (click)="toggleSidenavAndInit(2)" >
             <i class="fas fa-folder-open"></i>
             <span id="name"  style="font-size: 12px;">DOC. DECRETADOS</span>
           </button>
-          <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="buscar-documento">
+          <button class="myButton" [routerLinkActive]="['active']" (click)="toggleSidenavAndInit(3)">
             <i class="fas fa-folder-open"></i>
             <span id="name"  style="font-size: 12px;">DOC. ARCHIVADOS</span>
           </button>
@@ -48,7 +48,7 @@
             <i class="fas fa-folder-open"></i>
             <span id="name"  style="font-size: 12px;">DOC. FIRMADOS</span>
           </button>
-          <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="buscar-documento">
+          <button class="myButton" [routerLinkActive]="['active']" (click)="toggleSidenavAndInit(6)">
             <i class="fas fa-folder-open"></i>
             <span id="name"  style="font-size: 12px;">DOC. DERIVADOS</span>
           </button>
