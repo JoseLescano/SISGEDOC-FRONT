@@ -38,7 +38,7 @@ export class CrearDocumentoComponent implements OnInit {
     this.initForm();
     this.organizacionService.findFirmantes(this.codigoOrganizacion).subscribe((response:any)=>  this.firmantes = response.data );
     // this.firmanteFilter$ = this.firmanteControl.valueChanges.pipe(map(val => this.filterfirmantes(val)));
-    this.claseService.findByOrganizacionDestino().subscribe((response:any)=> this.clases = response.data );
+    this.claseService.findForCrearDocumento().subscribe((response:any)=> this.clases = response.data );
     this.organizacionService.destinatariosExternoByCodigo(this.codigoOrganizacion).subscribe((response:any)=> {
       this.organizacionesDestino = response.data;
       this.copiasInformativas = response.data;

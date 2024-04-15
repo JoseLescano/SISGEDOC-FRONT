@@ -32,5 +32,9 @@ export class OrganizacionService extends GenericService<Organizacion> {
     return this.http.get<Organizacion[]>(`${environment.HOST}organizaciones/destinatariosExternoByCodigo/${codigoInterno}`);
   }
 
+  getRemitentesInterno(){
+    return this.http.get<Organizacion[]>(`${environment.HOST}organizaciones/getRemitentesInterno`);
+  }
+
 
 }

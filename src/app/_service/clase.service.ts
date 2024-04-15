@@ -24,7 +24,7 @@ export class ClaseService extends GenericService<Clase> {
     return this.claseCambio.asObservable();
   }
 
-  findByOrganizacionDestino(){
+  findForCrearDocumento(){
     return this.http.get<Clase[]>(`${environment.HOST}clases/findForCrearDocumento`);
   }
 

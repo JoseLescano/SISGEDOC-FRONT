@@ -26,11 +26,11 @@
 
           <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="resetear-authentificacion">
             <i class="fas fa-users-cog"></i>
-              <span id="name"  style="font-size: 12px;">RESETEAR AUTENTIFACION</span>
+              <span id="name"  style="font-size: 12px;">RESETEAR AUTENTIF.</span>
           </button>
           <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="buscar-documento">
             <i class="fas fa-folder-open"></i>
-            <span id="name"  style="font-size: 12px;">BUSCAR DOCUMENTO</span>
+            <span id="name"  style="font-size: 12px;">BUSCAR DOC.</span>
           </button>
           <button class="myButton" [routerLinkActive]="['active']" (click)="toggleSidenavAndInit(2)" >
             <i class="fas fa-folder-open"></i>
@@ -51,6 +51,10 @@
           <button class="myButton" [routerLinkActive]="['active']" (click)="toggleSidenavAndInit(6)">
             <i class="fas fa-folder-open"></i>
             <span id="name"  style="font-size: 12px;">DOC. DERIVADOS</span>
+          </button>
+          <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="recibir-documento" >
+            <i class="fas fa-folder-open"></i>
+            <span id="name"  style="font-size: 12px;">REGISTRAR DOC.</span>
           </button>
       </mat-sidenav>
       <mat-sidenav-content>

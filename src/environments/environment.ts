@@ -4,7 +4,17 @@
 
 export const environment = {
   production: false,
-  HOST: 'http://localhost:8080/'
+  HOST: 'http://localhost:8080/',
+  
+  cantidadPaginasPDF:function(inFile:any,incallback:any){
+    var reader:any = new FileReader();
+    reader.readAsBinaryString(inFile);
+    reader.onloadend = function(){
+    var count = reader.result.match(/\/Type[\s]*\/Page[^s]/g).length;
+      incallback(count);
+    }
+
+  }
 };
 
 /*

@@ -28,6 +28,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { DobleAutentificacionComponent } from './pages/doble-autentificacion/doble-autentificacion.component';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { BuscarDocumentoComponent } from './pages/documento/buscar-documento/buscar-documento.component';
+import { RecibirComponent } from './pages/documento/mesaPartes/recibir/recibir.component';
+import { EnvioExternoComponent } from './pages/documento/mesaPartes/envio-externo/envio-externo.component';
+import { RegistrarMPComponent } from './pages/documento/mesaPartes/registrar/registrarMP.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +44,9 @@ import { BuscarDocumentoComponent } from './pages/documento/buscar-documento/bus
     CrearDocumentoComponent,
     DobleAutentificacionComponent,
     BuscarDocumentoComponent,
+    RecibirComponent,
+    EnvioExternoComponent,
+    RegistrarMPComponent
 
 
   ],

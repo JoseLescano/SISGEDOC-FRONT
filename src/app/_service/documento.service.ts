@@ -32,6 +32,10 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get(`${environment.HOST}documentos/viewPDF/${vidDocumento}`);
   }
 
+  findRecibosMP(codigoOrganizacion){
+    return this.http.get<Documento[]>(`${environment.HOST}documentos/findRecibosMP/${codigoOrganizacion}`);
+  }
+
   findDecretados(codigoOrganizacion:any, fechaI?:any, fechaF?:any){
     return this.http.get<Documento[]>(`${environment.HOST}documentos/findDecretados`, { params: { codigoInterno: codigoOrganizacion, fi:fechaI, ff:fechaF }});
   }
@@ -42,6 +46,14 @@ export class DocumentoService  extends GenericService<Documento> {
 
   findDerivadosByOrganizacion(codigoInterno:any){
     return this.http.get<Documento[]>(`${environment.HOST}documentos/findDerivadosByOrganizacion/${codigoInterno}`);
+  }
+
+  recibirDocumentoMP(documentoDTO: any, archivoPrincipal:any, anexos?:any){
+    // console.log(documentoDTO.value['tipoOrganizacion']);
+    // this.documento.organizacionOrigen = this.form.value['organizacionRemitente'];
+    // this.documento.clase = this.form.value['tipoDocumento'];
+    console.log(documentoDTO)
+    return null;
   }
 
 }

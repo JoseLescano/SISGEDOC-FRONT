@@ -5,7 +5,7 @@
       <mat-label>Filter</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
     </mat-form-field>
-
+  <mat-card-content>
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource" >
 
@@ -68,4 +68,8 @@
 
       <mat-paginator [pageSizeOptions]="[10, 15, 25, 100]"  aria-label="Select page of users"></mat-paginator>
     </div>
+  </mat-card-content>
+    <mat-card-footer>
+      <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
+    </mat-card-footer>
 </mat-card>
