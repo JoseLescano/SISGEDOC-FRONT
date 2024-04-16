@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { DocumentoArchivoAnexo } from 'src/app/_DTO/DocumentoArchivoAnexo';
 import { Clase } from 'src/app/_model/clase';
 import { Documento } from 'src/app/_model/documento.model';
 import { Organizacion } from 'src/app/_model/organizacion';
@@ -73,21 +74,32 @@ export class RegistrarMPComponent implements OnInit {
     this.form.controls['folio'].disable();
   }
 
+  documentoar : DocumentoArchivoAnexo = new DocumentoArchivoAnexo();
+
   operate(){
+    debugger;
     if (this.form.valid){
       this.documento.tipoOrganizacion = this.form.value['tipoOrganizacion'];
       this.documento.organizacionOrigen = this.form.value['organizacionRemitente'];
-      this.documento.asunto= this.form.value['asunto'];
-      this.documento.claveIndicativo= this.form.value[''];
       this.documento.clase = this.form.value['tipoDocumento'];
+      this.documento.nroOrden =  this.form.value['nroDocumento'];
+      this.documento.indicativo =  this.form.value['indicativo'];
       this.documento.claveIndicativo= this.form.value['remitente'];
-      this.documento.fechaDocumento== this.form.value['fechaDocumento'];
-      console.log(this.form.value['organizacionRemitente']);
+      this.documento.prioridad = this.form.value['prioridad'];
+      this.documento.fechaDocumento= this.form.value['fechaDocumento'];
+      this.documento.folio = this.form.value['folio'];
+      this.documento.asunto= this.form.value['asunto'];
+
+      
+      this.documentoar.documento = this.documento;
+      
+      this.documentoService.recibirDocumentoMP(this.documentoar).subscribe((data:any) => console.log('xd'));
+
     } else {
       Swal.fire('Lo sentimos', `Se presento un inconveniente!`, 'warning');
     }
     
-    // this.documentoService.recibirDocumentoMP(this.documento).subscribe(data => console.log('xd'));
+    
   }
 
   get nativeDocument(): any {

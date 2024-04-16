@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { GenericService } from './generic.service';
+import { DocumentoArchivoAnexo } from '../_DTO/DocumentoArchivoAnexo';
 
 @Injectable({
   providedIn: 'root'
@@ -48,12 +49,8 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get<Documento[]>(`${environment.HOST}documentos/findDerivadosByOrganizacion/${codigoInterno}`);
   }
 
-  recibirDocumentoMP(documentoDTO: any, archivoPrincipal:any, anexos?:any){
-    // console.log(documentoDTO.value['tipoOrganizacion']);
-    // this.documento.organizacionOrigen = this.form.value['organizacionRemitente'];
-    // this.documento.clase = this.form.value['tipoDocumento'];
-    console.log(documentoDTO)
-    return null;
+  recibirDocumentoMP(documentoDTO: DocumentoArchivoAnexo){
+    return this.http.post(`${environment.HOST}documentos/recibirDocumentoMP`, documentoDTO);
   }
 
 }
