@@ -1,5 +1,5 @@
 <mat-card class="m-2">
-    <mat-card-title>REGISTRAR NUEVO DOCUMENTO</mat-card-title>
+    <div style="width: 100%; height: 50px; align-items: center; font-weight: 500; font-size: 16px;">REGISTRAR NUEVO DOCUMENTO</div>
     <mat-card-content>
         <div class="row">
             <div class="col-xs-6 col-sm-6 col-md-6">
@@ -14,7 +14,7 @@
                               </mat-option>
                             </mat-select>
                             <div *ngIf="form.get('tipoOrganizacion').errors && form.get('tipoOrganizacion').dirty" >
-                                <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('tipoOrganizacion').hasError('required')">* Field is required</small> 
+                                <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('tipoOrganizacion').hasError('required')">* Field is required</small>
                             </div>
                         </mat-form-field>
                     </div>
@@ -24,7 +24,7 @@
                             <ng-option *ngFor="let c of remitentes" [value]="c.codigoInterno" >{{c.acronimo}}</ng-option>
                           </ng-select>
                           <div *ngIf="form.get('organizacionRemitente').errors && form.get('organizacionRemitente').dirty" >
-                            <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('organizacionRemitente').hasError('required')">* Field is required</small> 
+                            <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('organizacionRemitente').hasError('required')">* Field is required</small>
                         </div>
                     </div>
                     <div class="col-4">
@@ -33,7 +33,7 @@
                             <ng-option *ngFor="let c of clases" [value]="c.codigo" >{{c.nombre}}</ng-option>
                           </ng-select>
                           <div *ngIf="form.get('tipoDocumento').errors && form.get('tipoDocumento').dirty" >
-                            <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('tipoDocumento').hasError('required')">* Field is required</small> 
+                            <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('tipoDocumento').hasError('required')">* Field is required</small>
                         </div>
                     </div>
                     <div class="col-4">
@@ -41,7 +41,7 @@
                             <mat-label>NRO. DOCUMENTO</mat-label>
                             <input matInput type="text" formControlName="nroDocumento"    >
                             <div *ngIf="form.get('nroDocumento').errors && form.get('nroDocumento').dirty" >
-                                <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('nroDocumento').hasError('required')">* Field is required</small> 
+                                <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('nroDocumento').hasError('required')">* Field is required</small>
                             </div>
                           </mat-form-field>
                     </div>
@@ -71,18 +71,13 @@
                         </mat-form-field>
                     </div>
                     <div class="col-6">
-                        <mat-form-field appearance="fill" class="example-full-width">
-                            <mat-label>SELECCIONE FECHA</mat-label>
-                            <input matInput [matDatepicker]="datepicker" formControlName="fechaDocumento" >
-                            <mat-hint>DD/MM/YYYY</mat-hint>
-                            <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
-                            <mat-datepicker #datepicker>
-                              <mat-datepicker-actions>
-                                <button mat-button matDatepickerCancel>Cancel</button>
-                                <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
-                              </mat-datepicker-actions>
-                            </mat-datepicker>
-                          </mat-form-field>
+                      <mat-form-field appearance="fill">
+                        <mat-label>Fecha Documento</mat-label>
+                        <input matInput [matDatepicker]="dp" formControlName="fechaDocumento">
+                        <mat-hint>DD/MM/YYYY</mat-hint>
+                        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                        <mat-datepicker #dp></mat-datepicker>
+                      </mat-form-field>
                     </div>
                     <div class="col-6">
                         <mat-form-field appearance="fill" class="example-full-width">
@@ -106,32 +101,7 @@
                             <i class="fas fa-cloud-upload-alt"></i>
                             <p>Browse File to Upload</p>
                         </div>
-                        <!-- <section class="progress-area">
-                            <li class="row">
-                                <i class="fas fa-file-alt"></i>
-                                <div class="content">
-                                    <div class="details">
-                                        <span class="name">image_01.png Uploading</span>
-                                        <span class="percent">50%</span>
-                                    </div>
-                                    <div class="progress-bar">
-                                        <div class="progress"></div>
-                                    </div>
-                                </div>
-                            </li>
-                        </section>
-                        <section class="uploaded-area">
-                            <li class="row">
-                                <div class="content">
-                                    <i class="fas fa-file-alt" ></i>
-                                    <div class="details">
-                                        <span class="name">image_01.png Uploaded</span>
-                                        <span class="percent">70kb</span>
-                                    </div>
-                                </div>
-                                <i class="fas fa-check"></i>
-                            </li>
-                        </section> -->
+
                       </div>
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6"  >
@@ -154,5 +124,5 @@
             </div>
         </div>
     </mat-card-content>
-    <div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{form.value | json}}</div>
+    <!-- <div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{form.value | json}}</div> -->
 </mat-card>

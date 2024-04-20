@@ -32,12 +32,12 @@ export class PendienteComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.cargando = true;
-    this.documentoService.findByOrganizacionDestino('0715').subscribe((data: any)=> {
+    this.documentoService.findByOrganizacionDestino('3302010102').subscribe((data: any)=> {
       this.createTable(data);
       this.cargando = false;
     }, error=> {
       this.cargando=false;
-      Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning'); 
+      Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
     });
   }
 

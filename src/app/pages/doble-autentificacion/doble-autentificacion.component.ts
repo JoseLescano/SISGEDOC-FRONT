@@ -17,7 +17,7 @@ import Swal from 'sweetalert2';
 export class DobleAutentificacionComponent implements OnInit, AfterViewInit {
 
   campoIngresado:any="";
-  persona: Persona;
+  persona: Persona = new Persona();
   nombreCompleado: string;
   cargando:boolean=false;
   cargandoPerfil:boolean=false;
@@ -60,7 +60,7 @@ export class DobleAutentificacionComponent implements OnInit, AfterViewInit {
     this.cargando = true;
     this.personaService.findByCampo(this.campoIngresado).subscribe((data:any)=>{
       this.persona = data;
-      this.nombreCompleado = this.persona.apellidos+  ' ' + this.persona.nombres;
+      this.nombreCompleado = this.persona.grado_LARGA + ' '+ this.persona.arma_LARGA + ' '+  this.persona.apellidos+  ' ' + this.persona.nombres;
       this.buscarPerfiles();
       this.cargando=false;
     }, (error: any)=> {
@@ -77,7 +77,9 @@ export class DobleAutentificacionComponent implements OnInit, AfterViewInit {
   }
 
   limpiar(){
-    this.persona = null;
+    this.persona = new Persona();
+    this.nombreCompleado = '';
+    this.cargando = false;
     this.campoIngresado = '';
   }
 
@@ -95,7 +97,7 @@ export class DobleAutentificacionComponent implements OnInit, AfterViewInit {
       this.buscarPerfiles();
       Swal.fire('SE ELIMINO PERFIL', `Se elimino perfil del usuario con éxito`, 'info');
     });
-    
+
     this.cargando=false;
   }
 

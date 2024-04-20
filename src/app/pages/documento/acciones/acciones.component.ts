@@ -13,6 +13,7 @@ export class AccionesComponent implements OnInit {
 
   url_pdf: any;
   idDocumento : any;
+  errorPDF : boolean = false;
 
   constructor(
               // @Inject(MAT_DIALOG_DATA) public data: Documento,
@@ -34,6 +35,10 @@ export class AccionesComponent implements OnInit {
     this.documentoService.viewPDF(vidDocumento).subscribe((response: any)=>{
 
       this.crearDocumento(response.data);
+      this.errorPDF = false;
+    }, (error:any) => {
+      this.errorPDF = true;
+      Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR PDF!`, 'warning');
     });
   }
 
