@@ -71,6 +71,9 @@
                   <mat-icon>more_vert</mat-icon>
               </button>
               <mat-menu #menu="matMenu">
+                  <div mat-menu-item  style="display: flex; align-items: center; justify-content: space-between;">
+                    <i class="fas fa-user"></i><span> {{codigo}}</span>
+                  </div>
                   <button mat-menu-item (click)="sidenav.opened = false" >
                       <mat-icon>exit_to_app</mat-icon>
                       <span>Cerrar Sesión</span>

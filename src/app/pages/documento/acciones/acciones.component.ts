@@ -80,5 +80,11 @@ export class AccionesComponent implements OnInit {
     });
   }
 
+  verSeguimiento(vidDocumento: any){
+    this.documentoService.findDecretoByDocumento(vidDocumento).subscribe(data => {
+      console.log(data)
+    });
+  }
+
 
 }

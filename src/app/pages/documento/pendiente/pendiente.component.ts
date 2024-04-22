@@ -7,6 +7,7 @@ import { AccionesComponent } from '../acciones/acciones.component';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort, SortDirection} from '@angular/material/sort';
 import Swal from 'sweetalert2';
+import { environment } from 'src/environments/environment';
 
 
 
@@ -32,7 +33,7 @@ export class PendienteComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.cargando = true;
-    this.documentoService.findByOrganizacionDestino('3302010102').subscribe((data: any)=> {
+    this.documentoService.findByOrganizacionDestino(environment.codigoOrganizacion).subscribe((data: any)=> {
       this.createTable(data);
       this.cargando = false;
     }, error=> {

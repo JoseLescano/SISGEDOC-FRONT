@@ -18,7 +18,7 @@ import Swal from 'sweetalert2';
 })
 export class RegistrarMPComponent implements OnInit {
 
-  public listaTipoOrganizacion : any = [
+  listaTipoOrganizacion : any = [
     {
       nombre: "INTERNA",
       codigo: "I"
@@ -33,12 +33,14 @@ export class RegistrarMPComponent implements OnInit {
   clases:Clase[];
   prioridades : any;
 
-  public selectedFiles: any = null;
-  public url_pdf = '';
-
+  selectedFiles: any = null;
+  url_pdf = '';
   form:FormGroup;
   archivoPDF: any;
   documento:Documento = new Documento();
+  organizacionesDestino:Organizacion[];
+  copiasInformativas:Organizacion[];
+  codigoOrganizacion:any=environment.codigoOrganizacion;
 
   constructor(private organizacionService: OrganizacionService,
             private claseService: ClaseService,
@@ -53,6 +55,10 @@ export class RegistrarMPComponent implements OnInit {
     });
     this.claseService.listar().subscribe((response:any)=> this.clases = response.data );
     this.prioridadService.listar().subscribe(data=> this.prioridades = data);
+    this.organizacionService.getChildrenByCodigo(this.codigoOrganizacion).subscribe((response:any)=> {
+      this.organizacionesDestino = response.data;
+      this.copiasInformativas = response.data;
+    });
   }
 
   initForm(){
@@ -65,33 +71,33 @@ export class RegistrarMPComponent implements OnInit {
       'remitente': new FormControl('', [Validators.required]),
       'prioridad': new FormControl('', [Validators.required]),
       'fechaDocumento': new FormControl('', [Validators.required]),
-      'folio': new FormControl('', [Validators.required]),
+      'folio': new FormControl(0, [Validators.required]),
       'asunto': new FormControl('', [Validators.required]),
-      'archivoPDF': new FormControl('', [Validators.required]),
-      'archivosAnexos': new FormControl([]),
-      'destinos': new FormControl([])
+      'destinos': new FormControl([]),
+      'copiasInformativas': new FormControl([]),
     });
-    this.form.controls['folio'].disable();
   }
 
   documentoar : DocumentoArchivoAnexo = new DocumentoArchivoAnexo();
 
   operate(){
-    debugger;
+    
     if (this.form.valid){
-      this.documento.tipoOrganizacion = this.form.value['tipoOrganizacion'];
-      this.documento.organizacionOrigen = this.form.value['organizacionRemitente'];
-      this.documento.clase = this.form.value['tipoDocumento'];
-      this.documento.nroOrden =  this.form.value['nroDocumento'];
-      this.documento.indicativo =  this.form.value['indicativo'];
-      this.documento.claveIndicativo= this.form.value['remitente'];
-      this.documento.prioridad = this.form.value['prioridad'];
-      this.documento.fechaDocumento= this.form.value['fechaDocumento'];
-      this.documento.folio = this.form.value['folio'];
-      this.documento.asunto= this.form.value['asunto'];
-
+      this.documentoar.tipoOrganizacion = this.form.value['tipoOrganizacion'];
+      this.documentoar.organizacionOrigen = this.form.value['organizacionRemitente'];
+      this.documentoar.clase = this.form.value['tipoDocumento'];
+      this.documentoar.nroOrden =  this.form.value['nroDocumento'];
+      this.documentoar.indicativo =  this.form.value['indicativo'];
+      this.documentoar.claveIndicativo= this.form.value['remitente'];
+      this.documentoar.prioridad = this.form.value['prioridad'];
+      this.documentoar.fechaDocumento= this.form.value['fechaDocumento'];
+      this.documentoar.folio = this.form.value['folio'];
+      this.documentoar.asunto= this.form.value['asunto']; 
+      this.documentoar.destinos = this.form.value['destinos'];
+      this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
+      // this.form.controls['destinos'].setValue(environment.codigoOrganizacion);
       
-      this.documentoar.documento = this.documento;
+
       
       this.documentoService.recibirDocumentoMP(this.documentoar).subscribe((data:any) => console.log('xd'));
 
@@ -133,7 +139,7 @@ export class RegistrarMPComponent implements OnInit {
           environment.cantidadPaginasPDF(this.selectedFiles[0],
             (cpages:any)=>{
               this.form.controls['folio'].setValue(cpages);
-              this.form.controls['archivoPDF'].setValue(this.selectedFiles[0]);
+              //this.form.controls['archivoPDF'].setValue(this.selectedFiles.item(0));
             }
           );
           

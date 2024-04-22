@@ -30,7 +30,7 @@ export class RecibirComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.cargando = true;
-    this.documentoService.findByOrganizacionDestino('0715').subscribe((data: any)=> {
+    this.documentoService.findByOrganizacionDestino('33020101').subscribe((data: any)=> {
       this.createTable(data);
       this.cargando = false;
     }, error=> {

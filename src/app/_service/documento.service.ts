@@ -49,8 +49,38 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get<Documento[]>(`${environment.HOST}documentos/findDerivadosByOrganizacion/${codigoInterno}`);
   }
 
-  recibirDocumentoMP(documentoDTO: DocumentoArchivoAnexo){
-    return this.http.post(`${environment.HOST}documentos/recibirDocumentoMP`, documentoDTO);
+  recibirDocumentoMP(documento: any){
+    debugger;
+    // let formData:FormData = new FormData();
+    // formData.append('tipoOrganizacion', documento.tipoOrganizacion);
+    // formData.append('organizacionOrigen', documento.organizacionOrigen);
+    // formData.append('clase', documento.clase);
+    // formData.append('nroOrden', documento.nroOrden);
+    // formData.append('indicativo', documento.indicativo);
+    // formData.append('claveIndicativo', documento.claveIndicativo);
+    // formData.append('prioridad', documento.prioridad);
+    // formData.append('fechaDocumento', environment.convertStringToDateBD(documento.fechaDocumento));
+    // formData.append('folio', documento.folio);
+    // formData.append('asunto', documento.asunto);
+    // formData.append('destinos', destino);
+    // formData.append('copiasInformativas', copiasInformativas);
+    // formData.append('archivoPrincipal', archivoPrincipal);
+    // formData.append('anexo', anexos);
+    return this.http.post(`${environment.HOST}documentos/recibirDocumentoMP`, documento);
+  }
+
+  archivarDocumento(vidDocumento:any, orgOrigen:any,usuario:any, observaciones:any,url_pdf?:any){
+    let formData:FormData = new FormData();
+    formData.append('vidDocumento', vidDocumento);
+    formData.append('orgOrigen', orgOrigen);
+    formData.append('usuario', usuario);
+    formData.append('observaciones', observaciones);
+    formData.append('url_pdf', url_pdf);
+    return this.http.post(`${environment.HOST}documentos/archivarDocumento`, formData);
+  }
+
+  findDecretoByDocumento(codigoInterno:any){
+    return this.http.get(`${environment.HOST}documentos/findDecretoByDocumento/${codigoInterno}`);
   }
 
 }

@@ -5,6 +5,7 @@ import { Clase } from 'src/app/_model/clase';
 import { Organizacion } from 'src/app/_model/organizacion';
 import { ClaseService } from 'src/app/_service/clase.service';
 import { OrganizacionService } from 'src/app/_service/organizacion.service';
+import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -27,7 +28,7 @@ export class CrearDocumentoComponent implements OnInit {
 
   clases:Clase[];
 
-  codigoOrganizacion:any='33';
+  codigoOrganizacion:any=environment.codigoOrganizacion;
 
   // =======================================================================================================
 
