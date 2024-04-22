@@ -31,6 +31,7 @@ import { BuscarDocumentoComponent } from './pages/documento/buscar-documento/bus
 import { RecibirComponent } from './pages/documento/mesaPartes/recibir/recibir.component';
 import { EnvioExternoComponent } from './pages/documento/mesaPartes/envio-externo/envio-externo.component';
 import { RegistrarMPComponent } from './pages/documento/mesaPartes/registrar/registrarMP.component';
+import { EsquemaComponent } from './pages/organizacion/esquema/esquema.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { RegistrarMPComponent } from './pages/documento/mesaPartes/registrar/reg
     BuscarDocumentoComponent,
     RecibirComponent,
     EnvioExternoComponent,
-    RegistrarMPComponent
+    RegistrarMPComponent,
+    EsquemaComponent
 
 
   ],

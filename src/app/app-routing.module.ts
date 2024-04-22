@@ -9,6 +9,7 @@ import { DobleAutentificacionComponent } from './pages/doble-autentificacion/dob
 import { BuscarDocumentoComponent } from './pages/documento/buscar-documento/buscar-documento.component';
 import { RecibirComponent } from './pages/documento/mesaPartes/recibir/recibir.component';
 import { RegistrarMPComponent } from './pages/documento/mesaPartes/registrar/registrarMP.component';
+import { EsquemaComponent } from './pages/organizacion/esquema/esquema.component';
 
 const routes: Routes = [
   {path:'', redirectTo:'pendientes', pathMatch:'full' },
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'buscar-documento/:tipoReporte', component: BuscarDocumentoComponent },
   { path: 'recibir-documento', component: RecibirComponent },
   { path: 'registrar-documento', component: RegistrarMPComponent },
+  { path: 'organizacion', component: EsquemaComponent },
 ];
 
 @NgModule({

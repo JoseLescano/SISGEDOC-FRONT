@@ -56,6 +56,10 @@
             <i class="fas fa-folder-open"></i>
             <span id="name"  style="font-size: 12px;">REGISTRAR DOC.</span>
           </button>
+          <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="organizacion" >
+            <i class="fas fa-folder-open"></i>
+            <span id="name"  style="font-size: 12px;">Organizacion</span>
+          </button>
       </mat-sidenav>
       <mat-sidenav-content>
           <mat-toolbar>
