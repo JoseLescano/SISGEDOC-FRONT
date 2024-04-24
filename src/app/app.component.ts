@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import * as go from 'gojs';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,11 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'new-front-sisgedo';
+
+  public model: go.TreeModel = new go.TreeModel(
+    [
+      { 'key': 1, 'name': 'wrojas flores', 'title': 'CEO'}
+    ]
+  );
+
 }

@@ -7,6 +7,7 @@ import { Documento } from 'src/app/_model/documento.model';
 import { DocumentoService } from 'src/app/_service/documento.service';
 import Swal from 'sweetalert2';
 import { RegistrarMPComponent } from '../registrar/registrarMP.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-recibir',
@@ -15,11 +16,9 @@ import { RegistrarMPComponent } from '../registrar/registrarMP.component';
 })
 export class RecibirComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['Nro', 'Origen', 'FechaDoc', 'Documento', 'Asunto', 'Acciones'];
+  displayedColumns: string[] = ['Nro', 'Asunto','Documento', 'Origen', 'FechaDoc',  'Acciones'];
   dataSource: MatTableDataSource<Documento>;
   cargando: boolean;
-
-  idOrganizacion:any='330201';
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -30,12 +29,12 @@ export class RecibirComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.cargando = true;
-    this.documentoService.findByOrganizacionDestino('33020101').subscribe((data: any)=> {
+    this.documentoService.findByOrganizacionDestino(environment.codigoOrganizacion).subscribe((data: any)=> {
       this.createTable(data);
       this.cargando = false;
     }, error=> {
       this.cargando=false;
-      Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning'); 
+      Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
     });
   }
 

@@ -28,4 +28,13 @@ table {
   color: #fff;
 }
 
+.title-form{
+  align-items: center;
+  place-content: center;
+  color: #675b45;
+  font-weight: bold;
+  text-decoration: underline;
+  margin-bottom: 2px;
+}
+
 

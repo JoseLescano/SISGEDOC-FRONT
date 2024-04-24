@@ -51,22 +51,22 @@ export class DocumentoService  extends GenericService<Documento> {
 
   recibirDocumentoMP(documento: any){
     debugger;
-    // let formData:FormData = new FormData();
-    // formData.append('tipoOrganizacion', documento.tipoOrganizacion);
-    // formData.append('organizacionOrigen', documento.organizacionOrigen);
-    // formData.append('clase', documento.clase);
-    // formData.append('nroOrden', documento.nroOrden);
-    // formData.append('indicativo', documento.indicativo);
-    // formData.append('claveIndicativo', documento.claveIndicativo);
-    // formData.append('prioridad', documento.prioridad);
-    // formData.append('fechaDocumento', environment.convertStringToDateBD(documento.fechaDocumento));
-    // formData.append('folio', documento.folio);
-    // formData.append('asunto', documento.asunto);
-    // formData.append('destinos', destino);
-    // formData.append('copiasInformativas', copiasInformativas);
-    // formData.append('archivoPrincipal', archivoPrincipal);
-    // formData.append('anexo', anexos);
-    return this.http.post(`${environment.HOST}documentos/recibirDocumentoMP`, documento);
+    let formData:FormData = new FormData();
+    formData.append('tipoOrganizacion', documento.tipoOrganizacion);
+    formData.append('organizacionOrigen', documento.organizacionOrigen);
+    formData.append('clase', documento.clase);
+    formData.append('nroOrden', documento.nroOrden);
+    formData.append('indicativo', documento.indicativo);
+    formData.append('claveIndicativo', documento.claveIndicativo);
+    formData.append('prioridad', documento.prioridad);
+    formData.append('fechaDocumento', environment.convertDateToStr(documento.fechaDocumento));
+    formData.append('folio', documento.folio);
+    formData.append('asunto', documento.asunto);
+    formData.append('destinos', documento.destinos);
+    formData.append('copiasInformativas', documento.copiasInformativas);
+    formData.append('archivoPrincipal', documento.archivoPrincipal);
+    formData.append('anexo', documento.anexos);
+    return this.http.post(`${environment.HOST}documentos/recibirDocumentoMP`, formData);
   }
 
   archivarDocumento(vidDocumento:any, orgOrigen:any,usuario:any, observaciones:any,url_pdf?:any){
