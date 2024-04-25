@@ -3,7 +3,7 @@ import * as moment from "moment";
 export const environment = {
   production: false,
   HOST: 'http://localhost:8080/',
-  codigoOrganizacion: '330201',
+  codigoOrganizacion: '3302010102',
 
   cantidadPaginasPDF:function(inFile:any,incallback:any){
     var reader:any = new FileReader();

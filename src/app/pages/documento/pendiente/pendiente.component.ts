@@ -5,9 +5,10 @@ import { Documento } from 'src/app/_model/documento.model';
 import { DocumentoService } from 'src/app/_service/documento.service';
 import { AccionesComponent } from '../acciones/acciones.component';
 import {MatPaginator} from '@angular/material/paginator';
-import {MatSort, SortDirection} from '@angular/material/sort';
 import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
+import { MatSort, Sort } from '@angular/material/sort';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 
 
 
@@ -28,7 +29,8 @@ export class PendienteComponent implements OnInit, AfterViewInit {
   cargando: boolean;
 
   constructor(private documentoService: DocumentoService,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private _liveAnnouncer: LiveAnnouncer) {
   }
 
   ngOnInit(): void {
@@ -68,6 +70,19 @@ export class PendienteComponent implements OnInit, AfterViewInit {
     this.dataSource = new MatTableDataSource(documento);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+  }
+
+  announceSortChange(sortState: Sort) {
+    debugger;
+    // This example uses English messages. If your application supports
+    // multiple language, you would internationalize these strings.
+    // Furthermore, you can customize the message to add additional
+    // details about the values being sorted.
+    if (sortState.direction) {
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+      this._liveAnnouncer.announce('Sorting cleared');
+    }
   }
 
 }

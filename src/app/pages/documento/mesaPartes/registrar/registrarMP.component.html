@@ -5,11 +5,12 @@
     <mat-card-content>
       <mat-stepper #stepper >
         <mat-step [stepControl]="firstFormGroup" >
-            <form [formGroup]="firstFormGroup"  >
+            <form [formGroup]="firstFormGroup" (ngSubmit)="operate()" novalidate >
                 <ng-template matStepLabel>Datos generales</ng-template>
-                <div class="row">
-                  <input type="file" (change)="selectArchivoPrincipal($event)" style="display: none" id="btnFileUpload213"  accept="application/pdf" />
-                  <div [class]="selectedFiles==null ? 'col-12':'col-6'">
+                <div class="row">         
+                  <input type="file" (change)="selectArchivoPrincipal($event)" style="display: none" id="btnFileUpload213"  accept="application/pdf" />         
+                  <div class="col-md-6">
+
                     <div class="row mt-4">
                       <div class="col-6">
                         <mat-form-field appearance="fill" class="example-full-width">
@@ -114,7 +115,7 @@
                       </div>
                     </div>
                   </div>
-                  <div  class="col-md-6" *ngIf="selectedFiles!=null">
+                  <div  class="col-md-6" >
                     <iframe id="documentoPrincipal" style="width: 100%; height: 100%; margin-top: 5px; border: 1px solid black; border-radius: 5px;"></iframe>
                   </div>
                 </div>
@@ -152,9 +153,16 @@
               </form>
               <div>
                 <button mat-raised-button color="warn"  matStepperPrevious>Regresar</button>
-                <button mat-raised-button  color="accent" matStepperNext >Limpiar</button>
+                <button mat-raised-button  color="accent" matStepperNext (click)="stepper.reset()">Limpiar</button>
               </div>
         </mat-step>
     </mat-stepper>
     </mat-card-content>
+    <mat-card-actions align="end">
+      <button  class="btn btn-outline-primary mr-2" type="submit" [disabled]="firstFormGroup.invalid">GUARDAR DOCUMENTO</button>
+      <button class="btn btn-outline-danger mr-2" type="button" [routerLink]="['/recibir-documento']" >CANCELAR </button>
+    </mat-card-actions>
+    <mat-card-footer>
+      <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
+    </mat-card-footer>
 </mat-card>

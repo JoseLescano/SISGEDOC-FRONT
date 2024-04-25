@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Documento } from 'src/app/_model/documento.model';
 import { DocumentoService } from 'src/app/_service/documento.service';
+import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -17,8 +18,6 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['Estado', 'Nro', 'Origen', 'FechaDoc', 'Documento', 'Asunto', 'Acciones'];
   dataSource: MatTableDataSource<Documento>;
   cargando: boolean;
-
-  idOrganizacion:any='3302';
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -36,7 +35,7 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
   generarReporte(tipoReporte: number): void {
     this.cargando = true;
     if (tipoReporte === 2) {
-      this.documentoService.findDecretados(this.idOrganizacion, '01/04/2024', '31/12/2024').subscribe((data: any) => {
+      this.documentoService.findDecretados(environment.codigoOrganizacion, '01/04/2024', '31/12/2024').subscribe((data: any) => {
         this.createTable(data);
         this.cargando = false;
       }, (error: any)=> {
@@ -44,7 +43,7 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
         Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
       });
     } else if (tipoReporte === 3) {
-      this.documentoService.findArchivadosByOrganizacion(this.idOrganizacion).subscribe((data: any) => {
+      this.documentoService.findArchivadosByOrganizacion(environment.codigoOrganizacion).subscribe((data: any) => {
         this.createTable(data);
         this.cargando = false;
       }, (error: any)=> {
@@ -52,7 +51,7 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
         Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
       });
     } else if (tipoReporte === 6) {
-      this.documentoService.findDerivadosByOrganizacion(this.idOrganizacion).subscribe((data: any) => {
+      this.documentoService.findDerivadosByOrganizacion(environment.codigoOrganizacion).subscribe((data: any) => {
         this.createTable(data);
         this.cargando = false;
       }, (error: any)=> {

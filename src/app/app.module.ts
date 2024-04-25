@@ -32,6 +32,7 @@ import { RecibirComponent } from './pages/documento/mesaPartes/recibir/recibir.c
 import { EnvioExternoComponent } from './pages/documento/mesaPartes/envio-externo/envio-externo.component';
 import { RegistrarMPComponent } from './pages/documento/mesaPartes/registrar/registrarMP.component';
 import { EsquemaComponent } from './pages/organizacion/esquema/esquema.component';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { EsquemaComponent } from './pages/organizacion/esquema/esquema.component
     NgSelectModule,
     FormsModule,
     MatTooltipModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatSortModule
 
   ],
   exports:[],

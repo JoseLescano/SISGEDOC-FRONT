@@ -38,7 +38,7 @@ export class RegistrarMPComponent implements OnInit {
   stepperOrientation: Observable<StepperOrientation>;
   firstFormGroup : FormGroup;
   secondFormGroup : FormGroup;
-  form:FormGroup;
+  cargando: boolean;
 
   remitentes:Organizacion[] = [];
   clases:Clase[];
@@ -64,6 +64,7 @@ export class RegistrarMPComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this.cargando = true;
     this.initForm();
     this.organizacionService.getRemitentesInterno().subscribe((response:any)=>{
       this.remitentes = response.data;
@@ -74,6 +75,7 @@ export class RegistrarMPComponent implements OnInit {
       this.organizacionesDestino = response.data;
       this.copiasInformativas = response.data;
     });
+    this.cargando = false;
   }
 
   initForm(){
@@ -99,7 +101,7 @@ export class RegistrarMPComponent implements OnInit {
 
 
   getOrganizaciones(tipo:any){
-    debugger;
+    this.cargando = true;
     let tipoOrganizaciones  = this.firstFormGroup.get('tipoOrganizacion').value;
     this.remitentes = [];
     if (tipoOrganizaciones == 'E'){
@@ -111,24 +113,24 @@ export class RegistrarMPComponent implements OnInit {
         this.remitentes = response.data;
       });
     }
-
+    this.cargando = false;
 
   }
 
   operate(){
 
-    if (this.form.valid){
-      this.documentoar.tipoOrganizacion = this.form.value['tipoOrganizacion'];
-      this.documentoar.organizacionOrigen = this.form.value['organizacionRemitente'];
-      this.documentoar.clase = this.form.value['tipoDocumento'];
-      this.documentoar.nroOrden =  this.form.value['nroDocumento'];
-      this.documentoar.indicativo =  this.form.value['indicativo'];
-      this.documentoar.claveIndicativo= this.form.value['remitente'];
-      this.documentoar.prioridad = this.form.value['prioridad'];
-      this.documentoar.fechaDocumento= this.form.value['fechaDocumento'];
-      this.documentoar.folio = this.form.value['folio'];
-      this.documentoar.asunto= this.form.value['asunto'];
-      this.documentoar.destinos = this.form.value['destinos'];
+    if (this.firstFormGroup.valid){
+      this.documentoar.tipoOrganizacion = this.firstFormGroup.value['tipoOrganizacion'];
+      this.documentoar.organizacionOrigen = this.firstFormGroup.value['organizacionRemitente'];
+      this.documentoar.clase = this.firstFormGroup.value['tipoDocumento'];
+      this.documentoar.nroOrden =  this.firstFormGroup.value['nroDocumento'];
+      this.documentoar.indicativo =  this.firstFormGroup.value['indicativo'];
+      this.documentoar.claveIndicativo= this.firstFormGroup.value['remitente'];
+      this.documentoar.prioridad = this.firstFormGroup.value['prioridad'];
+      this.documentoar.fechaDocumento= this.firstFormGroup.value['fechaDocumento'];
+      this.documentoar.folio = this.firstFormGroup.value['folio'];
+      this.documentoar.asunto= this.firstFormGroup.value['asunto'];
+      this.documentoar.destinos = this.firstFormGroup.value['destinos'];
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
       this.documentoService.recibirDocumentoMP(this.documentoar).subscribe((response:any) =>{
          if (response.httpStatus=='CREATED'){
@@ -163,7 +165,6 @@ export class RegistrarMPComponent implements OnInit {
   }
 
   selectArchivoPrincipal(event: any): void {
-
     const fileTemp = event.target.files[0];
       const fileType = fileTemp.type;
       if (fileType !== 'application/pdf') {
@@ -177,8 +178,8 @@ export class RegistrarMPComponent implements OnInit {
           this.selectedFiles = event.target.files;
           environment.cantidadPaginasPDF(this.selectedFiles[0],
             (cpages:any)=>{
-              this.form.controls['folio'].setValue(cpages);
-              //this.form.controls['archivoPDF'].setValue(this.selectedFiles.item(0));
+              this.firstFormGroup.controls['folio'].setValue(cpages);
+              //this.firstFormGroup.controls['archivoPDF'].setValue(this.selectedFiles.item(0));
             }
           );
 
