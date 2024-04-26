@@ -10,6 +10,7 @@ import { BuscarDocumentoComponent } from './pages/documento/buscar-documento/bus
 import { RecibirComponent } from './pages/documento/mesaPartes/recibir/recibir.component';
 import { RegistrarMPComponent } from './pages/documento/mesaPartes/registrar/registrarMP.component';
 import { EsquemaComponent } from './pages/organizacion/esquema/esquema.component';
+import { ViewComponent } from './pages/documento/archivar/view/view.component';
 
 const routes: Routes = [
   {path:'', redirectTo:'pendientes', pathMatch:'full' },
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'recibir-documento', component: RecibirComponent },
   { path: 'registrar-documento', component: RegistrarMPComponent },
   { path: 'organizacion', component: EsquemaComponent },
+  { path: 'list-archivados', component: ViewComponent },
 ];
 
 @NgModule({

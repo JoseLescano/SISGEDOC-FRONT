@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { switchMap } from 'rxjs';
 import { Perfil } from 'src/app/_model/perfil';
 import { Persona } from 'src/app/_model/persona';
 import { PerfilService } from 'src/app/_service/perfil.service';

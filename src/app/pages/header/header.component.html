@@ -36,7 +36,7 @@
             <i class="fas fa-folder-open"></i>
             <span id="name"  style="font-size: 12px;">DOC. DECRETADOS</span>
           </button>
-          <button class="myButton" [routerLinkActive]="['active']" (click)="toggleSidenavAndInit(3)">
+          <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="list-archivados">
             <i class="fas fa-folder-open"></i>
             <span id="name"  style="font-size: 12px;">DOC. ARCHIVADOS</span>
           </button>

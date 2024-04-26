@@ -33,6 +33,8 @@ import { EnvioExternoComponent } from './pages/documento/mesaPartes/envio-extern
 import { RegistrarMPComponent } from './pages/documento/mesaPartes/registrar/registrarMP.component';
 import { EsquemaComponent } from './pages/organizacion/esquema/esquema.component';
 import { MatSortModule } from '@angular/material/sort';
+import { ViewDocumentoComponent } from './pages/documento/view-documento/view-documento.component';
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,9 @@ import { MatSortModule } from '@angular/material/sort';
     RecibirComponent,
     EnvioExternoComponent,
     RegistrarMPComponent,
-    EsquemaComponent
+    EsquemaComponent,
+    ViewComponent,
+    ViewDocumentoComponent
 
 
   ],
@@ -68,7 +72,9 @@ import { MatSortModule } from '@angular/material/sort';
 
   ],
   exports:[],
-  providers: [DocumentoService, ClaseService, OrganizacionService],
+  providers: [DocumentoService, ClaseService, OrganizacionService,
+    // {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

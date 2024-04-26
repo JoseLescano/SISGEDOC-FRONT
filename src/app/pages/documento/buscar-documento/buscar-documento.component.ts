@@ -42,14 +42,6 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
          this.cargando = false;
         Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
       });
-    } else if (tipoReporte === 3) {
-      this.documentoService.findArchivadosByOrganizacion(environment.codigoOrganizacion).subscribe((data: any) => {
-        this.createTable(data);
-        this.cargando = false;
-      }, (error: any)=> {
-         this.cargando = false;
-        Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
-      });
     } else if (tipoReporte === 6) {
       this.documentoService.findDerivadosByOrganizacion(environment.codigoOrganizacion).subscribe((data: any) => {
         this.createTable(data);
