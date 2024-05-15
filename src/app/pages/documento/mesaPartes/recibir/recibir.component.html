@@ -51,7 +51,7 @@
                   <div class="example-button-row">
                     <div class="example-flex-container">
                       <div class="example-button-container">
-                        <button mat-mini-fab color="primary" class="mr-2"  >
+                        <button mat-mini-fab color="primary" class="mr-2" (click)="verDocumento(row)"  >
                           <i class="far fa-file-pdf"></i>
                         </button>
                         <button mat-mini-fab color="accent"  >
@@ -80,8 +80,8 @@
           </div>
     </mat-card-content>
     <mat-card-actions align="end">
-        <button mat-raised-button color="primary" routerLink="/registrar-documento" >Nuevo registro</button>
-        <button mat-raised-button color="accent">Enviar a dependencia Externa</button>
+        <button mat-raised-button color="primary" routerLink="../registrar-documento"  >Nuevo registro</button>
+        <button mat-raised-button color="accent" routerLink="../envio-externo" >Enviar a dependencia Externa</button>
     </mat-card-actions>
     <mat-card-footer>
       <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>

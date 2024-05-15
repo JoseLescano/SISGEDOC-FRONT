@@ -12,7 +12,6 @@ import { PrioridadService } from 'src/app/_service/prioridad.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 
-import {BreakpointObserver} from '@angular/cdk/layout';
 import {StepperOrientation} from '@angular/material/stepper';
 import {Observable, map} from 'rxjs';
 
@@ -130,7 +129,7 @@ export class RegistrarMPComponent implements OnInit {
       this.documentoar.fechaDocumento= this.firstFormGroup.value['fechaDocumento'];
       this.documentoar.folio = this.firstFormGroup.value['folio'];
       this.documentoar.asunto= this.firstFormGroup.value['asunto'];
-      this.documentoar.destinos = this.firstFormGroup.value['destinos'];
+      this.documentoar.destinos = this.secondFormGroup.value['destinos'];
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
       this.documentoService.recibirDocumentoMP(this.documentoar).subscribe((response:any) =>{
          if (response.httpStatus=='CREATED'){

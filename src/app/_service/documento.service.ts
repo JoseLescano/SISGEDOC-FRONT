@@ -17,7 +17,7 @@ export class DocumentoService  extends GenericService<Documento> {
     super(http, `${environment.HOST}documentos/`)
    }
 
-   setDocumentoCambio(data: Documento[]){
+  setDocumentoCambio(data: Documento[]){
     this.DocumentoCambio.next(data);
   }
 
@@ -38,7 +38,8 @@ export class DocumentoService  extends GenericService<Documento> {
   }
 
   findDecretados(codigoOrganizacion:any, fechaI?:any, fechaF?:any){
-    return this.http.get<Documento[]>(`${environment.HOST}documentos/findDecretados`, { params: { codigoInterno: codigoOrganizacion, fi:fechaI, ff:fechaF }});
+    return this.http.get<Documento[]>(`${environment.HOST}documentos/findDecretados`, 
+      { params: { codigoInterno: codigoOrganizacion, fi:fechaI, ff:fechaF }});
   }
 
   findArchivadosByOrganizacion(codigoInterno:any){
@@ -49,8 +50,15 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get<Documento[]>(`${environment.HOST}documentos/findDerivadosByOrganizacion/${codigoInterno}`);
   }
 
+  findRemitidos(codigoInterno:any){
+    return this.http.get<Documento[]>(`${environment.HOST}documentos/findRemitidos/${codigoInterno}`);
+  }
+
+  findEnviadosExternosMP(codigoInterno:any){
+    return this.http.get<Documento[]>(`${environment.HOST}documentos/findEnviadosExternosMP/${codigoInterno}`);
+  }
+
   recibirDocumentoMP(documento: any){
-    debugger;
     let formData:FormData = new FormData();
     formData.append('tipoOrganizacion', documento.tipoOrganizacion);
     formData.append('organizacionOrigen', documento.organizacionOrigen);
@@ -69,6 +77,24 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/recibirDocumentoMP`, formData);
   }
 
+  envioExterno(documento: any){
+    let formData:FormData = new FormData();
+    formData.append('clase', documento.clase);
+    formData.append('nroOrden', documento.nroOrden);
+    formData.append('indicativo', documento.indicativo);
+    formData.append('claveIndicativo', documento.claveIndicativo);
+    formData.append('prioridad', documento.prioridad);
+    formData.append('fechaDocumento', environment.convertDateToStr(documento.fechaDocumento));
+    formData.append('folio', documento.folio);
+    formData.append('asunto', documento.asunto);
+    formData.append('destinos', documento.destinos);
+    formData.append('copiasInformativas', documento.copiasInformativas);
+    formData.append('archivoPrincipal', documento.archivoPrincipal);
+    formData.append('anexo', documento.anexos);
+    formData.append('organizacionRemitente', documento.organizacionOrigen);
+    return this.http.post(`${environment.HOST}documentos/envioExterno`, formData);
+  }
+
   archivarDocumento(vidDocumento:any, orgOrigen:any,usuario:any, observaciones:any,url_pdf?:any){
     let formData:FormData = new FormData();
     formData.append('vidDocumento', vidDocumento);
@@ -81,6 +107,10 @@ export class DocumentoService  extends GenericService<Documento> {
 
   findDecretoByDocumento(codigoInterno:any){
     return this.http.get(`${environment.HOST}documentos/findDecretoByDocumento/${codigoInterno}`);
+  }
+
+  findParaParte(codigoInterno:any){
+    return this.http.get(`${environment.HOST}documentos/findParaParte/${codigoInterno}`);
   }
 
 }

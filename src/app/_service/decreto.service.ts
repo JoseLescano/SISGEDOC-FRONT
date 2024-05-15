@@ -1,0 +1,34 @@
+import { Injectable } from '@angular/core';
+import { GenericService } from './generic.service';
+import { Decreto } from '../_model/decreto';
+import { Observable, Subject } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { DecretoDTO } from '../_DTO/DecretoDTO';
+import { DecretoDocumentoDTO } from '../_DTO/DecretoDocumentoDTO';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DecretoService extends GenericService<Decreto> {
+
+  private decretoCambio = new Subject<Decreto[]>();
+
+  constructor(protected override http: HttpClient) {
+    super(http, `${environment.HOST}decretos`)
+  }
+
+  ultimoDecreto(codigoDocumento:any, codigoDestino:any){
+    return this.http.get<Decreto>(`${environment.HOST}decretos/ultimoDecreto`, 
+      { params: 
+        { codigoDocumento: codigoDocumento, codigoDestino:codigoDestino }
+      });
+  }
+
+  decretarDocumento(decretoDocumento: DecretoDocumentoDTO): Observable<any>{
+    return this.http.post(`${environment.HOST}decretos/decretarDocumento`,  decretoDocumento);
+  }
+
+
+
+}

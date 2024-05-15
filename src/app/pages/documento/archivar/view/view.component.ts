@@ -20,7 +20,7 @@ export class ViewComponent implements OnInit, AfterViewInit {
   // displayedColumns: string[] = ['Estado', 'Nro', 'Origen', 'FechaDoc', 'Documento', 'Asunto', 'Acciones'];
   displayedColumns: string[] = ['Nro', 'Asunto', 'Origen', 'FechaDoc', 'Documento',  'Acciones'];
   dataSource: MatTableDataSource<Documento>;
-  cargando: boolean;
+  cargando: boolean = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -37,6 +37,7 @@ export class ViewComponent implements OnInit, AfterViewInit {
   }
 
   generarReporte(): void {
+    this.cargando = true;
     this.documentoService.findArchivadosByOrganizacion(environment.codigoOrganizacion).subscribe((data: any) => {
       this.createTable(data);
       this.cargando = false;

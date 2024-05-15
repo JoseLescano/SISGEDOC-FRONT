@@ -1,4 +1,4 @@
-<div class="example-container">
+<!-- <div class="example-container">
   <mat-sidenav-container class="example-sidenav-container">
       <mat-sidenav id="sidenav" #sidenav style="width: 220px" mode=side opened="true" disableClose="true">
           <br>
@@ -7,16 +7,16 @@
           </div>
           <br>
           <mat-divider></mat-divider>
-          <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="/">
+          <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="./pendientes">
             <i class="fas fa-folder-open"></i>
               <span id="name"  style="font-size: 12px;">DOC. RECIBIDOS</span>
           </button>
-          <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="/">
+          <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="parte-diario">
             <i class="fas fa-file-signature"></i>
               <span id="name"  style="font-size: 12px;">DOC. PARA LA FIRMA</span>
           </button>
           <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="/">
-            <i class="fas fa-pen-square mat-icon" ></i>
+            <i class="fas fa-pen-square" ></i>
             <span id="name"  style="font-size: 12px;">DOC. PARA CORREGIR</span>
           </button>
           <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="crear-documento">
@@ -40,7 +40,7 @@
             <i class="fas fa-folder-open"></i>
             <span id="name"  style="font-size: 12px;">DOC. ARCHIVADOS</span>
           </button>
-          <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="buscar-documento">
+          <button class="myButton" [routerLinkActive]="['active']" (click)="sidenav.toggle()" routerLink="list-remitidos">
             <i class="fas fa-folder-open"></i>
             <span id="name"  style="font-size: 12px;">DOC. REMITIDOS</span>
           </button>
@@ -87,5 +87,29 @@
           <router-outlet></router-outlet>
       </mat-sidenav-content>
   </mat-sidenav-container>
-</div>
+</div> -->
 <!-- (click)="logout()" -->
+
+
+<div class="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed': ''">
+  <div class="logo-container">
+      <button class="logo" (click)="toggleCollapse()">S</button>
+      <div class="logo-text" @fadeInOut *ngIf="collapsed">SISGEDO</div>
+      <button class="btn-close" @rotate *ngIf="collapsed" (click)="closeSidenav()">
+        <i class="fas fa-times"></i>
+      </button>
+  </div>
+  <ul class="sidenav-nav">
+      <li class="sidenav-nav-item" *ngFor="let data of menus">
+        <!-- *ngIf="(codigoOrganizacion=='120210' || codigoOrganizacion=='12021002') && rolIngresado=='001'" -->
+          <a class="sidenav-nav-link" [routerLink]="[data.url]" 
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{exact: true}">
+              <i class="sidenav-link-icon" [class]="data.icon"></i>
+              <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">
+                  {{data.nombre}}
+              </span>
+          </a>
+      </li>
+  </ul>
+</div>

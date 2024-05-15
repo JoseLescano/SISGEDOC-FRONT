@@ -1,34 +1,125 @@
-<div class="container mt-4">
-  <mat-card>
-    <mat-card-subtitle>
-      <div class="row">
-        <div class="col-md-4 d-flex justify-content-center align-items-center">
-          <i class="fas fa-file-invoice" style="font-size: 12px; color: #e78078;">
-          </i>
-          <label style="font-size: 12px; margin-left: 5px; ">
-            <span> N° DOCUMENTO: <strong>90965</strong></span>
-          </label>
-        </div>
-        <div class="col-md-4 d-flex justify-content-center align-items-center">
-          <label style="font-size: 12px">
-            <span> PERIODO: <strong>2024</strong>
-            </span>
-          </label>
-        </div>
-        <div class="col-md-4 d-flex justify-content-center align-items-center">
-          <label style="font-size: 12px;">
-            <span >PLAZO LÍMITE: <strong>---</strong> </span>
-          </label>
+<mat-card class="m-2">
+  <mat-card-header class="title-form">
+    <mat-card-title >DECRETO DE DOCUMENTO</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="row"  >
+      <div class="col-md-4">
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>NUM.DE REGISTRO</mat-label>
+          <input matInput disabled [(ngModel)]="idDocumento">
+        </mat-form-field>
+      </div>
+      <!-- <div class="col-md-4">
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>ORIGEN</mat-label>
+          <input matInput disabled value="DIRECCION DE PERSONAL DEL EJERCITO">
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>DOCUMENTO</mat-label>
+          <input matInput disabled value="OFICIO N° 152">
+        </mat-form-field>
+      </div>
+      <div class="col-md-12">
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>ASUNTO</mat-label>
+          <input matInput disabled value="ASUNTO DE PRUEBA">
+        </mat-form-field>
+      </div> -->
+    </div>
+    <mat-divider></mat-divider>
+    
+    <div class="row mt-2">
+      <div class="col-md-12 mt-2">
+        <strong style="margin-right: 5px;">DETALLES DE DECRETO</strong>
+        <button mat-mini-fab color="primary" (click)="addDecreto()" aria-label="Example icon button with a delete icon">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+    </div>
+    <form [formGroup]="formParent" novalidate (ngSubmit)="operate()" >
+      <div  formArrayName="decretos">
+        <div *ngFor="let de of getCrl('decretos', formParent).controls; index as i">
+          <div [formGroupName]="i" style="border: 2px; border-color: #675b45; border-style: dotted; 
+                                        border-radius: 10px;  margin-top: 3px;padding: 10px; ">
+            <div class="alert alert-info alert-dismissible  mt-2 fade show" role="alert">
+              <i class="fas fa-info-circle"></i>
+              <strong style="margin-left: 5px;"> Número de decreto: {{i+1}}</strong> 
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="remove(i)" ></button>
+            </div>
+            <div class="row mt-2" >
+              <div class="col-md-4">
+                <ng-select placeholder="ORGANIZACION REMITENTE" [virtualScroll]=true formControlName="destino"  class="example-full-width">
+                    <mat-option>SELECCIONE</mat-option>
+                    <ng-option *ngFor="let c of destinos" [value]="c" >{{c.acronimo}}</ng-option>
+                </ng-select>
+                  <!-- <div *ngIf="firstFormGroup.get('organizacionRemitente').errors && firstFormGroup.get('organizacionRemitente').dirty" >
+                    <mat-error *ngIf="firstFormGroup.get('organizacionRemitente').hasError('required')">* Campo requerido</mat-error>
+                  </div> -->
+              </div>
+              <div class="col-md-4" >
+                <mat-form-field appearance="fill" class="example-full-width">
+                  <mat-label>PRIORIDAD</mat-label>
+                  <mat-select matInput formControlName="prioridad" >
+                    <mat-option>SELECCIONE</mat-option>
+                    <mat-option  *ngFor="let c of prioridades"  [value]="c">
+                      {{c.nombre}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error>*Campo requerido</mat-error>
+              </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field appearance="fill" class="example-full-width">
+                  <mat-label>PLAZO LIMITE</mat-label>
+                  <input matInput [matDatepicker]="dp" formControlName="fechaLimite">
+                  <mat-hint>DD/MM/YYYY</mat-hint>
+                  <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                  <mat-datepicker #dp></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-12">
+                <!-- <strong style="margin-right: 5px;">LISTA DE ACCIONES</strong>
+
+                <div style="display: grid; grid-template-columns: auto auto auto; font-size: 15px; margin-left: 5px;">
+                  <ng-container  *ngFor="let item of acciones"   >
+                    <mat-checkbox     [value]="item.codigo"  (change)="onCheckboxChange(item.codigo, i)" formArrayName="acciones">
+                      {{ item.nombre }}
+                    </mat-checkbox>
+                  </ng-container>
+                </div> -->
+                <ng-select placeholder="LISTA DE ACCIONES" [multiple]="true" [virtualScroll]=true formControlName="acciones"  class="example-full-width">
+                  <mat-option>SELECCIONE</mat-option>
+                  <ng-option *ngFor="let c of acciones" [value]="c.codigo" >{{c.nombre}}</ng-option>
+                </ng-select>
+              </div>
+              <div class="col-md-12 mt-2">
+                <mat-form-field appearance="fill" class="example-full-width">
+                  <mat-label>OBSERVACIONES</mat-label>
+                  <textarea matInput rows="2" formControlName="observaciones" ></textarea>
+                  <!-- <div *ngIf="form.get('asunto').errors && form.get('asunto').dirty" >
+                    <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('asunto').hasError('required')">* Campo requerido</small>
+                    <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('asunto').hasError('minlength')">** Min of 10 characters</small>
+                  </div> -->
+              </mat-form-field>
+              </div>              
+            </div>
+            <!-- <mat-divider></mat-divider> -->
+          </div>
         </div>
       </div>
-    </mat-card-subtitle>
-    <mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-raised-button color="primary" type="submit" [disabled]="formParent.invalid && ultimoDecreto!=null" >Guardar</button>
+        <button mat-raised-button color="warn" type="button" routerLink="/principal" >Cancelar</button>
+      </mat-card-actions>
+    </form>
+    
+  </mat-card-content>
+  <mat-card-footer>
+    <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
+  </mat-card-footer>
+</mat-card>
 
-    </mat-card-content>
-    <mat-card-actions align="end">
-      <button mat-raised-button color="primary">Guardar</button>
-      <button mat-raised-button color="warn">Cancelar</button>
-    </mat-card-actions>
-  </mat-card>
-</div>
-
+<div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{formParent.value | json}}</div>

@@ -16,19 +16,15 @@ import Swal from 'sweetalert2';
 export class CrearDocumentoComponent implements OnInit {
 
   form:FormGroup;
-
-  // firmanteControl:FormControl;
-  // firmanteFilter$:Observable<Organizacion[]>;
+  cargando: boolean = false;
   firmantes:Organizacion[];
-
   organizacionesDestino:Organizacion[];
   copiasInformativas:Organizacion[];
   tipoDocumentos:Clase[];
   indicativo:string="";
-
   clases:Clase[];
-
-  codigoOrganizacion:any=environment.codigoOrganizacion;
+  selectedFiles: any = null;
+  url_pdf = '';
 
   // =======================================================================================================
 
@@ -36,21 +32,19 @@ export class CrearDocumentoComponent implements OnInit {
               private claseService: ClaseService) { }
 
   ngOnInit(): void {
+    this.cargando = true;
     this.initForm();
-    this.organizacionService.findFirmantes(this.codigoOrganizacion).subscribe((response:any)=>  this.firmantes = response.data );
-    // this.firmanteFilter$ = this.firmanteControl.valueChanges.pipe(map(val => this.filterfirmantes(val)));
-    this.claseService.findForCrearDocumento().subscribe((response:any)=> this.clases = response.data );
-    this.organizacionService.destinatariosExternoByCodigo(this.codigoOrganizacion).subscribe((response:any)=> {
-      this.organizacionesDestino = response.data;
-      this.copiasInformativas = response.data;
+    this.organizacionService.findFirmantes(environment.codigoOrganizacion).subscribe((response:any)=>  {
+      this.firmantes = response.data
     });
+    // this.firmanteFilter$ = this.firmanteControl.valueChanges.pipe(map(val => this.filterfirmantes(val)));
+    this.claseService.findForCrearDocumento().subscribe((response:any)=> this.clases = response.data );    
+    this.cargando = false;
   }
 
   // =======================================================================================================
 
   initForm(){
-    // this.firmanteControl = new FormControl('', [Validators.required]);
-
     this.form = new FormGroup({
       'firmante': new FormControl('', [Validators.required]),
       'tipoDocumento': new FormControl('', [Validators.required]),
@@ -59,22 +53,32 @@ export class CrearDocumentoComponent implements OnInit {
       'destinatarios': new FormControl(new Array<String>,[Validators.required]),
       'copiaInformativa': new FormControl(new Array<String>),
       'asunto': new FormControl('', [Validators.required, Validators.minLength(10)]),
-      'observaciones': new FormControl(''),
+      // 'observaciones': new FormControl(''),
     });
 
     this.form.controls['nroCorrelativo'].disable();
 
   }
 
-  // filterfirmantes(val: any){
-  //   if(val.vid>0){
-  //     return this.firmantes.filter(el =>
-  //       el.acronimo.toLowerCase().includes(val.acronimo.toLowerCase()));
-  //   }else {
-  //     return this.firmantes.filter(el =>
-  //       el.acronimo.toLowerCase().includes(val?.toLowerCase()));
-  //   }
-  // }
+  findDestinatarios(){
+    
+    let firmante = this.form.get('firmante').value;
+    let tipoDocumento = this.form.get('tipoDocumento').value;
+
+    if (firmante!='' && tipoDocumento !=''){
+      this.cargando = true;
+      this.form.controls['destinatarios'].setValue('');
+      this.form.controls['copiaInformativa'].setValue('');
+      this.organizacionesDestino = [];
+      this.copiasInformativas = [];
+
+      this.organizacionService.destinatariosExternoByCodigo(firmante.codigoInterno, tipoDocumento).subscribe((response:any)=> {
+        this.organizacionesDestino = response.data;
+        this.copiasInformativas = response.data;
+      });
+      this.cargando = false;
+    }
+  }
 
 
   getIndicativo(){
@@ -83,10 +87,6 @@ export class CrearDocumentoComponent implements OnInit {
     this.form.get('indicativo').setValue(organizacion.indicativo);
   }
 
-
-  // showFirmantes(val: any){
-  //   return val ? `${val.acronimo}`: val;
-  // }
 
   operate(){
 
@@ -113,6 +113,60 @@ export class CrearDocumentoComponent implements OnInit {
 
     this.validarPlantilla();
 
+  }
+
+  get nativeDocument(): any {
+    return document;
+  }
+
+  agregarArchivo() {
+    this.nativeDocument.getElementById('documentoPrincipal').click();
+  }
+
+  selectArchivoPrincipal(event: any): void {
+    const fileTemp = event.target.files[0];
+      const fileType = fileTemp.type;
+      if (fileType !== 'application/pdf') {
+        event.target.value = ''; // Borra la selección del archivo
+        this.selectedFiles=null;
+        Swal.fire('Lo sentimos', `Debe de seleccionar un documento PDF`, 'info');
+      }else{
+        if(event.target.files.length>0){
+          this.selectedFiles = event.target.files;
+          this.url_pdf = this.selectedFiles[0].name;
+          this.selectedFiles = event.target.files;
+          environment.cantidadPaginasPDF(this.selectedFiles[0],
+            (cpages:any)=>{
+              //this.firstFormGroup.controls['archivoPDF'].setValue(this.selectedFiles.item(0));
+            }
+          );
+
+          this.fileInIframe(this.selectedFiles[0],"documentoPrincipal");
+          let byteArray = new Uint8Array(
+            atob(this.selectedFiles[0])
+              .split('')
+              .map((char) => char.charCodeAt(0))
+          );
+          let file = new Blob([byteArray], { type: 'application/pdf' });
+            var rf_file = new File([file], URL.createObjectURL(file), {
+              type: 'application/pdf',
+            });
+          let list = new DataTransfer();
+          list.items.add(rf_file);
+          this.selectedFiles = list.files;
+        }
+      }
+    }
+
+    fileInIframe(file:any,idFrame:any){
+      let fileURL = URL.createObjectURL(file);
+      this.url_pdf = fileURL;
+      let iframe: any = document.getElementById(''+idFrame) as HTMLIFrameElement;
+      iframe.contentWindow.location.replace(fileURL);
+    }
+
+  limpiar(){
+    this.form.reset();
   }
 
 }

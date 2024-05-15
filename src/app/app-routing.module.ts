@@ -1,30 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PendienteComponent } from './pages/documento/pendiente/pendiente.component';
-import { DecetarComponent } from './pages/documento/decetar/decetar.component';
-import { AccionesComponent } from './pages/documento/acciones/acciones.component';
-import { RegistrarComponent } from './pages/documento/archivar/registrar/registrar.component';
-import { CrearDocumentoComponent } from './pages/documento/crear-documento/crear-documento.component';
-import { DobleAutentificacionComponent } from './pages/doble-autentificacion/doble-autentificacion.component';
-import { BuscarDocumentoComponent } from './pages/documento/buscar-documento/buscar-documento.component';
-import { RecibirComponent } from './pages/documento/mesaPartes/recibir/recibir.component';
-import { RegistrarMPComponent } from './pages/documento/mesaPartes/registrar/registrarMP.component';
-import { EsquemaComponent } from './pages/organizacion/esquema/esquema.component';
-import { ViewComponent } from './pages/documento/archivar/view/view.component';
+import { PrincipalComponent } from './pages/principal/principal.component';
+import { LoginComponent } from './pages/login/login.component';
 
 const routes: Routes = [
-  {path:'', redirectTo:'pendientes', pathMatch:'full' },
-  {path:'pendientes', component:PendienteComponent},
-  {path:'decretar', component:DecetarComponent},
-  { path: 'acciones/:codigoDocumento', component: AccionesComponent },
-  { path: 'archivar/:codigoDocumento', component: RegistrarComponent },
-  { path: 'crear-documento', component: CrearDocumentoComponent },
-  { path: 'resetear-authentificacion', component: DobleAutentificacionComponent },
-  { path: 'buscar-documento/:tipoReporte', component: BuscarDocumentoComponent },
-  { path: 'recibir-documento', component: RecibirComponent },
-  { path: 'registrar-documento', component: RegistrarMPComponent },
-  { path: 'organizacion', component: EsquemaComponent },
-  { path: 'list-archivados', component: ViewComponent },
+  { path: '',   redirectTo: 'login', pathMatch: 'full' }, // redirect to `first-component` },
+  { path: 'login', component: LoginComponent },
+  { path: 'principal', component: PrincipalComponent,
+  loadChildren: () =>
+  import('./pages/pages.module').then(m => m.PagesModule) },
+  // { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({

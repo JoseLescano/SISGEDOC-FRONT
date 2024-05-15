@@ -3,7 +3,11 @@ import * as moment from "moment";
 export const environment = {
   production: false,
   HOST: 'http://localhost:8080/',
-  codigoOrganizacion: '3302010102',
+  // codigoOrganizacion: '12021002',
+  // codigoOrganizacion: '0211090101',
+  codigoOrganizacion: '3302',
+
+  rol: '002',
 
   cantidadPaginasPDF:function(inFile:any,incallback:any){
     var reader:any = new FileReader();
@@ -18,7 +22,7 @@ export const environment = {
     var myDate = moment(date).format(inFormat);
     return myDate;
   },
-  convertDateToStr:function(inDate:any,inFormat:any="dd-MM-YYYY"){
+  convertDateToStr:function(inDate:any,inFormat:any="DD-MM-YYYY"){
     var date=new Date(inDate);
     var myDate = moment(date).format(inFormat);
     return myDate;

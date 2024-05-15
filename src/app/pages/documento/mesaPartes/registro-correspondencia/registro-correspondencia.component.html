@@ -1,0 +1,120 @@
+<mat-card class="m-2">
+    <mat-card-header class="title-form">
+        <mat-card-title >REGISTRO DE CORRESPONDENCIA</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="operate()" novalidate >
+            <div class="row">    
+                <div class="col-12">
+                    <ng-select placeholder="ORGANIZACION REMITENTE" [virtualScroll]=true  
+                        formControlName="origen" (change)="mostrarPanelRemitenteExterno($event)"  >
+                        <mat-option>SELECCIONE</mat-option>
+                        <ng-option *ngFor="let c of remitentes" [value]="c.codigoInterno" >{{c.acronimo}}</ng-option>
+                      </ng-select>
+                      <!-- <div *ngIf="firstFormGroup.get('organizacionRemitente').errors && firstFormGroup.get('organizacionRemitente').dirty" >
+                        <mat-error *ngIf="firstFormGroup.get('organizacionRemitente').hasError('required')">* Campo requerido</mat-error>
+                      </div> -->
+                </div> 
+                <!-- 6726 -->
+                <div class="col-6" *ngIf="mostrarTipoIdentidad">
+                    <mat-form-field appearance="fill" class="example-full-width">
+                        <mat-label>TIPO DOC. IDENTIDAD</mat-label>
+                        <mat-select formControlName="tipoOrganizacion" formControlName="tipoIdentidad"  (valueChange)="mostrarFormExterno($event)" >
+                            <mat-option>SELECCIONE</mat-option>
+                            <mat-option  *ngFor="let c of tipoDocumento"  [value]="c.codigo">
+                            {{c.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-6" *ngIf="(mostrarFormDatos!=3) && mostrarTipoIdentidad">
+                    <mat-form-field appearance="fill" class="example-full-width">
+                        <mat-label>NÚMERO DE DOCUMENTO</mat-label>
+                        <input matInput type="number" formControlName="numeroIdentidad" >
+                    </mat-form-field>
+                </div>
+
+                <div class="col-6" *ngIf="mostrarFormDatos==0 && mostrarTipoIdentidad">
+                    <mat-form-field appearance="fill" class="example-full-width">
+                        <mat-label>ACRONIMO</mat-label>
+                        <input matInput type="text" formControlName="nombreCortoEntidad"  >
+                    </mat-form-field>
+                </div>
+
+                <div class="col-6" *ngIf="mostrarFormDatos!=null && mostrarTipoIdentidad">
+                    <mat-form-field appearance="fill" class="example-full-width">
+                        <mat-label>RAZÓN SOCIAL ó NOMBRES y APELLIDOS</mat-label>
+                        <input matInput type="text" formControlName="nombreCompletoEntidad" >
+                    </mat-form-field>
+                </div>
+                  
+                <div class="col-12">
+                <ng-select placeholder="ORGANIZACION DESTINO" [virtualScroll]=true formControlName="destino"   >
+                    <mat-option>SELECCIONE</mat-option>
+                    <ng-option *ngFor="let c of remitentes" [value]="c.codigoInterno" >{{c.acronimo}}</ng-option>
+                    </ng-select>
+                    <!-- <div *ngIf="firstFormGroup.get('organizacionRemitente').errors && firstFormGroup.get('organizacionRemitente').dirty" >
+                    <mat-error *ngIf="firstFormGroup.get('organizacionRemitente').hasError('required')">* Campo requerido</mat-error>
+                    </div> -->
+                </div> 
+                <div class="col-3">
+                    <mat-form-field appearance="fill" class="example-full-width">
+                        <mat-label>SELECCIONE FECHA</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="fechaDocumento">
+                        <mat-hint>MM/DD/YYYY</mat-hint>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-3">
+                    <ng-select placeholder="TIPO DOCUMENTO" [virtualScroll]=true formControlName="clase" class="example-full-width"  >
+                        <mat-option>SELECCIONE</mat-option>
+                        <ng-option *ngFor="let c of clases" [value]="c.codigo" >{{c.nombre}}</ng-option>
+                    </ng-select>
+                    <!-- <div *ngIf="firstFormGroup.get('tipoDocumento').errors && firstFormGroup.get('tipoDocumento').dirty" >
+                        <small class="fw-bold text-danger text-uppercase" *ngIf="firstFormGroup.get('tipoDocumento').hasError('required')">* Campo requerido</small>
+                    </div> -->
+                </div>
+                <div class="col-3">
+                    <mat-form-field appearance="fill" class="example-full-width">
+                        <mat-label>INDICATIVO</mat-label>
+                        <input matInput type="text" formControlName="indicativo"  >
+                      </mat-form-field>
+                </div>
+                <div class="col-3">
+                    <mat-form-field appearance="fill" class="example-full-width">
+                        <mat-label>FOLIO</mat-label>
+                        <input matInput type="number" formControlName="folio" >
+                    </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                    <mat-form-field appearance="fill" class="example-full-width">
+                        <mat-label>ASUNTO</mat-label>
+                        <textarea matInput rows="5" formControlName="asunto" ></textarea>
+                        <!-- <div *ngIf="form.get('asunto').errors && form.get('asunto').dirty" >
+                          <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('asunto').hasError('required')">* Campo requerido</small>
+                          <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('asunto').hasError('minlength')">** Min of 10 characters</small>
+                        </div> -->
+                    </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                    <mat-form-field appearance="fill" class="example-full-width">
+                        <mat-label>OBSERVACIONES</mat-label>
+                        <textarea matInput rows="3" formControlName="observaciones" ></textarea>
+                    </mat-form-field>
+                </div>
+            </div>  
+            <mat-card-actions >
+                <button mat-flat-button color="primary" type="submit" style="margin-right: 2px;" [disabled]="form.invalid" >REGISTRAR</button>
+                <button mat-flat-button color="accent"  type="button" style="margin-right: 2px;" (click)="cancelar()" >CANCELAR</button>
+                <button mat-flat-button color="warn"    type="button" routerLink="../list-correspondencia" >VER LISTA</button>
+                <button mat-stroked-button color="primary">ENTREGAR DOCUMENTO</button>
+            </mat-card-actions>
+        </form>
+    </mat-card-content>
+    <mat-card-footer>
+        <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
+    </mat-card-footer>
+    <div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{form.value | json}}</div>
+</mat-card>

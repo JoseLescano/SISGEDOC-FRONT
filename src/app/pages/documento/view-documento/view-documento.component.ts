@@ -30,7 +30,8 @@ export class ViewDocumentoComponent implements OnInit {
   }
 
   getIdDocumento(): void {
-    this.vidDocumento = this.data.codigoInterno;
+    debugger;
+    this.vidDocumento = this.data.codigo;
     this.viewDocumento(this.vidDocumento);
   }
 

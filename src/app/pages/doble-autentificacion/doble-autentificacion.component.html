@@ -43,8 +43,8 @@
     </mat-card-header>
     <mat-card-content>
         <mat-form-field appearance="fill" class="example-full-width">
-          <mat-label>Filter</mat-label>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+          <mat-label>Filtro</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Ingrese valor" #input>
         </mat-form-field>
 
         <div class="mat-elevation-z8">
@@ -65,8 +65,8 @@
               <td mat-cell *matCellDef="let row"> {{row.rol.nombre }} </td>
             </ng-container>
 
-            <ng-container matColumnDef="Puesto">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Puesto</th>
+            <ng-container matColumnDef="Organizacion">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Organizacion</th>
               <td mat-cell *matCellDef="let row"> {{row.organizacion.acronimo }} </td>
             </ng-container>
 
@@ -89,7 +89,7 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             <tr class="mat-row" *matNoDataRow>
-              <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+              <td class="mat-cell" colspan="4">Sin datos obtenidos...</td>
             </tr>
           </table>
 

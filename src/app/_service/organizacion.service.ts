@@ -28,8 +28,11 @@ export class OrganizacionService extends GenericService<Organizacion> {
     return this.http.get<Organizacion[]>(`${environment.HOST}organizaciones/findFirmantes/${codigoInterno}`);
   }
 
-  destinatariosExternoByCodigo(codigoInterno: any){
-    return this.http.get<Organizacion[]>(`${environment.HOST}organizaciones/destinatariosExternoByCodigo/${codigoInterno}`);
+  destinatariosExternoByCodigo(codigoInterno: any, tipoDocumento: any){
+    return this.http.get<Organizacion[]>(`${environment.HOST}organizaciones/destinatariosExternoByCodigo`,
+      { params: 
+        { codigoInterno: codigoInterno, tipoDocumento:tipoDocumento }
+      });
   }
 
   getRemitentesInterno(){
@@ -46,6 +49,10 @@ export class OrganizacionService extends GenericService<Organizacion> {
 
   getAllExternas(){
     return this.http.get<Organizacion[]>(`${environment.HOST}organizaciones/getAllExternas`);
+  }
+
+  getWithCodigoCopere(){
+    return this.http.get<Organizacion[]>(`${environment.HOST}organizaciones/getWithCodigoCopere`);
   }
 
 }

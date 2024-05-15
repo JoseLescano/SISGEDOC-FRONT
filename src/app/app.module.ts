@@ -1,61 +1,29 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { PendienteComponent } from './pages/documento/pendiente/pendiente.component';
-import { ViewComponent } from './pages/documento/archivar/view/view.component';
-import { DocumentoService } from './_service/documento.service';
 import { HttpClientModule } from '@angular/common/http';
-import { AccionesComponent } from './pages/documento/acciones/acciones.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-import { AngularMaterialModule } from './angular-material/angular-material.module';
-import { DecetarComponent } from './pages/documento/decetar/decetar.component';
-import { RegistrarComponent } from './pages/documento/archivar/registrar/registrar.component';
-import { HeaderComponent } from './pages/header/header.component';
-import { CrearDocumentoComponent } from './pages/documento/crear-documento/crear-documento.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
-
-import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
+
+import { DocumentoService } from './_service/documento.service';
 import { ClaseService } from './_service/clase.service';
 import { OrganizacionService } from './_service/organizacion.service';
 
-import {MatTooltipModule} from '@angular/material/tooltip';
-import { MatPaginator } from '@angular/material/paginator';
-import { DobleAutentificacionComponent } from './pages/doble-autentificacion/doble-autentificacion.component';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
-import { BuscarDocumentoComponent } from './pages/documento/buscar-documento/buscar-documento.component';
-import { RecibirComponent } from './pages/documento/mesaPartes/recibir/recibir.component';
-import { EnvioExternoComponent } from './pages/documento/mesaPartes/envio-externo/envio-externo.component';
-import { RegistrarMPComponent } from './pages/documento/mesaPartes/registrar/registrarMP.component';
-import { EsquemaComponent } from './pages/organizacion/esquema/esquema.component';
-import { MatSortModule } from '@angular/material/sort';
-import { ViewDocumentoComponent } from './pages/documento/view-documento/view-documento.component';
-import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { AngularMaterialModule } from './angular-material/angular-material.module';
+import { PagesModule } from './pages/pages.module';
+import { PagesRoutingModule } from './pages/pages-routing';
+import { LoginComponent } from './pages/login/login.component';
+
+
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    PendienteComponent,
-    ViewComponent,
-    AccionesComponent,
-    DecetarComponent,
-    RegistrarComponent,
-    HeaderComponent,
-    CrearDocumentoComponent,
-    DobleAutentificacionComponent,
-    BuscarDocumentoComponent,
-    RecibirComponent,
-    EnvioExternoComponent,
-    RegistrarMPComponent,
-    EsquemaComponent,
-    ViewComponent,
-    ViewDocumentoComponent
-
-
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,12 +34,10 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
     ReactiveFormsModule,
     NgSelectModule,
     FormsModule,
-    MatTooltipModule,
-    MatProgressBarModule,
-    MatSortModule
+    PagesModule,
+    PagesRoutingModule
 
   ],
-  exports:[],
   providers: [DocumentoService, ClaseService, OrganizacionService,
     // {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
   ],

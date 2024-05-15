@@ -7,6 +7,8 @@ import { Documento } from 'src/app/_model/documento.model';
 import { DocumentoService } from 'src/app/_service/documento.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
+import { ViewDocumentoComponent } from '../view-documento/view-documento.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-buscar-documento',
@@ -24,7 +26,8 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
 
   constructor(private documentoService: DocumentoService,
               private route: ActivatedRoute,
-              private router: Router) { }
+              private router: Router,
+              public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params: ParamMap) => {
@@ -77,5 +80,14 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
       this.dataSource.sort = this.sort;
     }
   }
+
+  verDocumento(documentoSeleccionado?:any): void {
+    const dialogRef = this.dialog.open(ViewDocumentoComponent, {
+      width: '60%',
+      height: '95%',
+      data: documentoSeleccionado,
+    });
+  }
+  
 
 }

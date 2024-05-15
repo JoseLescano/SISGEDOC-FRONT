@@ -21,7 +21,7 @@ export class DobleAutentificacionComponent implements OnInit, AfterViewInit {
   cargando:boolean=false;
   cargandoPerfil:boolean=false;
 
-  displayedColumns: string[] = ['#', 'Descripcion', 'Rol', 'Puesto', 'Acciones'];
+  displayedColumns: string[] = ['#', 'Descripcion', 'Rol', 'Organizacion', 'Acciones'];
   dataSource: MatTableDataSource<Perfil>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;

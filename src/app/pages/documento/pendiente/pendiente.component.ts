@@ -20,7 +20,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 })
 export class PendienteComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'FechaReg.', 'Acciones'];
+  displayedColumns: string[] = ['Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'Acciones'];
   dataSource: MatTableDataSource<Documento>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;

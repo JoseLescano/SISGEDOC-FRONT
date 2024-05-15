@@ -1,8 +1,11 @@
 import { Component, ElementRef, Inject, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { Documento } from 'src/app/_model/documento.model';
 import { DocumentoService } from 'src/app/_service/documento.service';
 
 import Swal from 'sweetalert2';
+import { DecetarComponent } from '../decetar/decetar.component';
 
 @Component({
   selector: 'app-acciones',
@@ -16,10 +19,12 @@ export class AccionesComponent implements OnInit {
   errorPDF : boolean = false;
 
   constructor(
-              // @Inject(MAT_DIALOG_DATA) public data: Documento,
-              private elRef: ElementRef,
-              private documentoService:DocumentoService,
-              private route: ActivatedRoute) {}
+      // @Inject(MAT_DIALOG_DATA) public data: Documento,
+      private elRef: ElementRef,
+      private documentoService:DocumentoService,
+      private route: ActivatedRoute,
+      public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this. getIdDocumento();
@@ -83,6 +88,14 @@ export class AccionesComponent implements OnInit {
   verSeguimiento(vidDocumento: any){
     this.documentoService.findDecretoByDocumento(vidDocumento).subscribe(data => {
       console.log(data)
+    });
+  }
+
+  abrirDecretar(vidDocumento:any){
+    const dialogRef = this.dialog.open(DecetarComponent, {
+      width: '60%',
+      height: '95%',
+      data: vidDocumento
     });
   }
 

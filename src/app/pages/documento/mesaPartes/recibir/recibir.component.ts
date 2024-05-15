@@ -8,6 +8,7 @@ import { DocumentoService } from 'src/app/_service/documento.service';
 import Swal from 'sweetalert2';
 import { RegistrarMPComponent } from '../registrar/registrarMP.component';
 import { environment } from 'src/environments/environment';
+import { ViewDocumentoComponent } from '../../view-documento/view-documento.component';
 
 @Component({
   selector: 'app-recibir',
@@ -65,6 +66,14 @@ export class RecibirComponent implements OnInit, AfterViewInit {
       data: documento,
     });
 
+  }
+
+  verDocumento(documentoSeleccionado?:any): void {
+    const dialogRef = this.dialog.open(ViewDocumentoComponent, {
+      width: '60%',
+      height: '95%',
+      data: documentoSeleccionado,
+    });
   }
 
 }
