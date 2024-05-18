@@ -13,12 +13,15 @@
           </div>
         </div>
         <div class="col-2 mt-1 ">
-          <div class="card text-bg-dark mb-3" style="width: 100%; height: 50%;">
+          <div class="card text-bg-dark mb-3" style="width: 100%; height: 80%;">
             <div class="card-header">ACCIONES</div>
             <div class="card-body">
               <div class="d-grid gap-2 col-12 mx-auto">
                 <button class="btn btn-success" type="button" [routerLink]="['/principal/decretar', idDocumento]">
                   <i class="fas fa-calendar-day"></i><span> DECRETAR</span>
+                </button>
+                <button class="btn btn-outline-info" type="button" >
+                  <i class="fas fa-exchange-alt"></i> DERIVAR
                 </button>
                 <button class="btn btn-warning" type="button" [routerLink]="['/principal/archivar', idDocumento]">
                   <i class="fas fa-archive"></i> ARCHIVAR

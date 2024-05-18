@@ -38,7 +38,7 @@ export class DocumentoService  extends GenericService<Documento> {
   }
 
   findDecretados(codigoOrganizacion:any, fechaI?:any, fechaF?:any){
-    return this.http.get<Documento[]>(`${environment.HOST}documentos/findDecretados`, 
+    return this.http.get<Documento[]>(`${environment.HOST}documentos/findDecretados`,
       { params: { codigoInterno: codigoOrganizacion, fi:fechaI, ff:fechaF }});
   }
 
@@ -103,6 +103,17 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('observaciones', observaciones);
     formData.append('url_pdf', url_pdf);
     return this.http.post(`${environment.HOST}documentos/archivarDocumento`, formData);
+  }
+
+  generarPlantillaWord(tipo_documento:any, asunto: any, uu_destino: any, uu_origen: any,
+    fr_indicativo: any, fr_correlativo: any, fr_copia_informativa ?: any
+  ){
+
+    return this.http.get(`${environment.HOST}documentos/generarWordPlantilla`,
+    { params: { tipo_documento: tipo_documento, asunto:asunto, uu_destino:uu_destino,
+      uu_origen: uu_origen, fr_indicativo: fr_indicativo, fr_correlativo: fr_correlativo,
+      fr_copia_informativa: fr_copia_informativa
+     }});
   }
 
   findDecretoByDocumento(codigoInterno:any){

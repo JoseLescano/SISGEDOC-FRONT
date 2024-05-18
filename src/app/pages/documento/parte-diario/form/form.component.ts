@@ -18,7 +18,7 @@ export class FormComponent implements OnInit {
   errorPDF : boolean = false;
   errorPDFReferencia : boolean = false;
   anexos:Anexo[]=[];
-  
+
   folders: any[] = [
     {
       name: 'Photos',
@@ -34,8 +34,8 @@ export class FormComponent implements OnInit {
     },
   ];
 
-  constructor( 
-    @Inject(MAT_DIALOG_DATA) private data: Documento, 
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private data: Documento,
     private matDialog: MatDialogRef<FormComponent>,
     private documentoService:DocumentoService,
     private elRef: ElementRef,
@@ -46,7 +46,7 @@ export class FormComponent implements OnInit {
   ngOnInit(): void {
     this.documento = {...this.data};
     this.viewDocumento();
-    this.verReferencia();    
+    this.verReferencia();
     this.findAnexosByDocumento();
   }
 
@@ -135,7 +135,7 @@ export class FormComponent implements OnInit {
     downloadLink.download = fileName;
     downloadLink.click();
   }
-  
+
   downloadExcel(excel: any) {
     const linkSource = `data:application/vnd.ms-excel;base64,${excel}`;
     const downloadLink = document.createElement('a');
@@ -144,15 +144,16 @@ export class FormComponent implements OnInit {
     downloadLink.download = fileName;
     downloadLink.click();
   }
-   generarNombreArchivo() :any{
+
+  generarNombreArchivo() :any{
     const timestamp = new Date().getTime(); // Marca de tiempo actual
     const randomValue = Math.floor(Math.random() * 1000); // Valor aleatorio entre 0 y 999
     const nombreArchivo = `archivo_${timestamp}_${randomValue}`; // Formato del nombre del archivo
     return nombreArchivo;
   }
-  
+
   downloadRar(rar: any) {
-  
+
     const byteCharacters = atob(rar);
     const byteNumbers = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) {
@@ -160,20 +161,20 @@ export class FormComponent implements OnInit {
     }
     const byteArray = new Uint8Array(byteNumbers);
     const blob:any = new Blob([byteArray], { type: 'application/x-rar-compressed' });
-  
+
     // Crear un enlace temporal y descargar el archivo
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
     link.download =  this.generarNombreArchivo()+'.rar';
-  
+
     // Simular un clic en el enlace para descargar el archivo
     link.click();
   }
-  
-  
+
+
   downloadWord(word: any) {
-  
-  
+
+
     const linkSource = `data:application/msword;base64,${word}`;
      const downloadLink = document.createElement('a');
      const fileName = this.generarNombreArchivo()+'.docx';
