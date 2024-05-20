@@ -176,7 +176,7 @@ export class CrearDocumentoComponent implements OnInit {
 
     const linkSource = `data:application/msword;base64,${word}`;
      const downloadLink = document.createElement('a');
-     const fileName = resultado.nombre +" 0021" +'.docx';
+     const fileName = resultado.nombre + " " +  correlativo +'.docx';
      downloadLink.href = linkSource;
      downloadLink.download = fileName;
      downloadLink.click();
