@@ -95,6 +95,22 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/envioExterno`, formData);
   }
 
+  crearDocumento(documento: any){
+    debugger;
+    let formData:FormData = new FormData();
+    formData.append('clase', documento.clase);
+    formData.append('nroOrden', documento.nroOrden);
+    formData.append('indicativo', documento.indicativo);
+    formData.append('prioridad', documento.prioridad);
+    formData.append('asunto', documento.asunto);
+    formData.append('destinos', documento.destinos);
+    formData.append('copiasInformativas', documento.copiasInformativas);
+    formData.append('archivoPrincipal', documento.archivoPrincipal);
+    formData.append('anexo', documento.anexos);
+    formData.append('organizacionRemitente', documento.organizacionOrigen);
+    return this.http.post(`${environment.HOST}documentos/crearDocumento`, formData);
+  }
+
   archivarDocumento(vidDocumento:any, orgOrigen:any,usuario:any, observaciones:any,url_pdf?:any){
     let formData:FormData = new FormData();
     formData.append('vidDocumento', vidDocumento);
@@ -122,6 +138,12 @@ export class DocumentoService  extends GenericService<Documento> {
 
   findParaParte(codigoInterno:any){
     return this.http.get(`${environment.HOST}documentos/findParaParte/${codigoInterno}`);
+  }
+
+  convertFileToPDF (file: any) {
+    let formData: FormData = new FormData();
+    formData.append('files', file);
+    return this.http.post(`${environment.HOST}documentos/findParaParte/convertFileToPDF`, formData);
   }
 
 }

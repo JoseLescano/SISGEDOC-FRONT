@@ -14,7 +14,7 @@
                   </mat-card-header>
                   <mat-card-content>
                     <div class="row mt-3">
-                      <ng-select  [virtualScroll]=true formControlName="tipoDocumento" 
+                      <ng-select  [virtualScroll]=true formControlName="tipoDocumento"
                         (change)="findDestinatarios()" notFoundText="Sin elementos encontrados" >
                         <ng-option *ngFor="let c of clases" [value]="c.codigo" >
                           {{c.nombre}}
@@ -52,7 +52,7 @@
                   <mat-card-content>
                     <div class="row mt-3">
                       <div class="col-6">
-                        <ng-select  [virtualScroll]=true placeholder="SELECCIONE FIRMANTE" formControlName="firmante" 
+                        <ng-select  [virtualScroll]=true placeholder="SELECCIONE FIRMANTE" formControlName="firmante"
                           (change)="getIndicativo(); findDestinatarios();" notFoundText="Sin elementos encontrados" >
                           <ng-option *ngFor="let c of firmantes" [value]="c" >
                             {{c.nombreLargo}}
@@ -72,17 +72,19 @@
                     </div>
                     <div class="row">
                       <div class="col-md-6">
-                        <ng-select [multiple]=true placeholder="SELECCIONE DESTINARIO(S)" 
+                        <ng-select [multiple]=true placeholder="SELECCIONE DESTINARIO(S)"
                           [virtualScroll]=true formControlName="destinatarios" notFoundText="Sin elementos encontrados" >
                           <mat-option>SELECCIONE</mat-option>
-                          <ng-option *ngFor="let c of organizacionesDestino" [value]="c.codigoInterno" >{{c.acronimo}}</ng-option>
+                          <ng-option *ngFor="let c of organizacionesDestino" [value]="c.codigoInterno" >
+                            {{c.acronimo}}
+                          </ng-option>
                         </ng-select>
                         <div *ngIf="form.get('destinatarios').errors && form.get('destinatarios').dirty" class="mt-1" >
                               <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('destinatarios').hasError('destinatarios')">*Campo requerido</small>
                         </div>
                       </div>
                       <div class="col-md-6">
-                          <ng-select [multiple]=true placeholder="SELECCIONE COPIA(S) INFORMATIVA(S)" 
+                          <ng-select [multiple]=true placeholder="SELECCIONE COPIA(S) INFORMATIVA(S)"
                             [virtualScroll]=true formControlName="copiaInformativa" notFoundText="Sin elementos encontrados" >
                             <mat-option>SELECCIONE</mat-option>
                             <ng-option *ngFor="let c of copiasInformativas" [value]="c.codigoInterno" >{{c.acronimo}}</ng-option>
@@ -110,8 +112,12 @@
                               <i class="fas fa-cloud-upload-alt"></i>
                               <p>Browse File to Upload</p>
                               <input type="file" (change)="selectArchivoPrincipal($event)"
-                                  id="documentoPrincipal"  accept="application/pdf" />
+                                id="documentoPrincipal"
+                                accept="application/msword, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+
                           </div>
+                          <button  mat-flat-button type="button" color="primary"
+                            class="form-control mt-2" *ngIf="mostrarFirma && selectedFiles != null" >FIRMAR DOCUMENTO</button>
                         </div>
                       </div>
                     </div>

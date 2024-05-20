@@ -31,7 +31,7 @@ body{
     flex-direction: column;
     border: 1px dashed #3f51b5;
     margin: 1px 0;
-    
+
 }
 
 .form :where(i,p){

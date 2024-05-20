@@ -30,6 +30,7 @@ import { RegistroCorrespondenciaComponent } from './documento/mesaPartes/registr
 import { ListCorrespondenciaComponent } from './documento/mesaPartes/list-correspondencia/list-correspondencia.component';
 import { EntregarCorrespondenciaComponent } from './documento/mesaPartes/entregar-correspondencia/entregar-correspondencia.component';
 import { ViewDecretadoComponent } from './documento/view-decretado/view-decretado.component';
+import { ModalFirmaPeruComponent } from './documento/modal-firma-peru/modal-firma-peru.component';
 
 
 
@@ -70,7 +71,8 @@ import { ViewDecretadoComponent } from './documento/view-decretado/view-decretad
     RegistroCorrespondenciaComponent,
     ListCorrespondenciaComponent,
     EntregarCorrespondenciaComponent,
-    ViewDecretadoComponent
+    ViewDecretadoComponent,
+    ModalFirmaPeruComponent
   ],
    exports:[
     

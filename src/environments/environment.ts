@@ -5,7 +5,7 @@ export const environment = {
   HOST: 'http://localhost:8080/',
   // codigoOrganizacion: '12021002',
   // codigoOrganizacion: '0211090101',
-  codigoOrganizacion: '3302',
+  codigoOrganizacion: '0210',
 
   rol: '002',
 

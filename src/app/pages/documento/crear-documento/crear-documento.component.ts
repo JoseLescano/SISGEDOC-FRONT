@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable, map } from 'rxjs';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import { DocumentoArchivoAnexo } from 'src/app/_DTO/DocumentoArchivoAnexo';
 import { Clase } from 'src/app/_model/clase';
-import { Correlativo } from 'src/app/_model/correlativo';
 import { Organizacion } from 'src/app/_model/organizacion';
 import { ClaseService } from 'src/app/_service/clase.service';
 import { CorrelativoService } from 'src/app/_service/correlativo.service';
@@ -10,6 +10,7 @@ import { DocumentoService } from 'src/app/_service/documento.service';
 import { OrganizacionService } from 'src/app/_service/organizacion.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
+import { ModalFirmaPeruComponent } from '../modal-firma-peru/modal-firma-peru.component';
 
 @Component({
   selector: 'app-crear-documento',
@@ -28,6 +29,8 @@ export class CrearDocumentoComponent implements OnInit {
   clases:Clase[];
   selectedFiles: any = null;
   url_pdf = '';
+  mostrarFirma : boolean = false;
+  documentoar : DocumentoArchivoAnexo = new DocumentoArchivoAnexo();
 
   // =======================================================================================================
 
@@ -35,7 +38,8 @@ export class CrearDocumentoComponent implements OnInit {
     private organizacionService: OrganizacionService,
     private claseService: ClaseService,
     private documentoService: DocumentoService,
-    private correlativoService: CorrelativoService
+    private correlativoService: CorrelativoService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -59,8 +63,7 @@ export class CrearDocumentoComponent implements OnInit {
       'indicativo': new FormControl('', [Validators.required]),
       'destinatarios': new FormControl(new Array<String>,[Validators.required]),
       'copiaInformativa': new FormControl(new Array<String>),
-      'asunto': new FormControl('', [Validators.required, Validators.minLength(10)]),
-      // 'observaciones': new FormControl(''),
+      'asunto': new FormControl('', [Validators.required, Validators.minLength(10)])
     });
 
     this.form.controls['nroCorrelativo'].disable();
@@ -85,6 +88,9 @@ export class CrearDocumentoComponent implements OnInit {
       });
       this.cargando = false;
     }
+    if (firmante.codigoInterno === environment.codigoOrganizacion)
+      this.mostrarFirma = true;
+    else this.mostrarFirma = false;
   }
 
 
@@ -96,7 +102,31 @@ export class CrearDocumentoComponent implements OnInit {
 
 
   operate(){
-
+    if(this.form.valid && this.selectedFiles != null){
+      this.cargando = true;
+      debugger;
+      this.documentoar.organizacionOrigen = this.form.value['firmante'].codigoInterno;
+      this.documentoar.clase = this.form.value['tipoDocumento'];
+      this.documentoar.nroOrden =  this.form.get('nroCorrelativo').value;
+      this.documentoar.indicativo =  this.form.value['indicativo'];
+      this.documentoar.destinos = this.form.value['destinatarios'];
+      this.documentoar.copiasInformativas = this.form.value['copiaInformativa'];
+      this.documentoar.asunto= this.form.value['asunto'];
+      this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
+      this.documentoService.crearDocumento(this.documentoar).subscribe((response:any)=>{
+        if (response.httpStatus=='CREATED'){
+          this.cargando = false;
+          this.initForm();
+          Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
+        }
+      }, error => {
+        this.cargando = false;
+        Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
+      });
+     } else {
+      this.cargando = false;
+      Swal.fire('Lo sentimos', `Se presento un inconveniente!`, 'warning');
+    }
   }
 
 
@@ -188,45 +218,67 @@ export class CrearDocumentoComponent implements OnInit {
 
   selectArchivoPrincipal(event: any): void {
     const fileTemp = event.target.files[0];
-      const fileType = fileTemp.type;
-      if (fileType !== 'application/pdf') {
+    const fileType = fileTemp.type;
+    if (fileType !== 'application/pdf' && fileType !== 'application/msword'
+        && fileType !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
         event.target.value = ''; // Borra la selección del archivo
         this.selectedFiles=null;
-        Swal.fire('Lo sentimos', `Debe de seleccionar un documento PDF`, 'info');
+        Swal.fire('Lo sentimos', `Debe de seleccionar un documento PDF ó WORD`, 'info');
       }else{
         if(event.target.files.length>0){
           this.selectedFiles = event.target.files;
           this.url_pdf = this.selectedFiles[0].name;
           this.selectedFiles = event.target.files;
-          environment.cantidadPaginasPDF(this.selectedFiles[0],
-            (cpages:any)=>{
-              //this.firstFormGroup.controls['archivoPDF'].setValue(this.selectedFiles.item(0));
-            }
-          );
-
-          this.fileInIframe(this.selectedFiles[0],"documentoPrincipal");
-          let byteArray = new Uint8Array(
-            atob(this.selectedFiles[0])
-              .split('')
-              .map((char) => char.charCodeAt(0))
-          );
-          let file = new Blob([byteArray], { type: 'application/pdf' });
-            var rf_file = new File([file], URL.createObjectURL(file), {
-              type: 'application/pdf',
+          if (this.selectedFiles[0].type == 'application/pdf') {
+            this.abrirFirmaPeru(this.selectedFiles);
+            environment.cantidadPaginasPDF(this.selectedFiles[0],
+              (cpages:any)=>{
+                //this.form.controls['archivoPDF'].setValue(this.selectedFiles.item(0));
+              }
+            );
+          }else {
+            this.documentoService
+            .convertFileToPDF(this.selectedFiles.item(0))
+            .subscribe((resp: any) => {
+              let byteArray = new Uint8Array(atob(resp[0]).split('').map((char) => char.charCodeAt(0)));
+              let file = new Blob([byteArray], { type: 'application/pdf' });
+              var rf_file = new File([file], URL.createObjectURL(file), {
+                type: 'application/pdf',
+              });
+              let listFile = [rf_file];
+              let list = new DataTransfer();
+              list.items.add(rf_file);
+              this.selectedFiles = list.files;
             });
-          let list = new DataTransfer();
-          list.items.add(rf_file);
-          this.selectedFiles = list.files;
+          }
+
+
+          // let byteArray = new Uint8Array(
+          //   atob(this.selectedFiles[0])
+          //     .split('')
+          //     .map((char) => char.charCodeAt(0))
+          // );
+          // let file = new Blob([byteArray], { type: 'application/pdf' });
+          //   var rf_file = new File([file], URL.createObjectURL(file), {
+          //     type: 'application/pdf',
+          //   });
+          // let list = new DataTransfer();
+          // list.items.add(rf_file);
+          // this.selectedFiles = list.files;
         }
       }
-    }
+  }
 
-    fileInIframe(file:any,idFrame:any){
-      let fileURL = URL.createObjectURL(file);
-      this.url_pdf = fileURL;
-      let iframe: any = document.getElementById(''+idFrame) as HTMLIFrameElement;
-      iframe.contentWindow.location.replace(fileURL);
-    }
+  abrirFirmaPeru(documento:any): void {
+    debugger;
+    const dialogRef = this.dialog.open(ModalFirmaPeruComponent,{
+      width: '90%',
+      height: '95%',
+
+      data: { documento }
+    });
+
+  }
 
   limpiar(){
     this.form.reset();
