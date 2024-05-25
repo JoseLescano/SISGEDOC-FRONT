@@ -107,7 +107,11 @@
 
                       <div class="col"  >
                         <div class="wrapper" >
-                          <mat-label>DOCUMENTO PRINCIPAL</mat-label>
+                          <mat-label>DOCUMENTO PRINCIPAL
+                            <span *ngIf="selectedFiles == null || selectedFiles == ''">
+                              <i class="fas fa-info-circle" style="font-size: 14px; color: #ea5d5d" ></i>
+                            </span>
+                          </mat-label>
                           <div class="form">
                               <i class="fas fa-cloud-upload-alt"></i>
                               <p>Browse File to Upload</p>
@@ -116,7 +120,8 @@
                                 accept="application/msword, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
 
                           </div>
-                          <button  mat-flat-button type="button" color="primary"
+                          <button  mat-flat-button type="button" color="primary" (click)="firmarDocumento()"
+                            data-bs-toggle="modal" data-bs-target="#panelFirmaPeru"
                             class="form-control mt-2" *ngIf="mostrarFirma && selectedFiles != null" >FIRMAR DOCUMENTO</button>
                         </div>
                       </div>

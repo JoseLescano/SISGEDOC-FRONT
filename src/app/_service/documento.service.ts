@@ -143,7 +143,15 @@ export class DocumentoService  extends GenericService<Documento> {
   convertFileToPDF (file: any) {
     let formData: FormData = new FormData();
     formData.append('files', file);
-    return this.http.post(`${environment.HOST}documentos/findParaParte/convertFileToPDF`, formData);
+    return this.http.post(`${environment.HOST}documentos/convertFileToPDF`, formData);
+  }
+
+  firmarDocumento(file: any){
+    let formData: FormData = new FormData();
+    formData.append('files', file);
+    // formData.append('param_token', "1626476967");
+    // formData.append("document_extension","pdf")
+    return this.http.post(`${environment.HOST}documentos/firmarDocumentoPeru`, formData);
   }
 
 }

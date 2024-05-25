@@ -11,6 +11,7 @@ import { OrganizacionService } from 'src/app/_service/organizacion.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 import { ModalFirmaPeruComponent } from '../modal-firma-peru/modal-firma-peru.component';
+import { of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-crear-documento',
@@ -135,7 +136,7 @@ export class CrearDocumentoComponent implements OnInit {
     var tipoDocumento = this.form.get('tipoDocumento').value != null && this.form.get('tipoDocumento').value != '' ;
     var indicativo = this.form.get('indicativo').value != null && this.form.get('indicativo').value != '' ;
     var destinatarios = this.form.get('destinatarios').value != null && this.form.get('destinatarios').value != '' ;
-    var asunto = this.form.get('asunto').value != null && this.form.get('asunto').value != '' ;
+    var asunto = (this.form.get('asunto').value != null && this.form.get('asunto').value != '') && !this.form.get('asunto').hasError('minlength') ;
     if (!firmante || !tipoDocumento || !indicativo || !destinatarios || !asunto ) {
       Swal.fire('Datos incompletos', `Complete todos los campos para generar plantilla de Word`, 'error');
       return false;
@@ -145,50 +146,55 @@ export class CrearDocumentoComponent implements OnInit {
 
   }
 
-  generarPlantilla(){
-
-    if (this.validarPlantilla()){
+  generarPlantilla() {
+    if (this.validarPlantilla()) {
       this.cargando = true;
+      this.getUltimoNumero().pipe(
+        switchMap(() => {
+          var tipoDocumento = this.form.get('tipoDocumento').value;
+          var asunto = this.form.get('asunto').value;
+          var destino = this.form.get('destinatarios').value;
+          var firmante = this.form.get('firmante').value;
+          var indicativo = this.form.get('indicativo').value;
+          var copiasInformativas = this.form.get('copiaInformativa').value;
+          var correlativo = this.form.get('nroCorrelativo').value;
 
-      this.getUltimoNumero();
-      debugger;
-      var tipoDocumento = this.form.get('tipoDocumento').value
-      var asunto = this.form.get('asunto').value;
-      var destino = this.form.get('destinatarios').value;
-      var firmante = this.form.get('firmante').value;
-      var correlativo = this.form.get('nroCorrelativo').value;
-      var indicativo = this.form.get('indicativo').value;
-      var copiasInformativas = this.form.get('copiaInformativa').value;
-      this.documentoService.generarPlantillaWord(tipoDocumento, asunto, destino, firmante.codigoInterno, indicativo, correlativo, copiasInformativas)
-      .subscribe((response: any)=> {
-        if (response.httpStatus=='CREATED'){
-          console.log(response.data);
-          this.downloadWord(response.data[0]);
-          this.cargando = false;
+          return this.documentoService.generarPlantillaWord(
+              tipoDocumento, asunto, destino, firmante.codigoInterno,
+              indicativo, correlativo, copiasInformativas
+          );
+        })
+      ).subscribe((response: any) => {
+        if (response.httpStatus === 'CREATED') {
+            console.log(response.data);
+            this.downloadWord(response.data[0]);
+            this.cargando = false;
         }
       }, error => {
         this.cargando = false;
-        Swal.fire('Lo sentimos', 'Se presento un inconveniente en la generación del Word', 'info');
+        Swal.fire('Lo sentimos', 'Se presentó un inconveniente en la generación del Word', 'info');
       });
     }
-
-  }
+}
 
   get nativeDocument(): any {
     return document;
   }
 
   getUltimoNumero() {
-
     var tipoDocumento = this.form.get('tipoDocumento').value;
     var firmante = this.form.get('firmante').value;
 
-    if ( tipoDocumento != null && firmante != null) {
-      debugger;
-      this.correlativoService.findClaseAndOrganizacion(tipoDocumento, firmante.codigoInterno).subscribe((response:any)=> {
-        var correlativo = response;
-        this.form.controls['nroCorrelativo'].setValue(correlativo.numero);
-      })
+    if (tipoDocumento != null && firmante != null) {
+        return this.correlativoService.findClaseAndOrganizacion(tipoDocumento, firmante.codigoInterno).pipe(
+            switchMap((response: any) => {
+                var correlativo = response;
+                this.form.controls['nroCorrelativo'].setValue(correlativo.numero);
+                return of(true);  // Se devuelve un observable para indicar que el proceso ha terminado
+            })
+        );
+    } else {
+        return of(false);  // En caso de que tipoDocumento o firmante sean nulos, se devuelve un observable de false
     }
   }
 
@@ -217,6 +223,7 @@ export class CrearDocumentoComponent implements OnInit {
   }
 
   selectArchivoPrincipal(event: any): void {
+    this.selectedFiles = null;
     const fileTemp = event.target.files[0];
     const fileType = fileTemp.type;
     if (fileType !== 'application/pdf' && fileType !== 'application/msword'
@@ -224,19 +231,19 @@ export class CrearDocumentoComponent implements OnInit {
         event.target.value = ''; // Borra la selección del archivo
         this.selectedFiles=null;
         Swal.fire('Lo sentimos', `Debe de seleccionar un documento PDF ó WORD`, 'info');
-      }else{
+    } else{
         if(event.target.files.length>0){
           this.selectedFiles = event.target.files;
           this.url_pdf = this.selectedFiles[0].name;
-          this.selectedFiles = event.target.files;
           if (this.selectedFiles[0].type == 'application/pdf') {
-            this.abrirFirmaPeru(this.selectedFiles);
-            environment.cantidadPaginasPDF(this.selectedFiles[0],
-              (cpages:any)=>{
-                //this.form.controls['archivoPDF'].setValue(this.selectedFiles.item(0));
-              }
-            );
+            this.convertirArchivoABase64(this.selectedFiles.item(0));
+            // environment.cantidadPaginasPDF(this.selectedFiles[0],
+            //   (cpages:any)=>{
+            //     //this.form.controls['archivoPDF'].setValue(this.selectedFiles.item(0));
+            //   }
+            // );
           }else {
+            this.cargando = true;
             this.documentoService
             .convertFileToPDF(this.selectedFiles.item(0))
             .subscribe((resp: any) => {
@@ -249,6 +256,12 @@ export class CrearDocumentoComponent implements OnInit {
               let list = new DataTransfer();
               list.items.add(rf_file);
               this.selectedFiles = list.files;
+              this.url_pdf = this.selectedFiles[0].name;
+              this.cargando = false;
+              this.convertirArchivoABase64(this.selectedFiles.item(0));
+            }, error => {
+              this.cargando = false;
+              Swal.fire('Lo sentimos', 'Se presento un inconveniente al convertir Word a PDF', 'info');
             });
           }
 
@@ -269,6 +282,19 @@ export class CrearDocumentoComponent implements OnInit {
       }
   }
 
+  convertirArchivoABase64(file: File) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+        const base64 = reader.result as string;
+        // Ahora abre el modal con el archivo codificado en base64
+        this.abrirFirmaPeru(base64);
+    };
+    reader.onerror = error => {
+        console.log('Error: ', error);
+    };
+}
+
   abrirFirmaPeru(documento:any): void {
     debugger;
     const dialogRef = this.dialog.open(ModalFirmaPeruComponent,{
@@ -282,6 +308,20 @@ export class CrearDocumentoComponent implements OnInit {
 
   limpiar(){
     this.form.reset();
+  }
+
+  _window(): any {
+    // return the global native browser window object
+    return window;
+  }
+
+  firmarDocumento(){
+    this.cargando = true;
+    this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response:any)=>{
+
+       this._window().iniciarFirma(response[1]);
+    });
+    this.cargando = false;
   }
 
 }

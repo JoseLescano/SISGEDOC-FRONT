@@ -19,10 +19,43 @@
 </head>
 <body class="mat-typography">
   <app-root></app-root>
+  <div id="addComponent" style="display:none;"></div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://apps.firmaperu.gob.pe/web/clienteweb/firmaperu.min.js"></script>
+  <script type="text/javascript">
+    var jqFirmaPeru = jQuery.noConflict(true);
+    function signatureInit(){
+      console.log('Iniciando....');
+    }
+    function signatureOk(){
+      console.log('Documento Firmado');
+    }
+    function signatureCancel(){
+      console.log('Operacion Cancelada');
+    }
+    function sendParam(data){
+      var param = data;
+      var port = "48596";
+      startSignature(port, param);
+    }
 
+    function iniciarFirma(configuracion){
+      var param={
+        "param_url": " http://localhost:8080/documentos/firmaPeru/"+configuracion,
+        "param_token": "162647697663667",
+        "document_extension": "pdf"
+      }
+      var json = JSON.stringify(param);
+      var base64 = btoa(json);
+      var port="48596";
+      startSignature(port,base64)
+    }
+
+
+  </script>
 
 </body>
 </html>

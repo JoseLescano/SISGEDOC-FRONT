@@ -1,4 +1,4 @@
- 
+
 .example-container {
   display: flex;
   flex-direction: column;
@@ -30,8 +30,8 @@ background: linear-gradient(45deg, #000000, #675b45);
 
 .myButton {
   width: 100%;
-  display: flex; 
-  align-items: center; 
+  display: flex;
+  align-items: center;
   text-align: center;
   justify-items: center;
   color: white;
@@ -41,17 +41,17 @@ background: linear-gradient(45deg, #000000, #675b45);
   margin: 5px 0;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s ease; 
+  transition: background-color 0.3s ease;
 }
 
 .myButton:hover {
   background: #675b45;
-   color: rgb(255, 255, 255); 
+   color: rgb(255, 255, 255);
 }
 
 .myButton .mat-icon {
-  color: white; 
-  margin-right: 5px; 
+  color: white;
+  margin-right: 5px;
 }  */
 
 
