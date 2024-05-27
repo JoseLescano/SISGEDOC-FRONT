@@ -3,17 +3,25 @@
       <div class = "row mt-5">
         <div class = "col-md-6 offset-md-3">
             <div class = "container text-center">
-              <img src="../../../assets/user.png" width = "100" height = "100">
+              <img src="./../../../assets/person.jpeg" width = "100" height = "100" style="border-radius: 10px;">
             </div>
   
             <h1 class = "text-center">Inicio de sesión</h1>
-            <form >
-  
               <div class = "container text-center">
-                <button type = "submit" mat-raised-button color="primary" (click)="login()" >Iniciar sesión</button>
-                <button type="reset" style = "margin-left: 20px;" mat-raised-button color="accent">Limpiar</button>
+                <mat-form-field appearance="fill" class="example-full-width">
+                  <mat-label>INGRESE USUARIO</mat-label>
+                  <input matInput [(ngModel)]="username">
+                </mat-form-field>
+                <mat-form-field appearance="fill"  class="example-full-width">
+                  <mat-label>INGRESE CONTRASEÑA</mat-label>
+                  <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="password">
+                  <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                  </button>
+                </mat-form-field>
+                <button type = "submit" mat-raised-button color="primary" (click)="login()" >INICIAR SESIÓN</button>
+                <button type="reset" style = "margin-left: 20px;" mat-raised-button color="accent">LIMPIAR</button>
               </div>
-            </form>
         </div>
       </div>
     </div>
