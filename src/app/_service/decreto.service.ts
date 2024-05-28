@@ -19,14 +19,24 @@ export class DecretoService extends GenericService<Decreto> {
   }
 
   ultimoDecreto(codigoDocumento:any, codigoDestino:any){
-    return this.http.get<Decreto>(`${environment.HOST}decretos/ultimoDecreto`, 
-      { params: 
+    return this.http.get<Decreto>(`${environment.HOST}decretos/ultimoDecreto`,
+      { params:
         { codigoDocumento: codigoDocumento, codigoDestino:codigoDestino }
       });
   }
 
   decretarDocumento(decretoDocumento: DecretoDocumentoDTO): Observable<any>{
     return this.http.post(`${environment.HOST}decretos/decretarDocumento`,  decretoDocumento);
+  }
+
+
+  devolverDocumento(documento: any, origen: any, observacion:any){
+    let formData: FormData= new FormData();
+    formData.append('codigoDocumento', documento);
+    formData.append('codigoOrigen', origen);
+    formData.append('observacion', observacion);
+    return this.http.post(`${environment.HOST}decretos/devolverDocumento`,  formData);
+
   }
 
 

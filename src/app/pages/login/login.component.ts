@@ -24,20 +24,10 @@ export class LoginComponent implements OnInit {
   }
 
   login(){
-    // debugger;
-    // this.perfilService.loginActiveDirectory(this.username,this.password).subscribe((response:any)=> {
-    //   if(response.httpStatus=='OK'){
-        this.router.navigate(['/principal']);
-    //     Swal.fire(response.message, 'Bienvenido al sistema usuario', 'success');
-    //   }else {
-    //     Swal.fire('LO SENTIMOS', 'USUARIO NO EXISTE EN ACTIVE DIRECTORY', 'info');
-    //   }
-    // }, error => {
-    //   Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENINTE EN LA VALIDACION DEL USUARIO', 'info');
-    // })
-    
-    
-   
+    debugger;
+    this.router.navigate(['/principal']);
+
+
   }
 
 }

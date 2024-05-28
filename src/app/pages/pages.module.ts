@@ -31,15 +31,14 @@ import { ListCorrespondenciaComponent } from './documento/mesaPartes/list-corres
 import { EntregarCorrespondenciaComponent } from './documento/mesaPartes/entregar-correspondencia/entregar-correspondencia.component';
 import { ViewDecretadoComponent } from './documento/view-decretado/view-decretado.component';
 import { ModalFirmaPeruComponent } from './documento/modal-firma-peru/modal-firma-peru.component';
-
-
-
+import { RegistrarDevolverComponent } from './documento/devolver/registrar-devolver/registrar-devolver.component';
+import { RegistrarDerivacionComponent } from './documento/derivar/registrar-derivacion/registrar-derivacion.component';
 
 @NgModule({
   imports: [
-    HttpClientModule,    
+    HttpClientModule,
     ReactiveFormsModule,
-    FormsModule, 
+    FormsModule,
     AngularMaterialModule,
     CommonModule,
     PagesRoutingModule,
@@ -72,10 +71,12 @@ import { ModalFirmaPeruComponent } from './documento/modal-firma-peru/modal-firm
     ListCorrespondenciaComponent,
     EntregarCorrespondenciaComponent,
     ViewDecretadoComponent,
-    ModalFirmaPeruComponent
+    ModalFirmaPeruComponent,
+    RegistrarDevolverComponent,
+    RegistrarDerivacionComponent
   ],
    exports:[
-    
+
   ]
 })
 export class PagesModule { }

@@ -59,7 +59,7 @@ export class DecetarComponent implements OnInit {
     this.prioridadService.listar().subscribe((response:any)=> {
       this.prioridades = response;
     });
-   
+
     this.getIdDocumento();
     this.initFormParent();
     this.getUltimoDecreto();
@@ -70,9 +70,11 @@ export class DecetarComponent implements OnInit {
     const id = +this.route.snapshot.paramMap.get('codigoDocumento');
     this.idDocumento = id;
   }
-  
+
   getUltimoDecreto(){
+
     this.decretoService.ultimoDecreto(this.idDocumento, environment.codigoOrganizacion).subscribe((data: any) => {
+      debugger;
       this.ultimoDecreto = data;
     });
   }
@@ -117,12 +119,12 @@ export class DecetarComponent implements OnInit {
   getCrl(key:string, form: FormGroup):any{
     return form.get(key);
   }
-  
+
   getDecreto(key:string, decetro: FormArray):any{
     return decetro.get(key);
   }
 
-  
+
   remove(rowIndex:any){
     const refDecreto = this.formParent.get('decretos') as FormArray;
     refDecreto.removeAt(rowIndex);
@@ -132,12 +134,12 @@ export class DecetarComponent implements OnInit {
   decretos : DecretoDTO[] = [];
 
   operate(){
-    
+
     let formDecretos = this.formParent.value['decretos'];
     for (let index = 0; index < formDecretos.length; index++) {
       let dd : DecretoDTO= new DecretoDTO();
       // dd.documento = this.formParent.value['codigoDocumento'];
-      dd.origen = this.formParent.value['origen'];      
+      dd.origen = this.formParent.value['origen'];
       dd.destino = formDecretos[index].destino;
       dd.fechaLimite = environment.convertDateToStr(formDecretos[index].fechaLimite);
       dd.observacion = formDecretos[index].observaciones;
@@ -148,18 +150,18 @@ export class DecetarComponent implements OnInit {
       for (let y = 0; y < acciones.length; y++) {
         let da: DecretoAccionDTO = new DecretoAccionDTO();
         da.accion = acciones[y];
-        decretosAcciones.push(da);       
+        decretosAcciones.push(da);
       }
       dd.acciones = decretosAcciones;
-      
-       
+
+
       this.decretos.push(dd);
     }
     this.decretoDocumento.codigoDocumento = this.formParent.value['codigoDocumento'];
     this.decretoDocumento.decretoActual = this.ultimoDecreto.codigo;
     this.decretoDocumento.decretos = this.decretos;
     console.log(this.decretoDocumento);
-    
+
     this.decretoService.decretarDocumento(this.decretoDocumento).subscribe((response:any)=> {
       debugger;
       if (response.httpStatus == 'CREATED'){
@@ -171,8 +173,8 @@ export class DecetarComponent implements OnInit {
     },(error: any) => {
       Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'warning');
     });
-    
-    
+
+
   }
 
   onCheckboxChange(item: any, index:any) {
@@ -184,11 +186,11 @@ export class DecetarComponent implements OnInit {
     // let arrayAccion = Object.assign([], accion);
     // arrayAccion.append(item);
     // accion.setValue(arrayAccion);
-    
+
     // if (event.target.checked) {
     //   selectAccion.push(new FormControl(event.target.value));
     // } else {
-    //   const index = selectAccion.controls.findIndex(x => 
+    //   const index = selectAccion.controls.findIndex(x =>
     //     x.value === event.target.value
     //   );
     //   selectAccion.removeAt(index);

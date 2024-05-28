@@ -102,7 +102,7 @@
   <ul class="sidenav-nav">
       <li class="sidenav-nav-item" *ngFor="let data of menus">
         <!-- *ngIf="(codigoOrganizacion=='120210' || codigoOrganizacion=='12021002') && rolIngresado=='001'" -->
-          <a class="sidenav-nav-link" [routerLink]="[data.url]" 
+          <a class="sidenav-nav-link" [routerLink]="[data.url]"
               routerLinkActive="active"
               [routerLinkActiveOptions]="{exact: true}">
               <i class="sidenav-link-icon" [class]="data.icon"></i>

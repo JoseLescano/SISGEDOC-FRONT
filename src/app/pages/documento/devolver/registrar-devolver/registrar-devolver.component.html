@@ -1,0 +1,45 @@
+<div class="container mt-2" style="height: 90%;">
+  <mat-card style="height: 100%;">
+
+    <mat-card-content style="height: 100%;">
+        <div class="row" style="height: 100%;">
+          <div class="col-sm-7 mb-3 mb-sm-0"  >
+            <iframe id="embeddedPage" style="width: 100%; height: 100%" *ngIf="!errorPDF"></iframe>
+            <div  style="width: 100%; height: 100%; border: 1px solid black;
+                  border-radius: 5px; align-items: center; align-content: center;
+                  text-align: center; " *ngIf="errorPDF">
+            <i class="fas fa-exclamation-triangle" style="color: red;" ></i>
+            <strong style="font-size: 12px;"> Error en PDF!</strong>
+          </div>
+          </div>
+          <div class="col-sm-5 mb-3 mb-sm-0" >
+            <mat-card-header>
+              <mat-card-title>DEVOLVER DOCUMENTO </mat-card-title>
+            </mat-card-header>
+              <mat-tab-group mat-align-tabs="start">
+                <mat-tab label="DATOS GENERALES">
+                  <form class="example-form mt-2">
+                    <mat-form-field  appearance="fill">
+                      <mat-label>CODIGO DE DOCUMENTO</mat-label>
+                      <input matInput disabled value="{{vidDocumento}}">
+                    </mat-form-field>
+                  </form>
+                  <mat-form-field class="example-full-width" appearance="fill">
+                      <mat-label>MOTIVO</mat-label>
+                      <textarea matInput rows="7" [(ngModel)]="observaciones" ></textarea>
+                  </mat-form-field>
+                    <div class="col-md-12" style="text-align: right;">
+                        <button mat-raised-button color="primary" style="margin-right: 5px;" (click)="devolverDocumento(vidDocumento)" [disabled]="observaciones==''" >GUARDAR</button>
+                        <button mat-raised-button color="warn" routerLink="/principal">CANCELAR</button>
+                    </div>
+                </mat-tab>
+              </mat-tab-group>
+
+          </div>
+        </div>
+    </mat-card-content>
+  </mat-card>
+
+</div>
+
+

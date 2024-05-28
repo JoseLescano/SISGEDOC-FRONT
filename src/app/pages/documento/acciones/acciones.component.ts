@@ -6,6 +6,9 @@ import { DocumentoService } from 'src/app/_service/documento.service';
 
 import Swal from 'sweetalert2';
 import { DecetarComponent } from '../decetar/decetar.component';
+import { environment } from 'src/environments/environment';
+import { DecretoService } from 'src/app/_service/decreto.service';
+import { DecretoDTO } from 'src/app/_DTO/DecretoDTO';
 
 @Component({
   selector: 'app-acciones',
@@ -60,31 +63,6 @@ export class AccionesComponent implements OnInit {
     iframe.contentWindow.location.replace(fileURL);
   }
 
-
-  devolver(vidDocumento:any){
-    Swal.fire({
-      title: "Submit your Github username",
-      input: "text",
-      inputAttributes: {
-        autocapitalize: "off"
-      },
-      showCancelButton: true,
-      confirmButtonText: "Look up",
-      showLoaderOnConfirm: true,
-      preConfirm: async (login) => {
-
-      },
-      allowOutsideClick: () => !Swal.isLoading()
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: `${result.value.login}'s avatar`,
-          imageUrl: result.value.avatar_url
-        });
-      }
-    });
-  }
-
   verSeguimiento(vidDocumento: any){
     this.documentoService.findDecretoByDocumento(vidDocumento).subscribe(data => {
       console.log(data)
@@ -98,6 +76,5 @@ export class AccionesComponent implements OnInit {
       data: vidDocumento
     });
   }
-
 
 }

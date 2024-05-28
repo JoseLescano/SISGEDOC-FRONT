@@ -34,7 +34,7 @@ interface SideNavToggle {
     ]),
     trigger('rotate', [
       transition(':enter', [
-        animate('1000ms', 
+        animate('1000ms',
           keyframes([
             style({transform: 'rotate(0deg)', offset: '0'}),
             style({transform: 'rotate(2turn)', offset: '1'})
@@ -47,6 +47,8 @@ interface SideNavToggle {
 
 export class HeaderComponent implements OnInit {
 
+  listPerfil : any;
+  isOffCanvasOpen: any;
   @Output() onToggleSideNav: EventEmitter<SideNavToggle> = new EventEmitter();
   collapsed = false;
   screenWidth = 0;
@@ -69,6 +71,14 @@ export class HeaderComponent implements OnInit {
       this.menuService.getMenuByRol(environment.rol).subscribe((response:any)=> {
         this.menus = response.data as Menu[];
       })
+  }
+
+  closeOffCanvas(){
+
+  }
+
+  openOffCanvas(){
+
   }
 
   toggleCollapse(): void {

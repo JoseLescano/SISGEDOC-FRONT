@@ -26,7 +26,7 @@
                 <button class="btn btn-warning" type="button" [routerLink]="['/principal/archivar', idDocumento]">
                   <i class="fas fa-archive"></i> ARCHIVAR
                 </button>
-                <button class="btn btn-secondary" type="button">
+                <button class="btn btn-secondary" type="button"  [routerLink]="['/principal/devolver', idDocumento]">
                   <i class="fas fa-undo-alt"></i> DEVOLVER
                 </button>
                 <button class="btn btn-info" type="button" (click)="verSeguimiento(idDocumento)" >
