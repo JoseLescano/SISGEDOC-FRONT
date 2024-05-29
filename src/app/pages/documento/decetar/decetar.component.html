@@ -30,7 +30,7 @@
       </div> -->
     </div>
     <mat-divider></mat-divider>
-    
+
     <div class="row mt-2">
       <div class="col-md-12 mt-2">
         <strong style="margin-right: 5px;">DETALLES DE DECRETO</strong>
@@ -42,11 +42,11 @@
     <form [formGroup]="formParent" novalidate (ngSubmit)="operate()" >
       <div  formArrayName="decretos">
         <div *ngFor="let de of getCrl('decretos', formParent).controls; index as i">
-          <div [formGroupName]="i" style="border: 2px; border-color: #675b45; border-style: dotted; 
+          <div [formGroupName]="i" style="border: 2px; border-color: #675b45; border-style: dotted;
                                         border-radius: 10px;  margin-top: 3px;padding: 10px; ">
             <div class="alert alert-info alert-dismissible  mt-2 fade show" role="alert">
               <i class="fas fa-info-circle"></i>
-              <strong style="margin-left: 5px;"> Número de decreto: {{i+1}}</strong> 
+              <strong style="margin-left: 5px;"> Número de decreto: {{i+1}}</strong>
               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="remove(i)" ></button>
             </div>
             <div class="row mt-2" >
@@ -104,7 +104,7 @@
                     <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('asunto').hasError('minlength')">** Min of 10 characters</small>
                   </div> -->
               </mat-form-field>
-              </div>              
+              </div>
             </div>
             <!-- <mat-divider></mat-divider> -->
           </div>
@@ -115,11 +115,11 @@
         <button mat-raised-button color="warn" type="button" routerLink="/principal" >Cancelar</button>
       </mat-card-actions>
     </form>
-    
+
   </mat-card-content>
   <mat-card-footer>
     <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
   </mat-card-footer>
 </mat-card>
 
-<!-- <div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{formParent.value | json}}</div> -->
+<div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{formParent.value | json}}</div>

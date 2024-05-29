@@ -144,7 +144,7 @@ export class DecetarComponent implements OnInit {
       dd.fechaLimite = environment.convertDateToStr(formDecretos[index].fechaLimite);
       dd.observacion = formDecretos[index].observaciones;
       dd.prioridad = formDecretos[index].prioridad;
-      debugger;
+
       let acciones = formDecretos[index].acciones;
       let decretosAcciones: DecretoAccionDTO[] = [];
       for (let y = 0; y < acciones.length; y++) {
@@ -157,15 +157,16 @@ export class DecetarComponent implements OnInit {
 
       this.decretos.push(dd);
     }
+    debugger;
     this.decretoDocumento.codigoDocumento = this.formParent.value['codigoDocumento'];
-    this.decretoDocumento.decretoActual = this.ultimoDecreto.codigo;
+    this.decretoDocumento.decretoActual = this.ultimoDecreto;
     this.decretoDocumento.decretos = this.decretos;
     console.log(this.decretoDocumento);
 
     this.decretoService.decretarDocumento(this.decretoDocumento).subscribe((response:any)=> {
       debugger;
       if (response.httpStatus == 'CREATED'){
-        this.router.navigate(["/principal"])
+        this.router.navigate(["/principal/pendientes"])
         Swal.fire('OPERACION REALIZADA', response.message, 'info');
 
       }

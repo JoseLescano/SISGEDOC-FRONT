@@ -25,7 +25,8 @@ export class LoginComponent implements OnInit {
 
   login(){
     debugger;
-    this.router.navigate(['/principal']);
+    // this.router.navigate(['/principal']);
+    this.router.navigate(['/perfiles']);
 
 
   }

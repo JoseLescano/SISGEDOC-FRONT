@@ -39,6 +39,16 @@ export class DecretoService extends GenericService<Decreto> {
 
   }
 
+  derivarDocumento(documento: any, origen: any, destino:any, observacion:any){
+    debugger;
+    let formData: FormData= new FormData();
+    formData.append('codigoDocumento', documento);
+    formData.append('origen', origen);
+    formData.append('destino', destino);
+    formData.append('observacion', observacion);
+    return this.http.post(`${environment.HOST}decretos/derivarDocumento`,  formData);
+  }
+
 
 
 }

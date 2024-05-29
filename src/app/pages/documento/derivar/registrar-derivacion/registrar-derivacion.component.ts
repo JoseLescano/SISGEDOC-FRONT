@@ -6,6 +6,9 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { Organizacion } from 'src/app/_model/organizacion';
 import { OrganizacionService } from 'src/app/_service/organizacion.service';
 import { environment } from 'src/environments/environment';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Decreto } from 'src/app/_model/decreto';
+import { DecretoDTO } from 'src/app/_DTO/DecretoDTO';
 
 @Component({
   selector: 'app-registrar-derivacion',
@@ -20,6 +23,7 @@ export class RegistrarDerivacionComponent implements OnInit {
   errorPDF : boolean = false;
   destinos:Organizacion[] = [];
   cargando: boolean = false;
+  form:FormGroup;
 
   constructor(
     private documentoService:DocumentoService,
@@ -35,6 +39,15 @@ export class RegistrarDerivacionComponent implements OnInit {
     this.getIdDocumento();
     this.getOrganizacion();
     this.cargando = false;
+    this.initForm();
+  }
+
+  initForm(){
+    this.form = new FormGroup({
+      'codigoDocumento': new FormControl(this.vidDocumento, [Validators.required]),
+      'destino': new FormControl('', [Validators.required]),
+      'observacion': new FormControl(null, [Validators.required, Validators.min(10)])
+    });
   }
 
   getIdDocumento(): void {
@@ -68,12 +81,31 @@ export class RegistrarDerivacionComponent implements OnInit {
   }
 
   getOrganizacion(){
-    debugger;
     this.organizacionService.findForDerivacion(environment.codigoOrganizacion).subscribe((response:any)=> {
       this.destinos = response.data;
     });
   }
 
-  
+  operate(){
+    if (this.form.valid){
+      let documento: any = this.vidDocumento;
+      let origen = environment.codigoOrganizacion;
+      let destino = this.form.value['destino'];
+      let observacion = this.form.value['observacion'];
+      this.decretoService.derivarDocumento(documento, origen, destino, observacion).subscribe((response:any)=>{
+        if(response.httpStatus == 'CREATED'){
+          Swal.fire('Operacion realizada', response.message, 'info');
+          this.router.navigate(['/principal/pendientes']);
+        }
+      }, error => {
+        Swal.fire('Lo sentimos', 'Se presento un inconveniente', 'warning');
+      });
+    }
+
+
+
+  }
+
+
 
 }

@@ -3,9 +3,9 @@ import { DecretoAccionDTO } from "./DecretoAccionDTO";
 import { DecretoDTO } from "./DecretoDTO";
 
 export class DecretoDocumentoDTO{
-    
+
     codigoDocumento:number;
-    decretoActual: number;
+    decretoActual: any;
     decretos: DecretoDTO[];
-    
+
 }

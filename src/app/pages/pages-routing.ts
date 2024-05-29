@@ -25,11 +25,14 @@ import { EntregarCorrespondenciaComponent } from './documento/mesaPartes/entrega
 import { ViewDecretadoComponent } from './documento/view-decretado/view-decretado.component';
 import { RegistrarDevolverComponent } from './documento/devolver/registrar-devolver/registrar-devolver.component';
 import { RegistrarDerivacionComponent } from './documento/derivar/registrar-derivacion/registrar-derivacion.component';
+import { PerfilesComponent } from './perfiles/perfiles.component';
 
 const routes: Routes = [
 
-  { path:'', redirectTo: environment.rol=='002' || environment.rol=='000'? 'pendientes': 'recibir-documento', pathMatch:'full' },
+  { path: '', redirectTo: 'perfiles', pathMatch:'full' },
+  // { path:'', redirectTo: environment.rol=='002' || environment.rol=='000'? 'pendientes': 'recibir-documento', pathMatch:'full' },
   { path:'pendientes', component:PendienteComponent},
+  { path:'perfiles', component:PerfilesComponent},
   { path:'decretar/:codigoDocumento', component:DecetarComponent},
   { path: 'acciones/:codigoDocumento', component: AccionesComponent },
   { path: 'archivar/:codigoDocumento', component: RegistrarComponent },

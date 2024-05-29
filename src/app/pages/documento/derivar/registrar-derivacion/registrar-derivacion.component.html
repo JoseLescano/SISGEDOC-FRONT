@@ -17,30 +17,30 @@
             </mat-card-header>
               <mat-tab-group mat-align-tabs="start">
                 <mat-tab label="DATOS GENERALES">
-                  <!-- <form class="example-form mt-2"> -->
+                  <form [formGroup]="form" (ngSubmit)="operate()" novalidate >
                     <mat-form-field  appearance="fill" class="mt-2">
                       <mat-label>CODIGO DE DOCUMENTO</mat-label>
                       <input matInput disabled value="{{vidDocumento}}">
                     </mat-form-field>
 
-                      <ng-select placeholder="ORGANIZACION DESTINO" [virtualScroll]=true formControlName="destino"  
-                          class="example-full-width">
-                          <mat-option>SELECCIONE</mat-option>
-                          <ng-option *ngFor="let c of destinos" [value]="c" >{{c.acronimo}}</ng-option>
-                      </ng-select>
-                        <!-- <div *ngIf="firstFormGroup.get('organizacionRemitente').errors && firstFormGroup.get('organizacionRemitente').dirty" >
-                          <mat-error *ngIf="firstFormGroup.get('organizacionRemitente').hasError('required')">* Campo requerido</mat-error>
-                        </div> -->
-                  
-                    <mat-form-field class="example-full-width mt-2" appearance="fill">
+                    <ng-select placeholder="ORGANIZACION DESTINO" [virtualScroll]=true formControlName="destino"
+                        class="example-full-width">
+                        <mat-option>SELECCIONE</mat-option>
+                        <ng-option *ngFor="let c of destinos" [value]="c.codigoInterno" >{{c.acronimo}}</ng-option>
+                    </ng-select>
+                      <!-- <div *ngIf="firstFormGroup.get('organizacionRemitente').errors && firstFormGroup.get('organizacionRemitente').dirty" >
+                        <mat-error *ngIf="firstFormGroup.get('organizacionRemitente').hasError('required')">* Campo requerido</mat-error>
+                      </div> -->
+
+                    <mat-form-field class="example-full-width mt-2" appearance="fill" >
                         <mat-label>MOTIVO</mat-label>
-                        <textarea matInput rows="7" [(ngModel)]="observaciones" ></textarea>
+                        <textarea matInput rows="7" [(ngModel)]="observaciones" formControlName="observacion" ></textarea>
                     </mat-form-field>
                     <div class="col-md-12" style="text-align: right;">
-                        <button mat-raised-button color="primary" style="margin-right: 5px;" [disabled]="observaciones==''" >GUARDAR</button>
-                        <button mat-raised-button color="warn" routerLink="/principal">CANCELAR</button>
+                        <button mat-raised-button type="submit" color="primary" style="margin-right: 5px;" [disabled]="form.invalid" >GUARDAR</button>
+                        <button mat-raised-button type="button" color="warn" routerLink="./principal">CANCELAR</button>
                     </div>
-                  <!-- </form> -->
+                  </form>
                 </mat-tab>
               </mat-tab-group>
 
@@ -48,7 +48,7 @@
         </div>
     </mat-card-content>
   </mat-card>
-
+  <div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{form.value | json}}</div>
 </div>
 
 

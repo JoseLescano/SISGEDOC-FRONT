@@ -75,7 +75,7 @@ export class RegistrarDevolverComponent implements OnInit {
           Swal.fire('Se presento un inconveniente', response.message, 'info')
         }
       }, (error:any)=> {
-        Swal.fire('Lo sentimos!', `No podemos archivar documento`, 'info');
+        Swal.fire('Lo sentimos!', `No podemos devolver documento`, 'info');
       });
     }else {
       Swal.fire('Lo sentimos!', `Debe de ingresar una observación para continuar con el registro`, 'info');

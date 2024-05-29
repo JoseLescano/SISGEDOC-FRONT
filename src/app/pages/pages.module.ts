@@ -33,6 +33,7 @@ import { ViewDecretadoComponent } from './documento/view-decretado/view-decretad
 import { ModalFirmaPeruComponent } from './documento/modal-firma-peru/modal-firma-peru.component';
 import { RegistrarDevolverComponent } from './documento/devolver/registrar-devolver/registrar-devolver.component';
 import { RegistrarDerivacionComponent } from './documento/derivar/registrar-derivacion/registrar-derivacion.component';
+import { PerfilesComponent } from './perfiles/perfiles.component';
 
 @NgModule({
   imports: [
@@ -73,7 +74,8 @@ import { RegistrarDerivacionComponent } from './documento/derivar/registrar-deri
     ViewDecretadoComponent,
     ModalFirmaPeruComponent,
     RegistrarDevolverComponent,
-    RegistrarDerivacionComponent
+    RegistrarDerivacionComponent,
+    PerfilesComponent
   ],
    exports:[
 
