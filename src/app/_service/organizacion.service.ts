@@ -55,4 +55,8 @@ export class OrganizacionService extends GenericService<Organizacion> {
     return this.http.get<Organizacion[]>(`${environment.HOST}organizaciones/getWithCodigoCopere`);
   }
 
+  findForDerivacion(codigoInterno: any){
+    return this.http.get<Organizacion[]>(`${environment.HOST}organizaciones/findForDerivacion/${codigoInterno}`);
+  }
+
 }

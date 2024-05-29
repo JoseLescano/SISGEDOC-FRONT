@@ -3,6 +3,9 @@ import { DecretoService } from 'src/app/_service/decreto.service';
 import { DocumentoService } from 'src/app/_service/documento.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit, ElementRef } from '@angular/core';
+import { Organizacion } from 'src/app/_model/organizacion';
+import { OrganizacionService } from 'src/app/_service/organizacion.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-registrar-derivacion',
@@ -15,17 +18,23 @@ export class RegistrarDerivacionComponent implements OnInit {
   vidDocumento:any;
   observaciones : any = '';
   errorPDF : boolean = false;
+  destinos:Organizacion[] = [];
+  cargando: boolean = false;
 
   constructor(
     private documentoService:DocumentoService,
     private decretoService: DecretoService,
+    private organizacionService: OrganizacionService,
     private route: ActivatedRoute,
     private router: Router,
     private elRef: ElementRef,
   ) { }
 
   ngOnInit(): void {
+    this.cargando = true;
     this.getIdDocumento();
+    this.getOrganizacion();
+    this.cargando = false;
   }
 
   getIdDocumento(): void {
@@ -57,5 +66,14 @@ export class RegistrarDerivacionComponent implements OnInit {
     iframe.contentWindow.location.replace(fileURL);
 
   }
+
+  getOrganizacion(){
+    debugger;
+    this.organizacionService.findForDerivacion(environment.codigoOrganizacion).subscribe((response:any)=> {
+      this.destinos = response.data;
+    });
+  }
+
+  
 
 }
