@@ -81,7 +81,7 @@ export class RegistrarDerivacionComponent implements OnInit {
   }
 
   getOrganizacion(){
-    this.organizacionService.findForDerivacion(environment.codigoOrganizacion).subscribe((response:any)=> {
+    this.organizacionService.findForDerivacion(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=> {
       this.destinos = response.data;
     });
   }
@@ -89,7 +89,7 @@ export class RegistrarDerivacionComponent implements OnInit {
   operate(){
     if (this.form.valid){
       let documento: any = this.vidDocumento;
-      let origen = environment.codigoOrganizacion;
+      let origen = sessionStorage.getItem(environment.codigoOrganizacion);
       let destino = this.form.value['destino'];
       let observacion = this.form.value['observacion'];
       this.decretoService.derivarDocumento(documento, origen, destino, observacion).subscribe((response:any)=>{

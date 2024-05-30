@@ -37,7 +37,7 @@ export class ViewRemitidosComponent implements OnInit {
   // =======================================================================================================
 
   ngOnInit(): void {
-    
+
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.generarReporte();
     });
@@ -45,7 +45,7 @@ export class ViewRemitidosComponent implements OnInit {
 
   generarReporte(): void {
     this.cargando = true;
-    this.documentoService.findRemitidos(environment.codigoOrganizacion).subscribe((data: any) => {
+    this.documentoService.findRemitidos(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any) => {
       this.createTable(data);
       this.cargando = false;
     }, (error: any)=> {

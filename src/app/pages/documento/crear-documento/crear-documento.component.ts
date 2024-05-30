@@ -46,7 +46,7 @@ export class CrearDocumentoComponent implements OnInit {
   ngOnInit(): void {
     this.cargando = true;
     this.initForm();
-    this.organizacionService.findFirmantes(environment.codigoOrganizacion).subscribe((response:any)=>  {
+    this.organizacionService.findFirmantes(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>  {
       this.firmantes = response.data
     });
     // this.firmanteFilter$ = this.firmanteControl.valueChanges.pipe(map(val => this.filterfirmantes(val)));
@@ -89,7 +89,7 @@ export class CrearDocumentoComponent implements OnInit {
       });
       this.cargando = false;
     }
-    if (firmante.codigoInterno === environment.codigoOrganizacion)
+    if (firmante.codigoInterno === sessionStorage.getItem(environment.codigoOrganizacion))
       this.mostrarFirma = true;
     else this.mostrarFirma = false;
   }
@@ -107,6 +107,7 @@ export class CrearDocumentoComponent implements OnInit {
       this.cargando = true;
       debugger;
       this.documentoar.organizacionOrigen = this.form.value['firmante'].codigoInterno;
+
       this.documentoar.clase = this.form.value['tipoDocumento'];
       this.documentoar.nroOrden =  this.form.get('nroCorrelativo').value;
       this.documentoar.indicativo =  this.form.value['indicativo'];
@@ -114,16 +115,31 @@ export class CrearDocumentoComponent implements OnInit {
       this.documentoar.copiasInformativas = this.form.value['copiaInformativa'];
       this.documentoar.asunto= this.form.value['asunto'];
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
-      this.documentoService.crearDocumento(this.documentoar).subscribe((response:any)=>{
-        if (response.httpStatus=='CREATED'){
+      if (this.documentoar.organizacionOrigen== sessionStorage.getItem(environment.codigoOrganizacion)){
+        this.documentoService.crearDocumento(this.documentoar).subscribe((response:any)=>{
+          if (response.httpStatus=='CREATED'){
+            this.cargando = false;
+            this.initForm();
+            Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
+          }
+        }, error => {
           this.cargando = false;
-          this.initForm();
-          Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
-        }
-      }, error => {
-        this.cargando = false;
-        Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
-      });
+          Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
+        });
+      }else {
+        this.documentoService.crearDocumentoParaFirmar(
+          this.documentoar,
+          sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>{
+          if (response.httpStatus=='CREATED'){
+            this.cargando = false;
+            this.initForm();
+            Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
+          }
+        }, error => {
+          this.cargando = false;
+          Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
+        });
+      }
      } else {
       this.cargando = false;
       Swal.fire('Lo sentimos', `Se presento un inconveniente!`, 'warning');

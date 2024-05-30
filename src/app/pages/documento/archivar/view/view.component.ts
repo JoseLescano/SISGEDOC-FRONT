@@ -38,7 +38,7 @@ export class ViewComponent implements OnInit, AfterViewInit {
 
   generarReporte(): void {
     this.cargando = true;
-    this.documentoService.findArchivadosByOrganizacion(environment.codigoOrganizacion).subscribe((data: any) => {
+    this.documentoService.findArchivadosByOrganizacion(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any) => {
       this.createTable(data);
       this.cargando = false;
     }, (error: any)=> {

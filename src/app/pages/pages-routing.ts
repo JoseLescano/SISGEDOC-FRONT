@@ -26,12 +26,14 @@ import { ViewDecretadoComponent } from './documento/view-decretado/view-decretad
 import { RegistrarDevolverComponent } from './documento/devolver/registrar-devolver/registrar-devolver.component';
 import { RegistrarDerivacionComponent } from './documento/derivar/registrar-derivacion/registrar-derivacion.component';
 import { PerfilesComponent } from './perfiles/perfiles.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
 
   { path: '', redirectTo: 'perfiles', pathMatch:'full' },
   // { path:'', redirectTo: environment.rol=='002' || environment.rol=='000'? 'pendientes': 'recibir-documento', pathMatch:'full' },
   { path:'pendientes', component:PendienteComponent},
+  { path:'dashboard', component:DashboardComponent},
   { path:'perfiles', component:PerfilesComponent},
   { path:'decretar/:codigoDocumento', component:DecetarComponent},
   { path: 'acciones/:codigoDocumento', component: AccionesComponent },

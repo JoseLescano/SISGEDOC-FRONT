@@ -34,6 +34,7 @@ import { ModalFirmaPeruComponent } from './documento/modal-firma-peru/modal-firm
 import { RegistrarDevolverComponent } from './documento/devolver/registrar-devolver/registrar-devolver.component';
 import { RegistrarDerivacionComponent } from './documento/derivar/registrar-derivacion/registrar-derivacion.component';
 import { PerfilesComponent } from './perfiles/perfiles.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
   imports: [
@@ -75,7 +76,8 @@ import { PerfilesComponent } from './perfiles/perfiles.component';
     ModalFirmaPeruComponent,
     RegistrarDevolverComponent,
     RegistrarDerivacionComponent,
-    PerfilesComponent
+    PerfilesComponent,
+    DashboardComponent
   ],
    exports:[
 

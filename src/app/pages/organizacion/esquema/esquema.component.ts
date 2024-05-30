@@ -138,8 +138,7 @@ export class EsquemaComponent implements OnInit {
 
 
   fetchDataAndDraw(): void {
-    this.organizacionService.getChildrenAllByCodigo(environment.codigoOrganizacion).subscribe((response: any) => {
-      debugger;
+    this.organizacionService.getChildrenAllByCodigo(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response: any) => {
       this.buildDiagram(response.data);
     });
   }

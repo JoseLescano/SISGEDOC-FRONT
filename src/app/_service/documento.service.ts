@@ -154,4 +154,21 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/firmarDocumentoPeru`, formData);
   }
 
+  crearDocumentoParaFirmar(documento: any, organizacionRemitente:any){
+    debugger;
+    let formData:FormData = new FormData();
+    formData.append('clase', documento.clase);
+    formData.append('nroOrden', documento.nroOrden);
+    formData.append('indicativo', documento.indicativo);
+    formData.append('prioridad', documento.prioridad);
+    formData.append('asunto', documento.asunto);
+    formData.append('destinos', documento.destinos);
+    formData.append('copiasInformativas', documento.copiasInformativas);
+    formData.append('archivoPrincipal', documento.archivoPrincipal);
+    formData.append('anexo', documento.anexos);
+    formData.append('organizacionOrigen', documento.organizacionOrigen);
+    formData.append('organizacionRemitente', organizacionRemitente);
+    return this.http.post(`${environment.HOST}documentos/remitirDocumentoForFirma`, formData);
+  }
+
 }

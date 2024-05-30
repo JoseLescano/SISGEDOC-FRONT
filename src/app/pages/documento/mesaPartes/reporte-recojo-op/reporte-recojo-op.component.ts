@@ -31,7 +31,7 @@ export class ReporteRecojoOPComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
-    this.correspondenciaService.findByOrganizacionDestino(environment.codigoOrganizacion).subscribe((response:any)=> {
+    this.correspondenciaService.findByOrganizacionDestino(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=> {
       this.createTable(response.data);
     });
   }

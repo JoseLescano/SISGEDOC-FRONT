@@ -31,7 +31,7 @@ export class ParteDiarioComponent implements OnInit, AfterViewInit {
               public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.documentoService.findParaParte(environment.codigoOrganizacion).subscribe((response:any)=>{
+    this.documentoService.findParaParte(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>{
       this.dataSource = response;
     });
   }

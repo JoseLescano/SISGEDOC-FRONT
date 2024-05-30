@@ -65,7 +65,7 @@ export class RegistrarDevolverComponent implements OnInit {
     if (this.observaciones!='' && this.observaciones!=null){
       let documento : any = codigoDocumento;
       let observacion = this.observaciones;
-      let origen = environment.codigoOrganizacion;
+      let origen = sessionStorage.getItem(environment.codigoOrganizacion);
 
       this.decretoService.devolverDocumento(documento, origen, observacion).subscribe((response:any)=>{
         if(response.data){

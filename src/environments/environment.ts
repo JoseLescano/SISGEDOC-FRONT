@@ -6,6 +6,7 @@ export const environment = {
   // codigoOrganizacion: '12021002',
   // codigoOrganizacion: '0211090101',
   codigoOrganizacion: '3302010102',
+  TOKEN_AUTH_USERNAME: '',
 
   rol: '002',
 

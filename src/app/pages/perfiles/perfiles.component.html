@@ -1,13 +1,33 @@
-<div class="container">
-  <div class="service-wrapper">
-    <div class="service">
-      <h1>Perfiles asignados a su usuario</h1>
-      <div class="cards">
-        <div class="card">
-          <i class="fa-brands fa-chromecast"></i>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad magni enim qui, quae sit ex quasi. Debitis magnam ea laborum aliquid. Dignissimos quia officiis dicta distinctio quos, recusandae magni sapiente.</p>
+<div class="container-fluid">
+  <section>
+    <div class="row">
+      <h2 class="section-heading">PERFILES ASIGNADOS</h2>
+    </div>
+    <div class="row">
+      <div class="column" *ngFor="let perfil of perfiles">
+        <div class="card" (click)="seleccionarPerfil(perfil)">
+          <div class="icon-wrapper">
+            <i class="fas fa-user-tag"></i>
+          </div>
+          <h3>{{perfil.nombre}}</h3>
+          <p>
+           {{perfil.organizacion.nombreLargo}}
+           <!-- <br>
+           <span style="font-size: 14px; font-weight: 600;">{{perfil.rol.nombre}}</span> -->
+          </p>
+        </div>
+      </div>
+      <div class="column" *ngIf="perfiles?.length>0">
+        <div class="card-salir" (click)="salir()" >
+          <div class="icon-wrapper-salir">
+            <i class="fas fa-sign-out-alt"></i>
+          </div>
+          <h3>SALIR</h3>
+          <p>
+           SALIR DEL SISTEMA
+          </p>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </div>

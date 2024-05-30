@@ -35,7 +35,7 @@ export class PendienteComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.cargando = true;
-    this.documentoService.findByOrganizacionDestino(environment.codigoOrganizacion).subscribe((data: any)=> {
+    this.documentoService.findByOrganizacionDestino(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any)=> {
       this.createTable(data);
       this.cargando = false;
     }, error=> {

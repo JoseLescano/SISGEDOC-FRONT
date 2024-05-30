@@ -1,8 +1,8 @@
 import swal from 'sweetalert2'
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { PerfilService } from 'src/app/_service/perfil.service';
-import Swal from 'sweetalert2';
+import { Perfil } from 'src/app/_model/perfil';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -14,9 +14,9 @@ export class LoginComponent implements OnInit {
   username: string;
   password: string;
   hide : boolean = true;
+  perfiles: Perfil[] = [];
 
   constructor(
-    private perfilService: PerfilService,
     private router: Router
   ) { }
 
@@ -24,11 +24,10 @@ export class LoginComponent implements OnInit {
   }
 
   login(){
-    debugger;
-    // this.router.navigate(['/principal']);
+    environment.TOKEN_AUTH_USERNAME= this.username;
     this.router.navigate(['/perfiles']);
-
-
   }
+
+
 
 }

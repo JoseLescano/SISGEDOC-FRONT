@@ -33,7 +33,7 @@ export class EnvioExternoComponent implements OnInit {
   copiasInformativas:Organizacion[];
   documentoar : DocumentoArchivoAnexo = new DocumentoArchivoAnexo();
 
-  
+
   constructor(
     private organizacionService: OrganizacionService,
     private claseService: ClaseService,
@@ -66,13 +66,13 @@ export class EnvioExternoComponent implements OnInit {
       'fechaDocumento':  new FormControl('', [Validators.required]),
       'prioridad':  new FormControl('', [Validators.required]),
       'folio':  new FormControl('', [Validators.required]),
-      'asunto':  new FormControl('', [Validators.required]), 
-      
+      'asunto':  new FormControl('', [Validators.required]),
+
     });
   }
 
   operate(){
-    
+
     if (this.firstFormGroup.valid){
       this.cargando = true;
 
@@ -86,9 +86,9 @@ export class EnvioExternoComponent implements OnInit {
       this.documentoar.prioridad = this.firstFormGroup.value['prioridad'];
       this.documentoar.folio = this.firstFormGroup.value['folio'];
       this.documentoar.asunto= this.firstFormGroup.value['asunto'];
-      this.documentoar.organizacionOrigen = environment.codigoOrganizacion;
+      this.documentoar.organizacionOrigen = sessionStorage.getItem(environment.codigoOrganizacion);
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
-      
+
       this.documentoService.envioExterno(this.documentoar).subscribe((response:any) =>{
       if (response.httpStatus=='CREATED'){
         this.cargando = false;

@@ -46,7 +46,7 @@ export class DecetarComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargando = true;
-    this.organizacionService.getChildrenByCodigo(environment.codigoOrganizacion).subscribe((response:any)=> {
+    this.organizacionService.getChildrenByCodigo(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=> {
       this.destinos = response.data;
       if (this.destinos.length==0){
         this.router.navigate(['./principal/pendientes']);
@@ -73,14 +73,14 @@ export class DecetarComponent implements OnInit {
 
   getUltimoDecreto(){
 
-    this.decretoService.ultimoDecreto(this.idDocumento, environment.codigoOrganizacion).subscribe((data: any) => {
+    this.decretoService.ultimoDecreto(this.idDocumento, sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any) => {
       debugger;
       this.ultimoDecreto = data;
     });
   }
 
   initFormParent(){
-    this.origen.codigoInterno  = environment.codigoOrganizacion;
+    this.origen.codigoInterno  = sessionStorage.getItem(environment.codigoOrganizacion);
     this.formParent = new FormGroup(
       {
         codigoDocumento: new FormControl(this.idDocumento, [Validators.required]),

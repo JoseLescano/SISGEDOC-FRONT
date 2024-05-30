@@ -70,7 +70,7 @@ export class RegistrarMPComponent implements OnInit {
     });
     this.claseService.listar().subscribe((response:any)=> this.clases = response.data );
     this.prioridadService.listar().subscribe(data=> this.prioridades = data);
-    this.organizacionService.getChildrenByCodigo(environment.codigoOrganizacion).subscribe((response:any)=> {
+    this.organizacionService.getChildrenByCodigo(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=> {
       this.organizacionesDestino = response.data;
       this.copiasInformativas = response.data;
     });

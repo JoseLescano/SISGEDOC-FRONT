@@ -54,7 +54,6 @@ export class HeaderComponent implements OnInit {
   screenWidth = 0;
   perfiles: Perfil[];
   menus: Menu[];
-  codigoOrganizacion=environment.codigoOrganizacion;
   rolIngresado = environment.rol;
 
   @HostListener('window:resize', ['$event'])
@@ -68,7 +67,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
       this.screenWidth = window.innerWidth;
-      this.menuService.getMenuByRol(environment.rol).subscribe((response:any)=> {
+      this.menuService.getMenuByRol(sessionStorage.getItem(environment.rol)).subscribe((response:any)=> {
         this.menus = response.data as Menu[];
       })
   }

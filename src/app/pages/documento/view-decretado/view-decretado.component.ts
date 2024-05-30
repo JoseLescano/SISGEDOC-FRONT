@@ -30,7 +30,7 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.cargando = true;
-    this.documentoService.findDecretados(environment.codigoOrganizacion).subscribe((data: any)=> {
+    this.documentoService.findDecretados(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any)=> {
       this.createTable(data);
       this.cargando = false;
     }, error=> {

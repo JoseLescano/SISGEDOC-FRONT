@@ -28,7 +28,7 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
     start: new FormControl<Date | null>(null),
     end: new FormControl<Date | null>(null),
   });
-  
+
   constructor(
     private documentoService:DocumentoService,
     public dialog: MatDialog
@@ -67,12 +67,12 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
 
   verDecretos(){
     this.cargando = true;
-    this.documentoService.findDecretados(environment.codigoOrganizacion, 
+    this.documentoService.findDecretados(sessionStorage.getItem(environment.codigoOrganizacion),
       environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end'])
     ).subscribe((response:any)=>{
       this.createTable(response);
       this.cargando = false;
-      
+
     }, error => {
       this.cargando = false;
       Swal.fire(`LO SENTIMOS`, 'SE PRESENTO UN INCONVENIENTE CON EL REPORTE DE DOCUMENTOS', 'info');
@@ -81,7 +81,7 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
 
   verEnviadosExterno(){
     this.cargando = true;
-    this.documentoService.findEnviadosExternosMP(environment.codigoOrganizacion).subscribe((response:any)=>{
+    this.documentoService.findEnviadosExternosMP(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>{
       this.createTable(response);
       this.cargando = false;
     }, error => {
@@ -92,7 +92,7 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
 
   verDocumentoRegistrados(){
     this.cargando = true;
-    this.documentoService.findByOrganizacionDestino(environment.codigoOrganizacion).subscribe((data: any)=> {
+    this.documentoService.findByOrganizacionDestino(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any)=> {
       this.createTable(data);
       this.cargando = false;
     }, error=> {
