@@ -3,8 +3,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Anexo } from 'src/app/_model/anexo';
 import { Documento } from 'src/app/_model/documento.model';
 import { AnexoService } from 'src/app/_service/anexo.service';
+import { DecretoService } from 'src/app/_service/decreto.service';
 import { DocumentoRespuestaService } from 'src/app/_service/documento-respuesta.service';
 import { DocumentoService } from 'src/app/_service/documento.service';
+import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -18,6 +20,9 @@ export class FormComponent implements OnInit {
   errorPDF : boolean = false;
   errorPDFReferencia : boolean = false;
   anexos:Anexo[]=[];
+  selectedFiles: any;
+  url_pdf : any;
+  cargando : boolean = false;
 
   folders: any[] = [
     {
@@ -34,25 +39,42 @@ export class FormComponent implements OnInit {
     },
   ];
 
+  mostrarReferencia: boolean = false;
+  mostrarDistribuir: boolean = false;
+  organizacionLogueada: string = "";
+
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: Documento,
     private matDialog: MatDialogRef<FormComponent>,
     private documentoService:DocumentoService,
     private elRef: ElementRef,
     private documentoRespuestaService: DocumentoRespuestaService,
-    private anexoService: AnexoService
+    private anexoService: AnexoService,
+    private decretoService: DecretoService
   ) { }
 
   ngOnInit(): void {
     this.documento = {...this.data};
+    this.organizacionLogueada = sessionStorage.getItem(environment.codigoOrganizacion);
+    if (this.organizacionLogueada==this.documento.organizacionOrigen.codigoInterno){
+      this.mostrarDistribuir=true;
+    }else {
+      this.mostrarDistribuir=false;
+    }
     this.viewDocumento();
-    this.verReferencia();
+    if (this.documento.estadoDocumento.codigo!='15'){
+      this.verReferencia();
+      this.mostrarReferencia=true;
+    }
+
     this.findAnexosByDocumento();
   }
 
   findAnexosByDocumento(){
     this.anexoService.findByDocumento(this.documento.codigo).subscribe((response:any)=> {
       this.anexos = response.data;
+    }, error => {
+      Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR ANEXOS!`, 'warning');
     });
   }
 
@@ -80,9 +102,30 @@ export class FormComponent implements OnInit {
   crearDocumento(resp: any, iframeId: string) {
     const byteArray = new Uint8Array(atob(resp[0]).split('').map((char) => char.charCodeAt(0)));
     const file = new Blob([byteArray], { type: 'application/pdf' });
+
     const fileURL = URL.createObjectURL(file);
     const iframe: any = document.getElementById(iframeId) as HTMLIFrameElement;
     iframe.contentWindow.location.replace(fileURL);
+
+    var rf_file = new File([file], URL.createObjectURL(file), { type: 'application/pdf'});
+    let listFile = [rf_file];
+    let list = new DataTransfer();
+    list.items.add(rf_file);
+    this.selectedFiles=list.files;
+    this.url_pdf = this.selectedFiles[0].name;
+    // this.convertirArchivoABase64(this.selectedFiles.item(0));
+  }
+
+
+  convertirArchivoABase64(file: File) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+        const base64 = reader.result as string;
+    };
+    reader.onerror = error => {
+        console.log('Error: ', error);
+    };
   }
 
   descargarAnexo(anexo:Anexo){
@@ -185,6 +228,53 @@ export class FormComponent implements OnInit {
 
   close(){
     this.matDialog.close();
+  }
+
+  elevarDocumento(){
+    this.decretoService.elevarDocumento(this.documento.codigo, sessionStorage.getItem(environment.codigoOrganizacion))
+    .subscribe((response:any)=> {
+      if (response.httpStatus=='CREATED'){
+        Swal.fire('DOCUMENTO ELEVADO', response.message, 'info');
+      }else {
+        Swal.fire('LO SENTIMOS', response.message, 'warning');
+      }
+    }, error=> {
+      Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVIENTE EN LA ELEVACION DEL DOCUMENTO', 'warning');
+    });
+  }
+
+  distribuir(){
+    Swal.fire({
+      title: "¿Desea agregar una firma digital?",
+      text: "Antes de realizar la operación desea firmar digitalmente el documento",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, deseo firmarlo",
+      cancelButtonText: `Solo DISTRIBUIR`
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire("Saved!", "", "success");
+      } else {
+        this.cargando = true;
+        this.firmarDocumento();
+        this.cargando = false;
+        // this.decretoService.distrubirDocumento(this.documento.codigo, sessionStorage.getItem(environment.codigoOrganizacion)).subscribe;
+        Swal.fire("Changes are not saved", "", "info");
+      }
+    });
+  }
+
+  _window(): any {
+    // return the global native browser window object
+    return window;
+  }
+
+  firmarDocumento(){
+
+    this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response:any)=>{
+       this._window().iniciarFirma(response[1]);
+    });
+
   }
 
 

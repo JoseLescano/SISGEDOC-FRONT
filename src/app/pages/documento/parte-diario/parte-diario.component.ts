@@ -18,7 +18,7 @@ import { FormComponent } from './form/form.component';
 })
 export class ParteDiarioComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['Nro', 'Asunto', 'Origen', 'FechaDoc', 'Documento',  'Acciones'];
+  displayedColumns: string[] = ['Nro', 'Asunto', 'Origen','Destino', 'FechaDoc', 'Documento',  'Acciones'];
   dataSource: MatTableDataSource<Documento>;
   cargando: boolean;
 

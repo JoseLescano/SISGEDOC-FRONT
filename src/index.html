@@ -31,9 +31,11 @@
       console.log('Iniciando....');
     }
     function signatureOk(){
+      Swal.fire("Documento Firmado Correctamente", "", "info");
       console.log('Documento Firmado');
     }
     function signatureCancel(){
+      Swal.fire("Firma Cancelada", "", "info");
       console.log('Operacion Cancelada');
     }
     function sendParam(data){
