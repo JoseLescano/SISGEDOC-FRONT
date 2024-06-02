@@ -9,7 +9,7 @@
                 <ng-template matStepLabel>Datos generales</ng-template>
                 <div class="row">         
                   <input type="file" (change)="selectArchivoPrincipal($event)" style="display: none" id="btnFileUpload213"  accept="application/pdf" />         
-                  <div class="col-md-6">
+                  <div class="col-sm-12 col-lg-6">
 
                     <div class="row mt-4">
                       <div class="col-6">
@@ -115,13 +115,13 @@
                       </div>
                     </div>
                   </div>
-                  <div  class="col-md-6" >
+                  <div  class="col-sm-12 col-lg-6" >
                     <iframe id="documentoPrincipal" style="width: 100%; height: 100%; margin-top: 5px; border: 1px solid black; border-radius: 5px;"></iframe>
                   </div>
                 </div>
                 <mat-card-actions align="end">
                   <button  class="btn btn-outline-primary mr-2" type="submit" [disabled]="firstFormGroup.invalid">GUARDAR DOCUMENTO</button>
-                  <button class="btn btn-outline-danger mr-2" type="button" [routerLink]="['../recibir-documento']" >CANCELAR </button>
+                  <button class="btn btn-outline-danger mr-2" type="button" [routerLink]="['/principal/recibir-documento']" >CANCELAR </button>
                 </mat-card-actions>
               </form>
               <div class="mt-2">

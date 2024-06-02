@@ -70,7 +70,7 @@
                       <button mat-mini-fab color="accent"  >
                         <i class="fas fa-info-circle" ></i>
                       </button>
-                      <button mat-mini-fab color="warn" (click)="openDialog(row)" >
+                      <button mat-mini-fab color="warn" [routerLink]="['/principal/form', row.codigo]" >
                         <i class="fas fa-signature" ></i>
                       </button>
                     </div>

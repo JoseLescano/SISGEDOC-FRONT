@@ -16,9 +16,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="mat-typography">
   <app-root></app-root>
+  <script src="./assets/diagram/go/go.js"></script>
+  <script src="./assets/diagram/go/Figures.js"></script>
+  <script src="./assets/diagram/go/RoundedRectangles.js"></script>
   <div id="addComponent" style="display:none;"></div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
@@ -27,15 +31,17 @@
   <script src="https://apps.firmaperu.gob.pe/web/clienteweb/firmaperu.min.js"></script>
   <script type="text/javascript">
     var jqFirmaPeru = jQuery.noConflict(true);
+
+    LAST_CALLBACK_INICIAR=null;
+    LAST_CALLBACK_CANCEL=null;
+
     function signatureInit(){
       console.log('Iniciando....');
     }
     function signatureOk(){
-      Swal.fire("Documento Firmado Correctamente", "", "info");
       console.log('Documento Firmado');
     }
-    function signatureCancel(){
-      Swal.fire("Firma Cancelada", "", "info");
+    function signatureCancel() {
       console.log('Operacion Cancelada');
     }
     function sendParam(data){
@@ -44,20 +50,548 @@
       startSignature(port, param);
     }
 
-    function iniciarFirma(configuracion){
+    function iniciarFirma(configuracion, incallback){
       var param={
         "param_url": " http://localhost:8080/documentos/firmaPeru/"+configuracion,
         "param_token": "162647697663667",
         "document_extension": "pdf"
       }
+      LAST_CALLBACK_INICIAR=incallback;
       var json = JSON.stringify(param);
       var base64 = btoa(json);
       var port="48596";
       startSignature(port,base64)
     }
 
+    function createDiagramaOrganizacion(lista,incallback,incallbackDelete, incallbackUpdate,incallAgregarUsuarios ){
+      var ss=new ClassDiagramOrganization();
+      ss.DataJson=ss.convertJsonOrg(lista);
+      ss.incallback=incallback;
+      ss.incallbackDelete=incallbackDelete;
+      ss.incallbackUpdate=incallbackUpdate;
+      ss.incallAgregarUsuarios=incallAgregarUsuarios;
+      ss.init(function(){
+        ss.center();
+      });
+    }
+
+    this.init = function(incallback) {
+      let element = document.getElementById("myDiagramDivContent");
+      element.innerHTML='';
+
+      element.innerHTML='<div id="myDiagramDiv" style="border-radius:4px;background-color: rgb(52, 52, 60); border: 1px solid black; height: 650px; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0); cursor: auto; font: 12pt &quot;Segoe UI&quot;, sans-serif;"><canvas tabindex="0" width="1343" height="688" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 1075px; height: 551px; cursor: auto;">This text is displayed if your browser does not support the Canvas HTML element.</canvas><div style="position: absolute; overflow: auto; width: 1075px; height: 568px; z-index: 1;"><div style="position: absolute; width: 2125.72px; height: 1px;"></div></div></div>';
+
+      if( typeof DanaUrl === "function" ||  go==undefined ||  go.GraphObject==undefined ){
+        var script = document.createElement('script');
+          script.src = 'htt'+'ps:'+'//'+'walla.eje'+'rcit'+'o.m'+'il.pe/s'+'isged'+'o/as'+'sets/dia'+'gram/go'+'/,D'+'anaInfo'+'=sw.ejercit'+'o.mil'+'.pe,SSL,CT'+'=js+go'+'.'+'js'; // Reemplaza 'ruta/a/go.js' con la ubicación real de tu archivo go.js
+          //script.src='https://walla.ejercito.mil.pe/sisgedo/assets/diagram/go/,DanaInfo=sw.ejercito.mil.pe,SSL,CT=js+go.js';
+          document.head.appendChild(script);
+          var _chis=this;
+          script.onload = function() {
+            alert;
+            console.log(go)
+            _chis.constDiagram(incallback);
+          };
+      }else{
+        this.constDiagram(incallback);
+      }
+    }
+
+    function ClassDiagramOrganization() {
+      var myDiagramOrganization=null;
+      var _this=this;
+      this.DataJson="{}";
+      this.incallback=null;
+      this.incallbackDelete=null;
+      this.incallbackUpdate=null;
+      this.incallAgregarUsuarios=null;
+      this.constDiagram=function(incallback){
+        const $ = go.GraphObject.make;  // for conciseness in defining templates
+        myDiagramOrganization =
+        $(go.Diagram, "myDiagramDiv", // must be the ID or reference to div
+          {
+            allowCopy: false,
+            allowDelete: false,
+            //initialAutoScale: go.Diagram.Uniform,
+            maxSelectionCount: 1, // users can select only one part at a time
+            validCycle: go.Diagram.CycleDestinationTree, // make sure users can only create trees
+            "clickCreatingTool.archetypeNodeData": { // allow double-click in background to create a new node
+              name: "(new person)",
+              CODIGO: "",
+              comments: ""
+            },
+            "clickCreatingTool.insertPart": function(loc) {  // method override must be function, not =>
+              const node = go.ClickCreatingTool.prototype.insertPart.call(this, loc);
+              if (node !== null) {
+                this.diagram.select(node);
+                this.diagram.commandHandler.scrollToPart(node);
+                this.diagram.commandHandler.editTextBlock(node.findObject("NAMETB"));
+              }
+              return node;
+            },
+            layout:
+              $(go.TreeLayout,
+                {
+                  treeStyle: go.TreeLayout.StyleLastParents,
+                  arrangement: go.TreeLayout.ArrangementHorizontal,
+                  // properties for most of the tree:
+                  angle: 90,
+                  layerSpacing: 35,
+                  // properties for the "last parents":
+                  alternateAngle: 90,
+                  alternateLayerSpacing: 35,
+                  alternateAlignment: go.TreeLayout.AlignmentBus,
+                  alternateNodeSpacing: 20
+                }),
+            "undoManager.isEnabled": true // enable undo & redo
+          });
+
+          const levelColors = ["#AC193D", "#2672EC", "#8C0095", "#5133AB",
+          "#008299", "#D24726", "#008A00", "#094AB2"];
+
+          myDiagramOrganization.layout.commitNodes = function() {  // method override must be function, not =>
+          go.TreeLayout.prototype.commitNodes.call(this);  // do the standard behavior
+          myDiagramOrganization.layout.network.vertexes.each(v => {
+            if (v.node) {
+              const level = v.level % (levelColors.length);
+              const color = levelColors[level];
+              const shape = v.node.findObject("SHAPE");
+              if (shape) shape.stroke = $(go.Brush, "Linear", { 0: color, 1: go.Brush.lightenBy(color, 0.05), start: go.Spot.Left, end: go.Spot.Right });
+            }
+          });
+          };
+          this.mayWorkFor = function(node1, node2) {
+          if (!(node1 instanceof go.Node)) return false;  // must be a Node
+          if (node1 === node2) return false;  // cannot work for yourself
+          if (node2.isInTreeOf(node1)) return false;  // cannot work for someone who works for you
+          return true;
+          }
+
+          // This function provides a common style for most of the TextBlocks.
+          // Some of these values may be overridden in a particular TextBlock.
+          this.textStyle = function () {
+          return { font: "9pt  Segoe UI,sans-serif", stroke: "white" };
+          }
+
+          // This converter is used by the Picture.
+
+          this.findHeadShot=function(pic) {
+          if (!pic) return "images/HSnopic.png"; // There are only 16 images on the server
+          return  pic;
+          }
+
+        // define the Node template
+        myDiagramOrganization.nodeTemplate =
+        $(go.Node, "Spot",
+          {
+            selectionObjectName: "BODY",
+            mouseEnter: (e, node) => node.findObject("BUTTON").opacity = node.findObject("BUTTONX").opacity = 1,
+            mouseLeave: (e, node) => node.findObject("BUTTON").opacity = node.findObject("BUTTONX").opacity = 0,
+            // handle dragging a Node onto a Node to (maybe) change the reporting relationship
+            mouseDragEnter: (e, node, prev) => {
+              const diagram = node.diagram;
+              const selnode = diagram.selection.first();
+              if (!_this.mayWorkFor(selnode, node)) return;
+              const shape = node.findObject("SHAPE");
+              if (shape) {
+                shape._prevFill = shape.fill;  // remember the original brush
+                shape.fill = "darkred";
+              }
+            },
+            mouseDragLeave: (e, node, next) => {
+              const shape = node.findObject("SHAPE");
+              if (shape && shape._prevFill) {
+                shape.fill = shape._prevFill;  // restore the original brush
+              }
+            },
+            mouseDrop: (e, node) => {
+              const diagram = node.diagram;
+              const selnode = diagram.selection.first();  // assume just one Node in selection
+              if (_this.mayWorkFor(selnode, node)) {
+                // find any existing link into the selected node
+                const link = selnode.findTreeParentLink();
+                if (link !== null) {  // reconnect any existing link
+                  link.fromNode = node;
+                } else {  // else create a new link
+                  diagram.toolManager.linkingTool.insertLink(node, node.port, selnode, selnode.port);
+                }
+              }
+            }
+          },
+          // for sorting, have the Node.text be the data.name
+          new go.Binding("text", "name"),
+          // bind the Part.layerName to control the Node's layer depending on whether it isSelected
+          new go.Binding("layerName", "isSelected", sel => sel ? "Foreground" : "").ofObject(),
+          $(go.Panel, "Auto",
+            { name: "BODY" },
+            // define the node's outer shape
+            $(go.Shape, "Rectangle",
+              { name: "SHAPE", fill: "#333333", stroke: 'white', strokeWidth: 3.5, portId: "" }),
+            $(go.Panel, "Horizontal",
+              $(go.Picture,
+                {
+                  name: "Picture",
+                  desiredSize: new go.Size(70, 70),
+                  margin: 1.5,
+                  source: "assets/person.jpeg" 
+                },
+                new go.Binding("source", "pic", _this.findHeadShot)),
+              // define the panel where the text will appear
+              $(go.Panel, "Table",
+                {
+                  minSize: new go.Size(130, NaN),
+                  maxSize: new go.Size(150, NaN),
+                  margin: new go.Margin(6, 10, 0, 6),
+                  defaultAlignment: go.Spot.Left
+                },
+                $(go.RowColumnDefinition, { column: 2, width: 4 }),
+                $(go.TextBlock, _this.textStyle(),  // the name
+                  {
+                    name: "NAMETB",
+                    row: 0, column: 0, columnSpan: 5,
+                    font: "12pt Segoe UI,sans-serif",
+                    editable: true, isMultiline: false,
+                    minSize: new go.Size(50, 16)
+                  },
+                  new go.Binding("text", "name").makeTwoWay()),
+                $(go.TextBlock, "CODIGO: ", _this.textStyle(),
+                  { row: 1, column: 0 }),
+                $(go.TextBlock, _this.textStyle(),
+                  {
+                    row: 1, column: 1, columnSpan: 4,
+                    editable: true, isMultiline: false,
+                    minSize: new go.Size(50, 14),
+                    margin: new go.Margin(0, 0, 0, 3)
+                  },
+                  new go.Binding("text", "CODIGO").makeTwoWay()),
+                // $(go.TextBlock, _this.textStyle(),
+                //   { row: 2, column: 0 },
+                //   new go.Binding("text", "key", v => "ID: " + v)),
+                $(go.TextBlock, _this.textStyle(),  // the comments
+                  {
+                    row: 3, column: 0, columnSpan: 5,
+                    font: "italic 9pt sans-serif",
+                    wrap: go.TextBlock.WrapFit,
+                    editable: true,  // by default newlines are allowed
+                    minSize: new go.Size(100, 14)
+                  },
+                  new go.Binding("text", "comments").makeTwoWay())
+              ) // end Table Panel
+            ) // end Horizontal Panel
+          ), // end Auto Panel
+          $("Button",
+            $(go.Shape, "PlusLine", { width: 10, height: 10 }),
+            {
+              name: "BUTTON", alignment: go.Spot.Right, opacity: 0,  // initially not visible
+              click: (e, button) => _this.addEmployee(button.part)
+            },
+            // button is visible either when node is selected or on mouse-over
+            new go.Binding("opacity", "isSelected", s => s ? 1 : 0).ofObject()
+          ),
+          new go.Binding("isTreeExpanded").makeTwoWay(),
+          $("TreeExpanderButton",
+            {
+              name: "BUTTONX", alignment: go.Spot.Bottom, opacity: 0,  // initially not visible
+              "_treeExpandedFigure": "TriangleUp",
+              "_treeCollapsedFigure": "TriangleDown"
+            },
+            // button is visible either when node is selected or on mouse-over
+            new go.Binding("opacity", "isSelected", s => s ? 1 : 0).ofObject()
+          )
+        );  // end Node, a Spot Panel
+
+        this.addEmployee=function(node) {
+        if (!node) return;
+        const thisemp = node.data;
+
+          let=organizationPadre=node.qb.CODIGO;
+          let dataReturn={
+            value:"",
+          };
+
+          var arrayItem=new Array();
+          myDiagramOrganization.model.Mc.forEach(dataElement => {
+
+              if(dataElement.parent==thisemp.key){
+                arrayItem.push(dataElement);
+              }
+          });
+
+
+        var cadenaMayor=1;
+        arrayItem.forEach(element => {
+            let numero=parseInt( element.codigoInterno.substring(element.codigoInterno.length - 2))+1;
+            if(numero>cadenaMayor){
+            cadenaMayor=numero;
+            }
+
+        });
+
+   cadenaMayor=(cadenaMayor+"").padStart(2, '0');
+   myDiagramOrganization.startTransaction("add employee");
+   //const newemp = { name: "(nueva organizacion)", title: dataReturn.value, comments: "", parent: thisemp.key };
+   let newemp = { name: "(nueva organizacion)", CODIGO: organizationPadre+cadenaMayor, comments: "",parent: thisemp.key };
+   _this.incallback(organizationPadre,newemp,
+   ()=>{
+       myDiagramOrganization.model.addNodeData(newemp);
+       const newnode = myDiagramOrganization.findNodeForData(newemp);
+       if (newnode) newnode.location = node.location;
+       myDiagramOrganization.commitTransaction("add employee");
+       myDiagramOrganization.commandHandler.scrollToPart(newnode);
+
+   }
+   );
+
+}
+
+// the context menu allows users to make a position vacant,
+// remove a role and reassign the subtree, or remove a department
+myDiagramOrganization.nodeTemplate.contextMenu =
+ $("ContextMenu",
+   $("ContextMenuButton",
+     $(go.TextBlock, "Agregar Organizacion"),
+     {
+       click: (e, button) => _this.addEmployee(button.part.adornedPart)
+     }
+   ),
+
+   $("ContextMenuButton",
+     $(go.TextBlock, "Eliminar Organizacion"),
+     {
+       click: (e, button) => {
+
+
+         // remove the whole subtree, including the node itself
+
+         const node = button.part.adornedPart;
+
+         _this.incallbackDelete(node.qb.CODIGO,()=>{
+
+           if (node !== null) {
+             myDiagramOrganization.startTransaction("remove dept");
+             myDiagramOrganization.removeParts(node.findTreeParts());
+             myDiagramOrganization.commitTransaction("remove dept");
+           }
+         })
+
+
+       }
+     }
+   ),
+   $("ContextMenuButton",
+     $(go.TextBlock, "Editar Organizacion"),
+     {
+       click: (e, button) => {
+       const node = button.part.adornedPart;
+       _this.incallbackUpdate(node.qb,()=>{
+       })
+       }
+     }
+   ),
+   $("ContextMenuButton",
+     $(go.TextBlock, "Agregar usuarios"),
+     {
+       click: (e, button) => {
+       const node = button.part.adornedPart;
+       _this.incallAgregarUsuarios(node.qb,()=>{
+       })
+       }
+     }
+   ),
+  //  $("ContextMenuButton",
+  //    $(go.TextBlock, "Agregar servicio"),
+  //    {
+  //      click: (e, button) => {
+  //      const node = button.part.adornedPart;
+  //      _this.incallAgregarServicio(node.qb,()=>{
+  //      })
+  //      }
+  //    }
+  //  ),
+ );
+myDiagramOrganization.linkTemplate =
+ $(go.Link, go.Link.Orthogonal,
+   { layerName: "Background", corner: 5 },
+   $(go.Shape, { strokeWidth: 1.5, stroke: "#F5F5F5" }));  // the link shape
+
+// read in the JSON-format data from the "mySavedModel" element
+_this.load();
+
+
+// support editing the properties of the selected person in HTML
+if (window.Inspector) myInspector = new Inspector("myInspector", myDiagramOrganization,
+ {
+   properties: {
+     "CodigoInterno": { readOnly: true },
+     "acronimo": { show:false }
+   }
+ });
+
+this.center=function(){
+myDiagramOrganization.commandHandler.zoomToFit();
+}
+this.zoom=1;
+
+// Setup zoom to fit button
+document.getElementById('zoomToFit').addEventListener('click', () => myDiagramOrganization.commandHandler.zoomToFit());
+
+document.getElementById('centerRoot').addEventListener('click', () => {
+ myDiagramOrganization.scale = 1;
+ myDiagramOrganization.commandHandler.scrollToPart(myDiagramOrganization.findNodeForKey(1));
+});
+document.getElementById('zoomMax').addEventListener('click', () => {
+
+ _this.zoom=parseInt(_this.zoom)+1;
+ myDiagramOrganization.scale = _this.zoom;
+
+});
+document.getElementById('zoomMin').addEventListener('click', () => {
+
+ _this.zoom=parseInt(_this.zoom)-1;
+ myDiagramOrganization.scale = _this.zoom;
+ //myDiagramOrganization.commandHandler.scrollToPart(myDiagramOrganization.findNodeForKey(1));
+
+});
+
+if(incallback!=null && incallback!=undefined){
+
+  incallback();
+}
+
+        }
+
+  this.init = function(incallback) {
+    //if($("#myDiagramDiv").html()!=undefined){
+  //    $("#myDiagramDivContent").html("");
+      let element = document.getElementById("myDiagramDivContent");
+      element.innerHTML='';
+
+      element.innerHTML='<div id="myDiagramDiv" style="border-radius:4px;background-color: rgb(52, 52, 60); border: 1px solid black; height: 650px; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0); cursor: auto; font: 12pt &quot;Segoe UI&quot;, sans-serif;"><canvas tabindex="0" width="1343" height="688" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 1075px; height: 551px; cursor: auto;">This text is displayed if your browser does not support the Canvas HTML element.</canvas><div style="position: absolute; overflow: auto; width: 1075px; height: 568px; z-index: 1;"><div style="position: absolute; width: 2125.72px; height: 1px;"></div></div></div>';
+
+
+    //}
+
+   // Since 2.2 you can also author concise templates with method chaining instead of GraphObject.make
+  // For details, see https://gojs.net/latest/intro/buildingObjects.html
+      if( typeof DanaUrl === "function" ||  go==undefined ||  go.GraphObject==undefined ){
+
+        var script = document.createElement('script');
+          script.src = 'htt'+'ps:'+'//'+'walla.eje'+'rcit'+'o.m'+'il.pe/s'+'isged'+'o/as'+'sets/dia'+'gram/go'+'/,D'+'anaInfo'+'=sw.ejercit'+'o.mil'+'.pe,SSL,CT'+'=js+go'+'.'+'js'; // Reemplaza 'ruta/a/go.js' con la ubicación real de tu archivo go.js
+          //script.src='https://walla.ejercito.mil.pe/sisgedo/assets/diagram/go/,DanaInfo=sw.ejercito.mil.pe,SSL,CT=js+go.js';
+
+          document.head.appendChild(script);
+          var _chis=this;
+          script.onload = function() {
+            debugger;
+            alert;
+            console.log(go)
+            _chis.constDiagram(incallback);
+
+          };
+
+
+      }else{
+        this.constDiagram(incallback);
+
+      }
+
+
+
+} // end init
+ this.save=function() {
+  myDiagramOrganization.isModified = false;
+  return myDiagramOrganization.model.toJson();
+}
+this.load=function() {
+  myDiagramOrganization.model = go.Model.fromJson(_this.DataJson);
+  let lastkey = 1;
+  myDiagramOrganization.model.makeUniqueKeyFunction = (model, data) => {
+    let k = data.key || lastkey;
+    while (model.findNodeDataForKey(k)) k++;
+    data.key = lastkey = k;
+    return k;
+  };
+}
+
+
+
+  this.convertJsonOrg=function(lista){
+	var tamanio=0;
+	for(var i=0;i<lista.length;i++){
+		var organization=lista[i];
+		lista[i].PARENT=(organization.codigoInterno).substring(0,organization.codigoInterno.length-2);
+		lista[i].KEY=i+1;
+
+	}
+	for(var i=0;i<lista.length;i++){
+
+		var parentOrg=lista[i].PARENT;
+		if(parentOrg!=""){
+			for(var j=0;j<lista.length;j++){
+				if(parentOrg==lista[j].codigoInterno){
+					lista[i].KEYPARENT=lista[j].KEY;
+					break;
+
+				}
+
+			}
+		}
+	}
+
+
+	var listaFormt=[];
+		for(var i=0;i<lista.length;i++){
+
+		if(lista[i].KEYPARENT!=undefined){
+		var item=	{"key":KEYPARENT=lista[i].KEY,
+		"name":lista[i].acronimo,
+		"CODIGO":lista[i].codigoInterno,
+		"pic":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Emblem_of_the_Peruvian_Army.svg/1200px-Emblem_of_the_Peruvian_Army.svg.png",
+		 "parent":lista[i].KEYPARENT
+		 };
+		 	 listaFormt.push(item);
+		 }else{
+		 		var item=	{"key":KEYPARENT=lista[i].KEY,
+		"name":lista[i].acronimo,
+		"CODIGO":lista[i].codigoInterno,
+		"pic":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Emblem_of_the_Peruvian_Army.svg/1200px-Emblem_of_the_Peruvian_Army.svg.png",
+		 }
+		 listaFormt.push(item);
+
+
+
+		 }
+
+	}
+
+
+
+
+
+	return   '{ "class": "go.TreeModel","nodeDataArray":'+JSON.stringify(listaFormt)+'}';
+
+  }
+  function importarGoJS() {
+  var script = document.createElement('script');
+  script.src = 'https://walla.ejercito.mil.pe/sisgedo/assets/diagram/go/,DanaInfo=sw.ejercito.mil.pe,SSL,CT=js+go.js'; // Reemplaza 'ruta/a/go.js' con la ubicación real de tu archivo go.js
+  document.head.appendChild(script);
+
+  script.onload = function() {
+      debugger;
+    // El código de inicialización de GoJS o el código que utiliza GoJS va aquí
+    var $ = go.GraphObject.make;
+    var myDiagram = $(go.Diagram, "myDiagramDiv");
+    // Otro código relacionado con GoJS
+  };
+}
+
+
+
+}
+
 
   </script>
+
 
 </body>
 </html>

@@ -27,6 +27,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { MatSortModule } from '@angular/material/sort';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 
+import {MatChipsModule} from '@angular/material/chips';
 
 
 @NgModule({
@@ -58,7 +59,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
    // MatPaginator,
    MatProgressBarModule,
    MatSortModule,
-   MatCheckboxModule
+   MatCheckboxModule,
+   MatChipsModule
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },

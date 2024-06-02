@@ -55,11 +55,8 @@ const routes: Routes = [
   { path: 'registroCorrespondencia', component: RegistroCorrespondenciaComponent },
   { path: 'list-correspondencia', component: ListCorrespondenciaComponent },
   { path: 'entregarCorrespondencia', component: EntregarCorrespondenciaComponent },
-  { path: 'parte-diario', component: ParteDiarioComponent,
-    children : [
-      { path: 'form/:codigoDocumento', component: FormComponent }
-    ]
-  },
+  { path: 'parte-diario', component: ParteDiarioComponent },
+  { path: 'form/:codigoDocumento', component: FormComponent  },
 ];
 
 

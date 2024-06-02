@@ -157,14 +157,12 @@ export class DecetarComponent implements OnInit {
 
       this.decretos.push(dd);
     }
-    debugger;
     this.decretoDocumento.codigoDocumento = this.formParent.value['codigoDocumento'];
     this.decretoDocumento.decretoActual = this.ultimoDecreto;
     this.decretoDocumento.decretos = this.decretos;
     console.log(this.decretoDocumento);
 
     this.decretoService.decretarDocumento(this.decretoDocumento).subscribe((response:any)=> {
-      debugger;
       if (response.httpStatus == 'CREATED'){
         this.router.navigate(["/principal/pendientes"])
         Swal.fire('OPERACION REALIZADA', response.message, 'info');

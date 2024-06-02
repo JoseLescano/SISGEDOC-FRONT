@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import * as go from 'gojs';
+import { OrganizacionDiagram } from 'src/app/_DTO/OrganizacionDiagram';
 import { Organizacion } from 'src/app/_model/organizacion';
 import { OrganizacionService } from 'src/app/_service/organizacion.service';
 import { environment } from 'src/environments/environment';
+import Swal from 'sweetalert2';
 
 const $ = go.GraphObject.make;
 
@@ -14,140 +16,231 @@ const $ = go.GraphObject.make;
 export class EsquemaComponent implements OnInit {
 
   private diagram: go.Diagram | null = null;
-  organizaciones:Organizacion[];
+  organizaciones:OrganizacionDiagram[];
 
   constructor(private organizacionService:OrganizacionService) { }
 
+  _window(): any {
+    // return the global native browser window object
+    return window;
+  }
+
   ngOnInit(): void {
-    this.initDiagram();
-    this.fetchDataAndDraw();
+    this.createDiagramaOrganizacion();
+
+    var barOptions_stacked = {
+      tooltips: {
+          enabled: false
+      },
+      hover :{
+          animationDuration:0
+      },
+      scales: {
+          xAxes: [{
+              ticks: {
+                  beginAtZero:true,
+                  fontFamily: "'Open Sans Bold', sans-serif",
+                  fontSize:11
+              },
+              scaleLabel:{
+                  display:false
+              },
+              gridLines: {
+              },
+              stacked: true
+          }],
+          yAxes: [{
+              gridLines: {
+                  display:false,
+                  color: "#fff",
+                  zeroLineColor: "#fff",
+                  zeroLineWidth: 0
+              },
+              ticks: {
+                  fontFamily: "'Open Sans Bold', sans-serif",
+                  fontSize:11
+              },
+              stacked: true
+          }]
+      },
+      legend:{
+          display:false
+      },
+
+
+      pointLabelFontFamily : "Quadon Extra Bold",
+      scaleFontFamily : "Quadon Extra Bold",
+  }
   }
 
-  initDiagram(){
-    this.diagram = $(go.Diagram, 'diagramDiv',
-    {
-      layout:
-        $(go.TreeLayout,
-          {
-            isOngoing: true,
-            treeStyle: go.TreeLayout.StyleLastParents,
-            arrangement: go.TreeLayout.ArrangementHorizontal,
-            // properties for most of the tree:
-            angle: 90,
-            layerSpacing: 35,
-            // properties for the "last parents":
-            alternateAngle: 90,
-            alternateLayerSpacing: 35,
-            alternateAlignment: go.TreeLayout.AlignmentBus,
-            alternateNodeSpacing: 20
-          }),
-      'undoManager.isEnabled': true
-    }
-  );
+  
 
-  // define the Node template
-  this.diagram.nodeTemplate =
-    $(go.Node, 'Auto',
-      // for sorting, have the Node.text be the data.name
-      new go.Binding('text', 'name'),
-      // bind the Part.layerName to control the Node's layer depending on whether it isSelected
-      new go.Binding('layerName', 'isSelected', function(sel) { return sel ? 'Foreground' : ''; }).ofObject(),
-      // define the node's outer shape
-      $(go.Shape, 'Rectangle',
-        {
-          name: 'SHAPE', fill: 'lightblue', stroke: null,
-          // set the port properties:
-          portId: '', fromLinkable: true, toLinkable: true, cursor: 'pointer'
-        },
-        new go.Binding('fill', '', function(node) {
-          // modify the fill based on the tree depth level
-          const levelColors = ['#AC193D', '#2672EC', '#8C0095', '#5133AB',
-            '#008299', '#D24726', '#008A00', '#094AB2'];
-          let color = node.findObject('SHAPE').fill;
-          const dia: go.Diagram = node.diagram;
-          if (dia && dia.layout.network) {
-            dia.layout.network.vertexes.each(function(v: go.TreeVertex) {
-              if (v.node && v.node.key === node.data.key) {
-                const level: number = v.level % (levelColors.length);
-                color = levelColors[level];
+  createDiagramaOrganizacion(){
+    let _this=this;
+    this.organizacionService.findForDiagrama(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((resp:any) => {
+        //console.log(resp)
+      _this.organizaciones = resp;
+          this._window().createDiagramaOrganizacion(resp,
+            function(stringOrganizationPadre:any, dataRespuesta:any,incallbackOut:any){
+            Swal.fire({
+              title: 'NUEVA ORGANIZACIÓN',
+              html: `<input type="text" id="nombreCorto_ParamLTS_TEMP" class="form-control mb-2" placeholder="Ingrese acronimo">
+              <input type="text" id="nombreLargo_ParamLTS_TEMP"  class="form-control mb-2" placeholder="Ingrese nombre">
+              <textarea  rows="5" id="cargo_ParamLTS_TEMP"  class="form-control mb-2" placeholder="Ingrese cargo"></textarea>
+              <input type="text" id="indicativo_ParamLTS_TEMP" class="form-control mb-2" placeholder="Ingrese indicativo">
+              `,
+              confirmButtonText: 'Guardar',
+              focusConfirm: false,
+              preConfirm: () => {
+                let nombreCorto = _this._window().getJquery()('#nombreCorto_ParamLTS_TEMP')[0].value;
+                let nombreLargo = _this._window().getJquery()('#nombreLargo_ParamLTS_TEMP')[0].value;
+                let indicativo = _this._window().getJquery()('#indicativo_ParamLTS_TEMP')[0].value
+                let cargo = _this._window().getJquery()('#cargo_ParamLTS_TEMP')[0].value;
+
+                if (!nombreCorto || !nombreLargo || !indicativo || !cargo) {
+                  Swal.showValidationMessage(`Por favor complete los datos`);
+                }
+                return { nombreCorto: nombreCorto, nombreLargo: nombreLargo, indicativo:indicativo, cargo: cargo}
               }
-            });
+            }).then((result:any) => {
+              if((result.dismiss!=undefined && result.dismiss=='backdrop')){
+                return;
+                
+                }
+              if(result.value==undefined){
+                return;
+              }
+              // result.value.nombreCorto;
+             // dataRespuesta.codigoInterna=dataRespuesta.title;
+              dataRespuesta.nombreCorto=result.value.nombreCorto;
+              dataRespuesta.nombreLargo=result.value.nombreLargo;
+              dataRespuesta.indicativo=result.value.indicativo;
+              dataRespuesta.name=result.value.nombreCorto;
+              dataRespuesta.cargo=result.value.cargo;
+              debugger;
+              // _this.organizacionService.saveOrganizacion(stringOrganizationPadre,dataRespuesta).subscribe((data) =>{
+              //     if(incallbackOut!=null){
+              //       incallbackOut();
+              //     }
+              //     _this._window().getJquery()('.preloader').fadeOut();
+              //     _this.cargarOrganizaciones();
+              //     Swal.fire('Éxito ', `Se grabó la nueva organización`, 'success');
+              // });
+            }) 
           }
-          return color;
-        }).ofObject()
-      ),
-      $(go.Panel, 'Horizontal',
-        // $(go.Picture,
-        //   {
-        //     name: 'Picture',
-        //     desiredSize: new go.Size(39, 50),
-        //     margin: new go.Margin(6, 8, 6, 10)
-        //   },
-        //   new go.Binding('source', 'key', function(key) {
-        //     if (key < 0 || key > 16) return ''; // There are only 16 images on the server
-        //     return 'assets/HS' + key + '.png';
-        //   })
-        // ),
-        // define the panel where the text will appear
-        $(go.Panel, 'Table',
-          {
-            maxSize: new go.Size(150, 999),
-            margin: new go.Margin(6, 10, 0, 3),
-            defaultAlignment: go.Spot.Left
+
+          ,function(codigoInterna:any,callBackOutEliminar:any){
+            Swal.fire({
+              title: 'Estas seguro?',
+              text: "Esta organización se eliminará permanentemente",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Si, eliminalo!'
+            }).then((result:any) => {
+              if((result.dismiss!=undefined && result.dismiss=='backdrop')){
+                return;
+                
+                }
+              if (result.isConfirmed) {
+              //   _this.organizacionService.eliminarOrganizacionEnCascada(codigoInterna).subscribe((data: any) =>{
+              //     callBackOutEliminar();
+              //     _this._window().getJquery()('.preloader').fadeOut();
+              //     _this.createDiagramaOrganizacion();
+              //     if (data.mensaje === 'SE ELIMINO ORGANIZACION CORRECTAMENTE!')
+              //       Swal.fire('Eliminado ', data.mensaje, 'success');
+              //     else Swal.fire('Lo sentimos!', data.mensaje, 'warning');
+              // }, (error: any) => {
+              //   Swal.fire('Lo sentimos!', 'Se presento un inconveniente', 'warning');
+              // });
+              }
+            })
           },
-          $(go.RowColumnDefinition, { column: 2, width: 4 }),
-          $(go.TextBlock, { font: '9pt  Segoe UI,sans-serif', stroke: 'white' },  // the name
-            {
-              row: 0, column: 0, columnSpan: 5,
-              font: '12pt Segoe UI,sans-serif',
-              editable: true, isMultiline: false,
-              minSize: new go.Size(10, 16)
-            },
-            new go.Binding('text', 'name').makeTwoWay()),
-          $(go.TextBlock, 'acronimo: ', { font: '9pt  Segoe UI,sans-serif', stroke: 'white' },
-            { row: 1, column: 0 }),
-          $(go.TextBlock, { font: '9pt  Segoe UI,sans-serif', stroke: 'white' },
-            {
-              row: 1, column: 1, columnSpan: 1,
-              editable: true, isMultiline: false,
-              minSize: new go.Size(10, 14),
-              margin: new go.Margin(0, 0, 0, 3)
-            },
-            new go.Binding('text', 'acronimo').makeTwoWay()),
-          $(go.TextBlock, { font: '9pt  Segoe UI,sans-serif', stroke: 'white' },
-            { row: 2, column: 0 },
+          function(bq:any,callBackOutUpdate:any){
 
-            new go.Binding('text', 'codigoInterno', function(v) { return 'Codigo: ' + v; })),
-          $(go.TextBlock, { font: '9pt  Segoe UI,sans-serif', stroke: 'white' },
-            {row: 2, column: 0 }, // we include a name so we can access this TextBlock when deleting Nodes/Links
+            let organizacion:any={};
+            organizacion.vointerna_NOM_CORTO=bq.name;
+            organizacion.vointerna_NOM_LARGO="";
+            organizacion.cointerna_INDICATIVO="";
+            organizacion.cointerna_CODIGO=bq.CODIGO;
 
-            new go.Binding('text', 'parent', function(v) { return 'Boss: ' + v; })),
-          $(go.TextBlock, { font: '9pt  Segoe UI,sans-serif', stroke: 'white' },  // the comments
-            {
-              row: 3, column: 0,
-              font: 'italic 9pt sans-serif',
-              wrap: go.TextBlock.WrapFit,
-              editable: true,  // by default newlines are allowed
-              minSize: new go.Size(10, 14)
-            },
-            new go.Binding('text', 'comments').makeTwoWay())
-        )  // end Table Panel
-      ) // end Horizontal Panel
-    );  // end Node
-  }
+            // _this.organizacionService.buscarOrganizacionPorCodigo(bq.CODIGO).subscribe((data: any) => {
+            //   organizacion.vointerna_NOM_LARGO = data[0].vointerna_NOM_LARGO;
+            //   organizacion.cointerna_INDICATIVO=data[0].coindicativo;
+            //   organizacion.cargo = data[0].cargo;
+            //   _this.modalVerOrganizacion(organizacion);
+            // });
 
 
-  fetchDataAndDraw(): void {
-    this.organizacionService.getChildrenAllByCodigo(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response: any) => {
-      this.buildDiagram(response.data);
+
+           // _this.modalVerOrganizacion(organizacion);
+
+          },
+          function(bq:any,callBackOutAgregarUsuarios:any){
+
+
+            let organizacion:any={};
+            organizacion.vointerna_NOM_CORTO=bq.name;
+            organizacion.vointerna_NOM_LARGO="";
+            organizacion.cointerna_INDICATIVO="";
+            organizacion.cointerna_CODIGO=bq.CODIGO;
+
+            // let dialogVerDocumento = _this.dialog.open(
+            //   DialogoUsuariosOrganizacionComponent,
+            //   {
+            //     height: '90%',
+            //     width: '70%',
+            //   }
+            // );
+
+
+            // dialogVerDocumento.componentInstance.parentr = dialogVerDocumento;
+            // dialogVerDocumento.componentInstance.codigoInterna=organizacion.cointerna_CODIGO;
+
+
+            // dialogVerDocumento.componentInstance.call_receiveMessage = function (
+            //   documentoIn: any
+            // ) {
+            //   _this.receiveMessage(documentoIn);
+            // };
+
+          },
+          function(bq:any,callBackOutAgregarServicio:any){
+
+
+            let organizacion:any={};
+            organizacion.vointerna_NOM_CORTO=bq.name;
+            organizacion.vointerna_NOM_LARGO="";
+            organizacion.cointerna_INDICATIVO="";
+            organizacion.cointerna_CODIGO=bq.CODIGO;
+
+            // let dialogVerDocumento = _this.dialog.open(
+            //   DialogoUsuarioServicioComponent,
+            //   {
+            //     height: '90%',
+            //     width: '70%',
+            //   }
+            // );
+
+
+            // dialogVerDocumento.componentInstance.parentr = dialogVerDocumento;
+            // dialogVerDocumento.componentInstance.codigoInterna=organizacion.cointerna_CODIGO;
+
+
+            // dialogVerDocumento.componentInstance.call_receiveMessage = function (
+            //   documentoIn: any
+            // ) {
+            //   _this.receiveMessage(documentoIn);
+            // };
+
+          },
+
+
+          );
     });
-  }
 
-  buildDiagram(data: any): void {
-    const model = new go.TreeModel(data); // Usa los datos obtenidos para crear el modelo del diagrama
-    this.diagram.model = model; // Establece el modelo en el diagrama
   }
-
 
 
 

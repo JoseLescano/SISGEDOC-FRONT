@@ -15,7 +15,7 @@ export class Documento {
   prioridad:Prioridad;
   fechaDocumento:string;
   asunto:string;
-  estadoDocumento:EstadoDocumento;
+  estado:EstadoDocumento;
   usuario:string;
   fechaActual:string;
   organizacionDestino:Organizacion;

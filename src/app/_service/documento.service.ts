@@ -25,6 +25,10 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.DocumentoCambio.asObservable();
   }
 
+  findById(codigoDocumento: any){
+    return this.http.get<Documento>(`${environment.HOST}documentos/findById/${codigoDocumento}`);
+  }
+
   findByOrganizacionDestino(codigo:any){
     return this.http.get<Documento[]>(`${environment.HOST}documentos/findByOrganizacionDestino/${codigo}`);
   }
@@ -169,6 +173,12 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('organizacionOrigen', documento.organizacionOrigen);
     formData.append('organizacionRemitente', organizacionRemitente);
     return this.http.post(`${environment.HOST}documentos/remitirDocumentoForFirma`, formData);
+  }
+
+  getFileDocumentKeyDigital(nameFile: any = 0) {
+    let formData: FormData = new FormData();
+    formData.append('nameFile', nameFile);
+    return this.http.get(`${environment.HOST}documentos/getFileDocumentKeyDigital/${nameFile}`)
   }
 
 }

@@ -56,7 +56,7 @@ export class DecretoService extends GenericService<Decreto> {
     return this.http.post(`${environment.HOST}decretos/elevarDocumento`,  formData);
   }
 
-  distrubirDocumento(documento: any, origen: any, archivoFirmado:any){
+  distrubirDocumento(documento: any, origen: any, archivoFirmado?:any){
     debugger;
     let formData: FormData= new FormData();
     formData.append('codigoDocumento', documento);

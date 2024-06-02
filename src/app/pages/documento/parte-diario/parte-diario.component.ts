@@ -21,6 +21,7 @@ export class ParteDiarioComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['Nro', 'Asunto', 'Origen','Destino', 'FechaDoc', 'Documento',  'Acciones'];
   dataSource: MatTableDataSource<Documento>;
   cargando: boolean;
+  documentoSeleccionado:Documento;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -66,12 +67,12 @@ export class ParteDiarioComponent implements OnInit, AfterViewInit {
     });
   }
 
-  openDialog(documentoSeleccionado?: Documento){
-    this.dialog.open(FormComponent, {
-      width: '80%',
-      height: '90%',
-      data : documentoSeleccionado
-    });
-  }
+  // openDialog(documentoSeleccionado?: Documento){
+  //   this.dialog.open(FormComponent, {
+  //     width: '80%',
+  //     height: '90%',
+  //     data : documentoSeleccionado
+  //   });
+  // }
 
 }

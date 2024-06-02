@@ -4,6 +4,7 @@ import { GenericService } from './generic.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Subject } from 'rxjs';
+import { OrganizacionDiagram } from '../_DTO/OrganizacionDiagram';
 
 @Injectable({
   providedIn: 'root'
@@ -57,6 +58,10 @@ export class OrganizacionService extends GenericService<Organizacion> {
 
   findForDerivacion(codigoInterno: any){
     return this.http.get<Organizacion[]>(`${environment.HOST}organizaciones/findForDerivacion/${codigoInterno}`);
+  }
+
+  findForDiagrama(codigoInterno: any){
+    return this.http.get<OrganizacionDiagram[]>(`${environment.HOST}organizaciones/findForDiagrama/${codigoInterno}`);
   }
 
 }
