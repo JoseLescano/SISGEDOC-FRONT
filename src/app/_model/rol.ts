@@ -1,4 +1,4 @@
 export class Rol {
-  codigo:number;
+  codigo:string;
   nombre:string;
 }

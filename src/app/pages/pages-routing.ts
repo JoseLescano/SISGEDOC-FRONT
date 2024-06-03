@@ -27,6 +27,7 @@ import { RegistrarDevolverComponent } from './documento/devolver/registrar-devol
 import { RegistrarDerivacionComponent } from './documento/derivar/registrar-derivacion/registrar-derivacion.component';
 import { PerfilesComponent } from './perfiles/perfiles.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { CreateEditarComponent } from './organizacion/create-editar/create-editar.component';
 
 const routes: Routes = [
 
@@ -46,7 +47,10 @@ const routes: Routes = [
   { path: 'recibir-documento', component: RecibirComponent },
   { path: 'registrar-documento', component: RegistrarMPComponent },
   { path: 'envio-externo', component: EnvioExternoComponent },
-  { path: 'organizacion', component: EsquemaComponent },
+  { path: 'organizacion', component: EsquemaComponent, children:[
+    { path: 'nuevo', component: CreateEditarComponent },
+    { path: 'edit/:codigoInterno', component: CreateEditarComponent }
+  ] },
   { path: 'list-archivados', component: ViewComponent },
   { path: 'list-remitidos', component: ViewRemitidosComponent },
   { path: 'list-decretados', component: ViewDecretadoComponent },

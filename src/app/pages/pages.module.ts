@@ -35,6 +35,8 @@ import { RegistrarDevolverComponent } from './documento/devolver/registrar-devol
 import { RegistrarDerivacionComponent } from './documento/derivar/registrar-derivacion/registrar-derivacion.component';
 import { PerfilesComponent } from './perfiles/perfiles.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { CreateEditarComponent } from './organizacion/create-editar/create-editar.component';
+import { ViewUsariosComponent } from './organizacion/view-usarios/view-usarios.component';
 
 @NgModule({
   imports: [
@@ -77,7 +79,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     RegistrarDevolverComponent,
     RegistrarDerivacionComponent,
     PerfilesComponent,
-    DashboardComponent
+    DashboardComponent,
+    CreateEditarComponent,
+    ViewUsariosComponent
   ],
    exports:[
 

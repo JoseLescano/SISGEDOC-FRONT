@@ -23,6 +23,7 @@
     "@ng-select/ng-select": "^9.1.0",
     "bootstrap": "^5.3.3",
     "gojs": "^3.0.0",
+    "gojs-angular": "^2.0.7",
     "moment": "^2.30.1",
     "rxjs": "~7.5.0",
     "sweetalert2": "^11.10.7",

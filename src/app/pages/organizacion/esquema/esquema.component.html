@@ -44,3 +44,72 @@
     </div>
   </div>
 </div>
+
+<mat-card class="example-card">
+  <mat-card-header class="title-form">
+    <mat-card-title >LISTA DE ORGANIZACION REGISTRADAS</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <table mat-table [dataSource]="dataSource" matSort >
+
+      <ng-container matColumnDef="CodigoInterno">
+        <th mat-header-cell mat-sort-header  *matHeaderCellDef> CodigoInterno </th>
+        <td mat-cell *matCellDef="let row"> {{row.codigoInterno}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Acronimo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Asunto">Acronimo</th>
+        <td mat-cell *matCellDef="let row"> {{row.acronimo}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Nombre completo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre completo</th>
+        <td mat-cell *matCellDef="let row"> {{row.nombreLargo }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Nivel">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Origen">Nivel</th>
+        <td mat-cell *matCellDef="let row"> {{row.nivel}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Cargo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Cargo</th>
+        <td mat-cell *matCellDef="let row"> {{row.cargo}} </td>
+      </ng-container>
+
+      <!-- <ng-container matColumnDef="FechaReg.">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>FechaReg.</th>
+        <td mat-cell *matCellDef="let row"> {{row.fechaActual |date:"dd-MM-yyyy"}} </td>
+      </ng-container> -->
+
+      <ng-container matColumnDef="Acciones">
+        <th mat-header-cell *matHeaderCellDef > Acciones </th>
+        <td mat-cell *matCellDef="let row">
+          <div class="example-button-row">
+              <div class="example-flex-container">
+                <div class="example-button-container">
+                  <button mat-mini-fab color="primary" class="mr-2" (click)="openDialog(row)"  > 
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button mat-mini-fab color="accent" (click)="openDialogUsuario(row)" >
+                    <i class="fas fa-info-circle"  ></i>
+                 </button> 
+                  <button mat-mini-fab color="warn" (click)="eliminar(row)" >
+                    <i class="fas fa-trash"></i>
+                 </button> 
+                </div>
+              </div>
+            </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">Sin datos obtenidos...</td>
+      </tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[10, 15, 25, 100]"  aria-label="Select page of users"></mat-paginator>
+  </mat-card-content>
+</mat-card>

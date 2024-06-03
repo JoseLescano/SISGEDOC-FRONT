@@ -1,0 +1,50 @@
+<mat-card>
+    <mat-card-header class="title-form">
+        <mat-card-title >{{titulo}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        
+        <div class="row">
+            <div class="col">
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Codigo Interno</mat-label>
+                    <input matInput disabled [(ngModel)]="organizacionSeleccionada.codigoInterno">
+                </mat-form-field>
+            </div>            
+        </div>
+        <div class="row">
+            <div class="col">
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Acronimo</mat-label>
+                    <input matInput placeholder="Ingrese acronimo" [(ngModel)]="organizacionSeleccionada.acronimo">
+                </mat-form-field>
+            </div>           
+            <div class="col">
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Indicativo</mat-label>
+                    <input matInput placeholder="Ingrese indicativo" [(ngModel)]="organizacionSeleccionada.indicativo">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Nombre completo</mat-label>
+                    <input matInput placeholder="Ingrese nombre completo" [(ngModel)]="organizacionSeleccionada.nombreLargo">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Cargo</mat-label>
+                    <input matInput placeholder="Ingrese cargo" [(ngModel)]="organizacionSeleccionada.cargo">
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-flat-button color="primary" type="submit" (click)="operate()" >GUARDAR</button>
+        <button mat-flat-button color="accent" type="button" (click)="close()" >CANCELAR</button>
+    </mat-card-actions>
+  </mat-card>

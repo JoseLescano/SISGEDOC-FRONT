@@ -16,4 +16,8 @@ export class RoleService extends GenericService<Rol> {
     super(http, `${environment.HOST}roles`)
   }
 
+  findForUsuario(){
+    return this.http.get<Rol[]>(`${environment.HOST}roles/findForUsuario`);
+  }
+
 }

@@ -28,6 +28,10 @@ export class PerfilService extends GenericService<Perfil> {
     return this.http.get<Perfil[]>(`${environment.HOST}perfiles/findByUsuario`, { params: { usuario: usuario }} );
   }
 
+  findByOrganizacion(codigoInterno: any){
+    return this.http.get<Perfil[]>(`${environment.HOST}perfiles/findByOrganizacion/${codigoInterno}` );
+  }
+
   // loginActiveDirectory(usuario: any, password: any){
   //   let formData : FormData = new FormData();
   //   formData.append('usuario', usuario);

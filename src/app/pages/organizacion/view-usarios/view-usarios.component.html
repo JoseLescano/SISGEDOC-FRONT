@@ -1,0 +1,109 @@
+<mat-card class="example-card" >
+    <mat-card-header class="title-form">
+      <mat-card-title >MANTENIMIENTO DE USUARIOS</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="row">
+            <div class="col">
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>NOMBRE LARGO</mat-label>
+                    <input matInput disabled="disabled" placeholder="Ingrese acronimo" [(ngModel)]="organizacionSeleccionada.nombreLargo" >
+                </mat-form-field>
+            </div>           
+            <div class="col">
+                <mat-form-field appearance="fill"class="example-full-width" >
+                    <mat-label>Ingrese campo</mat-label>
+                    <input matInput placeholder="Ingrese número CIP ó DNI ó marbete" [(ngModel)]="campoIngresado" required (keydown.enter)="buscarPersona($event)">
+                    <mat-hint align="start" *ngIf="campoIngresado?.length>= 5" style="color: #06d76c; margin-bottom: 5px;"  ><strong>Presione la tecla Enter</strong> </mat-hint>
+                    <!-- <mat-error >x</mat-error> -->
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>USUARIO CHASQUI</mat-label>
+                    <input matInput disabled="disabled" placeholder="Ingrese Usuario Chasqui" [(ngModel)]="persona.usuario_CHASQUI" >
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>PERSONAL ENCONTRADO</mat-label>
+                    <input matInput disabled="disabled" [(ngModel)]="nombreCompleado" >
+                </mat-form-field>
+            </div>
+            <div class="col-4">
+                <ng-select placeholder="ROL" [virtualScroll]=true class="example-full-width">
+                    <mat-option>SELECCIONE</mat-option>
+                    <ng-option *ngFor="let r of roles" [value]="r" >
+                        {{r.codigo == "002"? 'JEFE ACCIDENTAL/TEMPORAL': r.codigo == "004"? 'ADMINISTRADOR': r.nombre }}
+                    </ng-option>
+                </ng-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>PUESTO</mat-label>
+                    <input matInput placeholder="Ingrese descripcion del puesto">
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-card-content>
+    <mat-card-actions align="end">
+        <button mat-flat-button color="primary" type="submit" class="btn-opcion" >GUARDAR</button>
+        <button mat-flat-button color="accent" type="button" class="btn-opcion">LIMPIAR</button>
+    </mat-card-actions>
+</mat-card>
+<mat-card class="example-card mt-2" >
+    <mat-card-header class="title-form">
+      <mat-card-title >LISTA DE USUARIOS REGISTRADOS</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <table mat-table [dataSource]="dataSource" matSort >
+
+            <ng-container matColumnDef="Rol">
+              <th mat-header-cell mat-sort-header  *matHeaderCellDef> Rol </th>
+              <td mat-cell *matCellDef="let row"> {{row.rol.nombre }} </td>
+            </ng-container>
+      
+            <ng-container matColumnDef="Puesto">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Asunto">Puesto</th>
+              <td mat-cell *matCellDef="let row"> {{row.nombre}} </td>
+            </ng-container>
+      
+            <ng-container matColumnDef="Responsable">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Responsable</th>
+              <td mat-cell *matCellDef="let row"> {{row.usuario.grado + ' ' + row.usuario.arma + ' ' + row.usuario.apellidos + ' '+ row.usuario.nombres }} </td>            </ng-container>
+      
+            <ng-container matColumnDef="Acciones">
+              <th mat-header-cell *matHeaderCellDef > Acciones </th>
+              <td mat-cell *matCellDef="let row">
+                <div class="example-button-row">
+                    <div class="example-flex-container">
+                      <div class="example-button-container">
+                        <button mat-mini-fab color="primary" class="mr-2"  > 
+                          <i class="fas fa-edit"></i>
+                        </button>
+                        <button mat-mini-fab color="warn" >
+                          <i class="fas fa-trash"></i>
+                       </button> 
+                      </div>
+                    </div>
+                  </div>
+              </td>
+            </ng-container>
+      
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">Sin datos obtenidos...</td>
+            </tr>
+          </table>
+          <mat-paginator [pageSizeOptions]="[10, 15, 25, 100]"  aria-label="Select page of users"></mat-paginator>
+    </mat-card-content>
+    <mat-card-actions align="end">
+        <button mat-flat-button color="accent" type="button" (click)="close()" class="btn-opcion" >CANCELAR</button>
+    </mat-card-actions>
+</mat-card>

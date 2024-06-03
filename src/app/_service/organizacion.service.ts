@@ -64,4 +64,21 @@ export class OrganizacionService extends GenericService<Organizacion> {
     return this.http.get<OrganizacionDiagram[]>(`${environment.HOST}organizaciones/findForDiagrama/${codigoInterno}`);
   }
 
+  findByCodigoInterno(codigoInterno: any){
+    return this.http.get<Organizacion>(`${environment.HOST}organizaciones/findByCodigoInterno/${codigoInterno}`);
+  }
+
+  updateOrganizacion(codigoInterno:any, acronimo:any, nombreLargo:any, indicativo:any, cargo:any){
+    let formData: FormData = new FormData();
+    formData.append("acronimo", acronimo);
+    formData.append("nombreLargo", nombreLargo);
+    formData.append("indicativo", indicativo);
+    formData.append("cargo", cargo);
+    return this.http.put(`${environment.HOST}organizaciones/updateOrganizacion/${codigoInterno}`, formData);
+  }
+
+  eliminarOrganizacion(codigoInterno: any){
+    return this.http.put(`${environment.HOST}organizaciones/eliminar/${codigoInterno}`, codigoInterno);
+  }
+
 }
