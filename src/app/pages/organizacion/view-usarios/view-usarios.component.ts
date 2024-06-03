@@ -1,8 +1,10 @@
 import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { switchMap } from 'rxjs';
 import { OrganizacionDiagram } from 'src/app/_DTO/OrganizacionDiagram';
 import { Organizacion } from 'src/app/_model/organizacion';
 import { Perfil } from 'src/app/_model/perfil';
@@ -27,6 +29,9 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
   campoIngresado: any = '';
   persona: Persona = new Persona();
   nombreCompleado: string;
+  puesto : string;
+  rolSeleccionado: Rol;
+
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -86,6 +91,39 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
 
   close(){
     this.matDialog.close();
+  }
+
+  registrarPerfil(){
+    debugger;
+    if (this.validar()){
+      this.perfilService.registrarPerfil(this.organizacionSeleccionada.codigoInterno, this.persona.usuario_CHASQUI,
+        this.puesto, this.rolSeleccionado.codigo).subscribe((response:any)=> {
+          if (response.data==0){
+            Swal.fire('OPERACION REALIZADA', response.message, 'success');
+            this.perfilService.findByOrganizacion(this.organizacionSeleccionada.codigoInterno).subscribe((response:any)=>{
+              this.createTable(response);
+            });
+          }
+          else {
+            Swal.fire('LO SENTIMOS', response.message, 'info');
+          }
+        }, error => {
+          Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'warning');
+        });
+    }
+  }
+
+  validar():boolean{
+    var organizacion = this.organizacionSeleccionada != null && this.organizacionSeleccionada.codigoInterno != '';
+    var puesto = this.puesto != null && this.puesto != '';
+    var rol = this.rolSeleccionado != null && this.rolSeleccionado.codigo !='';
+    var usuario = this.persona.usuario_CHASQUI != null && this.persona.usuario_CHASQUI != '';
+    if (!organizacion || !puesto || !rol || !usuario){
+      Swal.fire('Datos incompletos', `Complete todos los campos`, 'error');
+      return false;
+    } else {
+      return true;
+    }
   }
 
 }

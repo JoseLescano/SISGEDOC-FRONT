@@ -105,7 +105,6 @@ export class CrearDocumentoComponent implements OnInit {
   operate(){
     if(this.form.valid && this.selectedFiles != null){
       this.cargando = true;
-      debugger;
       this.documentoar.organizacionOrigen = this.form.value['firmante'].codigoInterno;
 
       this.documentoar.clase = this.form.value['tipoDocumento'];

@@ -32,6 +32,15 @@ export class PerfilService extends GenericService<Perfil> {
     return this.http.get<Perfil[]>(`${environment.HOST}perfiles/findByOrganizacion/${codigoInterno}` );
   }
 
+  registrarPerfil(codigoOrganizacion:any, usuario:any, puesto:any, rol:any){
+    let formData: FormData = new FormData();
+    formData.append('codigoOrganizacion', codigoOrganizacion);
+    formData.append('usuario', usuario);
+    formData.append('puesto', puesto);
+    formData.append('rol', rol);
+    return this.http.post<Perfil>(`${environment.HOST}perfiles/registrarPerfil`, formData );
+  }
+
   // loginActiveDirectory(usuario: any, password: any){
   //   let formData : FormData = new FormData();
   //   formData.append('usuario', usuario);
