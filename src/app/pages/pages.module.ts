@@ -37,6 +37,7 @@ import { PerfilesComponent } from './perfiles/perfiles.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { CreateEditarComponent } from './organizacion/create-editar/create-editar.component';
 import { ViewUsariosComponent } from './organizacion/view-usarios/view-usarios.component';
+import { ValidarRecojoComponent } from './documento/mesaPartes/validar-recojo/validar-recojo.component';
 
 @NgModule({
   imports: [
@@ -81,7 +82,8 @@ import { ViewUsariosComponent } from './organizacion/view-usarios/view-usarios.c
     PerfilesComponent,
     DashboardComponent,
     CreateEditarComponent,
-    ViewUsariosComponent
+    ViewUsariosComponent,
+    ValidarRecojoComponent
   ],
    exports:[
 

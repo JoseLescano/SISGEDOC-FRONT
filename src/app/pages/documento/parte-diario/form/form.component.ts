@@ -292,7 +292,7 @@ export class FormComponent implements OnInit {
     var _this:any=this;
     this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response:any)=>{
       this._window().iniciarFirma(response[1], function(){
-        _this.updateIframeWithKeyDigitalGeneral(response[1]);
+       _this.updateIframeWithKeyDigitalGeneral(response[1]);
       });   
     }, error => {
       Swal.fire("LO SENTIMOS", "HUBO UN INCONVENIENTE EN LA FIRMA DEL DOCUMENTO", "info");

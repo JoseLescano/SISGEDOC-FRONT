@@ -54,12 +54,12 @@
                         <button mat-mini-fab color="primary" class="mr-2" (click)="verDocumento(row)"  >
                           <i class="far fa-file-pdf"></i>
                         </button>
-                        <button mat-mini-fab color="accent"  >
+                        <!-- <button mat-mini-fab color="accent"  >
                           <i class="fas fa-info-circle"></i>
                         </button>
                         <button mat-mini-fab color="warn" >
                             <i class="fas fa-trash"></i>
-                          </button>
+                        </button> -->
                       </div>
                     </div>
                   </div>
@@ -80,8 +80,8 @@
           </div>
     </mat-card-content>
     <mat-card-actions align="end">
-        <button mat-raised-button color="primary" routerLink="../registrar-documento"  >Nuevo registro</button>
-        <button mat-raised-button color="accent" routerLink="../envio-externo" >Enviar a dependencia Externa</button>
+        <button mat-raised-button color="primary" routerLink="../registrar-documento" class="btn-opcion" >NUEVO REGISTRO FISICO</button>
+        <button mat-raised-button color="accent" routerLink="../envio-externo" class="btn-opcion">ENVIAR A DEPENDENCIA EXTERNA</button>
     </mat-card-actions>
     <mat-card-footer>
       <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>

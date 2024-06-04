@@ -32,4 +32,12 @@ export class PersonaService extends GenericService<Persona> {
     return this.http.delete(`${environment.HOST}dobleAuthe/resetearByCampo/${valor}`);
   }
 
+  validarEntrega(usuario:any, password:any){
+    let formData:FormData= new FormData();
+    formData.append('usuario',usuario);
+    formData.append('password',password);
+
+    return this.http.post(`${environment.HOST}personas/validarEntrega`, formData);
+  }
+
 }

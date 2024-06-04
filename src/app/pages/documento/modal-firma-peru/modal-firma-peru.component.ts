@@ -14,7 +14,8 @@ export class ModalFirmaPeruComponent implements OnInit, AfterViewInit  {
   url_pdf : any = '';
   @ViewChild('embeddedPage') iframe: ElementRef<HTMLIFrameElement>;
 
-  constructor(public dialogRef: MatDialogRef<ModalFirmaPeruComponent>,
+  constructor(
+    public dialogRef: MatDialogRef<ModalFirmaPeruComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private elRef: ElementRef,
     private documentoService:DocumentoService

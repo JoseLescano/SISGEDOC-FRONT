@@ -10,6 +10,8 @@ import { OrganizacionService } from 'src/app/_service/organizacion.service';
 
 import {SelectionModel} from '@angular/cdk/collections'
 import Swal from 'sweetalert2';
+import { MatDialog } from '@angular/material/dialog';
+import { ValidarRecojoComponent } from '../validar-recojo/validar-recojo.component';
 
 @Component({
   selector: 'app-entregar-correspondencia',
@@ -18,17 +20,19 @@ import Swal from 'sweetalert2';
 })
 export class EntregarCorrespondenciaComponent implements OnInit {
 
-  displayedColumns: string[] = ['select', 'Nro', 'Asunto','Documento', 'Origen', 'Destino', 'Fecha Registro',  'Acciones'];
+  displayedColumns: string[] = ['select', 'Nro', 'Asunto','Documento', 'Origen', 'Destino', 'Fecha Registro'];
   dataSource: MatTableDataSource<Correspondencia>;
   cargando: boolean;
   remitentes:Organizacion[] = [];
   form:FormGroup;
+  lista:any;
 
   selection = new SelectionModel<Correspondencia>(true, []);
 
   constructor(
     private organizacionService:OrganizacionService,
-    private correspondenciaService: CorrespondenciaService
+    private correspondenciaService: CorrespondenciaService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -88,7 +92,7 @@ export class EntregarCorrespondenciaComponent implements OnInit {
   }
 
   agregar(){
-    console.log(this.selection);
+    console.log(this.selection.selected);
   }
 
   createTable(correspondencia: Correspondencia[]){
@@ -105,8 +109,24 @@ export class EntregarCorrespondenciaComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  operate(){
+  abrirValidarCredenciales(): void {
+    debugger;
+    const dialogRef = this.dialog.open(ValidarRecojoComponent,{
+      width: '60%'
+    });
 
+  }
+
+  operate(){
+    debugger;
+    let listaCorrespondenciaSeleccionada = this.selection.selected;
+    let destino = this.form.controls['destino'].value;
+    if (listaCorrespondenciaSeleccionada.length==0 || listaCorrespondenciaSeleccionada==null){
+      Swal.fire('Lo sentimos', 'DEBE SELECCIONAR CORRESPONDENCIA A ENTREGAR', 'warning');
+    }else {
+      this.abrirValidarCredenciales();
+      // Swal.fire('OPERACION REALIZADA', 'SE ENTREGO CORRESPONDENCIA!', 'success');
+    }
   }
 
 }

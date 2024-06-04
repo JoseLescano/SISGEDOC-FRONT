@@ -60,8 +60,8 @@
       <button mat-flat-button color="primary" *ngIf="mostrarDistribuir" (click)="distribuir()" >
         <i class="fas fa-paper-plane"></i><span> DISTRIBUIR</span>
       </button>
-      <button mat-flat-button color="primary" *ngIf="mostrarDistribuir" (click)="FirmarDistribuir()"  >
-        <i class="fas fa-paper-plane"></i><span> FIRMAR Y DISTRIB.</span>
+      <button mat-flat-button color="primary" *ngIf="mostrarDistribuir" (click)="firmarDocumento()" >
+        <i class="fas fa-file-signature"></i><span> FIRMAR</span>
       </button>
       <button mat-flat-button color="primary" *ngIf="!mostrarDistribuir" (click)="elevarDocumento()" >
         <i class="fas fa-hand-point-up"></i> ELEVAR

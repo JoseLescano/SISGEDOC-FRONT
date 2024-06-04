@@ -29,6 +29,7 @@
   <script src="https://apps.firmaperu.gob.pe/web/clienteweb/firmaperu.min.js"></script>
   <script type="text/javascript">
     var jqFirmaPeru = jQuery.noConflict(true);
+    var _this = this;
 
     LAST_CALLBACK_INICIAR=null;
     LAST_CALLBACK_CANCEL=null;
@@ -37,6 +38,9 @@
       console.log('Iniciando....');
     }
     function signatureOk(){
+      if(LAST_CALLBACK_INICIAR!=null && LAST_CALLBACK_INICIAR!=undefined){
+        LAST_CALLBACK_INICIAR();
+      }
       console.log('Documento Firmado');
     }
     function signatureCancel() {
