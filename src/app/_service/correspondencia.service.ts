@@ -39,6 +39,22 @@ export class CorrespondenciaService extends GenericService<Correspondencia> {
 
     return this.http.post(`${environment.HOST}correspondencias/correspondenciaOP`, formData);
   }
-  
-  
+
+  entregaCorrespondencia(origen:any, usuarioEntrega:any, usuarioRecibe:any, contrasena:any, correspondencias:Correspondencia[]){
+    debugger;
+    let formData:FormData = new FormData();
+    formData.append('origen', origen);
+    formData.append('usuarioEntrega', usuarioEntrega);
+    formData.append('usuarioRecibe',usuarioRecibe);
+    formData.append('contrasena', contrasena);
+    let codigosCorrespondencias : any;
+    for (let index = 0; index < correspondencias.length; index++) {
+      codigosCorrespondencias.add(correspondencias[index].codigo);
+    }
+    formData.append('correspondencias', codigosCorrespondencias);
+
+    return this.http.post(`${environment.HOST}correspondencias/entregaCorrespondencia`, formData);
+  }
+
+
 }

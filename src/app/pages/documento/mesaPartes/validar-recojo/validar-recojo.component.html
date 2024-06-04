@@ -19,4 +19,7 @@
             <button type="button" style = "margin-left: 20px;" mat-raised-button color="accent" class="btn-opcion" (click)="close()">CANCELAR</button>
         </div>
     </mat-card-content>
+    <mat-card-footer>
+      <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
+    </mat-card-footer>
 </mat-card>

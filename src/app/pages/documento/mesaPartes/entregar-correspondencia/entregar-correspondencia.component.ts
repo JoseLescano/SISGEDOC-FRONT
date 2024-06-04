@@ -109,10 +109,11 @@ export class EntregarCorrespondenciaComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  abrirValidarCredenciales(): void {
+  abrirValidarCredenciales(informacion:any): void {
     debugger;
     const dialogRef = this.dialog.open(ValidarRecojoComponent,{
-      width: '60%'
+      width: '50%',
+      data: informacion
     });
 
   }
@@ -121,10 +122,14 @@ export class EntregarCorrespondenciaComponent implements OnInit {
     debugger;
     let listaCorrespondenciaSeleccionada = this.selection.selected;
     let destino = this.form.controls['destino'].value;
+    let informacion = {
+      lista: listaCorrespondenciaSeleccionada,
+      destino: destino
+    }
     if (listaCorrespondenciaSeleccionada.length==0 || listaCorrespondenciaSeleccionada==null){
       Swal.fire('Lo sentimos', 'DEBE SELECCIONAR CORRESPONDENCIA A ENTREGAR', 'warning');
     }else {
-      this.abrirValidarCredenciales();
+      this.abrirValidarCredenciales(informacion);
       // Swal.fire('OPERACION REALIZADA', 'SE ENTREGO CORRESPONDENCIA!', 'success');
     }
   }
