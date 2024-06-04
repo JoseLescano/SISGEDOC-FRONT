@@ -17,8 +17,11 @@ import { PagesModule } from './pages/pages.module';
 import { PagesRoutingModule } from './pages/pages-routing';
 import { LoginComponent } from './pages/login/login.component';
 
+import { JwtModule } from "@auth0/angular-jwt";
 
-
+export function tokenGetter() {
+  return localStorage.getItem("access_token");
+}
 
 @NgModule({
   declarations: [
@@ -35,7 +38,14 @@ import { LoginComponent } from './pages/login/login.component';
     NgSelectModule,
     FormsModule,
     PagesModule,
-    PagesRoutingModule
+    PagesRoutingModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: ["http://localhost:8080/"],
+        disallowedRoutes: ["http://example.com/examplebadroute/"],
+      },
+    }),
 
   ],
   providers: [DocumentoService, ClaseService, OrganizacionService,

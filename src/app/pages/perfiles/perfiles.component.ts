@@ -1,3 +1,4 @@
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Route, Router } from '@angular/router';
@@ -20,12 +21,17 @@ export class PerfilesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getPerfiles();
+    const helper = new JwtHelperService();
+    let token = sessionStorage.getItem(environment.TOKEN_NAME);
+    const decodedToken = helper.decodeToken(token);
+    const username = decodedToken.sub;
+    this.getPerfiles(username);
+
   }
 
-  getPerfiles(){
+  getPerfiles(username:any){
     debugger;
-    this.perfilService.findByUsuario(environment.TOKEN_AUTH_USERNAME).subscribe((response:Perfil[])=> {
+    this.perfilService.findByUsuario(username).subscribe((response:Perfil[])=> {
       if (response== null){
         Swal.fire("Usuario sin perfiles", "Se valida que el usuario no tiene perfiles asignados", "info");
         this.router.navigate(['/login']);
@@ -33,7 +39,6 @@ export class PerfilesComponent implements OnInit {
         this.perfiles = response;
         if (this.perfiles?.length<2){
           sessionStorage.setItem(environment.rol, this.perfiles[0].rol.codigo+"" );
-          sessionStorage.setItem(environment.TOKEN_AUTH_USERNAME, this.perfiles[0].usuario+"");
           sessionStorage.setItem(environment.codigoOrganizacion, this.perfiles[0].organizacion.codigoInterno);
           this.router.navigate(['/principal/dashboard']);
         }
@@ -45,10 +50,10 @@ export class PerfilesComponent implements OnInit {
   }
 
   seleccionarPerfil(perfil: any){
-    sessionStorage.clear();
+    //sessionStorage.clear();
     console.log(perfil);
     sessionStorage.setItem(environment.rol, perfil.rol.codigo );
-    sessionStorage.setItem(environment.TOKEN_AUTH_USERNAME, perfil.usuario+"");
+    //sessionStorage.setItem(environment.TOKEN_AUTH_USERNAME, perfil.usuario+"");
     sessionStorage.setItem(environment.codigoOrganizacion, perfil.organizacion.codigoInterno);
     this.router.navigate(['/principal/dashboard']);
   }
