@@ -66,6 +66,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    debugger;
       this.screenWidth = window.innerWidth;
       this.menuService.getMenuByRol(sessionStorage.getItem(environment.rol)).subscribe((response:any)=> {
         this.menus = response.data as Menu[];

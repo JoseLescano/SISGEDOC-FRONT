@@ -1,7 +1,7 @@
 import { Documento } from './../_model/documento.model';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { GenericService } from './generic.service';
 import { DocumentoArchivoAnexo } from '../_DTO/DocumentoArchivoAnexo';
@@ -30,7 +30,12 @@ export class DocumentoService  extends GenericService<Documento> {
   }
 
   findByOrganizacionDestino(codigo:any){
-    return this.http.get<Documento[]>(`${environment.HOST}documentos/findByOrganizacionDestino/${codigo}`);
+    let token = sessionStorage.getItem(environment.TOKEN_NAME);
+    return this.http.get<Documento[]>(`${environment.HOST}documentos/findByOrganizacionDestino/${codigo}`, {
+      headers: new HttpHeaders()
+            .set('Authorization', `Bearer ${token}`)
+            .set('Content-Type', 'application/json'),
+    });
   }
 
   viewPDF(vidDocumento: any){
