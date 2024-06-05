@@ -7,8 +7,8 @@
   'align-items': status === 0 ? 'initial' : 'center'
 }" *ngIf="status === 0">
   <br>
-  <div style="width: 100%;">
-    <h2 class="title-form">Doble Factor de Autentificación</h2>
+  <div class="title-container">
+    <h2 class="title">Doble Factor de Autentificación</h2>
   </div>
   <div class="content-container">
     <div class="info-container">
@@ -31,7 +31,7 @@
     <div class="qr-container">
       <div class="qr-wrapper">
         <ng-container>
-          <img class="qr-code" [src]="authResponse.secretImageUri" alt="QR Code">
+          <img class="qr-code" [src]="authResponse" alt="QR Code">
         </ng-container>
         <input class="validation-input" type="text" id="validationCode" name="validationCode" [(ngModel)]="otpCode"
           maxlength="6" (keypress)="validarNumero($event)" (input)="validarLongitud()">

@@ -14,8 +14,8 @@ import { environment } from 'src/environments/environment';
 export class ModalMfaComponent implements OnInit, OnDestroy {
 
   @Output() cerrarDialogo = new EventEmitter<void>();
-  status: number;
-  secretImageUri: string;
+  status: any;
+  secretImageUri: any;
   authResponse: AuthenticationResponse = {};
   otpCode = '';
   showProgressBar: boolean = false;
@@ -23,7 +23,6 @@ export class ModalMfaComponent implements OnInit, OnDestroy {
   private dialogCloseTimer: any;
   tiempoRestante: number;
   botonBloqueado: boolean = false;
-
 
   constructor(
     public dialogRef: MatDialogRef<ModalMfaComponent>,
@@ -34,15 +33,26 @@ export class ModalMfaComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+
     this.status = this.data.response.status;
-    if (this.status === 0) {
-      this.authResponse = this.data.response
+
+    //console.log(this.data)
+    if (this.status == "0") {
+      this.saveTwoFactor();
     }
-    this.startDialogCloseTimer();
+
+    // this.startDialogCloseTimer();
   }
 
   ngOnDestroy(): void {
     clearTimeout(this.dialogCloseTimer);
+  }
+
+  saveTwoFactor(): void {
+    if (this.data.response.secretImageUri && !this.data.response.secretImageUri.startsWith('data:image/png;base64,')) {
+      this.data.response.secretImageUri = 'data:image/png;base64,' + this.data.response.secretImageUri;
+    }
+    this.authResponse = this.data.response.secretImageUri;
   }
 
   private startDialogCloseTimer(): void {
@@ -72,28 +82,21 @@ export class ModalMfaComponent implements OnInit, OnDestroy {
   }
 
   SecretVerify() {
-    debugger;
     this.botonBloqueado = true;
     this.cd.detectChanges();
+    //Ddd
     const verifyRequest: VerificationRequest = {
       username: this.data.username,
       code: this.otpCode
     };
-    debugger;
     this.loginService.verifyCode(verifyRequest).subscribe({
-
       next: (response) => {
-        setTimeout(() => {
-          sessionStorage.setItem(environment.TOKEN_NAME, response.access_token);
-          this.router.navigate(['/perfiles']);
-          this.cerrarDialogo.emit();
-        }, 1000);
+        sessionStorage.setItem(environment.TOKEN_NAME, response.access_token);
+        this.router.navigate(['pages/dashboard']);
+        this.cerrarDialogo.emit();
       },
     });
     setTimeout(() => {
       this.botonBloqueado = false;
     }, 3500);
-  }
-
-
-}
+  }}

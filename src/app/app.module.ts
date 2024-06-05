@@ -20,7 +20,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { JwtModule } from "@auth0/angular-jwt";
 import { IsLoggedInGuard } from './auth/guards/is-logged-in.guard';
 import { JwtInterceptor } from './auth/guards/JwtInterceptor';
-import { RECAPTCHA_SETTINGS, RecaptchaModule, RecaptchaSettings, RecaptchaV3Module } from 'ng-recaptcha';
+import { RECAPTCHA_SETTINGS, RecaptchaSettings, RecaptchaV3Module } from 'ng-recaptcha';
 import { environment } from 'src/environments/environment';
 
 

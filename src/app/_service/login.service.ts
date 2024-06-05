@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { VerificationRequest } from '../_model/verification-request';
 import { Observable, catchError } from 'rxjs';
 
-interface ILoginRequest {
+export interface ILoginRequest {
   username: string;
   password: string;
   token:string;
@@ -26,10 +26,8 @@ export class LoginService {
     private router: Router
   ) { }
 
-  login(username: string, password: string, token:any) {
-    debugger;
-    const body: ILoginRequest = { username, password, token };
-    return this.http.post<any>(`${this.url}/ad`, body);
+  login(jwtRequest: ILoginRequest): Observable<any> {
+    return this.http.post<any>(`${this.url}/ad`, jwtRequest);
   }
 
   logout() {
