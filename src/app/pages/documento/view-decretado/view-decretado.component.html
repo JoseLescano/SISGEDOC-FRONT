@@ -46,12 +46,12 @@
             <div class="example-button-row">
                 <div class="example-flex-container">
                   <div class="example-button-container">
-                    <!-- <button mat-mini-fab color="warn" class="mr-2"  > -->
-                      <i class="far fa-file-pdf" style="color: red; " (click)="openDialog(row)"></i>
-                    <!-- </button> -->
-                    <!-- <button mat-mini-fab color="accent"  > -->
-                      <i class="fas fa-info-circle" style="color: brown;" ></i>
-                    <!-- </button> -->
+                    <button mat-mini-fab color="warn" class="mr-2"  >
+                      <i class="far fa-file-pdf"  (click)="openDialog(row)"></i>
+                    </button>
+                    <button mat-mini-fab color="accent"  >
+                      <i class="fas fa-info-circle"></i>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -68,7 +68,7 @@
 
       <mat-paginator [pageSizeOptions]="[10, 15, 25, 100]"  aria-label="Select page of users"></mat-paginator>
     </div>
-  </mat-card-content>  
+  </mat-card-content>
   <mat-card-footer>
     <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
   </mat-card-footer>

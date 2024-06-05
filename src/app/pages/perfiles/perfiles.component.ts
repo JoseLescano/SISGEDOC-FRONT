@@ -21,6 +21,7 @@ export class PerfilesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    debugger;
     const helper = new JwtHelperService();
     let token = sessionStorage.getItem(environment.TOKEN_NAME);
     const decodedToken = helper.decodeToken(token);
@@ -30,7 +31,6 @@ export class PerfilesComponent implements OnInit {
   }
 
   getPerfiles(username:any){
-    debugger;
     this.perfilService.findByUsuario(username).subscribe((response:Perfil[])=> {
       if (response== null){
         Swal.fire("Usuario sin perfiles", "Se valida que el usuario no tiene perfiles asignados", "info");

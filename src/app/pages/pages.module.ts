@@ -38,6 +38,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { CreateEditarComponent } from './organizacion/create-editar/create-editar.component';
 import { ViewUsariosComponent } from './organizacion/view-usarios/view-usarios.component';
 import { ValidarRecojoComponent } from './documento/mesaPartes/validar-recojo/validar-recojo.component';
+import { RespuestaComponent } from './documento/respuesta/respuesta.component';
+import { ModalMfaComponent } from './login/modal-mfa/modal-mfa.component';
 
 @NgModule({
   imports: [
@@ -83,7 +85,9 @@ import { ValidarRecojoComponent } from './documento/mesaPartes/validar-recojo/va
     DashboardComponent,
     CreateEditarComponent,
     ViewUsariosComponent,
-    ValidarRecojoComponent
+    ValidarRecojoComponent,
+    RespuestaComponent,
+    ModalMfaComponent
   ],
    exports:[
 

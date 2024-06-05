@@ -17,10 +17,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://www.google.com/recaptcha/api.js"></script>
+
+
+  <!-- Para la animacion del login -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js'></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+
+  <meta name="google-site-verification" content="6LdBnospAAAAANnmkuJxwjfGDq0eHlEPstjEIVNI" />
 </head>
 <body class="mat-typography">
   <app-root></app-root>
-  
+
   <div id="addComponent" style="display:none;"></div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
@@ -30,6 +38,20 @@
   <script type="text/javascript">
     var jqFirmaPeru = jQuery.noConflict(true);
     var _this = this;
+    function getJquery(){
+      return $;
+    }
+    window.addEventListener('load', function () {
+      // getJquery()('.preloader-proceso-firma').fadeOut();
+      jQuery=jqFirmaPeru;
+        $=jqFirmaPeru;
+      document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape") {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+      });
+    })
 
     LAST_CALLBACK_INICIAR=null;
     LAST_CALLBACK_CANCEL=null;
@@ -51,10 +73,13 @@
       var port = "48596";
       startSignature(port, param);
     }
-
+    debugger;
+    let token=sessionStorage.getItem('access_token');
     function iniciarFirma(configuracion, incallback){
+      debugger;
       var param={
-        "param_url": " http://localhost:8080/documentos/firmaPeru/"+configuracion,
+
+        "param_url": " http://localhost:8080/documentos/firmaPeru/"+configuracion+"?access_token="+token,
         "param_token": "162647697663667",
         "document_extension": "pdf"
       }
@@ -235,7 +260,7 @@
                   name: "Picture",
                   desiredSize: new go.Size(70, 70),
                   margin: 1.5,
-                  source: "assets/person.jpeg" 
+                  source: "assets/person.jpeg"
                 },
                 new go.Binding("source", "pic", _this.findHeadShot)),
               // define the panel where the text will appear
@@ -306,13 +331,13 @@
         if (!node) return;
         const thisemp = node.data;
 
-          let=organizationPadre=node.qb.CODIGO;
+          let=organizationPadre=node.si.CODIGO;
           let dataReturn={
             value:"",
           };
 
           var arrayItem=new Array();
-          myDiagramOrganization.model.Mc.forEach(dataElement => {
+          myDiagramOrganization.model.Ce.forEach(dataElement => {
 
               if(dataElement.parent==thisemp.key){
                 arrayItem.push(dataElement);
@@ -322,7 +347,7 @@
 
         var cadenaMayor=1;
         arrayItem.forEach(element => {
-            let numero=parseInt( element.codigoInterno.substring(element.codigoInterno.length - 2))+1;
+            let numero=parseInt( element.CODIGO.substring(element.CODIGO.length - 2))+1;
             if(numero>cadenaMayor){
             cadenaMayor=numero;
             }
@@ -353,7 +378,7 @@ myDiagramOrganization.nodeTemplate.contextMenu =
    $("ContextMenuButton",
      $(go.TextBlock, "Agregar Organizacion"),
      {
-       click: (e, button) => _this.addEmployee(button.part.adornedPart)
+       click: (e, button) =>{ _this.addEmployee(button.part.adornedPart)}
      }
    ),
 
@@ -383,7 +408,9 @@ myDiagramOrganization.nodeTemplate.contextMenu =
    $("ContextMenuButton",
      $(go.TextBlock, "Editar Organizacion"),
      {
+
        click: (e, button) => {
+        debugger;
        const node = button.part.adornedPart;
        _this.incallbackUpdate(node.qb,()=>{
        })
@@ -484,7 +511,6 @@ if(incallback!=null && incallback!=undefined){
           document.head.appendChild(script);
           var _chis=this;
           script.onload = function() {
-            debugger;
             alert;
             console.log(go)
             _chis.constDiagram(incallback);
@@ -579,7 +605,6 @@ this.load=function() {
   document.head.appendChild(script);
 
   script.onload = function() {
-      debugger;
     // El código de inicialización de GoJS o el código que utiliza GoJS va aquí
     var $ = go.GraphObject.make;
     var myDiagram = $(go.Diagram, "myDiagramDiv");

@@ -30,13 +30,11 @@ export class ViewDocumentoComponent implements OnInit {
   }
 
   getIdDocumento(): void {
-    debugger;
     this.vidDocumento = this.data.codigo;
     this.viewDocumento(this.vidDocumento);
   }
 
   viewDocumento(vidDocumento: any){
-    debugger;
     this.documentoService.viewPDF(vidDocumento).subscribe((response: any)=>{
       this.crearDocumento(response.data);
       this.errorPDF = false;

@@ -12,7 +12,7 @@ import { CreateEditarComponent } from '../create-editar/create-editar.component'
 import { MatDialog } from '@angular/material/dialog';
 import { switchMap } from 'rxjs';
 import { ViewUsariosComponent } from '../view-usarios/view-usarios.component';
-
+//import * as $ from 'jquery';
 const $ = go.GraphObject.make;
 
 @Component({
@@ -57,17 +57,21 @@ export class EsquemaComponent implements OnInit, AfterViewInit {
       });
   }
 
-  openDialog(codigoInterno:any){
+  openDialog(codigoOrganizacion:any, codigoPadre?:any){
+    let informacion = {
+      editar: codigoOrganizacion,
+      padre: codigoPadre
+    }
     this.dialog.open(CreateEditarComponent, {
       width: '50%',
-      data: codigoInterno,
+      data: informacion,
     });
   }
 
   openDialogUsuario(codigoInterno:any){
     this.dialog.open(ViewUsariosComponent, {
       width: '90%',
-      height:'70%',
+      height:'85%',
       data: codigoInterno,
     });
   }
@@ -116,15 +120,19 @@ export class EsquemaComponent implements OnInit, AfterViewInit {
   }
 
 
-  
+
 
   createDiagramaOrganizacion(){
     let _this=this;
+
     this.organizacionService.findForDiagrama(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((resp:any) => {
-        //console.log(resp)
       _this.organizaciones = resp;
           this._window().createDiagramaOrganizacion(resp,
             function(stringOrganizationPadre:any, dataRespuesta:any,incallbackOut:any){
+              debugger;
+              _this.openDialog(null, stringOrganizationPadre);
+              /*
+              debugger;
             Swal.fire({
               title: 'NUEVA ORGANIZACIÓN',
               html: `<input type="text" id="nombreCorto_ParamLTS_TEMP" class="form-control mb-2" placeholder="Ingrese acronimo">
@@ -135,8 +143,8 @@ export class EsquemaComponent implements OnInit, AfterViewInit {
               confirmButtonText: 'Guardar',
               focusConfirm: false,
               preConfirm: () => {
-                let nombreCorto = _this._window().getJquery()('#nombreCorto_ParamLTS_TEMP')[0].value;
-                let nombreLargo = _this._window().getJquery()('#nombreLargo_ParamLTS_TEMP')[0].value;
+                let nombreCorto = _this._window().$()('#nombreCorto_ParamLTS_TEMP')[0].value;
+                let nombreLargo = _this._window().$()('#nombreLargo_ParamLTS_TEMP')[0].value;
                 let indicativo = _this._window().getJquery()('#indicativo_ParamLTS_TEMP')[0].value
                 let cargo = _this._window().getJquery()('#cargo_ParamLTS_TEMP')[0].value;
 
@@ -148,7 +156,7 @@ export class EsquemaComponent implements OnInit, AfterViewInit {
             }).then((result:any) => {
               if((result.dismiss!=undefined && result.dismiss=='backdrop')){
                 return;
-                
+
                 }
               if(result.value==undefined){
                 return;
@@ -161,15 +169,16 @@ export class EsquemaComponent implements OnInit, AfterViewInit {
               dataRespuesta.name=result.value.nombreCorto;
               dataRespuesta.cargo=result.value.cargo;
               debugger;
-              // _this.organizacionService.saveOrganizacion(stringOrganizationPadre,dataRespuesta).subscribe((data) =>{
-              //     if(incallbackOut!=null){
-              //       incallbackOut();
-              //     }
-              //     _this._window().getJquery()('.preloader').fadeOut();
-              //     _this.cargarOrganizaciones();
-              //     Swal.fire('Éxito ', `Se grabó la nueva organización`, 'success');
-              // });
-            }) 
+              _this.organizacionService.saveOrganizacion(stringOrganizationPadre,dataRespuesta).subscribe((data) =>{
+                  if(incallbackOut!=null){
+                    incallbackOut();
+                  }
+                  _this.createDiagramaOrganizacion();
+                  _this._window().getJquery().fadeOut();
+                  Swal.fire('Éxito ', `Se grabó la nueva organización`, 'success');
+              });
+            })
+            */
           }
 
           ,function(codigoInterna:any,callBackOutEliminar:any){
@@ -184,7 +193,7 @@ export class EsquemaComponent implements OnInit, AfterViewInit {
             }).then((result:any) => {
               if((result.dismiss!=undefined && result.dismiss=='backdrop')){
                 return;
-                
+
                 }
               if (result.isConfirmed) {
               //   _this.organizacionService.eliminarOrganizacionEnCascada(codigoInterna).subscribe((data: any) =>{
@@ -201,7 +210,7 @@ export class EsquemaComponent implements OnInit, AfterViewInit {
             })
           },
           function(bq:any,callBackOutUpdate:any){
-
+            debugger;
             let organizacion:any={};
             organizacion.acronimo=bq.name;
             organizacion.nombreLargo="";

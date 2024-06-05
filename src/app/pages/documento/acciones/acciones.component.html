@@ -32,7 +32,7 @@
                 <button class="btn btn-info" type="button" (click)="verSeguimiento(idDocumento)" >
                   <i class="fas fa-archive"></i> SEGUIMIENTO
                 </button>
-                <button class="btn btn-primary" type="button" >
+                <button class="btn btn-primary" type="button" [routerLink]="['/principal/formRespuesta', idDocumento]" >
                   <i class="fas fa-file-import"></i> DAR RESPUESTA
                 </button>
                 <button class="btn btn-danger" type="button" routerLink="/principal/pendientes" >

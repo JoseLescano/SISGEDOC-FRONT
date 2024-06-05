@@ -22,24 +22,29 @@ export class CreateEditarComponent implements OnInit {
   operacion : string = "GUARDAR";
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: OrganizacionDiagram,
+    @Inject(MAT_DIALOG_DATA) private data: any,
     private matDialog: MatDialogRef<CreateEditarComponent>,
     private organizacionService:OrganizacionService,
     private router: Router) { }
 
   ngOnInit(): void {
-    this.codigoInterno = this.data.codigoInterno;
-    this.organizacionService.findByCodigoInterno(this.codigoInterno).subscribe((response:any)=> {
-      this.organizacionSeleccionada = response.data;
-    });
+    debugger;
+    if (this.data.editar!=null){
+      this.codigoInterno = this.data.editar;
+      this.organizacionService.findByCodigoInterno(this.codigoInterno).subscribe((response:any)=> {
+        this.organizacionSeleccionada = response.data;
+      });
+    }else {
+      this.titulo = "CREAR ORGANIZACION";
+    }
   }
 
   operate(){
-    if(this.organizacionSeleccionada.acronimo!= null && this.organizacionSeleccionada.cargo!=null 
+    if(this.organizacionSeleccionada.acronimo!= null && this.organizacionSeleccionada.cargo!=null
       && this.organizacionSeleccionada.indicativo!=null && this.organizacionSeleccionada.nombreLargo!=null){
         debugger;
         this.organizacionService.updateOrganizacion(
-          this.codigoInterno, this.organizacionSeleccionada.acronimo, 
+          this.codigoInterno, this.organizacionSeleccionada.acronimo,
           this.organizacionSeleccionada.nombreLargo, this.organizacionSeleccionada.indicativo,
           this.organizacionSeleccionada.cargo).pipe(switchMap(()=>{
             return this.organizacionService.findByCodigoInterno(this.codigoInterno);
@@ -48,7 +53,7 @@ export class CreateEditarComponent implements OnInit {
               Swal.fire('OPERACION REALIZADA', 'SE ACTUALIZO ORGANIZACION CON EXITO', 'info');
               this.close();
               // this.router.navigate(['/principal/organizacion']);
-            
+
           }, error => {
             Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
           });

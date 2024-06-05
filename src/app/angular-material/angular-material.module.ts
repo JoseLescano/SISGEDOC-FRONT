@@ -29,6 +29,13 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 
 import {MatChipsModule} from '@angular/material/chips';
 
+import {
+  RecaptchaFormsModule,
+  RecaptchaModule,
+  RecaptchaSettings,
+  RECAPTCHA_SETTINGS,
+} from 'ng-recaptcha';
+
 
 @NgModule({
   declarations: [],
@@ -36,6 +43,9 @@ import {MatChipsModule} from '@angular/material/chips';
     CommonModule
   ],
   exports: [
+    RecaptchaModule,
+    RecaptchaFormsModule,
+    RecaptchaModule,
     MatMenuModule,
     MatTableModule,
     MatInputModule,

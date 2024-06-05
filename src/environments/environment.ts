@@ -8,6 +8,10 @@ export const environment = {
   codigoOrganizacion: '3302010102',
   TOKEN_AUTH_USERNAME: '', // almacena usuario del token
   TOKEN_NAME: 'access_token', // token completo
+  RETRY: 2,
+  recaptcha: {
+    siteKey: '6Ld2caMpAAAAACs-TB53rcDAmROclnKBxrargQ_x',
+  },
 
   rol: '002',
 

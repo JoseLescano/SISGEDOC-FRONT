@@ -17,7 +17,6 @@ export class MenuService extends GenericService<Menu> {
   }
 
   getMenuByRol(rol:any){
-    debugger;
     let token = sessionStorage.getItem(environment.TOKEN_NAME);
     return this.http.get<Menu[]>(`${environment.HOST}menus/getMenuByRol/${rol}`, {
       headers: new HttpHeaders()

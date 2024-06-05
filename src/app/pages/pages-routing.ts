@@ -28,6 +28,8 @@ import { RegistrarDerivacionComponent } from './documento/derivar/registrar-deri
 import { PerfilesComponent } from './perfiles/perfiles.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { CreateEditarComponent } from './organizacion/create-editar/create-editar.component';
+import { IsLoggedInGuard } from '../auth/guards/is-logged-in.guard';
+import { RespuestaComponent } from './documento/respuesta/respuesta.component';
 
 const routes: Routes = [
 
@@ -41,7 +43,7 @@ const routes: Routes = [
   { path: 'archivar/:codigoDocumento', component: RegistrarComponent },
   { path: 'devolver/:codigoDocumento', component: RegistrarDevolverComponent },
   { path: 'derivar/:codigoDocumento', component: RegistrarDerivacionComponent },
-  { path: 'crear-documento', component: CrearDocumentoComponent },
+  { path: 'crear-documento', component: CrearDocumentoComponent, canActivate: [IsLoggedInGuard] },
   { path: 'resetear-authentificacion', component: DobleAutentificacionComponent },
   { path: 'buscar-documento/:tipoReporte', component: BuscarDocumentoComponent },
   { path: 'recibir-documento', component: RecibirComponent },
@@ -61,6 +63,7 @@ const routes: Routes = [
   { path: 'entregarCorrespondencia', component: EntregarCorrespondenciaComponent },
   { path: 'parte-diario', component: ParteDiarioComponent },
   { path: 'form/:codigoDocumento', component: FormComponent  },
+  { path: 'formRespuesta/:codigoDocumento', component: RespuestaComponent  },
 ];
 
 
