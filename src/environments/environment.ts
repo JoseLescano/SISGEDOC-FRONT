@@ -3,6 +3,7 @@ import * as moment from "moment";
 export const environment = {
   production: false,
   HOST: 'http://localhost:8080/',
+  // HOST: 'https://net.ejercito.mil.pe/dev-sisgedo/',
   // codigoOrganizacion: '12021002',
   // codigoOrganizacion: '0211090101',
   codigoOrganizacion: '3302010102',
@@ -10,7 +11,8 @@ export const environment = {
   TOKEN_NAME: 'access_token', // token completo
   RETRY: 2,
   recaptcha: {
-    siteKey: '6Ld2caMpAAAAACs-TB53rcDAmROclnKBxrargQ_x',
+     siteKey: '6Ld2caMpAAAAACs-TB53rcDAmROclnKBxrargQ_x',
+    siteKeyV3: '6LdBnospAAAAANnmkuJxwjfGDq0eHlEPstjEIVNI',
   },
 
   rol: '002',

@@ -1,11 +1,19 @@
-<mat-card class="dialog-card large" [ngStyle]="{
-  'padding': status === 0 ? '' : '15px',
-  'height': status === 0 ? '550px' : 'auto',
-  'width': status === 0 ? '1000px' : 'auto',
-  'display': 'flex',
-  'justify-content': status === 0 ? 'initial' : 'center',
-  'align-items': status === 0 ? 'initial' : 'center'
-}" *ngIf="status === 0">
+
+<ng-container *ngIf="status == '0'" >
+
+</ng-container>
+
+<ng-container *ngIf="status == '1'" >
+
+  </ng-container>
+<mat-card  class="dialog-card large" [ngStyle]="{
+  'padding': status == '0' ? '' : '15px',
+  'height': status == '0' ? '550px' : 'auto',
+  'width': status == '0' ? '1000px' : 'auto',
+
+  'justify-content': status == '0' ? 'initial' : 'center',
+  'align-items': status == '0' ? 'initial' : 'center'
+}"  *ngIf="status == '0'"  >
   <br>
   <div class="title-container">
     <h2 class="title">Doble Factor de Autentificación</h2>
@@ -36,7 +44,7 @@
         <input class="validation-input" type="text" id="validationCode" name="validationCode" [(ngModel)]="otpCode"
           maxlength="6" (keypress)="validarNumero($event)" (input)="validarLongitud()">
           <div class="message-container">
-            <label class="message">{{ status === 0 ? 'Ingrese código de validación' : '' }}</label>
+            <label class="message">{{ status == '0' ? 'Ingrese código de validación' : '' }}</label>
           </div>
         <br>
         <button class="verify-button blue-button" type="button" (click)="SecretVerify()"
@@ -48,13 +56,13 @@
   </div>
 </mat-card>
 <mat-card class="dialog-card large" [ngStyle]="{
-  'padding': status === 1 ? '15px' : '15px',
-  'height': status === 1 ? 'auto' : 'auto',
-  'width': status === 1 ? 'auto' : 'auto',
-  'display': 'flex',
-  'justify-content': status === 1 ? 'center' : 'center',
-  'align-items': status === 1 ? 'center' : 'center'
-}" *ngIf="status === 1">
+  'padding': status != '0' ? '15px' : '15px',
+  'height': status != '0' ? 'auto' : 'auto',
+  'width': status  != '0' ? 'auto' : 'auto',
+
+  'justify-content': status  != '0' ? 'center' : 'center',
+  'align-items': status  != '0' ? 'center' : 'center'
+}" *ngIf="status  != '0'">
   <div class="title-container">
     <h2 class="title">Doble Factor de<br>Autentificación</h2>
   </div>
@@ -64,7 +72,7 @@
       <input class="validation-input" type="text" id="validationCode" name="validationCode" [(ngModel)]="otpCode"
         maxlength="6" (keypress)="validarNumero($event)" (input)="validarLongitud()">
       <div class="message-container">
-        <label class="message">{{ status === 1 ? 'Ingrese código de validación' : '' }}</label>
+        <label class="message">{{ status  != '0' ? 'Ingrese código de validación' : '' }}</label>
       </div>
       <br>
       <button class="verify-button blue-button" type="button" (click)="SecretVerify()"

@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { AuthenticationResponse } from 'src/app/_model/authentication-response';
 import { VerificationRequest } from 'src/app/_model/verification-request';
 import { LoginService } from 'src/app/_service/login.service';
@@ -14,9 +15,9 @@ import { environment } from 'src/environments/environment';
 export class ModalMfaComponent implements OnInit, OnDestroy {
 
   @Output() cerrarDialogo = new EventEmitter<void>();
-  status: any;
+  status: string;
   secretImageUri: any;
-  authResponse: AuthenticationResponse = {};
+  authResponse: string ="";
   otpCode = '';
   showProgressBar: boolean = false;
   intentos: number = 0;
@@ -29,19 +30,21 @@ export class ModalMfaComponent implements OnInit, OnDestroy {
     private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private loginService: LoginService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private recaptchaV3Service: ReCaptchaV3Service,
   ) { }
 
   ngOnInit(): void {
-
-    this.status = this.data.response.status;
-
-    //console.log(this.data)
-    if (this.status == "0") {
+debugger;
+    console.log(this.data);
+    if (this.data.response.status == "0") {
+      this.status = "0"
       this.saveTwoFactor();
+    }else {
+      this.status = "1"
     }
 
-    // this.startDialogCloseTimer();
+   //  this.startDialogCloseTimer();
   }
 
   ngOnDestroy(): void {
@@ -68,6 +71,7 @@ export class ModalMfaComponent implements OnInit, OnDestroy {
       }
     }, 1000);
   }
+
   validarNumero(event: KeyboardEvent) {
     const inputChar = String.fromCharCode(event.charCode);
     if (!/^\d+$/.test(inputChar)) {
@@ -82,21 +86,49 @@ export class ModalMfaComponent implements OnInit, OnDestroy {
   }
 
   SecretVerify() {
-    this.botonBloqueado = true;
+
+    if (this.otpCode.length !== 6) {
+      console.error('Invalid OTP code length');
+      return;
+    }
+
     this.cd.detectChanges();
-    //Ddd
-    const verifyRequest: VerificationRequest = {
-      username: this.data.username,
-      code: this.otpCode
+    const verifyRequest: any = {
+      cip: this.data.response.cip,
+      code: this.otpCode,
+      token: ''
     };
-    this.loginService.verifyCode(verifyRequest).subscribe({
-      next: (response) => {
-        sessionStorage.setItem(environment.TOKEN_NAME, response.access_token);
-        this.router.navigate(['pages/dashboard']);
-        this.cerrarDialogo.emit();
+
+
+    debugger;
+    this.recaptchaV3Service.execute("login_action").subscribe({
+      next: (token) => {
+        verifyRequest.token=token;
+        debugger;
+        this.loginService.verifyCode(verifyRequest).subscribe({
+          next: (response) => {
+            this.cerrarDialogo.emit();
+            if (response && response.access_token) {
+              sessionStorage.setItem(environment.TOKEN_NAME, response.access_token);
+              this.router.navigate(['/perfiles']);
+
+            } else {
+              console.error('No access_token in response');
+            }
+          },
+          error: (err) => {
+            console.error('Error in verifyCode:', err);
+          }
+        });
       },
+      error: (err) => {
+        debugger;
+        console.error('ReCAPTCHA v3 error:', err);
+
+      }
     });
-    setTimeout(() => {
-      this.botonBloqueado = false;
-    }, 3500);
-  }}
+
+
+  }
+
+}

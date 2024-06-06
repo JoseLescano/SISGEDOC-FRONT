@@ -20,7 +20,8 @@ import { LoginComponent } from './pages/login/login.component';
 import { JwtModule } from "@auth0/angular-jwt";
 import { IsLoggedInGuard } from './auth/guards/is-logged-in.guard';
 import { JwtInterceptor } from './auth/guards/JwtInterceptor';
-import { RECAPTCHA_SETTINGS, RecaptchaSettings, RecaptchaV3Module } from 'ng-recaptcha';
+
+import { RECAPTCHA_SETTINGS, RECAPTCHA_V3_SITE_KEY, RecaptchaModule, RecaptchaSettings, RecaptchaV3Module } from 'ng-recaptcha';
 import { environment } from 'src/environments/environment';
 
 
@@ -43,14 +44,16 @@ export function tokenGetter() {
     NgSelectModule,
     FormsModule,
     PagesModule,
-    // RecaptchaModule,
+     RecaptchaModule,
     RecaptchaV3Module,
     PagesRoutingModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
         allowedDomains: ["localhost:8080"],
+         //allowedDomains: ["net.ejercito.mil.pe"],
         disallowedRoutes: ["http://example.com/examplebadroute/"],
+        //disallowedRoutes: ["https://net.ejercito.mil.pe/dev-sisgedo/"],
       },
     }),
 
@@ -60,6 +63,10 @@ export function tokenGetter() {
     {
       provide: RECAPTCHA_SETTINGS,
       useValue: {  siteKey: environment.recaptcha.siteKey,} as RecaptchaSettings,
+    },
+    {
+      provide: RECAPTCHA_V3_SITE_KEY,
+      useValue: environment.recaptcha.siteKeyV3,
     },
     // {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

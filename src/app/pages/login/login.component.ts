@@ -1,3 +1,6 @@
+import { ReCaptchaV3Service } from 'ng-recaptcha';
+
+
 import { JwtHelperService } from '@auth0/angular-jwt';
 import swal from 'sweetalert2'
 import { Component, OnInit } from '@angular/core';
@@ -7,11 +10,11 @@ import { environment } from 'src/environments/environment';
 import { LoginService, ILoginRequest } from 'src/app/_service/login.service';
 import Swal from 'sweetalert2';
 import { PerfilService } from 'src/app/_service/perfil.service';
-import { switchMap } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalMfaComponent } from './modal-mfa/modal-mfa.component';
-import { AngularMaterialModule } from 'src/app/angular-material/angular-material.module';
+
+import { PersonaService } from 'src/app/_service/persona.service';
 
 
 @Component({
@@ -19,113 +22,111 @@ import { AngularMaterialModule } from 'src/app/angular-material/angular-material
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent{
 
-  username: string;
-  password: string;
-  hide : boolean = true;
-  perfiles: Perfil[] = [];
-
-  message: string;
   error: string;
-  buttonClicked: boolean = false;
+ message: string;
   _formulario: FormGroup;
+  username: string;
   fullname: string;
+  password: string;
   loading: boolean = false;
-  tokencaptcha: string | undefined;
+
   captchaResolved: boolean = false;
   username_aux: boolean = false;
   password_aux: boolean = false;
-  token_aux: boolean = false;
+
   recaptchaToken: string = '';
 
   constructor(
-    private router: Router,
-    private loginService: LoginService,
-    private perfilService: PerfilService,
+    private recaptchaV3Service: ReCaptchaV3Service,
     public dialog: MatDialog,
-
+    private loginService: LoginService,
+    private userService: PersonaService,
   ) {
-
-   }
-
-  ngOnInit(): void {
     this._formulario = new FormGroup({
       username: new FormControl("", Validators.required),
       password: new FormControl("", Validators.required),
-      token: new FormControl("", Validators.required),
     });
   }
 
-login() {
-  debugger;
-  if (this._formulario.invalid) {
-    this.buttonClicked = true;
-    if (this._formulario.get("username").invalid) this.username_aux = true;
-    if (this._formulario.get("password").invalid) this.password_aux = true;
-    if (this._formulario.get("token").invalid) this.token_aux = true;
-    return;
+  login() {
+
+
+
+     if (this._formulario.invalid) {
+       if (this._formulario.get("username").invalid) this.username_aux = true;
+       if (this._formulario.get("password").invalid) this.password_aux = true;
+       return;
+     }
+     this.executeReCaptcha('login_action');
   }
 
-  const jwtRequest: ILoginRequest = {
-    username: this.username,
-    password: this.password,
-    token: this.recaptchaToken
-  };
+  executeReCaptcha(action: string): void {
 
-  this.loginService.login(jwtRequest).subscribe({
-    next: (response) => {
-    /*  sessionStorage.setItem(environment.TOKEN_NAME, response.access_token);
-      this.router.navigate(['pages/dashboard']);*/
-     // console.log(response);
-    this.openModalMfaStatus0(this.username, response);
-    },
-  });
-}
-
-openModalMfaStatus0(username: string, response: any): void {
-  const dialogRef = this.dialog.open(ModalMfaComponent, {
-    data: { username: username, response: response }
-  });
-  dialogRef.componentInstance.cerrarDialogo.subscribe(() => {
-    this._formulario.reset();
-    dialogRef.close();
-    this.onSwal();
-  });
-}
-
-onSwal() {
-  const helper = new JwtHelperService();
-  const token = sessionStorage.getItem(environment.TOKEN_NAME);
-  const decodedToken = helper.decodeToken(token);
-  this.username = decodedToken.sub;
-  // this.loginService.login(this.username).subscribe((response) => {
-  //   this.fullname = response.fullname;
-  //   Swal.fire('Bienvenido al SICAE', `${this.fullname}`, 'success');
-  // });
-
-}
-
-resetForm() {
-
-  this.recaptchaToken = '';
-  this.captchaResolved = false;
-  this.username = '';
-  this.password = '';
-}
-
-onCaptchaResolved(token: string) {
-  this.recaptchaToken = token;
-  this.captchaResolved = true;
-  this._formulario.get('token').setValue(token);
-}
-
-convertirAMayusculas() {
-  if (this.username) {
-    this.username = this.username.toUpperCase();
+    this.recaptchaV3Service.execute(action).subscribe({
+      next: (token) => {
+        debugger;
+        this.recaptchaToken = token;
+        this.performLogin();
+      },
+      error: (err) => {
+        debugger;
+        console.error('ReCAPTCHA v3 error:', err);
+        this.error = 'reCAPTCHA failed';
+      }
+    });
   }
-}
 
+  performLogin(): void {
+    const jwtRequest = {
+      username: this.username,
+      password: this.password,
+      token: this.recaptchaToken
+    };
 
+    this.loginService.login(jwtRequest).subscribe({
+      next: (response) => {
+        this.openModalMfaStatus0(this.username, response);
+      },
+      error: (err) => {
+        this.error = 'Login failed';
+      }
+    });
+  }
 
+  openModalMfaStatus0(username: string, response: any): void {
+
+    const dialogRef = this.dialog.open(ModalMfaComponent, {
+      data: { username: username, response: response }
+    });
+    dialogRef.componentInstance.cerrarDialogo.subscribe(() => {
+      dialogRef.close();
+      this.onSwal();
+    });
+  }
+
+  onSwal() {
+    const helper = new JwtHelperService();
+    const token = sessionStorage.getItem(environment.TOKEN_NAME);
+    const decodedToken = helper.decodeToken(token);
+    this.username = decodedToken.sub;
+    // this.userService.get(this.username).subscribe((response) => {
+    //   this.fullname = response.fullname;
+      Swal.fire('Bienvenido al SICAE','', 'success');
+    // });
+  }
+
+  resetForm() {
+    this.recaptchaToken = '';
+    this.captchaResolved = false;
+    this.username = '';
+    this.password = '';
+  }
+
+  convertirAMayusculas() {
+    if (this.username) {
+      this.username = this.username.toUpperCase();
+    }
+  }
 }

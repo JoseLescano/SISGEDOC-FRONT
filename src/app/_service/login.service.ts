@@ -27,6 +27,7 @@ export class LoginService {
   ) { }
 
   login(jwtRequest: ILoginRequest): Observable<any> {
+    jwtRequest.username =jwtRequest.username.toLowerCase();
     return this.http.post<any>(`${this.url}/ad`, jwtRequest);
   }
 
@@ -40,12 +41,14 @@ export class LoginService {
     return token != null;
   }
 
-  verifyCode(verificationRequest: VerificationRequest): Observable<any> {
-    return this.http.post<any>(`${this.url}/verify`, verificationRequest).pipe(
-      catchError(error => {
-        throw 'Error al verificar el código: ' + error.message;
-      })
-    );
+  verifyCode(verificationRequest: any): Observable<any> {
+
+    return this.http.post<any>(`${this.url}/twofa/verify`, verificationRequest);
+    // return this.http.post<any>(`${this.url}/twofa/verify`, verificationRequest).pipe(
+    //   catchError(error => {
+    //     throw 'Error al verificar el código: ' + error.message;
+    //   })
+    // );
   }
 
   key_recaptcha(token: string) {
