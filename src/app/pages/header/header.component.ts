@@ -1,5 +1,6 @@
 
 import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 
 interface SideNavToggle {
@@ -17,6 +18,9 @@ export class HeaderComponent implements OnInit {
 
   @Input() collapsed = false;
   @Input() screenWidth = 0;
+  // cargo = sessionStorage.getItem(environment.cargoSeleccionado);
+  // nombreOrganizacion = sessionStorage.getItem(environment.nombreOrganizacion);
+  // puesto = this.cargo + " - "+ this.nombreOrganizacion;
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -27,6 +31,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.checkCanShowSearchAsOverlay(window.innerWidth);
+
   }
 
   constructor(

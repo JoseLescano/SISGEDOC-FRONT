@@ -52,10 +52,10 @@ export function tokenGetter() {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        // allowedDomains: ["localhost:8080"],
-         //allowedDomains: ["net.ejercito.mil.pe"],
          allowedDomains: ["localhost:8080"],
-         disallowedRoutes: ["http://localhost:8080/login/forget"]
+        //allowedDomains: ["net.ejercito.mil.pe"],
+        //  allowedDomains: ["localhost:8080"],
+          disallowedRoutes: ["http://localhost:8080/login/forget"]
         //disallowedRoutes: ["https://net.ejercito.mil.pe/dev-sisgedo/"],
       },
     }),
@@ -71,8 +71,8 @@ export function tokenGetter() {
       provide: RECAPTCHA_V3_SITE_KEY,
       useValue: environment.recaptcha.siteKeyV3,
     },
-    { 
-      provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true 
+    {
+      provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true
     },
     {
       provide: LocationStrategy, useClass: HashLocationStrategy

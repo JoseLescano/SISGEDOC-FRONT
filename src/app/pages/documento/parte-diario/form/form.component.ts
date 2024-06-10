@@ -47,57 +47,42 @@ export class FormComponent implements OnInit {
     const id = +this.route.snapshot.paramMap.get('codigoDocumento');
     this.idDocumento = id;
     this.documentoService.findById(this.idDocumento).pipe(switchMap((response:any)=> {
-      debugger;
       this.documento = response;
       this.organizacionLogueada = sessionStorage.getItem(environment.codigoOrganizacion);
       return this.documentoService.findRespuestaByVidParent(this.documento.codigo);
-      //return this.documentoService.viewPDF(this.documento.codigo);
-
-      })
-    ).subscribe((responseDocumentoPadre: any)=>{
+      })).subscribe((responseDocumentoPadre: any)=>{
       if (responseDocumentoPadre!=null){
-        debugger;
         this.documentoRespuesta = responseDocumentoPadre;
         this.mostrarRespuesta = true;
         if (this.documentoRespuesta.organizacionOrigen.codigoInterno==this.organizacionLogueada){
           this.mostrarDistribuir = true;
-          // mostrar referencia
         }
         this.documentoService.viewPDF(this.documento.codigo).pipe(switchMap((viewDocumento:any)=> {
-          debugger;
           this.crearDocumento(viewDocumento.data, 'documentoReferencia');
           return this.documentoService.viewPDF(this.documentoRespuesta.codigo);
         })).subscribe((responseRespuesta:any)=> {
-          debugger;
           this.crearDocumento(responseRespuesta.data, 'documentoRespuesta');
+        }, (error:any) => {
+          this.errorPDF = true;
+          this.cargando = false;
+          Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR PDF!`, 'warning');
         });
       } else {
         if (this.documento.organizacionOrigen.codigoInterno==this.organizacionLogueada){
-          debugger;
           this.mostrarDistribuir = true;
           this.mostrarRespuesta = true;
           this.documentoService.viewPDF(this.documento.codigo).subscribe((response:any)=> {
-            debugger;
             this.crearDocumento(response.data, 'documentoRespuesta');
+          }, (error:any) => {
+            this.errorPDF = true;
+            this.cargando = false;
+            Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR PDF!`, 'warning');
           });
         }
       }
-      /*
-      this.cargando = true;
-      debugger;
-      this.crearDocumento(response.data,'documentoReferencia');
-      //this.viewDocumentoRespuesta();
-      this.findAnexosByDocumento();
-      this.cargando = false;
-    }, (error:any) => {
-      this.errorPDF = true;
-      this.cargando = false;
-      Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR PDF!`, 'warning');
-
-       */
     });
-   
-    
+
+
   }
 
   // getIdDocumento(){
@@ -111,11 +96,11 @@ export class FormComponent implements OnInit {
   //         this.mostrarDistribuir=true;
   //       }else {
   //         this.mostrarDistribuir=false;
-  //       }        
+  //       }
   //       return of(true);
   //     })
   //   );
-  // }  
+  // }
 
   findAnexosByDocumento(){
     this.anexoService.findByDocumento(this.documento.codigo).subscribe((response:any)=> {
@@ -141,8 +126,8 @@ export class FormComponent implements OnInit {
   //     if (this.mostrarRespuesta)
   //       this.crearDocumento(response.data,'documentoRespuesta');
   //   });
-    
-    
+
+
   // }
 
   crearDocumento(resp: any, iframeId: string) {
@@ -158,7 +143,7 @@ export class FormComponent implements OnInit {
     list.items.add(rf_file);
     this.selectedFiles=list.files;
     this.url_pdf = this.selectedFiles[0].name;
-   
+
   }
 
 
@@ -284,10 +269,10 @@ export class FormComponent implements OnInit {
       if (result.isConfirmed) {
         debugger;
         if (this.documentoRespuesta==null){
-          
+
           this.decretoService.elevarDocumento(
-            this.documento.codigo, 
-            sessionStorage.getItem(environment.codigoOrganizacion), 
+            this.documento.codigo,
+            sessionStorage.getItem(environment.codigoOrganizacion),
             this.cambioPDF?this.selectedFiles:'undefined')
           .subscribe((response:any)=> {
             if (response.httpStatus=='CREATED'){
@@ -299,12 +284,12 @@ export class FormComponent implements OnInit {
           }, (error: any) => {
             Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE EN LA ELEVACION DEL DOCUMENTO', 'warning');
           });
-          
+
         }else {
           this.decretoService.elevarDocumento(
-            this.documento.codigo,            
-            this.organizacionLogueada,             
-            this.cambioPDF?this.selectedFiles:'undefined', 
+            this.documento.codigo,
+            this.organizacionLogueada,
+            this.cambioPDF?this.selectedFiles:'undefined',
             this.documentoRespuesta.codigo )
           .subscribe((response:any)=> {
             debugger;
@@ -320,7 +305,7 @@ export class FormComponent implements OnInit {
         }
       }
     });
-    
+
   }
 
   distribuir(){
@@ -356,7 +341,7 @@ export class FormComponent implements OnInit {
             sessionStorage.getItem(environment.codigoOrganizacion),
             this.documento.codigo,
             this.cambioPDF?this.selectedFiles:'undefined')
-          .subscribe((response:any)=> { 
+          .subscribe((response:any)=> {
             console.log(response);
             if (response.httpStatus=='CREATED'){
               Swal.fire("ACCION REALIZADA", response.message, "success");
@@ -368,8 +353,8 @@ export class FormComponent implements OnInit {
             Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE", "warning");
           });
         }
-        
-      } 
+
+      }
     });
   }
 
@@ -381,13 +366,13 @@ export class FormComponent implements OnInit {
     var _this:any=this;
       this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response:any)=>{
         var nameFile=response[1];
-        this._window().iniciarFirma((response[1]), 
+        this._window().iniciarFirma((response[1]),
         function(){_this.updateIframeWithKeyDigitalGeneral(nameFile);}
-      );   
+      );
       }, error => {
         Swal.fire("LO SENTIMOS", "HUBO UN INCONVENIENTE EN LA FIRMA DEL DOCUMENTO", "info");
       });
-   
+
   }
 
   updateIframeWithKeyDigitalGeneral(inNameFile: any) {

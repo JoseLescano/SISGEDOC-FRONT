@@ -38,7 +38,7 @@ body {
   width: 100%;
 }
 .login-wrapper mat-card-header mat-card-title {
-  font-size: 32px;
+  font-size: 40px;
   margin: 0;
   color: #eeeeee;
   font-weight: bold;
@@ -92,4 +92,7 @@ body {
   justify-content: center; /* Centra horizontalmente el contenido */
   align-items: top; /* Centra verticalmente el contenido */
   height: 90px; /* Ajusta la altura según sea necesario */
+}
+.example-full-width input.mat-input {
+  height: 25px; /* Establece la altura a 25px */
 }

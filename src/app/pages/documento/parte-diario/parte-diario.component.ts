@@ -32,7 +32,7 @@ export class ParteDiarioComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.documentoService.findParaParte(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>{
-      this.dataSource = response;
+      this.createTable(response);
     });
   }
 

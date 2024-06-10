@@ -8,6 +8,8 @@ export const environment = {
   TOKEN_AUTH_USERNAME: '', // almacena usuario del token
   TOKEN_NAME: 'access_token', // token completo
   RETRY: 2,
+  cargoSeleccionado: '',
+  nombreOrganizacion:'',
   recaptcha: {
     siteKey: '6Ld2caMpAAAAACs-TB53rcDAmROclnKBxrargQ_x',
     siteKeyV3: '6LdBnospAAAAANnmkuJxwjfGDq0eHlEPstjEIVNI',
