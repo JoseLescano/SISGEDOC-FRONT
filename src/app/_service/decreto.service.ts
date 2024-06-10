@@ -46,13 +46,15 @@ export class DecretoService extends GenericService<Decreto> {
     formData.append('destino', destino);
     formData.append('observacion', observacion);
     return this.http.post(`${environment.HOST}decretos/derivarDocumento`,  formData);
-  }
-
-  elevarDocumento(documento: any, origen: any){
-    debugger;
-    let formData: FormData= new FormData();
-    formData.append('codigoDocumento', documento);
-    formData.append('origen', origen);
+    }
+    
+    elevarDocumento(documento: any, origen: any, archivoFirmado?:any, documentoRespuesta?:any){
+      debugger;
+      let formData: FormData= new FormData();
+      formData.append('codigoDocumento', documento);
+      formData.append('origen', origen);
+      formData.append('archivoFirmado', archivoFirmado[0]);
+      formData.append('documentoRespuesta', documentoRespuesta);
     return this.http.post(`${environment.HOST}decretos/elevarDocumento`,  formData);
   }
 
@@ -61,8 +63,18 @@ export class DecretoService extends GenericService<Decreto> {
     let formData: FormData= new FormData();
     formData.append('codigoDocumento', documento);
     formData.append('origen', origen);
-    formData.append('archivoFirmado', archivoFirmado);
+    formData.append('archivoFirmado', archivoFirmado[0]);
     return this.http.post(`${environment.HOST}decretos/distrubirDocumento`,  formData);
+  }
+
+  distrubirRespuestaDocumento(documento: any, origen: any, documentoPadre:any, archivoFirmado?:any){
+    debugger;
+    let formData: FormData= new FormData();
+    formData.append('codigoDocumento', documento);
+    formData.append('origen', origen);
+    formData.append('documentoPadre', documentoPadre);
+    formData.append('archivoFirmado', archivoFirmado[0]);
+    return this.http.post(`${environment.HOST}decretos/distrubirRespuestaDocumento`,  formData);
   }
 
 

@@ -58,14 +58,15 @@ export class RegistrarComponent implements OnInit {
   }
 
   archivarDocumento(){
-    debugger;
+    
     if (this.observaciones != '' && this.observaciones != null){
-      this.documentoService.archivarDocumento(this.vidDocumento, environment.codigoOrganizacion, 
-        'wrojasf', this.observaciones, this.selectedFiles == null? '':  this.selectedFiles.item(0)).subscribe((response: any)=> {
+      debugger;
+      this.documentoService.archivarDocumento(this.vidDocumento, sessionStorage.getItem(environment.codigoOrganizacion),
+         this.observaciones, this.selectedFiles == null? '':  this.selectedFiles.item(0)).subscribe((response: any)=> {
           debugger;
          if (response.httpStatus=='OK'){
            Swal.fire(response.message, `Se archivo documento correctamente`, 'info');
-           this.router.navigate(['/pendientes']);
+           this.router.navigate(['/principal/pendientes']);
          }else {
            Swal.fire(response.message, `Se presento un inconveniente para archivar documento`, 'info');
          }

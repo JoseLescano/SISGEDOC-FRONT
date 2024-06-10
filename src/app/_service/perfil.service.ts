@@ -33,6 +33,10 @@ export class PerfilService extends GenericService<Perfil> {
      params: { usuario: usuario }} );
   }
 
+  findByUsuariLogueado(){
+    return this.http.get<Perfil[]>(`${environment.HOST}perfiles/findByUsuarioLogueado`);
+  }
+
   findByOrganizacion(codigoInterno: any){
 
     return this.http.get<Perfil[]>(`${environment.HOST}perfiles/findByOrganizacion/${codigoInterno}`);

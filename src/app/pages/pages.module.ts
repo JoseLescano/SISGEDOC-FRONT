@@ -40,6 +40,7 @@ import { ViewUsariosComponent } from './organizacion/view-usarios/view-usarios.c
 import { ValidarRecojoComponent } from './documento/mesaPartes/validar-recojo/validar-recojo.component';
 import { RespuestaComponent } from './documento/respuesta/respuesta.component';
 import { ModalMfaComponent } from './login/modal-mfa/modal-mfa.component';
+import { SidenavComponent } from './sidenav/sidenav.component';
 
 @NgModule({
   imports: [
@@ -87,7 +88,8 @@ import { ModalMfaComponent } from './login/modal-mfa/modal-mfa.component';
     ViewUsariosComponent,
     ValidarRecojoComponent,
     RespuestaComponent,
-    ModalMfaComponent
+    ModalMfaComponent,
+    SidenavComponent
   ],
    exports:[
 

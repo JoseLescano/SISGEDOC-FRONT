@@ -17,7 +17,7 @@ import { ViewDocumentoComponent } from '../view-documento/view-documento.compone
 })
 export class ViewRemitidosComponent implements OnInit {
 
-  displayedColumns: string[] = ['Nro', 'Asunto', 'Origen', 'FechaDoc', 'Documento',  'Acciones'];
+  displayedColumns: string[] = ['Nro', 'Asunto', 'Origen','Destino', 'FechaDoc', 'Documento',  'Acciones'];
   dataSource: MatTableDataSource<Documento>;
   cargando: boolean= false;
 

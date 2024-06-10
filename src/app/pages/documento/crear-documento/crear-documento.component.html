@@ -121,8 +121,7 @@
 
                           </div>
                           <button  mat-flat-button type="button" color="primary" (click)="firmarDocumento()"
-                            data-bs-toggle="modal" data-bs-target="#panelFirmaPeru"
-                            class="form-control mt-2" *ngIf="mostrarFirma && selectedFiles != null" >FIRMAR DOCUMENTO</button>
+                            class="form-control mt-2" *ngIf="selectedFiles != null && form.get('firmante').value!=null" >FIRMAR DOCUMENTO</button>
                         </div>
                       </div>
                     </div>
@@ -140,8 +139,8 @@
                     <div class="row d-flex flex-row bd-highlight mt-3">
                       <div class="col">
                         <!-- <button class="btn btn-lg btn-outline-success mr-2" type="submit" [disabled]="form.invalid">GUARDAR DOCUMENTO</button> -->
-                        <button mat-flat-button type="submit" style="margin-right: 2px;" color="primary" [disabled]="form.invalid || selectedFiles== null">GUARDAR DOCUMENTO</button>
-                        <button mat-flat-button color="warn" type="button" (click)="limpiar()" >CANCELAR</button>
+                        <button mat-flat-button type="submit" class="btn-opcion" color="primary" [disabled]="form.invalid || selectedFiles== null">GUARDAR DOCUMENTO</button>
+                        <button mat-flat-button color="warn" type="button" class="btn-opcion" (click)="limpiar()" >CANCELAR</button>
                       </div>
                     </div>
                   </mat-card-content>

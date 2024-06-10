@@ -11,16 +11,13 @@ export class JwtInterceptor implements HttpInterceptor {
     constructor(private loginService: LoginService) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-      debugger;
       const helper = new JwtHelperService();
       let token = sessionStorage.getItem(environment.TOKEN_NAME);
       if (token==null){
         return next.handle(request);
       }else {
         const decodedToken = helper.decodeToken(token);
-
         const username = decodedToken.sub;
-        debugger;
           const isApiUrl = request.url.startsWith(environment.HOST);
           if (!helper.isTokenExpired(token) && isApiUrl) {
               request = request.clone({

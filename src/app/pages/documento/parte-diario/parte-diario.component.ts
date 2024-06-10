@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Documento } from 'src/app/_model/documento.model';
@@ -9,7 +8,7 @@ import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewDocumentoComponent } from '../view-documento/view-documento.component';
-import { FormComponent } from './form/form.component';
+import {MatPaginator} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-parte-diario',
@@ -52,11 +51,8 @@ export class ParteDiarioComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataSource = null;
-    if (this.dataSource!= null){
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    }
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   verDocumento(documentoSeleccionado?:any): void {

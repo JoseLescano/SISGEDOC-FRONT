@@ -103,6 +103,7 @@ export class CrearDocumentoComponent implements OnInit {
 
 
   operate(){
+
     if(this.form.valid && this.selectedFiles != null){
       this.cargando = true;
       this.documentoar.organizacionOrigen = this.form.value['firmante'].codigoInterno;
@@ -251,12 +252,7 @@ export class CrearDocumentoComponent implements OnInit {
           this.selectedFiles = event.target.files;
           this.url_pdf = this.selectedFiles[0].name;
           if (this.selectedFiles[0].type == 'application/pdf') {
-            this.convertirArchivoABase64(this.selectedFiles.item(0));
-            // environment.cantidadPaginasPDF(this.selectedFiles[0],
-            //   (cpages:any)=>{
-            //     //this.form.controls['archivoPDF'].setValue(this.selectedFiles.item(0));
-            //   }
-            // );
+            this.convertirArchivoABase64(this.selectedFiles.item(0));          
           }else {
             this.cargando = true;
             this.documentoService
@@ -279,22 +275,9 @@ export class CrearDocumentoComponent implements OnInit {
               Swal.fire('Lo sentimos', 'Se presento un inconveniente al convertir Word a PDF', 'info');
             });
           }
-
-
-          // let byteArray = new Uint8Array(
-          //   atob(this.selectedFiles[0])
-          //     .split('')
-          //     .map((char) => char.charCodeAt(0))
-          // );
-          // let file = new Blob([byteArray], { type: 'application/pdf' });
-          //   var rf_file = new File([file], URL.createObjectURL(file), {
-          //     type: 'application/pdf',
-          //   });
-          // let list = new DataTransfer();
-          // list.items.add(rf_file);
-          // this.selectedFiles = list.files;
         }
       }
+      console.log(this.selectedFiles)
   }
 
   convertirArchivoABase64(file: File) {
@@ -314,7 +297,7 @@ export class CrearDocumentoComponent implements OnInit {
     debugger;
     const dialogRef = this.dialog.open(ModalFirmaPeruComponent,{
       width: '90%',
-      height: '95%',
+      height: '80%',
 
       data: { documento }
     });
@@ -323,6 +306,7 @@ export class CrearDocumentoComponent implements OnInit {
 
   limpiar(){
     this.form.reset();
+    this.selectedFiles=null;
   }
 
   _window(): any {
@@ -331,12 +315,40 @@ export class CrearDocumentoComponent implements OnInit {
   }
 
   firmarDocumento(){
+    var _this:any=this;
     this.cargando = true;
     this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response:any)=>{
-
-       this._window().iniciarFirma(response[1]);
+      var nameFile=response[1];
+       this._window().iniciarFirma((response[1]),
+        function(){ _this.updateIframeWithKeyDigitalGeneral(nameFile); }
+      );
     });
     this.cargando = false;
+    console.log(this.selectedFiles)
   }
+
+  updateIframeWithKeyDigitalGeneral(inNameFile: any,tipo:any) {
+    this.documentoService
+      .getFileDocumentKeyDigital(inNameFile)
+      .subscribe((resp:any) => {
+        let byteArray = new Uint8Array(
+          atob(resp)
+            .split('')
+            .map((char) => char.charCodeAt(0))
+        );
+        let file = new Blob([byteArray], { type: 'application/pdf' });
+        var rf_file = new File([file], URL.createObjectURL(file), {
+          type: 'application/pdf',
+        });
+        let listFile = [rf_file];
+        let list = new DataTransfer();
+        list.items.add(rf_file);
+
+        this.selectedFiles = list.files;
+      });
+
+      console.log(this.selectedFiles)
+  }
+
 
 }

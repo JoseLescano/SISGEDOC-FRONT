@@ -6,6 +6,7 @@ import { AuthenticationResponse } from 'src/app/_model/authentication-response';
 import { VerificationRequest } from 'src/app/_model/verification-request';
 import { LoginService } from 'src/app/_service/login.service';
 import { environment } from 'src/environments/environment';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modal-mfa',
@@ -44,7 +45,8 @@ debugger;
       this.status = "1"
     }
 
-   //  this.startDialogCloseTimer();
+   this.startDialogCloseTimer();
+
   }
 
   ngOnDestroy(): void {
@@ -95,40 +97,37 @@ debugger;
     this.cd.detectChanges();
     const verifyRequest: any = {
       cip: this.data.response.cip,
-      code: this.otpCode,
-      token: ''
+      code: this.otpCode
     };
 
-
-    debugger;
-    this.recaptchaV3Service.execute("login_action").subscribe({
-      next: (token) => {
-        verifyRequest.token=token;
-        debugger;
+    // this.recaptchaV3Service.execute("login_action").subscribe({
+    //   next: (token) => {
+    //     debugger;
         this.loginService.verifyCode(verifyRequest).subscribe({
           next: (response) => {
             this.cerrarDialogo.emit();
             if (response && response.access_token) {
               sessionStorage.setItem(environment.TOKEN_NAME, response.access_token);
               this.router.navigate(['/perfiles']);
-
+              Swal.fire('Bienvenido al SISGEDO','', 'success');
             } else {
               console.error('No access_token in response');
             }
           },
           error: (err) => {
-            console.error('Error in verifyCode:', err);
+            Swal.fire('VERIFICACIÓN INCORRECTA', 'CÓDIGO INGRESADO NO ES VALIDO', 'info');
           }
         });
-      },
-      error: (err) => {
-        debugger;
-        console.error('ReCAPTCHA v3 error:', err);
+    //   },
+    //   error: (err) => {
+    //     debugger;
+    //     console.error('ReCAPTCHA v3 error:', err);
 
-      }
-    });
+    //   }
+    // });
 
 
   }
+
 
 }

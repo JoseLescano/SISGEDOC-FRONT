@@ -131,11 +131,12 @@ export class RegistrarMPComponent implements OnInit {
       this.documentoar.asunto= this.firstFormGroup.value['asunto'];
       this.documentoar.destinos = this.secondFormGroup.value['destinos'];
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
+      this.documentoar.organizacionPartida = sessionStorage.getItem(environment.codigoOrganizacion);
       this.documentoService.recibirDocumentoMP(this.documentoar).subscribe((response:any) =>{
          if (response.httpStatus=='CREATED'){
           this.initForm();
           Swal.fire(`Se ha registrado documento`, response.message, 'info');
-          this.router.navigate(['/recibir-documento']);
+          this.router.navigate(['/principal/recibir-documento']);
          }
       }, error => {
         Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');

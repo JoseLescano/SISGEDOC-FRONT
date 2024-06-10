@@ -42,6 +42,10 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get(`${environment.HOST}documentos/viewPDF/${vidDocumento}`);
   }
 
+  findRespuestaByVidParent(codigoDocumentoPadre: any){
+    return this.http.get(`${environment.HOST}documentos/findRespuestaByVidParent/${codigoDocumentoPadre}`);
+  }
+
   findRecibosMP(codigoOrganizacion){
     return this.http.get<Documento[]>(`${environment.HOST}documentos/findRecibosMP/${codigoOrganizacion}`);
   }
@@ -83,6 +87,7 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('copiasInformativas', documento.copiasInformativas);
     formData.append('archivoPrincipal', documento.archivoPrincipal);
     formData.append('anexo', documento.anexos);
+    formData.append('organizacionPartida', documento.organizacionPartida);
     return this.http.post(`${environment.HOST}documentos/recibirDocumentoMP`, formData);
   }
 
@@ -104,7 +109,7 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/envioExterno`, formData);
   }
 
-  crearDocumento(documento: any){
+  crearDocumento(documento: any, documentoPadre?:any){
     debugger;
     let formData:FormData = new FormData();
     formData.append('clase', documento.clase);
@@ -117,14 +122,15 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('archivoPrincipal', documento.archivoPrincipal);
     formData.append('anexo', documento.anexos);
     formData.append('organizacionRemitente', documento.organizacionOrigen);
+    formData.append('documentoPadre', documentoPadre);
     return this.http.post(`${environment.HOST}documentos/crearDocumento`, formData);
   }
 
-  archivarDocumento(vidDocumento:any, orgOrigen:any,usuario:any, observaciones:any,url_pdf?:any){
+  archivarDocumento(vidDocumento:any, orgOrigen:any, observaciones:any,url_pdf?:any){
+    debugger;
     let formData:FormData = new FormData();
     formData.append('vidDocumento', vidDocumento);
     formData.append('orgOrigen', orgOrigen);
-    formData.append('usuario', usuario);
     formData.append('observaciones', observaciones);
     formData.append('url_pdf', url_pdf);
     return this.http.post(`${environment.HOST}documentos/archivarDocumento`, formData);
@@ -180,10 +186,31 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/remitirDocumentoForFirma`, formData);
   }
 
-  getFileDocumentKeyDigital(nameFile: any = 0) {
-    let formData: FormData = new FormData();
-    formData.append('nameFile', nameFile);
-    return this.http.get(`${environment.HOST}documentos/getFileDocumentKeyDigital/${nameFile}`)
+  crearRespuestaParaFirmar(documento: any, organizacionRemitente:any, codigoDocumentoPadre:any){
+    debugger;
+    let formData:FormData = new FormData();
+    formData.append('clase', documento.clase);
+    formData.append('nroOrden', documento.nroOrden);
+    formData.append('indicativo', documento.indicativo);
+    formData.append('prioridad', documento.prioridad);
+    formData.append('asunto', documento.asunto);
+    formData.append('destinos', documento.destinos);
+    formData.append('copiasInformativas', documento.copiasInformativas);
+    formData.append('archivoPrincipal', documento.archivoPrincipal);
+    formData.append('anexo', documento.anexos);
+    formData.append('organizacionOrigen', documento.organizacionOrigen);
+    formData.append('organizacionRemitente', organizacionRemitente);
+    formData.append('codigoDocumentoPadre', codigoDocumentoPadre);
+    return this.http.post(`${environment.HOST}documentos/remitirRespuestaForFirma`, formData);
+  }
+
+  getFileDocumentKeyDigital(nameFile: any) {
+    let token = sessionStorage.getItem(environment.TOKEN_NAME);
+    return this.http.get(`${environment.HOST}documentos/getFileDocumentKeyDigital/${nameFile}`, {
+      headers: new HttpHeaders()
+            .set('Authorization', `Bearer ${token}`)
+            .set('Content-Type', 'application/json'),
+    });
   }
 
 }

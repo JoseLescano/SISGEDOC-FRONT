@@ -1,0 +1,40 @@
+<div class="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed': ''">
+    <div class="logo-container">
+        <button class="logo" (click)="toggleCollapse()">S</button>
+        <div class="logo-text" @fadeInOut *ngIf="collapsed">SISGEDO</div>
+        <button class="btn-close" @rotate *ngIf="collapsed" (click)="closeSidenav()">
+          <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <ul class="sidenav-nav">
+      <li class="sidenav-nav-item">
+        <a class="sidenav-nav-link" routerLink="/principal/dashboard">
+          <i class="fas fa-home  sidenav-link-icon"></i>
+          <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">DASHBOARD</span>
+        </a>
+      </li>
+        <li class="sidenav-nav-item" *ngFor="let data of menus">
+          <!-- *ngIf="(codigoOrganizacion=='120210' || codigoOrganizacion=='12021002') && rolIngresado=='001'" -->
+            <a class="sidenav-nav-link" [routerLink]="[data.url]"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}">
+                <i class="sidenav-link-icon" [class]="data.icon"></i>
+                <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">
+                    {{data.nombre}}
+                </span>
+            </a>
+        </li>
+        <li class="sidenav-nav-item">
+          <a class="sidenav-nav-link" routerLink="/perfiles">
+            <i class="fas fa-users sidenav-link-icon"></i>
+            <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">ELIGIR PERFIL</span>
+          </a>
+        </li>
+        <li class="sidenav-nav-item">
+          <a class="sidenav-nav-link" routerLink="/login">
+            <i class="fas fa-power-off sidenav-link-icon"></i>
+            <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">CERRAR SESIÓN</span>
+          </a>
+        </li>
+    </ul>
+  </div>

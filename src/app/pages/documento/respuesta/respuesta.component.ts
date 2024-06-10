@@ -132,7 +132,7 @@ export class RespuestaComponent implements OnInit {
       this.documentoar.asunto= this.form.value['asunto'];
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
       if (this.documentoar.organizacionOrigen== sessionStorage.getItem(environment.codigoOrganizacion)){
-        this.documentoService.crearDocumento(this.documentoar).subscribe((response:any)=>{
+        this.documentoService.crearDocumento(this.documentoar, this.vidDocumento).subscribe((response:any)=>{
           if (response.httpStatus=='CREATED'){
             this.cargando = false;
             this.initForm();
@@ -143,9 +143,10 @@ export class RespuestaComponent implements OnInit {
           Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
         });
       }else {
-        this.documentoService.crearDocumentoParaFirmar(
+        this.documentoService.crearRespuestaParaFirmar(
           this.documentoar,
-          sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>{
+          sessionStorage.getItem(environment.codigoOrganizacion),
+          this.vidDocumento).subscribe((response:any)=>{
           if (response.httpStatus=='CREATED'){
             this.cargando = false;
             this.initForm();

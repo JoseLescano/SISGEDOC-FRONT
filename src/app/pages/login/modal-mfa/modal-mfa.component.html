@@ -1,11 +1,4 @@
 
-<ng-container *ngIf="status == '0'" >
-
-</ng-container>
-
-<ng-container *ngIf="status == '1'" >
-
-  </ng-container>
 <mat-card  class="dialog-card large" [ngStyle]="{
   'padding': status == '0' ? '' : '15px',
   'height': status == '0' ? '550px' : 'auto',
@@ -56,10 +49,11 @@
   </div>
 </mat-card>
 <mat-card class="dialog-card large" [ngStyle]="{
-  'padding': status != '0' ? '15px' : '15px',
+  'padding': status != '0' ? '' : '15px',
   'height': status != '0' ? 'auto' : 'auto',
-  'width': status  != '0' ? 'auto' : 'auto',
-
+  'display': status != '0' ? 'flex' : 'auto',
+  'flex-direction': 'column',
+  'width': status  != '0' ? '300px' : 'auto',
   'justify-content': status  != '0' ? 'center' : 'center',
   'align-items': status  != '0' ? 'center' : 'center'
 }" *ngIf="status  != '0'">

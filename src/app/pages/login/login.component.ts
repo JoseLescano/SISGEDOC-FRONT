@@ -43,6 +43,7 @@ export class LoginComponent{
     public dialog: MatDialog,
     private loginService: LoginService,
     private userService: PersonaService,
+    private router: Router
   ) {
     this._formulario = new FormGroup({
       username: new FormControl("", Validators.required),
@@ -51,9 +52,6 @@ export class LoginComponent{
   }
 
   login() {
-
-
-
      if (this._formulario.invalid) {
        if (this._formulario.get("username").invalid) this.username_aux = true;
        if (this._formulario.get("password").invalid) this.password_aux = true;
@@ -63,15 +61,12 @@ export class LoginComponent{
   }
 
   executeReCaptcha(action: string): void {
-
     this.recaptchaV3Service.execute(action).subscribe({
       next: (token) => {
-        debugger;
         this.recaptchaToken = token;
         this.performLogin();
       },
       error: (err) => {
-        debugger;
         console.error('ReCAPTCHA v3 error:', err);
         this.error = 'reCAPTCHA failed';
       }
@@ -79,19 +74,22 @@ export class LoginComponent{
   }
 
   performLogin(): void {
+    
     const jwtRequest = {
       username: this.username,
       password: this.password,
       token: this.recaptchaToken
     };
-
-    this.loginService.login(jwtRequest).subscribe({
-      next: (response) => {
+    debugger;
+    this.loginService.login(jwtRequest).subscribe( (response) => {
+        debugger;
+        // sessionStorage.setItem(environment.TOKEN_NAME, response.access_token);
+        // this.router.navigate(['/perfiles']);
+        // Swal.fire('Bienvenido al SISGEDO','', 'success');
         this.openModalMfaStatus0(this.username, response);
-      },
-      error: (err) => {
+      }, error => {
         this.error = 'Login failed';
-      }
+      
     });
   }
 
@@ -102,7 +100,7 @@ export class LoginComponent{
     });
     dialogRef.componentInstance.cerrarDialogo.subscribe(() => {
       dialogRef.close();
-      this.onSwal();
+  //    this.onSwal();
     });
   }
 
@@ -113,7 +111,7 @@ export class LoginComponent{
     this.username = decodedToken.sub;
     // this.userService.get(this.username).subscribe((response) => {
     //   this.fullname = response.fullname;
-      Swal.fire('Bienvenido al SICAE','', 'success');
+      Swal.fire('Bienvenido al SISGEDO','', 'success');
     // });
   }
 

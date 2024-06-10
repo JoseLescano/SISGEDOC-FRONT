@@ -71,8 +71,9 @@
       startSignature(port, param);
     }
     debugger;
-    let token=sessionStorage.getItem('access_token');
-    function iniciarFirma(configuracion, incallback){
+    let token=sessionStorage.getItem('access_token')==null? sessionStorage.getItem(environments.TOKEN_NAME): sessionStorage.getItem('access_token');
+
+    function iniciarFirma(configuracion,incallback){
       debugger;
       var param={
 

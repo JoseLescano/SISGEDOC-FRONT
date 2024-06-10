@@ -144,7 +144,7 @@
                           </div>
                           <button  mat-flat-button type="button" color="primary" (click)="firmarDocumento()"
                             data-bs-toggle="modal" data-bs-target="#panelFirmaPeru"
-                            class="form-control mt-2" *ngIf="mostrarFirma && selectedFiles != null" >FIRMAR DOCUMENTO</button>
+                            class="form-control mt-2" *ngIf="this.form.get('firmante').value != null &&  selectedFiles != null" >FIRMAR DOCUMENTO</button>
                         </div>
                       </div>
                     </div>
