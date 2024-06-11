@@ -81,19 +81,30 @@
                 </mat-form-field>
               </div>
               <div class="col-md-12">
-                <!-- <strong style="margin-right: 5px;">LISTA DE ACCIONES</strong>
+                <mat-label><strong style="margin-right: 5px; font-weight: 500;">LISTA DE ACCIONES</strong></mat-label>
 
-                <div style="display: grid; grid-template-columns: auto auto auto; font-size: 15px; margin-left: 5px;">
+                <!--<div style="display: grid; grid-template-columns: auto auto auto; font-size: 15px; margin-left: 5px;">
                   <ng-container  *ngFor="let item of acciones"   >
                     <mat-checkbox     [value]="item.codigo"  (change)="onCheckboxChange(item.codigo, i)" formArrayName="acciones">
                       {{ item.nombre }}
                     </mat-checkbox>
                   </ng-container>
                 </div> -->
-                <ng-select placeholder="LISTA DE ACCIONES" [multiple]="true" [virtualScroll]=true formControlName="acciones"  class="example-full-width">
+                <!-- <ng-select placeholder="LISTA DE ACCIONES" [multiple]="true" [virtualScroll]=true formControlName="acciones"  class="example-full-width">
                   <mat-option>SELECCIONE</mat-option>
                   <ng-option *ngFor="let c of acciones" [value]="c.codigo" >{{c.nombre}}</ng-option>
-                </ng-select>
+                </ng-select> -->
+                <div style="display: grid; grid-template-columns: auto auto auto; margin-top: 5px;" >
+                  <ng-container *ngFor="let accion of acciones;">
+                    <label style="display: flex">
+                      <input type="checkbox"  style="position: relative;left: 0px; opacity: 1;"
+                        [value]="accion.codigo" name="group{{i+1 }}" />
+                        <span style="margin-left: 3px;margin-right: 6px; font-weight: 600; size: 14px;">
+                          {{ accion.nombre | uppercase }}
+                        </span>
+                      </label>
+                  </ng-container>
+                </div>
               </div>
               <div class="col-md-12 mt-2">
                 <mat-form-field appearance="fill" class="example-full-width">
@@ -121,5 +132,4 @@
     <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
   </mat-card-footer>
 </mat-card>
-
 <!-- <div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{formParent.value | json}}</div> -->

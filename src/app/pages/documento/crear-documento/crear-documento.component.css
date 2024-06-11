@@ -46,7 +46,12 @@ body{
     font-size: 16px;
     margin-top: 5px;
 }
-
+section .row{
+  background: #e9f0ff;
+  margin-bottom: 10px;
+  list-style: none;
+  padding: 15px 20px;
+}
 
 #documentoPrincipal{
     width: 98%;

@@ -97,16 +97,18 @@ export class DecetarComponent implements OnInit {
     });
     return accionesArray;
   }
-
+  idItemAdd:number=0;
   initFormDecreto(): FormGroup{
     let formControl : FormControl = new FormControl;
+    this.idItemAdd++;
     return new FormGroup(
       {
         destino: new FormControl('', [Validators.required]),
         prioridad: new FormControl('', [Validators.required]),
         fechaLimite: new FormControl('', [Validators.required]),
-        acciones: new FormControl([], [Validators.required]),
-        observaciones: new FormControl('')
+        acciones: new FormControl([]),
+        observaciones: new FormControl(''),
+        idGroup:new FormControl(this.idItemAdd),
       }
     );
   }
@@ -133,6 +135,20 @@ export class DecetarComponent implements OnInit {
   decretoDocumento: DecretoDocumentoDTO = new DecretoDocumentoDTO();
   decretos : DecretoDTO[] = [];
 
+  getValueCheckBox(idGroup: any):string[]{
+    var checkboxes: any = document.getElementsByName(
+      "group"+idGroup
+    );
+    var numberOfCheckedItems = 0;
+    let lista: string[] = [];
+    for (var i = 0; i < checkboxes.length; i++) {
+      if (checkboxes[i].checked) {
+        lista.push(checkboxes[i].value);
+      }
+    }
+    return lista;
+  }
+
   operate(){
 
     let formDecretos = this.formParent.value['decretos'];
@@ -145,7 +161,9 @@ export class DecetarComponent implements OnInit {
       dd.observacion = formDecretos[index].observaciones;
       dd.prioridad = formDecretos[index].prioridad;
 
-      let acciones = formDecretos[index].acciones;
+      //let acciones = formDecretos[index].acciones;
+
+      let acciones = this.getValueCheckBox(formDecretos[index].idGroup);
       let decretosAcciones: DecretoAccionDTO[] = [];
       for (let y = 0; y < acciones.length; y++) {
         let da: DecretoAccionDTO = new DecretoAccionDTO();

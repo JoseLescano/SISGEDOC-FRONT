@@ -9,6 +9,7 @@ import { DocumentoService } from 'src/app/_service/documento.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 import { ViewDocumentoComponent } from '../view-documento/view-documento.component';
+import { SeguimientoComponent } from '../../report/seguimiento/seguimiento.component';
 
 @Component({
   selector: 'app-view-remitidos',
@@ -78,6 +79,14 @@ export class ViewRemitidosComponent implements OnInit {
 
   verDocumento(documentoSeleccionado?:any): void {
     const dialogRef = this.dialog.open(ViewDocumentoComponent, {
+      width: '60%',
+      height: '95%',
+      data: documentoSeleccionado,
+    });
+  }
+
+  viewSeguimiento(documentoSeleccionado?:any): void {
+    const dialogRef = this.dialog.open(SeguimientoComponent, {
       width: '60%',
       height: '95%',
       data: documentoSeleccionado,

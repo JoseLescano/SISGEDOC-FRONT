@@ -42,6 +42,10 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get(`${environment.HOST}documentos/viewPDF/${vidDocumento}`);
   }
 
+  getDocumentoSeguimiento(vidDocumento: any){
+    return this.http.get(`${environment.HOST}documentos/getDocumentoSeguimiento/${vidDocumento}`);
+  }
+
   findRespuestaByVidParent(codigoDocumentoPadre: any){
     return this.http.get(`${environment.HOST}documentos/findRespuestaByVidParent/${codigoDocumentoPadre}`);
   }

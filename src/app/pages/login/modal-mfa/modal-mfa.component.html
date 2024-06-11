@@ -64,7 +64,7 @@
   <div class="qr-container">
     <div class="qr-wrapper">
       <input class="validation-input" type="text" id="validationCode" name="validationCode" [(ngModel)]="otpCode"
-        maxlength="6" (keypress)="validarNumero($event)" (input)="validarLongitud()">
+        maxlength="6" (keypress)="validarNumero($event)" (input)="validarLongitud()" (keydown.enter)="SecretVerify()">
       <div class="message-container">
         <label class="message">{{ status  != '0' ? 'Ingrese código de validación' : '' }}</label>
       </div>

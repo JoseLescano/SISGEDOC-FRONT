@@ -46,10 +46,10 @@
             <div class="example-button-row">
                 <div class="example-flex-container">
                   <div class="example-button-container">
-                    <button mat-mini-fab color="primary" class="mr-2"  >
-                      <i class="far fa-file-pdf"  (click)="openDialog(row)"></i>
+                    <button mat-mini-fab color="primary" class="mr-2"  (click)="openDialog(row)" >
+                      <i class="far fa-file-pdf" ></i>
                     </button>
-                    <button mat-mini-fab color="accent"  >
+                    <button mat-mini-fab color="accent" (click)="viewSeguimiento(row.codigo)" >
                       <i class="fas fa-info-circle"></i>
                     </button>
                   </div>

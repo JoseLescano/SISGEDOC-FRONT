@@ -41,6 +41,7 @@ import { ValidarRecojoComponent } from './documento/mesaPartes/validar-recojo/va
 import { RespuestaComponent } from './documento/respuesta/respuesta.component';
 import { ModalMfaComponent } from './login/modal-mfa/modal-mfa.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
+import { SeguimientoComponent } from './report/seguimiento/seguimiento.component';
 
 @NgModule({
   imports: [
@@ -89,7 +90,8 @@ import { SidenavComponent } from './sidenav/sidenav.component';
     ValidarRecojoComponent,
     RespuestaComponent,
     ModalMfaComponent,
-    SidenavComponent
+    SidenavComponent,
+    SeguimientoComponent
   ],
    exports:[
 

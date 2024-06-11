@@ -9,6 +9,8 @@ import { DecetarComponent } from '../decetar/decetar.component';
 import { environment } from 'src/environments/environment';
 import { DecretoService } from 'src/app/_service/decreto.service';
 import { DecretoDTO } from 'src/app/_DTO/DecretoDTO';
+import { ViewDocumentoComponent } from '../view-documento/view-documento.component';
+import { SeguimientoComponent } from '../../report/seguimiento/seguimiento.component';
 
 @Component({
   selector: 'app-acciones',
@@ -39,6 +41,15 @@ export class AccionesComponent implements OnInit {
     this.viewDocumento(id);
   }
 
+  viewSeguimiento(documentoSeleccionado?:any): void {
+    const dialogRef = this.dialog.open(SeguimientoComponent, {
+      width: '60%',
+      height: '95%',
+      data: documentoSeleccionado,
+    });
+  }
+
+
   viewDocumento(vidDocumento: any){
     this.documentoService.viewPDF(vidDocumento).subscribe((response: any)=>{
 
@@ -49,6 +60,8 @@ export class AccionesComponent implements OnInit {
       Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR PDF!`, 'warning');
     });
   }
+
+
 
   crearDocumento(resp: any){
     let byteArray = new Uint8Array(

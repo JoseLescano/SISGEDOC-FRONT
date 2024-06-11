@@ -52,11 +52,11 @@ export function tokenGetter() {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-         allowedDomains: ["localhost:8080"],
-        //allowedDomains: ["net.ejercito.mil.pe"],
+        // allowedDomains: ["localhost:8080"],
+        allowedDomains: ["net.ejercito.mil.pe"],
         //  allowedDomains: ["localhost:8080"],
-          disallowedRoutes: ["http://localhost:8080/login/forget"]
-        //disallowedRoutes: ["https://net.ejercito.mil.pe/dev-sisgedo/"],
+          // disallowedRoutes: ["http://localhost:8080/login/forget"]
+        disallowedRoutes: ["https://net.ejercito.mil.pe/dev-sisgedo/"],
       },
     }),
 
