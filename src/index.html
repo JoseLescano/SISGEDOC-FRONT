@@ -5,7 +5,7 @@
   <title>SISGEDO - EP</title>
   <base href="./">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/x-icon" href="./assets/citele.png">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
         integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm"
         crossorigin="anonymous"/>
@@ -70,15 +70,13 @@
       var port = "48596";
       startSignature(port, param);
     }
-    debugger;
-    let token=sessionStorage.getItem('access_token')==null? sessionStorage.getItem(environments.TOKEN_NAME): sessionStorage.getItem('access_token');
+    let token=sessionStorage.getItem('access_token')==null? sessionStorage.getItem(environment.TOKEN_NAME): sessionStorage.getItem('access_token');
 
     function iniciarFirma(configuracion,incallback){
-      debugger;
       var param={
 
-        "param_url": " http://localhost:8080/documentos/firmaPeru/"+configuracion+"?access_token="+token,
-        // "param_url": " https://net.ejercito.mil.pe/dev-sisgedo/documentos/firmaPeru/"+configuracion+"?access_token="+token,
+        //"param_url": " http://localhost:8080/documentos/firmaPeru/"+configuracion+"?access_token="+token,
+        "param_url": " https://net.ejercito.mil.pe/dev-sisgedo/documentos/firmaPeru/"+configuracion+"?access_token="+token,
         "param_token": "162647697663667",
         "document_extension": "pdf"
       }

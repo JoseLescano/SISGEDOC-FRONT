@@ -143,12 +143,15 @@ export class DocumentoService  extends GenericService<Documento> {
   generarPlantillaWord(tipo_documento:any, asunto: any, uu_destino: any, uu_origen: any,
     fr_indicativo: any, fr_correlativo: any, fr_copia_informativa ?: any
   ){
-
-    return this.http.get(`${environment.HOST}documentos/generarWordPlantilla`,
-    { params: { tipo_documento: tipo_documento, asunto:asunto, uu_destino:uu_destino,
-      uu_origen: uu_origen, fr_indicativo: fr_indicativo, fr_correlativo: fr_correlativo,
-      fr_copia_informativa: fr_copia_informativa
-     }});
+    let formData: FormData = new FormData();
+    formData.append('tipo_documento', tipo_documento);
+    formData.append('asunto', asunto);
+    formData.append('uu_destino', uu_destino);
+    formData.append('uu_origen', uu_origen);
+    formData.append('fr_indicativo', fr_indicativo);
+    formData.append('fr_correlativo', fr_correlativo);
+    formData.append('fr_copia_informativa', fr_copia_informativa==null? new Array():fr_copia_informativa);
+    return this.http.post(`${environment.HOST}documentos/generarWordPlantilla`, formData);
   }
 
   findDecretoByDocumento(codigoInterno:any){
