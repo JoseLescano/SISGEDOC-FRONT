@@ -18,9 +18,7 @@ export class HeaderComponent implements OnInit {
 
   @Input() collapsed = false;
   @Input() screenWidth = 0;
-  // cargo = sessionStorage.getItem(environment.cargoSeleccionado);
-  // nombreOrganizacion = sessionStorage.getItem(environment.nombreOrganizacion);
-  // puesto = this.cargo + " - "+ this.nombreOrganizacion;
+  cargo : any = '';
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -31,7 +29,8 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.checkCanShowSearchAsOverlay(window.innerWidth);
-
+    debugger;
+    this.cargo = sessionStorage.getItem(environment.cargoSeleccionado);
   }
 
   constructor(

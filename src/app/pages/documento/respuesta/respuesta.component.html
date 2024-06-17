@@ -56,118 +56,135 @@
                         <mat-label>Nro. Registro</mat-label>
                         <input matInput [disabled]="vidDocumento!=null" formControlName="documentoReferencia">
                       </mat-form-field>
-                      <!-- <button mat-flat-button color="accent" type="button"
+                      <button mat-flat-button color="accent" type="button"
                         style="width: 100%; height: 50px; border-radius: 10px;"
-                        (click)="openDialog(vidDocumento)"
-                        >VER DOCUMENTO</button> -->
+                        (click)="openDialog(vidDocumento)">VER DOCUMENTO
+                      </button>
                     </mat-card-content>
                   </mat-card>
                 </div>
               </div>
               <div class="col-sm-12  col-lg-10">
-                <mat-card >
-                  <mat-card-header class="title-form">
-                    <mat-card-title>
-                      DATOS PRINCIPALES
-                    </mat-card-title>
-                  </mat-card-header>
-                  <mat-card-content>
-                    <div class="row mt-3">
-                      <div class="col-6">
-                        <ng-select  [virtualScroll]=true placeholder="SELECCIONE FIRMANTE" formControlName="firmante"
-                          (change)="getIndicativo(); findDestinatarios();" notFoundText="Sin elementos encontrados" >
-                          <ng-option *ngFor="let c of firmantes" [value]="c" >
-                            {{c.nombreLargo}}
-                          </ng-option>
-                        </ng-select>
-                        <div *ngIf="form.get('firmante').errors && form.get('firmante').dirty" class="mt-1" >
-                          <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('firmante').hasError('required')">*Campo requerido</small>
+                <mat-tab-group>
+                  <mat-tab label="DATOS PRINCIPALES"> 
+                    <mat-card >
+                      <mat-card-content>
+                        <div class="row mt-3">
+                          <div class="col-6">
+                            <ng-select  [virtualScroll]=true placeholder="SELECCIONE FIRMANTE" formControlName="firmante"
+                              (change)="getIndicativo(); findDestinatarios();" notFoundText="Sin elementos encontrados" >
+                              <ng-option *ngFor="let c of firmantes" [value]="c" >
+                                {{c.nombreLargo}}
+                              </ng-option>
+                            </ng-select>
+                            <div *ngIf="form.get('firmante').errors && form.get('firmante').dirty" class="mt-1" >
+                              <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('firmante').hasError('required')">*Campo requerido</small>
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <mat-form-field appearance="fill" class="example-full-width">
+                                <mat-label>INDICATIVO</mat-label>
+                                <input matInput type="text" formControlName="indicativo">
+                                <mat-error ></mat-error>
+                              </mat-form-field>
+                          </div>
                         </div>
-                      </div>
-                      <div class="col-6">
-                        <mat-form-field appearance="fill" class="example-full-width">
-                            <mat-label>INDICATIVO</mat-label>
-                            <input matInput type="text" formControlName="indicativo">
-                            <mat-error ></mat-error>
-                          </mat-form-field>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <ng-select [multiple]=true placeholder="SELECCIONE DESTINARIO(S)"
-                          [virtualScroll]=true formControlName="destinatarios" notFoundText="Sin elementos encontrados" >
-                          <mat-option>SELECCIONE</mat-option>
-                          <ng-option *ngFor="let c of organizacionesDestino" [value]="c.codigoInterno" >
-                            {{c.acronimo}}
-                          </ng-option>
-                        </ng-select>
-                        <div *ngIf="form.get('destinatarios').errors && form.get('destinatarios').dirty" class="mt-1" >
-                              <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('destinatarios').hasError('destinatarios')">*Campo requerido</small>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <ng-select [multiple]=true placeholder="SELECCIONE DESTINARIO(S)"
+                              [virtualScroll]=true formControlName="destinatarios" notFoundText="Sin elementos encontrados" >
+                              <mat-option>SELECCIONE</mat-option>
+                              <ng-option *ngFor="let c of organizacionesDestino" [value]="c.codigoInterno" >
+                                {{c.acronimo}}
+                              </ng-option>
+                            </ng-select>
+                            <div *ngIf="form.get('destinatarios').errors && form.get('destinatarios').dirty" class="mt-1" >
+                                  <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('destinatarios').hasError('destinatarios')">*Campo requerido</small>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                              <ng-select [multiple]=true placeholder="SELECCIONE COPIA(S) INFORMATIVA(S)"
+                                [virtualScroll]=true formControlName="copiaInformativa" notFoundText="Sin elementos encontrados" >
+                                <mat-option>SELECCIONE</mat-option>
+                                <ng-option *ngFor="let c of copiasInformativas" [value]="c.codigoInterno" >{{c.acronimo}}</ng-option>
+                              </ng-select>
+                          </div>
                         </div>
-                      </div>
-                      <div class="col-md-6">
-                          <ng-select [multiple]=true placeholder="SELECCIONE COPIA(S) INFORMATIVA(S)"
-                            [virtualScroll]=true formControlName="copiaInformativa" notFoundText="Sin elementos encontrados" >
-                            <mat-option>SELECCIONE</mat-option>
-                            <ng-option *ngFor="let c of copiasInformativas" [value]="c.codigoInterno" >{{c.acronimo}}</ng-option>
-                          </ng-select>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12">
-                          <mat-form-field appearance="fill" class="example-full-width">
-                              <mat-label>ASUNTO</mat-label>
-                              <textarea matInput formControlName="asunto" rows="3"></textarea>
-                              <div *ngIf="form.get('asunto').errors && form.get('asunto').dirty" >
-                                <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('asunto').hasError('required')">* Se require campo</small>
-                                <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('asunto').hasError('minlength')">** 10 Caracteres como minimo</small>
+                        <div class="row">
+                          <div class="col-md-12">
+                              <mat-form-field appearance="fill" class="example-full-width">
+                                  <mat-label>ASUNTO</mat-label>
+                                  <textarea matInput formControlName="asunto" rows="3"></textarea>
+                                  <div *ngIf="form.get('asunto').errors && form.get('asunto').dirty" >
+                                    <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('asunto').hasError('required')">* Se require campo</small>
+                                    <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('asunto').hasError('minlength')">** 10 Caracteres como minimo</small>
+                                  </div>
+                              </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+    
+                          <div class="col"  >
+                            <div class="wrapper" >
+                              <mat-label>DOCUMENTO PRINCIPAL
+                                <span *ngIf="selectedFiles == null || selectedFiles == ''">
+                                  <i class="fas fa-info-circle" style="font-size: 14px; color: #ea5d5d" ></i>
+                                </span>
+                              </mat-label>
+                              <div class="form">
+                                  <i class="fas fa-cloud-upload-alt"></i>
+                                  <p>Browse File to Upload</p>
+                                  <input type="file" (change)="selectArchivoPrincipal($event)"
+                                    id="documentoPrincipal"
+                                    accept="application/msword, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+    
                               </div>
-                          </mat-form-field>
-                      </div>
-                    </div>
-                    <div class="row">
-
-                      <div class="col"  >
-                        <div class="wrapper" >
-                          <mat-label>DOCUMENTO PRINCIPAL
-                            <span *ngIf="selectedFiles == null || selectedFiles == ''">
-                              <i class="fas fa-info-circle" style="font-size: 14px; color: #ea5d5d" ></i>
-                            </span>
-                          </mat-label>
-                          <div class="form">
-                              <i class="fas fa-cloud-upload-alt"></i>
-                              <p>Browse File to Upload</p>
-                              <input type="file" (change)="selectArchivoPrincipal($event)"
-                                id="documentoPrincipal"
-                                accept="application/msword, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
-
+                              <button  mat-flat-button type="button" color="primary" (click)="firmarDocumento()"
+                                data-bs-toggle="modal" data-bs-target="#panelFirmaPeru"
+                                class="form-control mt-2" *ngIf="this.form.get('firmante').value != null &&  selectedFiles != null" >FIRMAR DOCUMENTO</button>
+                            </div>
                           </div>
-                          <button  mat-flat-button type="button" color="primary" (click)="firmarDocumento()"
-                            data-bs-toggle="modal" data-bs-target="#panelFirmaPeru"
-                            class="form-control mt-2" *ngIf="this.form.get('firmante').value != null &&  selectedFiles != null" >FIRMAR DOCUMENTO</button>
+                        </div>
+                        
+                        <div class="row d-flex flex-row bd-highlight mt-3">
+                          <div class="col">
+                            <!-- <button class="btn btn-lg btn-outline-success mr-2" type="submit" [disabled]="form.invalid">GUARDAR DOCUMENTO</button> -->
+                            <button mat-flat-button type="submit" style="margin-right: 2px;" color="primary" [disabled]="form.invalid || selectedFiles== null">GUARDAR DOCUMENTO</button>
+                            <button mat-flat-button color="warn" type="button" routerLink="/principal/pendientes" >CANCELAR</button>
+                          </div>
+                        </div>
+                      </mat-card-content>
+                    </mat-card>
+                  </mat-tab>
+                  <mat-tab label="ANEXOS (OPCIONAL)">
+                    <div class="col m-5"  >
+                      <div class="wrapper">
+                        <mat-label>ANEXOS (OPCIONAL)</mat-label>
+                        <div class="form">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Examinar para cargar archivo</p>
+                            <input type="file" (change)="selectAnexos($event)" id="anexos"
+                                multiple />
+                        </div>
+                        <div class="filewrapper" *ngIf="uploadedFiles.length > 0">
+                            <h3 class="uploaded">ANEXOS CARGADOS</h3>
+                            <div class="showfilebox" *ngFor="let file of uploadedFiles">
+                                <div class="left">
+                                    <span class="filetype">{{ getFileType(file) }}</span>
+                                    <h3>{{ file.name  + " - " + getFileSize(file.size) }}</h3>
+                                </div>
+                                <div class="right">
+                                    <span (click)="removeFile(file)">&#215;</span>
+                                </div>
+                            </div>
+                            <!-- <div class="total-size">
+                              <h3>Tamaño total: {{ getFileSize(totalFileSize) }}</h3>
+                            </div> -->
                         </div>
                       </div>
                     </div>
-                    <div class="row mt-2">
-                      <div class="col"  >
-                        <div class="wrapper">
-                            <mat-label>ANEXOS (OPCIONAL)</mat-label>
-                          <div class="form">
-                              <i class="fas fa-cloud-upload-alt"></i>
-                              <p>Browse File to Upload</p>
-                          </div>
-                        </div>
-                      </div>
-                      </div>
-                    <div class="row d-flex flex-row bd-highlight mt-3">
-                      <div class="col">
-                        <!-- <button class="btn btn-lg btn-outline-success mr-2" type="submit" [disabled]="form.invalid">GUARDAR DOCUMENTO</button> -->
-                        <button mat-flat-button type="submit" style="margin-right: 2px;" color="primary" [disabled]="form.invalid || selectedFiles== null">GUARDAR DOCUMENTO</button>
-                        <button mat-flat-button color="warn" type="button" routerLink="/principal/pendientes" >CANCELAR</button>
-                      </div>
-                    </div>
-                  </mat-card-content>
-                </mat-card>
+                  </mat-tab>
+                </mat-tab-group>
               </div>
 
             </div>

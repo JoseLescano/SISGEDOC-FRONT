@@ -14,6 +14,7 @@ import Swal from 'sweetalert2';
 import { ModalFirmaPeruComponent } from '../modal-firma-peru/modal-firma-peru.component';
 import { ActivatedRoute } from '@angular/router';
 import { ViewDocumentoComponent } from '../view-documento/view-documento.component';
+import { Documento } from 'src/app/_model/documento.model';
 
 @Component({
   selector: 'app-respuesta',
@@ -35,6 +36,7 @@ export class RespuestaComponent implements OnInit {
   mostrarFirma : boolean = false;
   documentoar : DocumentoArchivoAnexo = new DocumentoArchivoAnexo();
   vidDocumento :any;
+  uploadedFiles : any = [];
 
   constructor(
     private organizacionService: OrganizacionService,
@@ -65,10 +67,12 @@ export class RespuestaComponent implements OnInit {
 
 
   openDialog(documentoSeleccionado?:any): void {
+    let documento: Documento = new Documento;
+    documento.codigo = documentoSeleccionado;
     const dialogRef = this.dialog.open(ViewDocumentoComponent, {
       width: '60%',
       height: '95%',
-      data: documentoSeleccionado,
+      data: documento,
     });
   }
 
@@ -353,6 +357,47 @@ export class RespuestaComponent implements OnInit {
        this._window().iniciarFirma(response[1]);
     });
     this.cargando = false;
+  }
+
+  selectAnexos(event: any): void {
+    this.uploadedFiles = event.target.files;
+    // for (let i = 0; i < files.length; i++) {
+    //   this.uploadedFiles.push(files[i]);
+    // }
+  }
+
+
+  getFileType(file: File): string {
+    const fileType = file.type;
+    if (fileType === 'application/pdf') {
+      return 'PDF';
+    } else if (fileType === 'application/msword') {
+      return 'DOC';
+    } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      return 'DOCX';
+    }else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      return 'xlsx';
+    }
+     else {
+      return 'Desconocido';
+    }
+  }
+
+  removeFile(file: File): void {
+    const index = this.uploadedFiles.indexOf(file);
+    if (index > -1) {
+      this.uploadedFiles.splice(index, 1);
+    }
+  }
+
+  getFileSize(size: number): string {
+    if (size < 1024) {
+      return size + ' B';
+    } else if (size < 1048576) {
+      return (size / 1024).toFixed(2) + ' KB';
+    } else {
+      return (size / 1048576).toFixed(2) + ' MB';
+    }
   }
 
 }

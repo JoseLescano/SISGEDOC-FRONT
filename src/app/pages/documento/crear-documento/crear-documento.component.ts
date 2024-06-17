@@ -29,6 +29,8 @@ export class CrearDocumentoComponent implements OnInit {
   indicativo:string="";
   clases:Clase[];
   selectedFiles: any = null;
+  uploadedFiles: any = [];
+  totalFileSize: number = 0;
   url_pdf = '';
   mostrarFirma : boolean = false;
   documentoar : DocumentoArchivoAnexo = new DocumentoArchivoAnexo();
@@ -116,7 +118,7 @@ export class CrearDocumentoComponent implements OnInit {
       this.documentoar.asunto= this.form.value['asunto'];
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
       if (this.documentoar.organizacionOrigen== sessionStorage.getItem(environment.codigoOrganizacion)){
-        this.documentoService.crearDocumento(this.documentoar).subscribe((response:any)=>{
+        this.documentoService.crearDocumento(this.documentoar, this.uploadedFiles).subscribe((response:any)=>{
           if (response.httpStatus=='CREATED'){
             this.cargando = false;
             this.initForm();
@@ -182,7 +184,6 @@ export class CrearDocumentoComponent implements OnInit {
         })
       ).subscribe((response: any) => {
         if (response.httpStatus === 'CREATED') {
-            console.log(response.data);
             this.downloadWord(response.data[0]);
             this.cargando = false;
         }
@@ -263,7 +264,6 @@ export class CrearDocumentoComponent implements OnInit {
               var rf_file = new File([file], URL.createObjectURL(file), {
                 type: 'application/pdf',
               });
-              let listFile = [rf_file];
               let list = new DataTransfer();
               list.items.add(rf_file);
               this.selectedFiles = list.files;
@@ -277,7 +277,53 @@ export class CrearDocumentoComponent implements OnInit {
           }
         }
       }
-      console.log(this.selectedFiles)
+  }
+
+  selectAnexos(event: any): void {
+    this.uploadedFiles = event.target.files;
+    // for (let i = 0; i < files.length; i++) {
+    //   this.uploadedFiles.push(files[i]);
+    // }
+    this.calculateTotalFileSize();
+  }
+
+
+  getFileType(file: File): string {
+    const fileType = file.type;
+    if (fileType === 'application/pdf') {
+      return 'PDF';
+    } else if (fileType === 'application/msword') {
+      return 'DOC';
+    } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      return 'DOCX';
+    }else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      return 'xlsx';
+    }
+     else {
+      return 'Desconocido';
+    }
+  }
+
+  removeFile(file: File): void {
+    const index = this.uploadedFiles.indexOf(file);
+    if (index > -1) {
+      this.uploadedFiles.splice(index, 1);
+    }
+    this.calculateTotalFileSize();
+  }
+
+  getFileSize(size: number): string {
+    if (size < 1024) {
+      return size + ' B';
+    } else if (size < 1048576) {
+      return (size / 1024).toFixed(2) + ' KB';
+    } else {
+      return (size / 1048576).toFixed(2) + ' MB';
+    }
+  }
+
+  calculateTotalFileSize(): void {
+    this.totalFileSize = this.uploadedFiles.reduce((acc, file) => acc + file.size, 0);
   }
 
   convertirArchivoABase64(file: File) {
@@ -324,7 +370,6 @@ export class CrearDocumentoComponent implements OnInit {
       );
     });
     this.cargando = false;
-    console.log(this.selectedFiles)
   }
 
   updateIframeWithKeyDigitalGeneral(inNameFile: any,tipo:any) {
@@ -347,7 +392,6 @@ export class CrearDocumentoComponent implements OnInit {
         this.selectedFiles = list.files;
       });
 
-      console.log(this.selectedFiles)
   }
 
 

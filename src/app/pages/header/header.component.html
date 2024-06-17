@@ -10,9 +10,9 @@
     </div>
     <div class="head-content-rigth">
       <div class="head-menu">
-        <!-- <div class="head-menu-item m-3 mr-2">
-          <span class="badge text-bg-success">{{puesto}}</span>
-        </div> -->
+        <div class="head-menu-item m-3 mr-2">
+          <span class="badge text-bg-success">{{cargo}}</span>
+        </div>
         <div class="head-menu-item">
           <button class="head-menu-item-btn ripple">
             <img [src]="'assets/Peru-Flag.png'" class="flag" alt="peru">
@@ -25,12 +25,25 @@
         </div>
       </div>
       <div class="head-user-avatar-container">
-        <div class="head-user-avatar">
-          <img src="https://net.ejercito.mil.pe/sisgedo/assets/person.jpeg" alt="user" class="user-avatar">
-          <!-- <img src="./../../../assets/person.jpeg" alt="user" class="user-avatar"> -->
+        <div class="head-user-avatar" >
+          <!-- <img src="https://sisgedo.ejercito.mil.pe/assets/person.jpeg" alt="user" class="user-avatar"> -->
+          <img src="./../../../assets/person.jpeg" alt="user" class="user-avatar">
           <div class="circle-indicator pulse"></div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<ng-template #userOverlay>
+  <div class="overlay overlay-user overlay-fall">
+    <ul>
+      <li >
+        <a>
+          <i class="icon" ></i>
+          <span>xx</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</ng-template>

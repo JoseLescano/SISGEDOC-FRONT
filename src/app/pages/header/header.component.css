@@ -121,3 +121,9 @@
     box-shadow: 0 0 0 13px rgba(17, 64, 126, 0);
   }
 }
+
+.overlay-user{
+  ul{
+    padding:0.5rem 0;
+  }
+}

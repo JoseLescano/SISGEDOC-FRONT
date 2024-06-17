@@ -129,7 +129,6 @@ export class EsquemaComponent implements OnInit, AfterViewInit {
       _this.organizaciones = resp;
           this._window().createDiagramaOrganizacion(resp,
             function(stringOrganizationPadre:any, dataRespuesta:any,incallbackOut:any){
-              debugger;
               _this.openDialog(null, stringOrganizationPadre);
               /*
               debugger;
@@ -179,9 +178,11 @@ export class EsquemaComponent implements OnInit, AfterViewInit {
               });
             })
             */
-          }
-
-          ,function(codigoInterna:any,callBackOutEliminar:any){
+          },
+          function(codigoInterna:any, callBackOutEliminar:any){
+            _this.eliminar(codigoInterna);
+          }/*
+          function(codigoInterna:any,callBackOutEliminar:any){
             Swal.fire({
               title: 'Estas seguro?',
               text: "Esta organización se eliminará permanentemente",
@@ -208,7 +209,7 @@ export class EsquemaComponent implements OnInit, AfterViewInit {
               // });
               }
             })
-          },
+          }*/,
           function(bq:any,callBackOutUpdate:any){
             debugger;
             let organizacion:any={};

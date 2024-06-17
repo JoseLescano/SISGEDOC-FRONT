@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewDocumentoComponent } from '../view-documento/view-documento.component';
 import {MatPaginator} from '@angular/material/paginator';
+import { SeguimientoComponent } from '../../report/seguimiento/seguimiento.component';
 
 @Component({
   selector: 'app-parte-diario',
@@ -63,12 +64,12 @@ export class ParteDiarioComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // openDialog(documentoSeleccionado?: Documento){
-  //   this.dialog.open(FormComponent, {
-  //     width: '80%',
-  //     height: '90%',
-  //     data : documentoSeleccionado
-  //   });
-  // }
+  viewSeguimiento(documentoSeleccionado?:any): void {
+    const dialogRef = this.dialog.open(SeguimientoComponent, {
+      width: '60%',
+      height: '95%',
+      data: documentoSeleccionado,
+    });
+  }
 
 }

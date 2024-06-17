@@ -133,7 +133,6 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
     this.rolSeleccionado=perfilSeleccionado.rol;
     this.persona.usuario_CHASQUI = perfilSeleccionado.usuario.usuario_CHASQUI;
     this.organizacionSeleccionada.codigoInterno=perfilSeleccionado.organizacion.codigoInterno;
-
   }
 
 }

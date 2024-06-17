@@ -47,8 +47,7 @@ body{
   margin-top: 5px;
 }
 
-
-#documentoPrincipal{
+#documentoPrincipal, #anexos{
   width: 98%;
   max-width: 100%;
   color: #444;
@@ -59,7 +58,8 @@ body{
   margin-bottom: 10px;
 }
 
-#documentoPrincipal::file-selector-button{
+#documentoPrincipal::file-selector-button,
+#anexos::file-selector-button{
   margin-right: 20px;
   border: none;
   border-radius: 5px;
@@ -69,6 +69,84 @@ body{
   cursor: pointer;
 }
 
-#documentoPrincipal::file-selector-button:hover{
+
+#documentoPrincipal::file-selector-button:hover,
+#anexos::file-selector-button:hover{
   background: #3f51b5;
+}
+
+
+.btn-opcion{
+  width: 180px;
+  height: 60px;
+  margin-left: 5px;
+  size: 20px;
+}
+.uploaded{
+  margin: 10px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #a5a5a5;
+}
+
+.showfilebox{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 5px 0;
+  padding: 10px 15px;
+  box-shadow: #0000000d 0px 0px 0px 1px, #d1d5db3d 0px 0px 0px 1px inset ;
+}
+
+.showfilebox .left{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filetype{
+  background: #3f51b5;
+  color: #fff;
+  padding: 5px 15px;
+  font-size: 14px;
+  text-transform: capitalize;
+  font-family: 700;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius:3px;
+}
+
+.left h3{
+  font-weight: 600;
+  font-size: 14px;
+  color: #292F42;
+  margin: 0;
+}
+
+.right span{
+  background: #3f51b5;
+  color: #fff;
+  width: 25px;
+  height: 25px;
+  font-family: 25px;
+  line-height: 25px;
+  display: inline-block;
+  text-align: center;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius:50%;
+}
+
+.file-select input[type="file"] {
+  opacity: 0;
+  width: 200px;
+  height: 32px;
+  display: inline-block;
 }

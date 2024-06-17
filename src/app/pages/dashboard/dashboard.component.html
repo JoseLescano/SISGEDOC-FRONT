@@ -1,2 +1,31 @@
 <h1>Dashboard</h1>
 <h3>BIENVENIDO AL SISTEMA DE GESTIÓN DOCUMENTARIO - EP</h3>
+<div class="widget-container">
+    <div class="widget green" (click)="viewRemitidos()">
+      <div class="icon">
+        <i class="fas fa-upload"></i>
+      </div>
+      <div class="value">
+        <div class="top">{{atendidos}}</div>
+        <div class="bottom">ATENDIDOS</div>
+      </div>
+    </div>
+    <div class="widget yellow" (click)="viewParteDiario()">
+      <div class="icon">
+        <i class="fas fa-file-contract"></i>
+      </div>
+      <div class="value">
+        <div class="top">{{parte}}</div>
+        <div class="bottom">PARA FIRMAR</div>
+      </div>
+    </div>
+    <div class="widget red" (click)="viewPendientes()">
+      <div class="icon">
+        <i class="fas fa-envelope"></i>
+      </div>
+      <div class="value" >
+        <div class="top">{{pendientes}}</div>
+        <div class="bottom">PENDIENTES</div>
+      </div>
+    </div>
+  </div>

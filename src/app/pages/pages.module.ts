@@ -42,6 +42,8 @@ import { RespuestaComponent } from './documento/respuesta/respuesta.component';
 import { ModalMfaComponent } from './login/modal-mfa/modal-mfa.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { SeguimientoComponent } from './report/seguimiento/seguimiento.component';
+import { Not403Component } from './not403/not403.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
   imports: [
@@ -91,7 +93,9 @@ import { SeguimientoComponent } from './report/seguimiento/seguimiento.component
     RespuestaComponent,
     ModalMfaComponent,
     SidenavComponent,
-    SeguimientoComponent
+    SeguimientoComponent,
+    Not403Component,
+    PageNotFoundComponent
   ],
    exports:[
 

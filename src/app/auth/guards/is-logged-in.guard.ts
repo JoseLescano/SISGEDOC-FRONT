@@ -9,6 +9,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { PerfilService } from 'src/app/_service/perfil.service';
 import { Perfil } from 'src/app/_model/perfil';
 import { Menu } from 'src/app/_model/menu';
+import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +54,8 @@ export class IsLoggedInGuard implements CanActivate {
         if(cont>0){
           return true;
         }else {
-          this.router.navigate(['/pages/not-403']);
+          Swal.fire("LO SENTIMOS", "USTED NO CUENTA CON LAS CREDENCIALES PARA ESTA OPCION", "info");
+          //this.router.navigate(['/pages/not-403']);
           return false;
         }
       }));

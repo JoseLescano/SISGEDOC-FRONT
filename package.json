@@ -1,3 +1,4 @@
+
 {
   "name": "sisgedo",
   "version": "0.0.0",
@@ -9,10 +10,11 @@
     "buildProduction": "ng build --configuration production --base-href /sisgedo/",
     "test": "ng test"
   },
+  
   "private": true,
   "dependencies": {
     "@angular/animations": "^14.2.0",
-    "@angular/cdk": "^13.0.0",
+    "@angular/cdk": "^13.3.9",
     "@angular/common": "^14.2.0",
     "@angular/compiler": "^14.2.0",
     "@angular/core": "^14.2.0",

@@ -21,11 +21,6 @@ export class PerfilesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    debugger;
-    // const helper = new JwtHelperService();
-    // let token = sessionStorage.getItem(environment.TOKEN_NAME);
-    // const decodedToken = helper.decodeToken(token);
-    // const username = decodedToken.sub;
     this.getPerfiles();
 
   }
@@ -57,9 +52,8 @@ export class PerfilesComponent implements OnInit {
     sessionStorage.setItem(environment.rol, perfil.rol.codigo );
     //sessionStorage.setItem(environment.TOKEN_AUTH_USERNAME, perfil.usuario+"");
     sessionStorage.setItem(environment.codigoOrganizacion, perfil.organizacion.codigoInterno);
-    // debugger;
-    // sessionStorage.setItem(environment.cargoSeleccionado, perfil.nombre);
-    // sessionStorage.setItem(environment.nombreOrganizacion, perfil.organizacion.acronimo);
+    debugger;
+    sessionStorage.setItem(environment.cargoSeleccionado, perfil.nombre + ' - ' + perfil.organizacion.acronimo);
     this.router.navigate(['/principal/dashboard']);
   }
 

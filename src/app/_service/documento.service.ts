@@ -5,7 +5,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { GenericService } from './generic.service';
 import { DocumentoArchivoAnexo } from '../_DTO/DocumentoArchivoAnexo';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -113,8 +112,10 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/envioExterno`, formData);
   }
 
-  crearDocumento(documento: any, documentoPadre?:any){
-    debugger;
+  crearDocumento(documento: any, anexos?:any
+    // , documentoPadre: any
+  ){
+    
     let formData:FormData = new FormData();
     formData.append('clase', documento.clase);
     formData.append('nroOrden', documento.nroOrden);
@@ -124,9 +125,14 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('destinos', documento.destinos);
     formData.append('copiasInformativas', documento.copiasInformativas);
     formData.append('archivoPrincipal', documento.archivoPrincipal);
-    formData.append('anexo', documento.anexos);
     formData.append('organizacionRemitente', documento.organizacionOrigen);
-    formData.append('documentoPadre', documentoPadre);
+    // formData.append('documentoPadre', documentoPadre);
+    debugger;
+    for (let index = 0; index < anexos.length; index++) {
+      let element = anexos.item(index);
+      formData.append('anexos', element);
+    }
+    
     return this.http.post(`${environment.HOST}documentos/crearDocumento`, formData);
   }
 
@@ -218,6 +224,10 @@ export class DocumentoService  extends GenericService<Documento> {
             .set('Authorization', `Bearer ${token}`)
             .set('Content-Type', 'application/json'),
     });
+  }
+
+  contadoresDashboard(codigoOrganizacion:any){
+    return this.http.get(`${environment.HOST}documentos/contadoresDashboard/${codigoOrganizacion}`);
   }
 
 }

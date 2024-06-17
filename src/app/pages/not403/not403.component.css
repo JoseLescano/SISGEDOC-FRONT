@@ -1,0 +1,345 @@
+/*
+body {
+    color: #5a5a5a;
+    background: #f7f7f7;
+    font-family: "Euclid Circular A", "Poppins";
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  nav {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    border-radius: 6px;
+    translate: -50% -90px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 70%;
+    height: 72px;
+    padding: 0 20px;
+    background: #ffffff;
+    box-shadow: 0 0 20px rgb(0 0 0 / 6%);
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo img {
+    width: 36px;
+    padding: 0;
+    margin-left: 4px;
+    margin-right: 6px;
+  }
+  
+  span.material-symbols-outlined {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 72px;
+    font-size: 24px;
+  }
+  
+  nav h2 {
+    font-size: 19px;
+    font-weight: 400;
+  }
+  
+  .nav-right > img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: contain;
+    margin-left: 8px;
+  }
+  
+  button {
+    background: transparent;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+  }
+  
+  .nav-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .dropdown {
+    cursor: pointer;
+    position: relative;
+    display: grid;
+    place-items: center;
+    height: 72px;
+  }
+  
+  .dropdown > button {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+  }
+  
+  .dropdown > button::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    scale: 0.25;
+    opacity: 0;
+    background: #ebebeb;
+    transition: 0.2s;
+  }
+  
+  .dropdown:hover > button::before {
+    scale: 1;
+    opacity: 1;
+  }
+  
+  .menu {
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: absolute;
+    top: 64px;
+    right: -20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: max-content;
+    width: 270px;
+    max-height: 286px;
+    padding: 10px;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #ebebeb;
+    box-shadow: 0 0 10px rgb(0 0 0 / 8%);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+    appearance: none;
+  }
+  
+  .menu::-webkit-scrollbar {
+    width: 15px;
+  }
+  
+  .menu::-webkit-scrollbar-thumb {
+    background: #dadce0;
+    border-radius: 10px;
+    border: 4px solid transparent;
+    background-clip: padding-box;
+  }
+  
+  .dropdown:hover > .menu {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .menu > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 6px;
+    font-family: inherit;
+  }
+  
+  
+  .menu > button > img {
+    width: 64px;
+    height: 64px;
+    padding: 16px;
+  }
+  
+  .menu > button > span:first-child {
+    display: block;
+    width: 64px;
+    height: 64px;
+    scale: 0.7;
+    background-image: url(../../../assets/icons.png);
+    background-position: 0 -3105px;
+    background-size: 64px 3307px;
+    background-repeat: no-repeat;
+  }
+  
+  .menu > button > span:last-child {
+    font-size: 12px;
+    translate: 0 -12px;
+  }
+  */
+/*
+@import url(https://fonts.googleapis.com/css?family=Raleway:700);
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+html {
+    height: 100%;
+}
+body {
+    font-family: 'Raleway', sans-serif;
+    background-color: #342643; 
+    height: 100%;
+    padding: 10px;
+}
+
+a {
+  color: #EE4B5E !important;
+  text-decoration:none;
+}
+a:hover {
+  color: #FFFFFF !important;
+  text-decoration:none;
+}
+
+.text-wrapper {
+    height: 100%;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+}
+
+.title {
+    font-size: 5em;
+    font-weight: 700;
+    color: #EE4B5E;
+}
+
+.subtitle {
+    font-size: 40px;
+    font-weight: 700;
+    color: #1FA9D6;
+}
+.isi {
+    font-size: 18px;
+    text-align: center;
+    margin:30px;
+    padding:20px;
+    color: white;
+}
+.buttons {
+    margin: 30px;
+        font-weight: 700;
+        border: 2px solid #EE4B5E;
+        text-decoration: none;
+        padding: 15px;
+        text-transform: uppercase;
+        color: #EE4B5E;
+        border-radius: 26px;
+        transition: all 0.2s ease-in-out;
+        display: inline-block;
+        
+        .buttons:hover {
+            background-color: #EE4B5E;
+            color: white;
+            transition: all 0.2s ease-in-out;
+        }
+  }
+
+    */
+
+    @import url("https://fonts.googleapis.com/css?family=Share+Tech+Mono|Montserrat:700");
+
+    * {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+        box-sizing: border-box;
+        color: inherit;
+    }
+    
+    body {
+        background-image: linear-gradient(120deg, #4f0088 0%, #000000 100%);
+        height: 100vh;
+    }
+    
+    h1 {
+        font-size: 45vw;
+        text-align: center;
+        position: fixed;
+        width: 100vw;
+        z-index: 1;
+        color: #ffffff26;
+        text-shadow: 0 0 50px rgba(0, 0, 0, 0.07);
+        top: 50%;
+        transform: translateY(-50%);
+        font-family: "Montserrat", monospace;
+    }
+    
+    div {
+        background: rgba(0, 0, 0, 0);
+        width: 70vw;
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        margin: 0 auto;
+        padding: 30px 30px 10px;
+        box-shadow: 0 0 150px -20px rgba(0, 0, 0, 0.5);
+        z-index: 3;
+    }
+    
+    P {
+        font-family: "Share Tech Mono", monospace;
+        color: #f5f5f5;
+        margin: 0 0 20px;
+        font-size: 17px;
+        line-height: 1.2;
+    }
+    
+    span {
+        color: #f0c674;
+    }
+    
+    i {
+        color: #8abeb7;
+    }
+    
+    div a {
+        text-decoration: none;
+    }
+    
+    b {
+        color: #81a2be;
+    }
+    
+    a.avatar {
+        position: fixed;
+        bottom: 15px;
+        right: -100px;
+        animation: slide 0.5s 4.5s forwards;
+        display: block;
+        z-index: 4
+    }
+    
+    a.avatar img {
+        border-radius: 100%;
+        width: 44px;
+        border: 2px solid white;
+    }
+    
+    @keyframes slide {
+        from {
+            right: -100px;
+            transform: rotate(360deg);
+            opacity: 0;
+        }
+        to {
+            right: 15px;
+            transform: rotate(0deg);
+            opacity: 1;
+        }
+    }

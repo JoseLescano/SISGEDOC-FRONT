@@ -30,40 +30,44 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { CreateEditarComponent } from './organizacion/create-editar/create-editar.component';
 import { IsLoggedInGuard } from '../auth/guards/is-logged-in.guard';
 import { RespuestaComponent } from './documento/respuesta/respuesta.component';
+import { Not403Component } from './not403/not403.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 const routes: Routes = [
 
   { path: '', redirectTo: 'perfiles', pathMatch:'full' },
   // { path:'', redirectTo: environment.rol=='002' || environment.rol=='000'? 'pendientes': 'recibir-documento', pathMatch:'full' },
-  { path:'pendientes', component:PendienteComponent},
+  { path:'pendientes', component:PendienteComponent, canActivate: [IsLoggedInGuard]},
   { path:'dashboard', component:DashboardComponent},
-  { path:'perfiles', component:PerfilesComponent},
-  { path:'decretar/:codigoDocumento', component:DecetarComponent},
-  { path: 'acciones/:codigoDocumento', component: AccionesComponent },
+
+  { path:'decretar/:codigoDocumento', component:DecetarComponent, canActivate: [IsLoggedInGuard]},
+  { path: 'acciones/:codigoDocumento', component: AccionesComponent},
   { path: 'archivar/:codigoDocumento', component: RegistrarComponent },
   { path: 'devolver/:codigoDocumento', component: RegistrarDevolverComponent },
   { path: 'derivar/:codigoDocumento', component: RegistrarDerivacionComponent },
   { path: 'crear-documento', component: CrearDocumentoComponent, canActivate: [IsLoggedInGuard] },
-  { path: 'resetear-authentificacion', component: DobleAutentificacionComponent },
-  { path: 'buscar-documento/:tipoReporte', component: BuscarDocumentoComponent },
-  { path: 'recibir-documento', component: RecibirComponent },
+  { path: 'resetear-authentificacion', component: DobleAutentificacionComponent, canActivate: [IsLoggedInGuard] },
+  { path: 'buscar-documento/:tipoReporte', component: BuscarDocumentoComponent, canActivate: [IsLoggedInGuard] },
+  { path: 'recibir-documento', component: RecibirComponent, canActivate: [IsLoggedInGuard] },
   { path: 'registrar-documento', component: RegistrarMPComponent },
   { path: 'envio-externo', component: EnvioExternoComponent },
-  { path: 'organizacion', component: EsquemaComponent, children:[
+  { path: 'organizacion', component: EsquemaComponent, canActivate: [IsLoggedInGuard], children:[
     { path: 'nuevo', component: CreateEditarComponent },
     { path: 'edit/:codigoInterno', component: CreateEditarComponent }
   ] },
-  { path: 'list-archivados', component: ViewComponent },
-  { path: 'list-remitidos', component: ViewRemitidosComponent },
-  { path: 'list-decretados', component: ViewDecretadoComponent },
-  { path: 'report-documento', component: ReporteDocumentoComponent },
-  { path: 'recojo-op', component: ReporteRecojoOPComponent },
-  { path: 'registroCorrespondencia', component: RegistroCorrespondenciaComponent },
-  { path: 'list-correspondencia', component: ListCorrespondenciaComponent },
-  { path: 'entregarCorrespondencia', component: EntregarCorrespondenciaComponent },
-  { path: 'parte-diario', component: ParteDiarioComponent },
+  { path: 'list-archivados', component: ViewComponent, canActivate: [IsLoggedInGuard] },
+  { path: 'list-remitidos', component: ViewRemitidosComponent, canActivate: [IsLoggedInGuard] },
+  { path: 'list-decretados', component: ViewDecretadoComponent, canActivate: [IsLoggedInGuard] },
+  { path: 'report-documento', component: ReporteDocumentoComponent, canActivate: [IsLoggedInGuard] },
+  { path: 'recojo-op', component: ReporteRecojoOPComponent, canActivate: [IsLoggedInGuard] },
+  { path: 'registroCorrespondencia', component: RegistroCorrespondenciaComponent, canActivate: [IsLoggedInGuard] },
+  { path: 'list-correspondencia', component: ListCorrespondenciaComponent, canActivate: [IsLoggedInGuard] },
+  { path: 'entregarCorrespondencia', component: EntregarCorrespondenciaComponent, canActivate: [IsLoggedInGuard] },
+  { path: 'parte-diario', component: ParteDiarioComponent, canActivate: [IsLoggedInGuard] },
   { path: 'form/:codigoDocumento', component: FormComponent  },
   { path: 'formRespuesta/:codigoDocumento', component: RespuestaComponent  },
+  { path: 'pages/not-403', component: Not403Component  },
+  { path: 'pages/not-404', component: PageNotFoundComponent  },
 ];
 
 

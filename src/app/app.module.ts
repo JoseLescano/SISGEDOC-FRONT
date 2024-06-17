@@ -19,6 +19,7 @@ import { JwtInterceptor } from './auth/guards/JwtInterceptor';
 import { RECAPTCHA_SETTINGS, RECAPTCHA_V3_SITE_KEY, RecaptchaModule, RecaptchaSettings, RecaptchaV3Module } from 'ng-recaptcha';
 import { environment } from 'src/environments/environment';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 
 export function tokenGetter() {
@@ -40,16 +41,17 @@ export function tokenGetter() {
     NgSelectModule,
     FormsModule,
     PagesModule,
-     RecaptchaModule,
+    OverlayModule,
+    RecaptchaModule,    
     RecaptchaV3Module,
     PagesRoutingModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        // allowedDomains: ["localhost:8080"],
-        allowedDomains: ["net.ejercito.mil.pe"],
-        //disallowedRoutes: ["http://localhost:8080/login/forget"]
-        disallowedRoutes: ["https://net.ejercito.mil.pe/dev-sisgedo/"],
+        allowedDomains: ["localhost:8080"],
+        //allowedDomains: ["sisgedo.ejercito.mil.pe"],
+        disallowedRoutes: ["http://localhost:8080/login/forget"]
+        //disallowedRoutes: ["https://sisgedo.ejercito.mil.pe/"],
       },
     }),
 
