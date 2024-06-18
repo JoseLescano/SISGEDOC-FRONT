@@ -10,10 +10,10 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path:'perfiles', component:PerfilesComponent},
   { path: 'principal', component: PrincipalComponent,
-  
+
   loadChildren: () =>
   import('./pages/pages.module').then(m => m.PagesModule) },
-  { path: '**', component: PageNotFoundComponent },
+  // { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({
