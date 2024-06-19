@@ -51,7 +51,7 @@ export function tokenGetter() {
         allowedDomains: ["localhost:8080"],
         //allowedDomains: ["sisgedo.ejercito.mil.pe"],
         disallowedRoutes: ["http://localhost:8080/login/forget"]
-        //disallowedRoutes: ["https://sisgedo.ejercito.mil.pe/"],
+        //disallowedRoutes: ["https://sisgedo.ejercito.mil.pe"],
       },
     }),
 
