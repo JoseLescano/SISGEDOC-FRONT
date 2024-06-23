@@ -55,6 +55,7 @@ export class LoginComponent{
      if (this._formulario.invalid) {
        if (this._formulario.get("username").invalid) this.username_aux = true;
        if (this._formulario.get("password").invalid) this.password_aux = true;
+       Swal.fire('LO SENTIMOS', 'INGRESE USUARIO Y/O CONTRASEÑA PARA PODER INGRESAR', 'info');
        return;
      }
      this.executeReCaptcha('login_action');
@@ -74,22 +75,18 @@ export class LoginComponent{
   }
 
   performLogin(): void {
-    
+
     const jwtRequest = {
       username: this.username,
       password: this.password,
       token: this.recaptchaToken
     };
-    debugger;
-    this.loginService.login(jwtRequest).subscribe( (response) => {
-        debugger;
-        // sessionStorage.setItem(environment.TOKEN_NAME, response.access_token);
-        // this.router.navigate(['/perfiles']);
-        // Swal.fire('Bienvenido al SISGEDO','', 'success');
+    this.loginService.login(jwtRequest).subscribe( {
+      next : (response)=> {
         this.openModalMfaStatus0(this.username, response);
-      }, error => {
+      },  error : (err) => {
         this.error = 'Login failed';
-      
+      }
     });
   }
 

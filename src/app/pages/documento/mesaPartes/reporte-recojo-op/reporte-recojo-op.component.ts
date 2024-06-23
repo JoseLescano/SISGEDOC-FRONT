@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Correspondencia } from 'src/app/_model/correspondencia';
 import { CorrespondenciaService } from 'src/app/_service/correspondencia.service';
 import { environment } from 'src/environments/environment';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-reporte-recojo-op',
@@ -31,8 +32,12 @@ export class ReporteRecojoOPComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
-    this.correspondenciaService.findByOrganizacionDestino(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=> {
-      this.createTable(response.data);
+    this.correspondenciaService.findByOrganizacionDestino(
+      sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=> {
+        debugger;
+      this.createTable(response);
+    }, error => {
+      Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
     });
   }
 

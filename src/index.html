@@ -70,7 +70,7 @@
       var port = "48596";
       startSignature(port, param);
     }
-    // let token=sessionStorage.getItem('access_token')==null?;
+    // let token=sessionStorage.getItem('access_token')==null;
     let token=sessionStorage.getItem('access_token')==null? sessionStorage.getItem(environment.TOKEN_NAME): sessionStorage.getItem('access_token');
 
     function iniciarFirma(configuracion,incallback){

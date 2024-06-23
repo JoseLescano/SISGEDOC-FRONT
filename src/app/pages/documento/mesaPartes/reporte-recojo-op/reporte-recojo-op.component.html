@@ -7,7 +7,7 @@
             <mat-label>Filtro</mat-label>
             <input matInput placeholder="Ingrese valor" (keyup)="applyFilter($event)" #input>
         </mat-form-field>
-        <div class="mat-elevation-z8">
+        <div class="mat-elevation-z8" >
             <table mat-table [dataSource]="dataSource" matSort >
             <ng-container matColumnDef="Nro">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Nro">Nro. registro</th>

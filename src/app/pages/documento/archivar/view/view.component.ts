@@ -9,6 +9,8 @@ import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 import { ViewDocumentoComponent } from '../../view-documento/view-documento.component';
 import { MatDialog } from '@angular/material/dialog';
+import { DocumentoView } from 'src/app/_DTO/DocumentoView';
+import { SeguimientoComponent } from 'src/app/pages/report/seguimiento/seguimiento.component';
 
 @Component({
   selector: 'app-view',
@@ -17,9 +19,9 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class ViewComponent implements OnInit, AfterViewInit {
 
-  // displayedColumns: string[] = ['Estado', 'Nro', 'Origen', 'FechaDoc', 'Documento', 'Asunto', 'Acciones'];
+  // displayedColumns: string[] = ['Estado', 'Nro', 'Origen', 'FechaDoc', 'Documento', 'Asunto', 'Motivo', 'Acciones'];
   displayedColumns: string[] = ['Nro', 'Asunto', 'Origen', 'FechaDoc', 'Documento',  'Acciones'];
-  dataSource: MatTableDataSource<Documento>;
+  dataSource: MatTableDataSource<DocumentoView>;
   cargando: boolean = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -36,9 +38,18 @@ export class ViewComponent implements OnInit, AfterViewInit {
     });
   }
 
+  viewSeguimiento(documentoSeleccionado?:any): void {
+    const dialogRef = this.dialog.open(SeguimientoComponent, {
+      width: '60%',
+      height: '95%',
+      data: documentoSeleccionado,
+    });
+  }
+
   generarReporte(): void {
     this.cargando = true;
-    this.documentoService.findArchivadosByOrganizacion(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any) => {
+    this.documentoService.findArchivados1ByOrganizacion(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any) => {
+      debugger;
       this.createTable(data);
       this.cargando = false;
     }, (error: any)=> {
@@ -47,7 +58,7 @@ export class ViewComponent implements OnInit, AfterViewInit {
     });
   }
 
-  createTable(documentos: Documento[]): void {
+  createTable(documentos: DocumentoView[]): void {
     this.dataSource = new MatTableDataSource(documentos);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;

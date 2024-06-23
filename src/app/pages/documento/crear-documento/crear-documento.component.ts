@@ -253,7 +253,7 @@ export class CrearDocumentoComponent implements OnInit {
           this.selectedFiles = event.target.files;
           this.url_pdf = this.selectedFiles[0].name;
           if (this.selectedFiles[0].type == 'application/pdf') {
-            this.convertirArchivoABase64(this.selectedFiles.item(0));          
+            this.convertirArchivoABase64(this.selectedFiles.item(0));
           }else {
             this.cargando = true;
             this.documentoService
@@ -280,10 +280,10 @@ export class CrearDocumentoComponent implements OnInit {
   }
 
   selectAnexos(event: any): void {
-    this.uploadedFiles = event.target.files;
-    // for (let i = 0; i < files.length; i++) {
-    //   this.uploadedFiles.push(files[i]);
-    // }
+    let files = event.target.files;
+    for (let i = 0; i < files.length; i++) {
+      this.uploadedFiles.push(files[i]);
+    }
     this.calculateTotalFileSize();
   }
 

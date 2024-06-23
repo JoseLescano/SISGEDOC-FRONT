@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
+import { SeguimientoComponent } from 'src/app/pages/report/seguimiento/seguimiento.component';
 
 @Component({
   selector: 'app-reporte-documento',
@@ -98,6 +99,14 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
     }, error=> {
       this.cargando=false;
       Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
+    });
+  }
+
+  viewSeguimiento(documentoSeleccionado?:any): void {
+    const dialogRef = this.dialog.open(SeguimientoComponent, {
+      width: '60%',
+      height: '95%',
+      data: documentoSeleccionado,
     });
   }
 

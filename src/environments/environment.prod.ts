@@ -1,7 +1,7 @@
 import * as moment from "moment";
 
 export const environment = {
-  production: true,
+  production: false,
   HOST: 'http://localhost:8080/',
   //HOST: 'https://net.ejercito.mil.pe/dev-sisgedo/',
   codigoOrganizacion: '3302010102',

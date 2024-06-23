@@ -115,7 +115,7 @@ export class DocumentoService  extends GenericService<Documento> {
   crearDocumento(documento: any, anexos?:any
     // , documentoPadre: any
   ){
-    
+
     let formData:FormData = new FormData();
     formData.append('clase', documento.clase);
     formData.append('nroOrden', documento.nroOrden);
@@ -126,13 +126,9 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('copiasInformativas', documento.copiasInformativas);
     formData.append('archivoPrincipal', documento.archivoPrincipal);
     formData.append('organizacionRemitente', documento.organizacionOrigen);
-    // formData.append('documentoPadre', documentoPadre);
-    debugger;
-    for (let index = 0; index < anexos.length; index++) {
-      let element = anexos.item(index);
-      formData.append('anexos', element);
-    }
-    
+    formData.append('anexos', anexos);
+
+
     return this.http.post(`${environment.HOST}documentos/crearDocumento`, formData);
   }
 
@@ -228,6 +224,10 @@ export class DocumentoService  extends GenericService<Documento> {
 
   contadoresDashboard(codigoOrganizacion:any){
     return this.http.get(`${environment.HOST}documentos/contadoresDashboard/${codigoOrganizacion}`);
+  }
+
+  findArchivados1ByOrganizacion(codigoInterno:any){
+    return this.http.get<Documento[]>(`${environment.HOST}documentos/findArchivados1ByOrganizacion/${codigoInterno}`);
   }
 
 }
