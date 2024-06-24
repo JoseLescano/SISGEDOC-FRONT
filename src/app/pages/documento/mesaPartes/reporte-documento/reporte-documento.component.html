@@ -32,6 +32,8 @@
             <mat-label>Filtro</mat-label>
             <input matInput placeholder="Ingrese valor" (keyup)="applyFilter($event)" #input>
         </mat-form-field>
+        <button class="btn btn-success m-2" (click)="exportTable()">
+            <i class="fas fa-file-excel"></i> EXPORTAR A EXCEL</button>
         <div class="mat-elevation-z8">
             <table mat-table [dataSource]="dataSource" matSort >
             <ng-container matColumnDef="Nro">

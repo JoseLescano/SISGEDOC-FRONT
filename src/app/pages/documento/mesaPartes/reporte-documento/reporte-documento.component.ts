@@ -10,6 +10,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 import { SeguimientoComponent } from 'src/app/pages/report/seguimiento/seguimiento.component';
+import { ExcelService } from 'src/app/_service/excel.service';
 
 @Component({
   selector: 'app-reporte-documento',
@@ -32,10 +33,15 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
 
   constructor(
     private documentoService:DocumentoService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private excelService: ExcelService
   ) { }
 
   ngOnInit(): void {
+  }
+
+  exportTable() {
+    this.excelService.exportTableToExcel('mytable', 'LISTA DE DOCUMENTOS ARCHIVADOS');
   }
 
   createTable(documento: Documento[]){

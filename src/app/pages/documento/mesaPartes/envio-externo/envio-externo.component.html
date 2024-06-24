@@ -94,23 +94,44 @@
                                 </div> -->
                             </mat-form-field>
                         </div>
-                        <div class="col-md-6"  >
-                          <div class="wrapper" (click)="agregarArchivo()" >
-                            <mat-label>DOCUMENTO PRINCIPAL</mat-label>
+                        <div class="col-md-12"  >
+                          <div class="wrapper" (click)="agregarArchivo()">
+                            <mat-label>DOCUMENTO PRINCIPAL
+                              <span *ngIf="selectedFiles == null || selectedFiles == ''">
+                                <i class="fas fa-info-circle" style="font-size: 14px; color: #ea5d5d" ></i>
+                              </span>
+                            </mat-label>
                             <div class="form">
                                 <i class="fas fa-cloud-upload-alt"></i>
-                                <p>Browse File to Upload</p>
+                                <p>Examinar para cargar archivo</p>  
                             </div>
                           </div>
                         </div>
-                        <div class="col-md-6"  >
-                            <div class="wrapper">
-                                <mat-label>ANEXOS</mat-label>
-                              <div class="form">
-                                  <i class="fas fa-cloud-upload-alt"></i>
-                                  <p>Browse File to Upload</p>
-                              </div>
+                        <div class="col"  >
+                          <div class="wrapper">
+                            <mat-label>ANEXOS (OPCIONAL)</mat-label>
+                            <div class="form">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Examinar para cargar archivo</p>
+                                <input type="file" (change)="selectAnexos($event)" id="anexos"
+                                    multiple />
                             </div>
+                            <div class="filewrapper" *ngIf="uploadedFiles.length > 0">
+                                <h3 class="uploaded">ANEXOS CARGADOS</h3>
+                                <div class="showfilebox" *ngFor="let file of uploadedFiles">
+                                    <div class="left">
+                                        <span class="filetype">{{ getFileType(file) }}</span>
+                                        <h3>{{ file.name  + " - " + getFileSize(file.size) }}</h3>
+                                    </div>
+                                    <div class="right">
+                                        <span (click)="removeFile(file)">&#215;</span>
+                                    </div>
+                                </div>
+                                <!-- <div class="total-size">
+                                  <h3>Tamaño total: {{ getFileSize(totalFileSize) }}</h3>
+                                </div> -->
+                            </div>
+                          </div>
                         </div>
                       </div>                      
                     </div>

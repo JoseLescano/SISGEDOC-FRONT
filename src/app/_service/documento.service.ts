@@ -58,6 +58,14 @@ export class DocumentoService  extends GenericService<Documento> {
       { params: { codigoInterno: codigoOrganizacion, fi:fechaI, ff:fechaF }});
   }
 
+  findDecretados1(codigoInterno:any, fechaI?:any, fechaF?:any){
+    let formData:FormData = new FormData();
+    formData.append('codigoInterno', codigoInterno);
+    formData.append('fi', fechaI);
+    formData.append('ff', fechaF);
+    return this.http.post(`${environment.HOST}documentos/findDecretados1`, formData);
+  }
+
   findArchivadosByOrganizacion(codigoInterno:any){
     return this.http.get<Documento[]>(`${environment.HOST}documentos/findArchivadosByOrganizacion/${codigoInterno}`);
   }
@@ -226,8 +234,12 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get(`${environment.HOST}documentos/contadoresDashboard/${codigoOrganizacion}`);
   }
 
-  findArchivados1ByOrganizacion(codigoInterno:any){
-    return this.http.get<Documento[]>(`${environment.HOST}documentos/findArchivados1ByOrganizacion/${codigoInterno}`);
+  findArchivados1ByOrganizacion(codigoInterno:any, fechaInicio?:any, fechaFin?:any){
+    let formData:FormData = new FormData();
+    formData.append('codigoOrganizacion', codigoInterno);
+    formData.append('fi', fechaInicio);
+    formData.append('ff', fechaFin);
+    return this.http.post(`${environment.HOST}documentos/findArchivados1ByOrganizacion`, formData);
   }
 
 }

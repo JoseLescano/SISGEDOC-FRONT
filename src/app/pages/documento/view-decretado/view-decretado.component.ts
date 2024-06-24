@@ -9,6 +9,8 @@ import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 import { ViewDocumentoComponent } from '../view-documento/view-documento.component';
 import { SeguimientoComponent } from '../../report/seguimiento/seguimiento.component';
+import { FormControl, FormGroup } from '@angular/forms';
+import { ExcelService } from 'src/app/_service/excel.service';
 
 @Component({
   selector: 'app-view-decretado',
@@ -17,27 +19,50 @@ import { SeguimientoComponent } from '../../report/seguimiento/seguimiento.compo
 })
 export class ViewDecretadoComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'Acciones'];
+  displayedColumns: string[] = ['Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'Decretado a.', 'Acciones'];
   dataSource: MatTableDataSource<Documento>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   cargando: boolean;
+  range = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
 
   constructor(
     private documentoService: DocumentoService,
-    public dialog: MatDialog) {}
+    public dialog: MatDialog,
+    private excelService: ExcelService) {}
 
   ngOnInit(): void {
     this.cargando = true;
-    this.documentoService.findDecretados(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any)=> {
+    this.documentoService.findDecretados1(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any)=> {
+      debugger;
       this.createTable(data);
       this.cargando = false;
     }, error=> {
       this.cargando=false;
       Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
     });
+  }
+
+  buscarFechas(){
+    this.cargando = true;
+    this.documentoService.findDecretados1(sessionStorage.getItem(environment.codigoOrganizacion),
+      environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end'])).subscribe((data: any) => {
+      debugger;
+      this.createTable(data);
+      this.cargando = false;
+    }, (error: any)=> {
+       this.cargando = false;
+      Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
+    });
+  }
+
+  exportTable() {
+    this.excelService.exportTableToExcel('mytable', 'LISTA DE DOCUMENTOS ARCHIVADOS');
   }
 
   ngAfterViewInit() {

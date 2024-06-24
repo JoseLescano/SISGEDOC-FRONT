@@ -21,6 +21,8 @@ export class EnvioExternoComponent implements OnInit {
 
   firstFormGroup : FormGroup;
   cargando: boolean;
+  uploadedFiles: any = [];
+  totalFileSize: number = 0;
 
   remitentes:Organizacion[] = [];
   clases:Clase[];
@@ -119,6 +121,53 @@ export class EnvioExternoComponent implements OnInit {
     this.url_pdf = fileURL;
     let iframe: any = document.getElementById(''+idFrame) as HTMLIFrameElement;
     iframe.contentWindow.location.replace(fileURL);
+  }
+
+  selectAnexos(event: any): void {
+    let files = event.target.files;
+    for (let i = 0; i < files.length; i++) {
+      this.uploadedFiles.push(files[i]);
+    }
+    this.calculateTotalFileSize();
+  }
+
+
+  getFileType(file: File): string {
+    const fileType = file.type;
+    if (fileType === 'application/pdf') {
+      return 'PDF';
+    } else if (fileType === 'application/msword') {
+      return 'DOC';
+    } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      return 'DOCX';
+    }else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      return 'xlsx';
+    }
+     else {
+      return 'Desconocido';
+    }
+  }
+
+  removeFile(file: File): void {
+    const index = this.uploadedFiles.indexOf(file);
+    if (index > -1) {
+      this.uploadedFiles.splice(index, 1);
+    }
+    this.calculateTotalFileSize();
+  }
+
+  getFileSize(size: number): string {
+    if (size < 1024) {
+      return size + ' B';
+    } else if (size < 1048576) {
+      return (size / 1024).toFixed(2) + ' KB';
+    } else {
+      return (size / 1048576).toFixed(2) + ' MB';
+    }
+  }
+
+  calculateTotalFileSize(): void {
+    this.totalFileSize = this.uploadedFiles.reduce((acc, file) => acc + file.size, 0);
   }
 
   selectArchivoPrincipal(event: any): void {

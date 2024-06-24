@@ -1,4 +1,3 @@
-
 {
   "name": "sisgedo",
   "version": "0.0.0",
@@ -10,22 +9,22 @@
     "buildProduction": "ng build --configuration production --base-href /sisgedo/",
     "test": "ng test"
   },
-  
   "private": true,
   "dependencies": {
     "@angular/animations": "^14.2.0",
-    "@angular/cdk": "^13.3.9",
+    "@angular/cdk": "^14.0.0",
     "@angular/common": "^14.2.0",
     "@angular/compiler": "^14.2.0",
     "@angular/core": "^14.2.0",
     "@angular/forms": "^14.2.0",
-    "@angular/material": "^13.0.0",
+    "@angular/material": "^14.0.0",
     "@angular/platform-browser": "^14.2.0",
     "@angular/platform-browser-dynamic": "^14.2.0",
     "@angular/router": "^14.2.0",
     "@auth0/angular-jwt": "^5.1.0",
     "@ng-select/ng-select": "^9.1.0",
     "bootstrap": "^5.3.3",
+    "file-saver": "^2.0.5",
     "gojs": "^3.0.0",
     "gojs-angular": "^2.0.7",
     "moment": "^2.30.1",
@@ -33,6 +32,7 @@
     "rxjs": "~7.5.0",
     "sweetalert2": "^11.10.7",
     "tslib": "^2.3.0",
+    "xlsx": "^0.18.5",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
