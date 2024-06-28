@@ -74,8 +74,20 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get<Documento[]>(`${environment.HOST}documentos/findDerivadosByOrganizacion/${codigoInterno}`);
   }
 
-  findRemitidos(codigoInterno:any){
-    return this.http.get<Documento[]>(`${environment.HOST}documentos/findRemitidos/${codigoInterno}`);
+  findRemitidos(codigoInterno:any, fechaInicio?:any, fechaFin?:any ){
+    let formData:FormData = new FormData();
+    formData.append('codigoInterno', codigoInterno);
+    formData.append('fi', fechaInicio);
+    formData.append('ff', fechaFin);
+    return this.http.post(`${environment.HOST}documentos/findRemitidos`, formData);
+  }
+
+  searchByOrganizacion(codigoInterno:any, fechaInicio?:any, fechaFin?:any ){
+    let formData:FormData = new FormData();
+    formData.append('codigoInterno', codigoInterno);
+    formData.append('fi', fechaInicio);
+    formData.append('ff', fechaFin);
+    return this.http.post(`${environment.HOST}documentos/searchByOrganizacion`, formData);
   }
 
   findEnviadosExternosMP(codigoInterno:any){
@@ -168,6 +180,10 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get(`${environment.HOST}documentos/findDecretoByDocumento/${codigoInterno}`);
   }
 
+  findDecretoGraficaByDocumento(codigoInterno:any){
+    return this.http.get(`${environment.HOST}documentos/findDecretoGraficaByDocumento/${codigoInterno}`);
+  }
+
   findParaParte(codigoInterno:any){
     return this.http.get(`${environment.HOST}documentos/findParaParte/${codigoInterno}`);
   }
@@ -186,7 +202,7 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/firmarDocumentoPeru`, formData);
   }
 
-  crearDocumentoParaFirmar(documento: any, organizacionRemitente:any){
+  crearDocumentoParaFirmar(documento: any, organizacionRemitente:any, word?:any){
     debugger;
     let formData:FormData = new FormData();
     formData.append('clase', documento.clase);
@@ -200,6 +216,7 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('anexo', documento.anexos);
     formData.append('organizacionOrigen', documento.organizacionOrigen);
     formData.append('organizacionRemitente', organizacionRemitente);
+    formData.append('word', word);
     return this.http.post(`${environment.HOST}documentos/remitirDocumentoForFirma`, formData);
   }
 
@@ -240,6 +257,26 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('fi', fechaInicio);
     formData.append('ff', fechaFin);
     return this.http.post(`${environment.HOST}documentos/findArchivados1ByOrganizacion`, formData);
+  }
+
+  findElevados(codigoInterno:any, fechaInicio?:any, fechaFin?:any ){
+    let formData:FormData = new FormData();
+    formData.append('codigoInterno', codigoInterno);
+    formData.append('fi', fechaInicio);
+    formData.append('ff', fechaFin);
+    return this.http.post(`${environment.HOST}documentos/findElevados`, formData);
+  }
+
+  downloadWord(codigoDocumento:any){
+    let formData:FormData = new FormData();
+    formData.append('codigoDocumento', codigoDocumento);
+    return this.http.post(`${environment.HOST}documentos/downloadWord`, formData);
+  }
+
+  existByDocumento(codigoDocumento:any){
+    let formData:FormData = new FormData();
+    formData.append('codigoDocumento', codigoDocumento);
+    return this.http.post(`${environment.HOST}documentos/existByDocumento`, formData);
   }
 
 }

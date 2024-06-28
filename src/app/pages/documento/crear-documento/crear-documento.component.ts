@@ -35,6 +35,8 @@ export class CrearDocumentoComponent implements OnInit {
   mostrarFirma : boolean = false;
   documentoar : DocumentoArchivoAnexo = new DocumentoArchivoAnexo();
 
+  documentoWordTempl : any;
+
   // =======================================================================================================
 
   constructor(
@@ -131,7 +133,7 @@ export class CrearDocumentoComponent implements OnInit {
       }else {
         this.documentoService.crearDocumentoParaFirmar(
           this.documentoar,
-          sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>{
+          sessionStorage.getItem(environment.codigoOrganizacion), this.documentoWordTempl).subscribe((response:any)=>{
           if (response.httpStatus=='CREATED'){
             this.cargando = false;
             this.initForm();
@@ -256,6 +258,7 @@ export class CrearDocumentoComponent implements OnInit {
             this.convertirArchivoABase64(this.selectedFiles.item(0));
           }else {
             this.cargando = true;
+            this.documentoWordTempl = this.selectedFiles.item(0); // Guardo el documento word temp
             this.documentoService
             .convertFileToPDF(this.selectedFiles.item(0))
             .subscribe((resp: any) => {
@@ -336,7 +339,7 @@ export class CrearDocumentoComponent implements OnInit {
     };
     reader.onerror = error => {
         console.log('Error: ', error);
-    };
+  };
 }
 
   abrirFirmaPeru(documento:any): void {

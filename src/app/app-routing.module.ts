@@ -6,7 +6,7 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
 import { PerfilesComponent } from './pages/perfiles/perfiles.component';
 
 const routes: Routes = [
-  { path: '',   redirectTo: 'login', pathMatch: 'full' }, // redirect to `first-component` },
+  { path: '',   redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path:'perfiles', component:PerfilesComponent},
   { path: 'principal', component: PrincipalComponent,

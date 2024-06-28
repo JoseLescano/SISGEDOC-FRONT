@@ -10,6 +10,9 @@ import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 import { ViewDocumentoComponent } from '../view-documento/view-documento.component';
 import { SeguimientoComponent } from '../../report/seguimiento/seguimiento.component';
+import { FormGroup, FormControl } from '@angular/forms';
+import { ExcelService } from 'src/app/_service/excel.service';
+import { TimelineComponent } from '../../report/timeline/timeline.component';
 
 @Component({
   selector: 'app-view-remitidos',
@@ -24,6 +27,10 @@ export class ViewRemitidosComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  range = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
 
 
   // =======================================================================================================
@@ -32,7 +39,8 @@ export class ViewRemitidosComponent implements OnInit {
     private documentoService: DocumentoService,
     private route: ActivatedRoute,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private excelService: ExcelService
   ) { }
 
   // =======================================================================================================
@@ -44,14 +52,28 @@ export class ViewRemitidosComponent implements OnInit {
     });
   }
 
-  generarReporte(): void {
+  viewTimeline(vidDocumento: any){
+    const dialogRef = this.dialog.open(TimelineComponent, {
+      width: '60%',
+      height: '95%',
+      data: vidDocumento,
+    });
+  }
+
+  exportTable() {
+    this.excelService.exportTableToExcel('mytable', 'LISTA DE DOCUMENTOS REMITIDOS');
+  }
+
+  generarReporte(fi?:any, ff?:any): void {
     this.cargando = true;
-    this.documentoService.findRemitidos(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any) => {
-      this.createTable(data);
-      this.cargando = false;
-    }, (error: any)=> {
+    this.documentoService.findRemitidos(sessionStorage.getItem(environment.codigoOrganizacion), fi, ff).subscribe( {
+      next : (data: any) => {
+        this.createTable(data);
+        this.cargando = false;
+      }, error: (err : any)=> {
        this.cargando = false;
-      Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
+        Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
+      }
     });
   }
 
@@ -91,6 +113,14 @@ export class ViewRemitidosComponent implements OnInit {
       height: '95%',
       data: documentoSeleccionado,
     });
+  }
+
+  buscarFechas(){
+    if (this.range.value['start']!= null && this.range.value['end']!=null){
+      this.generarReporte(environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end']));
+    }else {
+      Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
+    }
   }
 
 }

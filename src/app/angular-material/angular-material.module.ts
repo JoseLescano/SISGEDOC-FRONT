@@ -70,7 +70,8 @@ import {
    MatProgressBarModule,
    MatSortModule,
    MatCheckboxModule,
-   MatChipsModule
+   MatChipsModule,
+
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },

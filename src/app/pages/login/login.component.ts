@@ -86,6 +86,7 @@ export class LoginComponent{
         this.openModalMfaStatus0(this.username, response);
       },  error : (err) => {
         this.error = 'Login failed';
+        Swal.fire('VALIDACIÓN INCORRECTA', 'USUARIO Y/O CONTRASEÑA INCORRECTA', 'info')
       }
     });
   }

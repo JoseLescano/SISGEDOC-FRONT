@@ -1,0 +1,22 @@
+<h1>TRAZABILIDAD DE DOCUMENTO # {{idDocumento}}</h1>
+<ul>
+  <li *ngFor="let item of decretos" [ngStyle]="{'--accent-color': item.estilo}">
+    <div class="date">{{item.estado}}</div>
+    <div class="title">
+      <div class="d-flex justify-content-between">
+        <div class="origen">
+          <span style="font-size: 12px; line-height: 1.4; text-transform: uppercase; font-weight: 600;
+          color: #9251ac; letter-spacing: 1.5px;">ORIGEN</span>
+          <p style="font-weight: 600;">{{item.origen}}</p>
+        </div>
+        <div class="destino">
+          <span style="font-size: 12px; line-height: 1.4; text-transform: uppercase; font-weight: 600;
+          color: #9251ac; letter-spacing: 1.5px;">DESTINO</span>
+          <p style="font-weight: 600;">{{item.destino}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="descr">{{(item.observacion=='' || item.observacion== null)? 'SIN OBSERVACIONES': item.observacion | uppercase}}</div>
+    <div class="descr">Fecha de decreto: {{item.fechaDecreto | date : 'dd MMM yyyy, h:mm:ss a'}}</div>
+  </li>
+</ul>

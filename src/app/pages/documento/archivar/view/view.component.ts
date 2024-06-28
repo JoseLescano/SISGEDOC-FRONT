@@ -15,6 +15,7 @@ import { ArchivoService } from 'src/app/_service/archivo.service';
 import { SustentacionComponent } from '../sustentacion/sustentacion.component';
 import { ExcelService } from 'src/app/_service/excel.service';
 import { FormGroup, FormControl } from '@angular/forms';
+import { TimelineComponent } from 'src/app/pages/report/timeline/timeline.component';
 
 @Component({
   selector: 'app-view',
@@ -112,15 +113,27 @@ export class ViewComponent implements OnInit, AfterViewInit {
   }
 
   buscarFechas(){
-    this.cargando = true;
-    this.documentoService.findArchivados1ByOrganizacion(sessionStorage.getItem(environment.codigoOrganizacion),
-      environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end'])).subscribe((data: any) => {
-      debugger;
-      this.createTable(data);
-      this.cargando = false;
-    }, (error: any)=> {
-       this.cargando = false;
-      Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
+    if (this.range.value['start']!= null && this.range.value['end']!=null){
+      this.cargando = true;
+      this.documentoService.findArchivados1ByOrganizacion(sessionStorage.getItem(environment.codigoOrganizacion),
+        environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end'])).subscribe((data: any) => {
+        debugger;
+        this.createTable(data);
+        this.cargando = false;
+      }, (error: any)=> {
+         this.cargando = false;
+        Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
+      });
+    }else {
+      Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
+    }
+  }
+
+  viewTimeline(vidDocumento: any){
+    const dialogRef = this.dialog.open(TimelineComponent, {
+      width: '60%',
+      height: '95%',
+      data: vidDocumento,
     });
   }
 

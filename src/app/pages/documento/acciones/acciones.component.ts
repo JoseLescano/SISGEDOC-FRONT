@@ -11,6 +11,7 @@ import { DecretoService } from 'src/app/_service/decreto.service';
 import { DecretoDTO } from 'src/app/_DTO/DecretoDTO';
 import { ViewDocumentoComponent } from '../view-documento/view-documento.component';
 import { SeguimientoComponent } from '../../report/seguimiento/seguimiento.component';
+import { TimelineComponent } from '../../report/timeline/timeline.component';
 
 @Component({
   selector: 'app-acciones',
@@ -58,6 +59,14 @@ export class AccionesComponent implements OnInit {
     }, (error:any) => {
       this.errorPDF = true;
       Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR PDF!`, 'warning');
+    });
+  }
+
+  viewGrafica(vidDocumento: any){
+    const dialogRef = this.dialog.open(TimelineComponent, {
+      width: '60%',
+      height: '95%',
+      data: vidDocumento,
     });
   }
 

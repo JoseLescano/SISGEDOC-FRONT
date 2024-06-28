@@ -18,15 +18,15 @@ export class JwtInterceptor implements HttpInterceptor {
       }else {
         const decodedToken = helper.decodeToken(token);
         const username = decodedToken.sub;
-          const isApiUrl = request.url.startsWith(environment.HOST);
-          if (!helper.isTokenExpired(token) && isApiUrl) {
-              request = request.clone({
-                  setHeaders: {
-                      Authorization: `Bearer ${token}`
-                  }
-              });
-          }
-          return next.handle(request);
+        const isApiUrl = request.url.startsWith(environment.HOST);
+        if (!helper.isTokenExpired(token) && isApiUrl) {
+            request = request.clone({
+                setHeaders: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+        }
+        return next.handle(request);
       }
 
 

@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ViewDocumentoComponent } from '../view-documento/view-documento.component';
 import {MatPaginator} from '@angular/material/paginator';
 import { SeguimientoComponent } from '../../report/seguimiento/seguimiento.component';
+import { TimelineComponent } from '../../report/timeline/timeline.component';
 
 @Component({
   selector: 'app-parte-diario',
@@ -41,6 +42,14 @@ export class ParteDiarioComponent implements OnInit, AfterViewInit {
     this.dataSource = new MatTableDataSource(documentos);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  viewTimeline(vidDocumento: any){
+    const dialogRef = this.dialog.open(TimelineComponent, {
+      width: '60%',
+      height: '95%',
+      data: vidDocumento,
+    });
   }
 
   applyFilter(event: Event) {

@@ -32,10 +32,11 @@ import { IsLoggedInGuard } from '../auth/guards/is-logged-in.guard';
 import { RespuestaComponent } from './documento/respuesta/respuesta.component';
 import { Not403Component } from './not403/not403.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { ViewElevadosComponent } from './documento/view-elevados/view-elevados.component';
 
 const routes: Routes = [
 
-  { path: '', redirectTo: 'perfiles', pathMatch:'full' },
+   { path: '', redirectTo: 'dashboard', pathMatch:'full' },
   // { path:'', redirectTo: environment.rol=='002' || environment.rol=='000'? 'pendientes': 'recibir-documento', pathMatch:'full' },
   { path:'pendientes', component:PendienteComponent, canActivate: [IsLoggedInGuard]},
   { path:'dashboard', component:DashboardComponent},
@@ -47,7 +48,7 @@ const routes: Routes = [
   { path: 'derivar/:codigoDocumento', component: RegistrarDerivacionComponent },
   { path: 'crear-documento', component: CrearDocumentoComponent, canActivate: [IsLoggedInGuard] },
   { path: 'resetear-authentificacion', component: DobleAutentificacionComponent, canActivate: [IsLoggedInGuard] },
-  { path: 'buscar-documento/:tipoReporte', component: BuscarDocumentoComponent },
+  { path: 'buscar-documento', component: BuscarDocumentoComponent },
   { path: 'recibir-documento', component: RecibirComponent, canActivate: [IsLoggedInGuard] },
   { path: 'registrar-documento', component: RegistrarMPComponent },
   { path: 'envio-externo', component: EnvioExternoComponent },
@@ -58,6 +59,7 @@ const routes: Routes = [
   { path: 'list-archivados', component: ViewComponent, canActivate: [IsLoggedInGuard] },
   { path: 'list-remitidos', component: ViewRemitidosComponent, canActivate: [IsLoggedInGuard] },
   { path: 'list-decretados', component: ViewDecretadoComponent, canActivate: [IsLoggedInGuard] },
+  { path: 'list-elevados', component: ViewElevadosComponent, canActivate: [IsLoggedInGuard] },
   { path: 'report-documento', component: ReporteDocumentoComponent, canActivate: [IsLoggedInGuard] },
   { path: 'recojo-op', component: ReporteRecojoOPComponent, canActivate: [IsLoggedInGuard] },
   { path: 'registroCorrespondencia', component: RegistroCorrespondenciaComponent, canActivate: [IsLoggedInGuard] },

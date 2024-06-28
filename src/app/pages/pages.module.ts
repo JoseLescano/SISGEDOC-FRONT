@@ -45,6 +45,8 @@ import { SeguimientoComponent } from './report/seguimiento/seguimiento.component
 import { Not403Component } from './not403/not403.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { SustentacionComponent } from './documento/archivar/sustentacion/sustentacion.component';
+import { ViewElevadosComponent } from './documento/view-elevados/view-elevados.component';
+import { TimelineComponent } from './report/timeline/timeline.component';
 
 @NgModule({
   imports: [
@@ -98,6 +100,8 @@ import { SustentacionComponent } from './documento/archivar/sustentacion/sustent
     Not403Component,
     PageNotFoundComponent,
     SustentacionComponent,
+    ViewElevadosComponent,
+    TimelineComponent,
   ],
    exports:[
 

@@ -28,11 +28,13 @@ export class FormComponent implements OnInit {
   url_pdf : any;
   cargando : boolean = false;
   idDocumento: number;
-  cambioPDF : boolean = false;
+  cambioPDF : boolean = true;
 
   mostrarRespuesta: boolean = false;
   mostrarDistribuir: boolean = false;
   organizacionLogueada: string = "";
+  existeWord : number = 0;
+  descargo:boolean = false;
 
   constructor(
     private documentoService:DocumentoService,
@@ -49,15 +51,22 @@ export class FormComponent implements OnInit {
     this.documentoService.findById(this.idDocumento).pipe(switchMap((response:any)=> {
       this.documento = response;
       this.organizacionLogueada = sessionStorage.getItem(environment.codigoOrganizacion);
+      debugger;
+      this.documentoService.existByDocumento(this.idDocumento).subscribe((response: any )=> {
+        debugger;
+        this.existeWord = response;
+      });
       return this.documentoService.findRespuestaByVidParent(this.documento.codigo);
       })).subscribe((responseDocumentoPadre: any)=>{
       if (responseDocumentoPadre!=null){
+        debugger;
         this.documentoRespuesta = responseDocumentoPadre;
         this.mostrarRespuesta = true;
         if (this.documentoRespuesta.organizacionOrigen.codigoInterno==this.organizacionLogueada){
           this.mostrarDistribuir = true;
         }
         this.documentoService.viewPDF(this.documento.codigo).pipe(switchMap((viewDocumento:any)=> {
+          debugger;
           this.crearDocumento(viewDocumento.data, 'documentoReferencia');
           return this.documentoService.viewPDF(this.documentoRespuesta.codigo);
         })).subscribe((responseRespuesta:any)=> {
@@ -68,21 +77,32 @@ export class FormComponent implements OnInit {
           Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR PDF!`, 'warning');
         });
       } else {
+        debugger;
         if (this.documento.organizacionOrigen.codigoInterno==this.organizacionLogueada){
           this.mostrarDistribuir = true;
           this.mostrarRespuesta = true;
-          this.documentoService.viewPDF(this.documento.codigo).subscribe((response:any)=> {
-            this.crearDocumento(response.data, 'documentoRespuesta');
-          }, (error:any) => {
-            this.errorPDF = true;
-            this.cargando = false;
-            Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR PDF!`, 'warning');
-          });
         }
+        this.documentoService.viewPDF(this.documento.codigo).subscribe((response:any)=> {
+          debugger;
+          this.crearDocumento(response.data, 'documentoRespuesta');
+        }, (error:any) => {
+          this.errorPDF = true;
+          this.cargando = false;
+          Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR PDF!`, 'warning');
+        });
       }
     });
+  }
 
-
+  descargarWordDocumento(){
+    this.documentoService.downloadWord(this.idDocumento).subscribe({
+      next : (response:any)=> {
+        this.downloadWord(response);
+        this.descargo = true;
+      }, error : (err)=> {
+        Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE PARA DESCARGAR DOCUMENTO WORD', 'info')
+      }
+    })
   }
 
   // getIdDocumento(){
@@ -109,26 +129,6 @@ export class FormComponent implements OnInit {
       Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR ANEXOS!`, 'warning');
     });
   }
-
-  // viewDocumentoRespuesta(){
-  //   this.documentoService.findRespuestaByVidParent(this.documento.codigo).pipe(switchMap((responsePadre: any)=> {
-  //     debugger;
-  //     if (responsePadre != null){
-  //       this.documentoRespuesta = responsePadre;
-  //       this.mostrarRespuesta = true;
-  //       this.mostrarDistribuir=true;
-  //     }else {
-  //       this.mostrarRespuesta = false;
-  //       this.mostrarDistribuir=false;
-  //     }
-  //     return this.documentoService.viewPDF(responsePadre.codigo);
-  //   })).subscribe((response:any)=> {
-  //     if (this.mostrarRespuesta)
-  //       this.crearDocumento(response.data,'documentoRespuesta');
-  //   });
-
-
-  // }
 
   crearDocumento(resp: any, iframeId: string) {
     debugger;
@@ -273,7 +273,7 @@ export class FormComponent implements OnInit {
           this.decretoService.elevarDocumento(
             this.documento.codigo,
             sessionStorage.getItem(environment.codigoOrganizacion),
-            this.cambioPDF?this.selectedFiles:'undefined')
+            this.cambioPDF?this.selectedFiles:null)
           .subscribe((response:any)=> {
             if (response.httpStatus=='CREATED'){
               Swal.fire('DOCUMENTO ELEVADO', response.message, 'info');
@@ -289,7 +289,7 @@ export class FormComponent implements OnInit {
           this.decretoService.elevarDocumento(
             this.documento.codigo,
             this.organizacionLogueada,
-            this.cambioPDF?this.selectedFiles:'undefined',
+            this.cambioPDF?this.selectedFiles[0]:null,
             this.documentoRespuesta.codigo )
           .subscribe((response:any)=> {
             debugger;
@@ -309,7 +309,6 @@ export class FormComponent implements OnInit {
   }
 
   distribuir(){
-    debugger;
     Swal.fire({
       title: "¿ESTÁS SEGURO?",
       text: "EL DOCUMENTO SERÁ DISTRIBUIDO, ¿DESEAS CONTINUAR?",
@@ -376,13 +375,85 @@ export class FormComponent implements OnInit {
   }
 
   updateIframeWithKeyDigitalGeneral(inNameFile: any) {
-    debugger;
     this.cambioPDF = true;
     this.documentoService
       .getFileDocumentKeyDigital(inNameFile)
       .subscribe((resp:any) => {
         this.crearDocumento(resp,'documentoRespuesta');
       });
-    }
+  }
+
+  get nativeDocument(): any {
+    return document;
+  }
+
+  eventClick() {
+    this.nativeDocument.getElementById('updateWord').click();
+  }
+
+  seleccionarDocumento(event: any): void {
+    this.selectedFiles = null;
+    const fileTemp = event.target.files[0];
+    const fileType = fileTemp.type;
+    if (fileType !== 'application/pdf' && fileType !== 'application/msword'
+        && fileType !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+        event.target.value = ''; // Borra la selección del archivo
+        this.selectedFiles=null;
+        Swal.fire('Lo sentimos', `Debe de seleccionar un documento PDF ó WORD`, 'info');
+    } else{
+        if(event.target.files.length>0){
+          this.selectedFiles = event.target.files;
+          this.url_pdf = this.selectedFiles[0].name;
+          if (this.selectedFiles[0].type == 'application/pdf') {
+            this.fileInIframe(this.selectedFiles[0], 'documentoRespuesta');
+            this.cargando = false;
+          }else {
+            this.cargando = true;
+            this.documentoService
+            .convertFileToPDF(this.selectedFiles.item(0))
+            .subscribe((resp: any) => {
+              this.crearDocumento(resp, 'documentoRespuesta');
+              this.cambioPDF = true;
+              this.cargando = false;
+            }, error => {
+              this.cargando = false;
+              Swal.fire('Lo sentimos', 'Se presento un inconveniente al convertir Word a PDF', 'info');
+            });
+          }
+        }
+      }
+  }
+
+  updateDocumento(){
+    this.documentoService
+      .convertFileToPDF(this.selectedFiles.item(0))
+      .subscribe((resp: any) => {
+        let byteArray = new Uint8Array(atob(resp[0]).split('').map((char) => char.charCodeAt(0)));
+        let file = new Blob([byteArray], { type: 'application/pdf' });
+        var rf_file = new File([file], URL.createObjectURL(file), {
+          type: 'application/pdf',
+        });
+        let list = new DataTransfer();
+        list.items.add(rf_file);
+        this.selectedFiles = list.files;
+        this.url_pdf = this.selectedFiles[0].name;
+        this.cargando = false;
+        this.convertirArchivoABase64(this.selectedFiles.item(0));
+        this.cambioPDF = true;
+      }, error => {
+        this.cargando = false;
+        Swal.fire('Lo sentimos', 'Se presento un inconveniente al convertir Word a PDF', 'info');
+      });
+  }
+
+  fileInIframe(file:any,idFrame:any){
+    let fileURL = URL.createObjectURL(file);
+    this.url_pdf = fileURL;
+    let iframe: any = document.getElementById(''+idFrame) as HTMLIFrameElement;
+    iframe.contentWindow.location.replace(fileURL);
+  }
+
+
+
 
 }

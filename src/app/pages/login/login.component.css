@@ -12,10 +12,10 @@ body {
 
 }
 .box {
-  box-shadow: 0 2px 5px rgb(255, 255, 255);
-  background-color: transparent;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 1);
+  background-color: rgba(13, 58, 16, 0.95);
   width: 430px; /* Ancho personalizado */
-  height: 520px; /* Alto personalizado */
+  height: 460px; /* Alto personalizado */
   position: relative;
   top: 0;
   opacity: 1;
@@ -38,7 +38,7 @@ body {
   width: 100%;
 }
 .login-wrapper mat-card-header mat-card-title {
-  font-size: 40px;
+  font-size: 28px;
   margin: 0;
   color: #eeeeee;
   font-weight: bold;
@@ -92,7 +92,4 @@ body {
   justify-content: center; /* Centra horizontalmente el contenido */
   align-items: top; /* Centra verticalmente el contenido */
   height: 90px; /* Ajusta la altura según sea necesario */
-}
-.example-full-width input.mat-input {
-  height: 25px; /* Establece la altura a 25px */
 }

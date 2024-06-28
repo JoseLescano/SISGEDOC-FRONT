@@ -40,9 +40,7 @@ export class IsLoggedInGuard implements CanActivate {
       // 3) VERIFICAR SI TIENES EL ROL NECESARIO PARA ACCEDER  A ESE COMPONENTE 'PAGINA'
       let url = state.url;
       const decodedToken = helper.decodeToken(token);
-      const username = decodedToken.sub;
       return this.menuService.getMenuByRol(sessionStorage.getItem(environment.rol)).pipe(map((response:any)=>{
-        console.log(response.data)
         this.menuService.setMenuChange(response.data);
         let cont=0;
         for(let m of response.data){

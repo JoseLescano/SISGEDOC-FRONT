@@ -20,6 +20,7 @@ import { RECAPTCHA_SETTINGS, RECAPTCHA_V3_SITE_KEY, RecaptchaModule, RecaptchaSe
 import { environment } from 'src/environments/environment';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { MatInputModule } from '@angular/material/input';
 
 
 export function tokenGetter() {
@@ -42,9 +43,10 @@ export function tokenGetter() {
     FormsModule,
     PagesModule,
     OverlayModule,
-    RecaptchaModule,    
+    RecaptchaModule,
     RecaptchaV3Module,
     PagesRoutingModule,
+    MatInputModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

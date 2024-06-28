@@ -13,7 +13,7 @@
   <div class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
       <mat-card class="box">
         <mat-card-header>
-          <mat-card-title>SISTEMA DE GESTIÓN DOCUMENTARIA DEL EJÉRCITO</mat-card-title>
+          <mat-card-title>SISTEMA GESTIÓN DOCUMENTARIO DEL EJÉRCITO - EP</mat-card-title>
         </mat-card-header>
         <br>
         <form class="form-group" [formGroup]="_formulario" (ngSubmit)="login()" #loginForm="ngForm">
@@ -37,3 +37,6 @@
       </mat-card>
     </div>
 </body>
+
+<mat-card *ngIf="message">{{message}}</mat-card>
+<mat-card *ngIf="error">{{error}}</mat-card>

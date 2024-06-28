@@ -1,24 +1,24 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Documento } from 'src/app/_model/documento.model';
 import { DocumentoService } from 'src/app/_service/documento.service';
+import { ExcelService } from 'src/app/_service/excel.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
-import { ViewDocumentoComponent } from '../view-documento/view-documento.component';
 import { SeguimientoComponent } from '../../report/seguimiento/seguimiento.component';
-import { FormControl, FormGroup } from '@angular/forms';
-import { ExcelService } from 'src/app/_service/excel.service';
+import { ViewDocumentoComponent } from '../view-documento/view-documento.component';
 import { TimelineComponent } from '../../report/timeline/timeline.component';
 
 @Component({
-  selector: 'app-view-decretado',
-  templateUrl: './view-decretado.component.html',
-  styleUrls: ['./view-decretado.component.css']
+  selector: 'app-view-elevados',
+  templateUrl: './view-elevados.component.html',
+  styleUrls: ['./view-elevados.component.css']
 })
-export class ViewDecretadoComponent implements OnInit, AfterViewInit {
+export class ViewElevadosComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'Decretado a.', 'Acciones'];
   dataSource: MatTableDataSource<Documento>;
@@ -39,7 +39,7 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.cargando = true;
-    this.documentoService.findDecretados1(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any)=> {
+    this.documentoService.findElevados(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any)=> {
       debugger;
       this.createTable(data);
       this.cargando = false;
@@ -49,18 +49,10 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  viewTimeline(vidDocumento: any){
-    const dialogRef = this.dialog.open(TimelineComponent, {
-      width: '60%',
-      height: '95%',
-      data: vidDocumento,
-    });
-  }
-
   buscarFechas(){
     if (this.range.value['start']!= null && this.range.value['end']!=null){
       this.cargando = true;
-      this.documentoService.findDecretados1(sessionStorage.getItem(environment.codigoOrganizacion),
+      this.documentoService.findElevados(sessionStorage.getItem(environment.codigoOrganizacion),
         environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end'])).subscribe((data: any) => {
         debugger;
         this.createTable(data);
@@ -72,6 +64,14 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
     }else {
       Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
     }
+  }
+
+  viewTimeline(vidDocumento: any){
+    const dialogRef = this.dialog.open(TimelineComponent, {
+      width: '60%',
+      height: '95%',
+      data: vidDocumento,
+    });
   }
 
   exportTable() {

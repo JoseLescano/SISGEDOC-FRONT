@@ -1,56 +1,36 @@
 <div class="row">
-  <div class="col-sm-12 col-md-2">
-    <div class="row">
-      <mat-card class="m-2 " style="border-radius: 10px;">
-        <mat-card-header class="title-form">
-            <mat-card-title >BUSQUEDA ENTRE FECHAS</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <mat-form-field appearance="fill" class="example-full-width mb-2">
-                <mat-label>Ingrese rango de fechas</mat-label>
-                <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
-                  <input matStartDate formControlName="start" placeholder="Start date">
-                  <input matEndDate formControlName="end" placeholder="End date">
-                </mat-date-range-input>
-                <mat-hint>MM-DD-YYYY – MM-DD-YYYY</mat-hint>
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-date-range-picker #picker></mat-date-range-picker>
+  <div class="col-2">
+    <mat-card class="m-2 " style="border-radius: 10px;">
+      <mat-card-header class="title-form">
+          <mat-card-title >BUSQUEDA ENTRE FECHAS</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+          <mat-form-field appearance="fill" class="example-full-width mb-2">
+              <mat-label>Ingrese rango de fechas</mat-label>
+              <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                <input matStartDate formControlName="start" placeholder="Start date">
+                <input matEndDate formControlName="end" placeholder="End date">
+              </mat-date-range-input>
+              <mat-hint>MM-DD-YYYY – MM-DD-YYYY</mat-hint>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
 
-                <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
-                <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
-            </mat-form-field>
+              <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+              <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+          </mat-form-field>
 
-            <button mat-flat-button color="primary" class=" mt-2 form-control" (click)="buscarFechas()" >
-              <i class="fas fa-search"></i> BUSCAR </button>
-            <mat-divider class="m-2" ></mat-divider>
-
-            <button mat-flat-button color="accent" class="mt-2 form-control" (click)="exportTable()">
-              <i class="fas fa-file-excel"></i> EXPORTAR A EXCEL</button>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="row">
-      <mat-card class="m-2 " style="border-radius: 10px;">
-        <mat-card-header class="title-form">
-            <mat-card-title >BUSQUEDA POR VALOR</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <mat-form-field appearance="fill" class="example-full-width mt-2">
-              <mat-label>Ingrese valor</mat-label>
-              <input matInput placeholder="Ingrese texto">
-            </mat-form-field>
-
-            <button mat-flat-button color="primary" class=" mt-2 form-control" (click)="buscarFechas()" >
-              <i class="fas fa-search"></i> BUSCAR </button>
-        </mat-card-content>
-      </mat-card>
-    </div>
-
+          <button mat-flat-button color="primary" class=" mt-2 form-control" (click)="buscarFechas()" >
+            <i class="fas fa-search"></i> BUSCAR </button>
+          <mat-divider class="m-2" ></mat-divider>
+          <button mat-flat-button color="accent" class="mt-2 form-control" (click)="exportTable()">
+            <i class="fas fa-file-excel"></i> EXPORTAR A EXCEL</button>
+      </mat-card-content>
+    </mat-card>
   </div>
-  <div class="col-sm-12 col-md-10">
+  <div class="col-10">
     <mat-card class="m-2" >
       <mat-card-header class="title-form">
-        <mat-card-title >LISTA DE DOCUMENTOS</mat-card-title>
+        <mat-card-title >LISTA DE DOCUMENTOS ELEVADOS</mat-card-title>
       </mat-card-header>
       <mat-form-field appearance="fill" class="example-full-width">
         <mat-label>Filtro</mat-label>
@@ -59,18 +39,6 @@
     <mat-card-content>
       <div class="mat-elevation-z8">
         <table mat-table [dataSource]="dataSource" matSort id="tbDecretados" >
-          <ng-container matColumnDef="Estado">
-            <th mat-header-cell mat-sort-header  *matHeaderCellDef> Estado </th>
-            <td mat-cell *matCellDef="let row" >
-              <span class="badge rounded-pill text-bg-primary " style="font-size: 12px;" *ngIf="row.estadoDocumento=='REMITIDO'" >REMITIDO</span>
-              <span class="badge rounded-pill text-bg-danger" style="font-size: 12px;" *ngIf="row.estadoDocumento=='FINALIZADO'" >FINALIZADO</span>
-              <span class="badge rounded-pill text-bg-success" style="font-size: 12px;" *ngIf="row.estadoDocumento=='DECRETADO'" >DECRETADO</span>
-              <span class="badge rounded-pill text-bg-dark" style="font-size: 12px;" *ngIf="row.estadoDocumento=='POR FIRMAR'">POR FIRMAR</span>
-              <span class="badge rounded-pill text-bg-warning" style="font-size: 12px;" *ngIf="row.estadoDocumento=='ARCHIVO'">ARCHIVADO</span>
-              <span class="badge rounded-pill text-bg-info" style="font-size: 12px;" *ngIf="row.estadoDocumento=='RECIBIDO'">RECIBIDO</span>
-              <span class="badge rounded-pill text-bg-secondary" style="font-size: 12px;" *ngIf="row.estadoDocumento=='POR REVISAR'">POR REVISAR</span>
-            </td>
-          </ng-container>
 
           <ng-container matColumnDef="Nro">
             <th mat-header-cell mat-sort-header  *matHeaderCellDef> Nro. Registro </th>
@@ -143,7 +111,7 @@
       <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
     </mat-card-footer>
     </mat-card>
+
   </div>
 </div>
-
 
