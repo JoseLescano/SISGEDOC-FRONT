@@ -19,7 +19,7 @@ import { JwtInterceptor } from './auth/guards/JwtInterceptor';
 import { RECAPTCHA_SETTINGS, RECAPTCHA_V3_SITE_KEY, RecaptchaModule, RecaptchaSettings, RecaptchaV3Module } from 'ng-recaptcha';
 import { environment } from 'src/environments/environment';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
-import { OverlayModule } from '@angular/cdk/overlay';
+import { FullscreenOverlayContainer, OverlayContainer, OverlayModule } from '@angular/cdk/overlay';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { MatInputModule } from '@angular/material/input';
 
@@ -75,7 +75,8 @@ export function tokenGetter() {
     },
     {
       provide: LocationStrategy, useClass: HashLocationStrategy
-    }
+    },
+    {provide: OverlayContainer, useClass: FullscreenOverlayContainer}
   ],
 
   bootstrap: [AppComponent]

@@ -2,6 +2,11 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { CdkMenuModule } from '@angular/cdk/menu';
+import { MenuService } from 'src/app/_service/menu.service';
+import { Menu } from 'src/app/_model/menu';
+import { Perfil } from 'src/app/_model/perfil';
+import { PerfilService } from 'src/app/_service/perfil.service';
+
 
 interface SideNavToggle {
   screenWidth: number;
@@ -19,21 +24,32 @@ export class HeaderComponent implements OnInit {
   @Input() collapsed = false;
   @Input() screenWidth = 0;
   cargo : any = '';
+  showFiller = false;
+  perfiles: Perfil[];
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.checkCanShowSearchAsOverlay(window.innerWidth);
   }
-
   canShowSearchAsOverlay=false;
+
+  constructor(
+    private perfilService: PerfilService
+  ) { }
 
   ngOnInit(): void {
     this.checkCanShowSearchAsOverlay(window.innerWidth);
     this.cargo = sessionStorage.getItem(environment.cargoSeleccionado);
+    this.perfilService.findByUsuariLogueado().subscribe({
+      next: (response:Perfil[])=> {
+        this.perfiles = response;
+      }, error : (err: any) => {
+
+      }
+    })
   }
 
-  constructor(
-  ) { }
+  
 
   getHeadClass(): string {
     let styleClass = '';
