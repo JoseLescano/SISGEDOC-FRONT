@@ -4,13 +4,13 @@
     <mat-card-title >REGISTRAR NUEVO DOCUMENTO</mat-card-title>
   </mat-card-header>
     <mat-card-content>
-      
+
       <mat-stepper #stepper >
         <mat-step [stepControl]="firstFormGroup" >
-            
+
                 <ng-template matStepLabel>Datos generales</ng-template>
-                <div class="row">         
-                  <input type="file" (change)="selectArchivoPrincipal($event)" style="display: none" id="btnFileUpload213"  accept="application/pdf" />         
+                <div class="row">
+                  <input type="file" (change)="selectArchivoPrincipal($event)" style="display: none" id="btnFileUpload213"  accept="application/pdf" />
                   <div class="col-sm-12 col-lg-6">
 
                     <div class="row mt-4">
@@ -89,21 +89,10 @@
                               <mat-error>*Campo requerido</mat-error>
                           </mat-form-field>
                       </div>
-
-                    <!-- <div class="col-6">
-                        <mat-form-field appearance="fill" class="example-full-width">
-                            <mat-label>FOLIO</mat-label>
-                            <input matInput type="text" formControlName="folio"   >
-                        </mat-form-field>
-                    </div> -->
                       <div class="col-md-12">
                           <mat-form-field appearance="fill" class="example-full-width">
                               <mat-label>ASUNTO</mat-label>
                               <textarea matInput rows="3" formControlName="asunto" ></textarea>
-                              <!-- <div *ngIf="form.get('asunto').errors && form.get('asunto').dirty" >
-                                <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('asunto').hasError('required')">* Campo requerido</small>
-                                <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('asunto').hasError('minlength')">** Min of 10 characters</small>
-                              </div> -->
                           </mat-form-field>
                       </div>
                       <div class="col-xs-12 col-sm-12 col-md-12"  >
@@ -121,8 +110,8 @@
                     <iframe id="documentoPrincipal" style="width: 100%; height: 100%; margin-top: 5px; border: 1px solid black; border-radius: 5px;"></iframe>
                   </div>
                 </div>
-                
-              
+
+
               <div class="mt-2">
                 <button mat-raised-button type="button" color="accent" matStepperNext>Siguiente</button>
               </div>
@@ -170,7 +159,7 @@
                     </div>
                   </div>
                 </div>
-              
+
               <div>
                 <button mat-raised-button color="warn" type="button"   matStepperPrevious>Regresar</button>
                 <button mat-raised-button  color="accent" type="button"  (click)="stepper.reset()">Limpiar</button>
@@ -178,8 +167,8 @@
             </form>
         </mat-step>
     </mat-stepper>
-    
-  
+
+
     </mat-card-content>
     <mat-card-footer>
       <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>

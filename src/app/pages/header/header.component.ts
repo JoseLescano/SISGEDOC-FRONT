@@ -2,12 +2,10 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { CdkMenuModule } from '@angular/cdk/menu';
-import { MenuService } from 'src/app/_service/menu.service';
-import { Menu } from 'src/app/_model/menu';
+
 import { Perfil } from 'src/app/_model/perfil';
 import { PerfilService } from 'src/app/_service/perfil.service';
-
-
+import { Router } from '@angular/router';
 interface SideNavToggle {
   screenWidth: number;
   collapsed: boolean;
@@ -24,9 +22,7 @@ export class HeaderComponent implements OnInit {
   @Input() collapsed = false;
   @Input() screenWidth = 0;
   cargo : any = '';
-  showFiller = false;
-  perfiles: Perfil[];
-
+  perfiles: Perfil[]=[];
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.checkCanShowSearchAsOverlay(window.innerWidth);
@@ -34,7 +30,8 @@ export class HeaderComponent implements OnInit {
   canShowSearchAsOverlay=false;
 
   constructor(
-    private perfilService: PerfilService
+    private perfilService: PerfilService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -48,8 +45,6 @@ export class HeaderComponent implements OnInit {
       }
     })
   }
-
-  
 
   getHeadClass(): string {
     let styleClass = '';
@@ -67,6 +62,17 @@ export class HeaderComponent implements OnInit {
     }else {
       this.canShowSearchAsOverlay = false;
     }
+  }
+
+  seleccionarPerfil(perfil: any){
+    sessionStorage.setItem(environment.rol, perfil.rol.codigo );
+    sessionStorage.setItem(environment.codigoOrganizacion, perfil.organizacion.codigoInterno);
+    sessionStorage.setItem(environment.cargoSeleccionado, perfil.nombre + ' - ' + perfil.organizacion.acronimo);
+
+    this.router.navigate(['/principal/dashboard']).then(() => {
+      // Do something
+     location.reload();
+    });
   }
 
 
