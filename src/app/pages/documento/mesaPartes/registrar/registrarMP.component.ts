@@ -9,6 +9,7 @@ import { ClaseService } from 'src/app/_service/clase.service';
 import { DocumentoService } from 'src/app/_service/documento.service';
 import { OrganizacionService } from 'src/app/_service/organizacion.service';
 import { PrioridadService } from 'src/app/_service/prioridad.service';
+import { ZipService } from 'src/app/_service/zip.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 
@@ -55,7 +56,8 @@ export class RegistrarMPComponent implements OnInit {
             private prioridadService: PrioridadService,
             private documentoService:DocumentoService,
             private router: Router,
-            private formBuilder: FormBuilder
+            private formBuilder: FormBuilder,
+            // private zipService: ZipService
   ) {
 
    }
@@ -87,7 +89,7 @@ export class RegistrarMPComponent implements OnInit {
       'fechaDocumento':  new FormControl('', [Validators.required]),
       'folio':  new FormControl('', [Validators.required]),
       'asunto':  new FormControl('', [Validators.required]),
-      
+
 
     });
     this.secondFormGroup = this.formBuilder.group({
@@ -116,7 +118,6 @@ export class RegistrarMPComponent implements OnInit {
   }
 
   operate(){
-
     if (this.firstFormGroup.valid){
       this.documentoar.tipoOrganizacion = this.firstFormGroup.value['tipoOrganizacion'];
       this.documentoar.organizacionOrigen = this.firstFormGroup.value['organizacionRemitente'];
@@ -146,8 +147,6 @@ export class RegistrarMPComponent implements OnInit {
     } else {
       Swal.fire('Lo sentimos', `Se presento un inconveniente!`, 'warning');
     }
-
-
   }
 
   get nativeDocument(): any {
@@ -203,11 +202,12 @@ export class RegistrarMPComponent implements OnInit {
 
   selectAnexos(event: any): void {
     let files = event.target.files;
-    for (let i = 0; i < files.length; i++) {
-      this.uploadedFiles.push(files[i]);
-    }
-    this.calculateTotalFileSize();
+     for (let i = 0; i < files.length; i++) {
+       this.uploadedFiles.push(files[i]);
+     }
+     this.calculateTotalFileSize();
   }
+
 
 
   getFileType(file: File): string {
