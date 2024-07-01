@@ -48,6 +48,9 @@ import { SustentacionComponent } from './documento/archivar/sustentacion/sustent
 import { ViewElevadosComponent } from './documento/view-elevados/view-elevados.component';
 import { TimelineComponent } from './report/timeline/timeline.component';
 
+import { OverlayModule } from '@angular/cdk/overlay';
+import { CdkMenuModule } from '@angular/cdk/menu';
+
 @NgModule({
   imports: [
     HttpClientModule,

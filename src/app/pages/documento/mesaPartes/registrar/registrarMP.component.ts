@@ -12,10 +12,6 @@ import { PrioridadService } from 'src/app/_service/prioridad.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 
-import {StepperOrientation} from '@angular/material/stepper';
-import {Observable, map} from 'rxjs';
-
-
 @Component({
   selector: 'app-registrarMP',
   templateUrl: './registrarMP.component.html',
@@ -34,7 +30,6 @@ export class RegistrarMPComponent implements OnInit {
     }
   ];
 
-  stepperOrientation: Observable<StepperOrientation>;
   firstFormGroup : FormGroup;
   secondFormGroup : FormGroup;
   cargando: boolean;
@@ -49,6 +44,9 @@ export class RegistrarMPComponent implements OnInit {
   organizacionesDestino:Organizacion[];
   copiasInformativas:Organizacion[];
   documentoar : DocumentoArchivoAnexo = new DocumentoArchivoAnexo();
+
+  uploadedFiles: any = [];
+  totalFileSize: number = 0;
 
   // =========================================================================================
 
@@ -89,6 +87,7 @@ export class RegistrarMPComponent implements OnInit {
       'fechaDocumento':  new FormControl('', [Validators.required]),
       'folio':  new FormControl('', [Validators.required]),
       'asunto':  new FormControl('', [Validators.required]),
+      
 
     });
     this.secondFormGroup = this.formBuilder.group({
@@ -132,16 +131,18 @@ export class RegistrarMPComponent implements OnInit {
       this.documentoar.destinos = this.secondFormGroup.value['destinos'];
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
       this.documentoar.organizacionPartida = sessionStorage.getItem(environment.codigoOrganizacion);
-      this.documentoService.recibirDocumentoMP(this.documentoar).subscribe((response:any) =>{
+      this.documentoar.anexos = this.uploadedFiles;
+      this.documentoService.recibirDocumentoMP(this.documentoar).subscribe({
+        next: (response:any) =>{
          if (response.httpStatus=='CREATED'){
           this.initForm();
           Swal.fire(`Se ha registrado documento`, response.message, 'info');
           this.router.navigate(['/principal/recibir-documento']);
          }
-      }, error => {
-        Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
+        }, error: (err: any) => {
+          Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
+        }
       });
-
     } else {
       Swal.fire('Lo sentimos', `Se presento un inconveniente!`, 'warning');
     }
@@ -198,6 +199,53 @@ export class RegistrarMPComponent implements OnInit {
           this.selectedFiles = list.files;
         }
       }
+  }
+
+  selectAnexos(event: any): void {
+    let files = event.target.files;
+    for (let i = 0; i < files.length; i++) {
+      this.uploadedFiles.push(files[i]);
     }
+    this.calculateTotalFileSize();
+  }
+
+
+  getFileType(file: File): string {
+    const fileType = file.type;
+    if (fileType === 'application/pdf') {
+      return 'PDF';
+    } else if (fileType === 'application/msword') {
+      return 'DOC';
+    } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      return 'DOCX';
+    }else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      return 'xlsx';
+    }
+     else {
+      return 'Desconocido';
+    }
+  }
+
+  removeFile(file: File): void {
+    const index = this.uploadedFiles.indexOf(file);
+    if (index > -1) {
+      this.uploadedFiles.splice(index, 1);
+    }
+    this.calculateTotalFileSize();
+  }
+
+  getFileSize(size: number): string {
+    if (size < 1024) {
+      return size + ' B';
+    } else if (size < 1048576) {
+      return (size / 1024).toFixed(2) + ' KB';
+    } else {
+      return (size / 1048576).toFixed(2) + ' MB';
+    }
+  }
+
+  calculateTotalFileSize(): void {
+    this.totalFileSize = this.uploadedFiles.reduce((acc, file) => acc + file.size, 0);
+  }
 
 }

@@ -1,7 +1,7 @@
 
 import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { environment } from 'src/environments/environment';
-
+import { CdkMenuModule } from '@angular/cdk/menu';
 
 interface SideNavToggle {
   screenWidth: number;
@@ -29,7 +29,6 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.checkCanShowSearchAsOverlay(window.innerWidth);
-    debugger;
     this.cargo = sessionStorage.getItem(environment.cargoSeleccionado);
   }
 

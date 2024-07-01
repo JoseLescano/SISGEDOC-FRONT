@@ -19,15 +19,20 @@ table {
 
 .mat-header-row
 {
-  background-color: black;
-
+  text-transform: uppercase;
+  align-items: center;
+  font-weight: 600;  
 }
-.mat-table {
-  border: 1px solid rgba(0, 0, 0, .87);
+table th {
+  text-align: center;
+  align-content: center;
 }
 
-.mat-header-cell{
-  color: #fff;
+.btn-opcion{
+  width: 250px;
+  height: 60px;
+  margin-left: 5px;
+  size: 20px;
 }
 
 .title-form{

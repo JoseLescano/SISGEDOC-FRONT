@@ -3,33 +3,15 @@
     <mat-card-title >DECRETO DE DOCUMENTO</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <div class="row"  >
+    <!-- <div class="row"  >
       <div class="col-md-4">
         <mat-form-field class="example-full-width" appearance="fill">
           <mat-label>NUM.DE REGISTRO</mat-label>
           <input matInput disabled [(ngModel)]="idDocumento">
         </mat-form-field>
       </div>
-      <!-- <div class="col-md-4">
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>ORIGEN</mat-label>
-          <input matInput disabled value="DIRECCION DE PERSONAL DEL EJERCITO">
-        </mat-form-field>
-      </div>
-      <div class="col-md-4">
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>DOCUMENTO</mat-label>
-          <input matInput disabled value="OFICIO N° 152">
-        </mat-form-field>
-      </div>
-      <div class="col-md-12">
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>ASUNTO</mat-label>
-          <input matInput disabled value="ASUNTO DE PRUEBA">
-        </mat-form-field>
-      </div> -->
     </div>
-    <mat-divider></mat-divider>
+    <mat-divider></mat-divider> -->
 
     <div class="row mt-2">
       <div class="col-md-12 mt-2">
@@ -55,9 +37,6 @@
                     <mat-option>SELECCIONE</mat-option>
                     <ng-option *ngFor="let c of destinos" [value]="c" >{{c.acronimo}}</ng-option>
                 </ng-select>
-                  <!-- <div *ngIf="firstFormGroup.get('organizacionRemitente').errors && firstFormGroup.get('organizacionRemitente').dirty" >
-                    <mat-error *ngIf="firstFormGroup.get('organizacionRemitente').hasError('required')">* Campo requerido</mat-error>
-                  </div> -->
               </div>
               <div class="col-md-4" >
                 <mat-form-field appearance="fill" class="example-full-width">
@@ -83,9 +62,9 @@
               <div class="col-md-12">
                 <mat-label><strong style="margin-right: 5px; font-weight: 500;">LISTA DE ACCIONES</strong></mat-label>
 
-                <!--<div style="display: grid; grid-template-columns: auto auto auto; font-size: 15px; margin-left: 5px;">
+                <!-- <div style="display: grid; grid-template-columns: auto auto auto; font-size: 15px; margin-left: 5px;">
                   <ng-container  *ngFor="let item of acciones"   >
-                    <mat-checkbox     [value]="item.codigo"  (change)="onCheckboxChange(item.codigo, i)" formArrayName="acciones">
+                    <mat-checkbox     [value]="item.codigo"  (change)="onCheckboxChange(item.codigo, i)" formArrayName="acciones" style="font-size: 20px;">
                       {{ item.nombre }}
                     </mat-checkbox>
                   </ng-container>
@@ -97,9 +76,9 @@
                 <div style="display: grid; grid-template-columns: auto auto auto; margin-top: 5px;" >
                   <ng-container *ngFor="let accion of acciones;">
                     <label style="display: flex">
-                      <input type="checkbox"  style="position: relative;left: 0px; opacity: 1;"
+                      <input type="checkbox"  style="position: relative;left: 0px; opacity: 1; size: 20px;"
                         [value]="accion.codigo" name="group{{i+1 }}" />
-                        <span style="margin-left: 3px;margin-right: 6px; font-weight: 600; size: 20px;">
+                        <span style="margin-left: 3px;margin-right: 6px; font-weight: 400;  font-size: 18px;">
                           {{ accion.nombre | uppercase }}
                         </span>
                       </label>
@@ -110,10 +89,6 @@
                 <mat-form-field appearance="fill" class="example-full-width">
                   <mat-label>OBSERVACIONES</mat-label>
                   <textarea matInput rows="2" formControlName="observaciones" ></textarea>
-                  <!-- <div *ngIf="form.get('asunto').errors && form.get('asunto').dirty" >
-                    <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('asunto').hasError('required')">* Campo requerido</small>
-                    <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('asunto').hasError('minlength')">** Min of 10 characters</small>
-                  </div> -->
               </mat-form-field>
               </div>
             </div>
@@ -122,8 +97,8 @@
         </div>
       </div>
       <mat-card-actions align="end">
-        <button mat-raised-button color="primary" type="submit" [disabled]="formParent.invalid && ultimoDecreto!=null" >Guardar</button>
-        <button mat-raised-button color="warn" type="button" routerLink="/principal/pendientes" >Cancelar</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="formParent.invalid && ultimoDecreto!=null" class="btn-opcion" > GUARDAR </button>
+        <button mat-raised-button color="warn" type="button" routerLink="/principal/pendientes" class="btn-opcion" > CANCELAR </button>
       </mat-card-actions>
     </form>
 

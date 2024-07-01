@@ -1,11 +1,13 @@
+<form [formGroup]="firstFormGroup" (ngSubmit)="operate()" novalidate >
 <mat-card class="m-2">
   <mat-card-header class="title-form">
     <mat-card-title >REGISTRAR NUEVO DOCUMENTO</mat-card-title>
   </mat-card-header>
     <mat-card-content>
+      
       <mat-stepper #stepper >
         <mat-step [stepControl]="firstFormGroup" >
-            <form [formGroup]="firstFormGroup" (ngSubmit)="operate()" novalidate >
+            
                 <ng-template matStepLabel>Datos generales</ng-template>
                 <div class="row">         
                   <input type="file" (change)="selectArchivoPrincipal($event)" style="display: none" id="btnFileUpload213"  accept="application/pdf" />         
@@ -109,7 +111,7 @@
                           <mat-label>DOCUMENTO PRINCIPAL</mat-label>
                           <div class="form">
                               <i class="fas fa-cloud-upload-alt"></i>
-                              <p>Browse File to Upload</p>
+                              <p>Examinar para cargar archivo</p>
                           </div>
                         </div>
                       </div>
@@ -119,13 +121,10 @@
                     <iframe id="documentoPrincipal" style="width: 100%; height: 100%; margin-top: 5px; border: 1px solid black; border-radius: 5px;"></iframe>
                   </div>
                 </div>
-                <mat-card-actions align="end">
-                  <button  class="btn btn-outline-primary mr-2" type="submit" [disabled]="firstFormGroup.invalid">GUARDAR DOCUMENTO</button>
-                  <button class="btn btn-outline-danger mr-2" type="button" [routerLink]="['/principal/recibir-documento']" >CANCELAR </button>
-                </mat-card-actions>
-              </form>
+                
+              
               <div class="mt-2">
-                <button mat-raised-button color="accent" matStepperNext>Siguiente</button>
+                <button mat-raised-button type="button" color="accent" matStepperNext>Siguiente</button>
               </div>
         </mat-step>
         <mat-step [stepControl]="secondFormGroup"  >
@@ -146,18 +145,35 @@
                   </div>
                   <div class="col-xs-3 col-sm-6 col-md-12"  >
                     <div class="wrapper">
-                        <mat-label>ANEXOS</mat-label>
+                      <mat-label>ANEXOS (OPCIONAL)</mat-label>
                       <div class="form">
                           <i class="fas fa-cloud-upload-alt"></i>
-                          <p>Browse File to Upload</p>
+                          <p>Examinar para cargar archivo</p>
+                          <input type="file" (change)="selectAnexos($event)" id="anexos"
+                              multiple />
+                      </div>
+                      <div class="filewrapper" *ngIf="uploadedFiles.length > 0">
+                          <h3 class="uploaded">ANEXOS CARGADOS</h3>
+                          <div class="showfilebox" *ngFor="let file of uploadedFiles">
+                              <div class="left">
+                                  <span class="filetype">{{ getFileType(file) }}</span>
+                                  <h3>{{ file.name  + " - " + getFileSize(file.size) }}</h3>
+                              </div>
+                              <div class="right">
+                                  <span (click)="removeFile(file)">&#215;</span>
+                              </div>
+                          </div>
+                          <!-- <div class="total-size">
+                            <h3>Tamaño total: {{ getFileSize(totalFileSize) }}</h3>
+                          </div> -->
                       </div>
                     </div>
                   </div>
                 </div>
               
               <div>
-                <button mat-raised-button color="warn"  matStepperPrevious>Regresar</button>
-                <button mat-raised-button  color="accent" matStepperNext (click)="stepper.reset()">Limpiar</button>
+                <button mat-raised-button color="warn" type="button"   matStepperPrevious>Regresar</button>
+                <button mat-raised-button  color="accent" type="button"  (click)="stepper.reset()">Limpiar</button>
               </div>
             </form>
         </mat-step>
@@ -168,4 +184,9 @@
     <mat-card-footer>
       <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
     </mat-card-footer>
+    <mat-card-actions align="end">
+      <button mat-raised-button color="primary"  class="btn-opcion" type="submit" [disabled]="firstFormGroup.invalid">GUARDAR DOCUMENTO</button>
+      <button mat-raised-button color="warn" class="btn-opcion" type="button" [routerLink]="['/principal/recibir-documento']" >CANCELAR </button>
+    </mat-card-actions>
 </mat-card>
+</form>

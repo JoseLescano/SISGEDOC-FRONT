@@ -50,16 +50,20 @@
                 <div class="example-button-row">
                   <div class="example-flex-container">
                     <div class="example-button-container">
-                      <button mat-mini-fab color="primary" class="mr-2"  (click)="verDocumento(row)" matTooltip="Ver documento">
+                      <button mat-mini-fab color="primary" class="mr-2"  (click)="verDocumento(row)" 
+                        data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver documento">
                         <i class="far fa-file-pdf"  ></i>
                       </button>
-                      <button mat-mini-fab color="accent" (click)="viewSeguimiento(row.codigo)" matTooltip="Ver seguimiento">
+                      <button mat-mini-fab color="accent" (click)="viewSeguimiento(row.codigo)" 
+                        data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver trazabilidad">
                         <i class="fas fa-info-circle" ></i>
                       </button>
-                      <button mat-mini-fab color="accent" (click)="viewTimeline(row.codigo)" matTooltip="Ver linea de tiempo">
+                      <button mat-mini-fab color="accent" (click)="viewTimeline(row.codigo)"    
+                        data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver linea de tiempo">
                         <i class="fas fa-tasks"></i>
                       </button>
-                      <button mat-mini-fab color="warn" [routerLink]="['/principal/form', row.codigo]" matTooltip="Distribuir/Elevar documento">
+                      <button mat-mini-fab color="warn" [routerLink]="['/principal/form', row.codigo]" 
+                        data-bs-toggle="tooltip" data-bs-placement="bottom" title="Firmar/Elevar documento">
                         <i class="fas fa-signature" ></i>
                       </button>
                     </div>

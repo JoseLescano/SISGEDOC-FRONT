@@ -95,6 +95,7 @@ export class DocumentoService  extends GenericService<Documento> {
   }
 
   recibirDocumentoMP(documento: any){
+    debugger;
     let formData:FormData = new FormData();
     formData.append('tipoOrganizacion', documento.tipoOrganizacion);
     formData.append('organizacionOrigen', documento.organizacionOrigen);
