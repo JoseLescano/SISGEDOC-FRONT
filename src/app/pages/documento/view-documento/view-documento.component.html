@@ -31,7 +31,7 @@
           <mat-list-option *ngFor="let item of anexos" (click)="descargarAnexo(item)">
             <mat-icon mat-list-icon>folder</mat-icon>
             <div mat-line>{{item.url}}</div>
-            <div mat-line> {{item.fechaCreacion| date}} </div>
+            <div mat-line> {{item.fechaCreacion| date : 'dd MMM YYYY'}} </div>
           </mat-list-option>
         </mat-selection-list>
       </div>

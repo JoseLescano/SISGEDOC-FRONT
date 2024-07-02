@@ -131,7 +131,7 @@ export class RegistrarMPComponent implements OnInit {
       this.documentoar.asunto= this.firstFormGroup.value['asunto'];
       this.documentoar.destinos = this.secondFormGroup.value['destinos'];
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
-      this.documentoar.organizacionPartida = sessionStorage.getItem(environment.codigoOrganizacion);
+      this.documentoar.organizacionPartida = sessionStorage.getItem(environment.codigoOrganizacion);  
       this.documentoar.anexos = this.uploadedFiles;
       this.documentoService.recibirDocumentoMP(this.documentoar).subscribe({
         next: (response:any) =>{

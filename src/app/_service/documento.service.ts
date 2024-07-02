@@ -110,12 +110,16 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('destinos', documento.destinos);
     formData.append('copiasInformativas', documento.copiasInformativas);
     formData.append('archivoPrincipal', documento.archivoPrincipal);
-    formData.append('anexo', documento.anexos);
+    documento.anexos.forEach(file => {
+      formData.append('anexo', file);
+    });
+    
     formData.append('organizacionPartida', documento.organizacionPartida);
     return this.http.post(`${environment.HOST}documentos/recibirDocumentoMP`, formData);
   }
 
   envioExterno(documento: any){
+    debugger;
     let formData:FormData = new FormData();
     formData.append('clase', documento.clase);
     formData.append('nroOrden', documento.nroOrden);
@@ -128,7 +132,9 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('destinos', documento.destinos);
     formData.append('copiasInformativas', documento.copiasInformativas);
     formData.append('archivoPrincipal', documento.archivoPrincipal);
-    formData.append('anexo', documento.anexos);
+    documento.anexos.forEach(file => {
+      formData.append('anexo', file);
+    });
     formData.append('organizacionRemitente', documento.organizacionOrigen);
     return this.http.post(`${environment.HOST}documentos/envioExterno`, formData);
   }

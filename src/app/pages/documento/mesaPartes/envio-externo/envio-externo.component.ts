@@ -90,7 +90,7 @@ export class EnvioExternoComponent implements OnInit {
       this.documentoar.asunto= this.firstFormGroup.value['asunto'];
       this.documentoar.organizacionOrigen = sessionStorage.getItem(environment.codigoOrganizacion);
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
-
+      this.documentoar.anexos = this.uploadedFiles;
       this.documentoService.envioExterno(this.documentoar).subscribe((response:any) =>{
       if (response.httpStatus=='CREATED'){
         this.cargando = false;
