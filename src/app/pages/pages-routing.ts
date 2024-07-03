@@ -63,7 +63,7 @@ const routes: Routes = [
   { path: 'report-documento', component: ReporteDocumentoComponent, canActivate: [IsLoggedInGuard] },
   { path: 'recojo-op', component: ReporteRecojoOPComponent, canActivate: [IsLoggedInGuard] },
   { path: 'registroCorrespondencia', component: RegistroCorrespondenciaComponent, canActivate: [IsLoggedInGuard] },
-  { path: 'list-correspondencia', component: ListCorrespondenciaComponent, canActivate: [IsLoggedInGuard] },
+  { path: 'list-correspondencia', component: ListCorrespondenciaComponent },
   { path: 'entregarCorrespondencia', component: EntregarCorrespondenciaComponent, canActivate: [IsLoggedInGuard] },
   { path: 'parte-diario', component: ParteDiarioComponent, canActivate: [IsLoggedInGuard] },
   { path: 'form/:codigoDocumento', component: FormComponent  },

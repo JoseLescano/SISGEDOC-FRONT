@@ -33,29 +33,25 @@ export class ValidarRecojoComponent implements OnInit {
 
   validarCredenciales(){
     this.cargando = true;
-    /*
-    this.personaService.validarEntrega(this.usuario, this.password).subscribe((response:any)=>{
-      if(response){
-        Swal.fire('VALIDACIÓN CORRECTA', 'SE PROCEDERÁ A ENTREGAR CORRESPONDENCIA', 'success');
-      }else {
-        Swal.fire('LO SENTIMOS', 'VALIDACIÓN INCORRECTA', 'warning');
-      }
-    }, error=> {
-      Swal.fire('LO SENTIMOS', 'USUARIO Y/O CONTRASEÑA INCORRECTAS', 'warning');
-    });
-    */
     this.correspondenciaService.entregaCorrespondencia(
-      sessionStorage.getItem(environment.codigoOrganizacion),
-      'lvelaa', this.usuario, this.password, this.data.lista).subscribe((response:any)=>{
-        if (response.data == 0){
-          Swal.fire('VALIDACIÓN CORRECTA', 'SE PROCEDERÁ A ENTREGAR CORRESPONDENCIA', 'success');
-        } else {
-          Swal.fire('LO SENTIMOS', response.message, 'warning');
+      sessionStorage.getItem(environment.codigoOrganizacion), 
+      this.usuario, this.password, 
+      this.data.lista).subscribe({
+        next : (response:any)=>{
+          if (response.data == 0){
+            this.cargando = false;
+            Swal.fire('VALIDACIÓN CORRECTA', 'SE PROCEDERÁ A ENTREGAR CORRESPONDENCIA', 'success');
+          } else {
+            this.cargando = false;
+            Swal.fire('LO SENTIMOS', response.message, 'warning');
+          }
+        }, 
+        error: (err: any) => {
+          this.cargando = false;
+          Swal.fire('LO SENTIMOS', "SE PRESENTO UN INCONVENIENTE", 'warning');
         }
-      },error => {
-        Swal.fire('LO SENTIMOS', "SE PRESENTO UN INCONVENIENTE", 'warning');
       });
-    this.cargando = false;
+    
   }
 
 }
