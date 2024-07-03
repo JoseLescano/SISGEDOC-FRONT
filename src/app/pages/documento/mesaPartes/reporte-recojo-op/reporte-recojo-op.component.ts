@@ -15,7 +15,7 @@ import Swal from 'sweetalert2';
 })
 export class ReporteRecojoOPComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['Nro', 'Asunto','Documento', 'Origen', 'Destino', 'Fecha Registro',  'Acciones'];
+  displayedColumns: string[] = ['Nro', 'Asunto','Documento', 'Origen', 'Destino', 'Fecha Registro'];
   dataSource: MatTableDataSource<Correspondencia>;
   cargando: boolean;
 
@@ -34,7 +34,7 @@ export class ReporteRecojoOPComponent implements OnInit, AfterViewInit {
         next: (response:any) => {
           this.createTable(response.data);
           this.cargando = false;
-        }, 
+        },
         error : (err: any) => {
           this.cargando = false;
           Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');

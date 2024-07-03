@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 import { SeguimientoComponent } from 'src/app/pages/report/seguimiento/seguimiento.component';
 import { ExcelService } from 'src/app/_service/excel.service';
+import { TimelineComponent } from 'src/app/pages/report/timeline/timeline.component';
 
 @Component({
   selector: 'app-reporte-documento',
@@ -22,6 +23,7 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['Nro', 'Asunto','Documento', 'Origen', 'Destino', 'FechaDoc',  'Acciones'];
   dataSource: MatTableDataSource<Documento>;
   cargando: boolean;
+  titulo: string = "";
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -73,39 +75,56 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
   }
 
   verDecretos(){
-    this.cargando = true;
-    this.documentoService.findDecretados(sessionStorage.getItem(environment.codigoOrganizacion),
-      environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end'])
-    ).subscribe((response:any)=>{
-      this.createTable(response);
-      this.cargando = false;
-
-    }, error => {
-      this.cargando = false;
-      Swal.fire(`LO SENTIMOS`, 'SE PRESENTO UN INCONVENIENTE CON EL REPORTE DE DOCUMENTOS', 'info');
-    });
+    if (this.range.value['start']!= null && this.range.value['end']!=null){
+      this.cargando = true;
+      this.titulo = "LISTA DE DOCUMENTOS DECRETOS"
+      this.documentoService.findDecretados(sessionStorage.getItem(environment.codigoOrganizacion),
+        environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end'])
+      ).subscribe(
+        {
+          next: (response:any)=> {
+            this.createTable(response);
+            this.cargando = false;
+          }, error : (err: any) => {
+            this.cargando = false;
+            Swal.fire(`LO SENTIMOS`, 'SE PRESENTO UN INCONVENIENTE CON EL REPORTE DE DOCUMENTOS', 'info');
+          }
+      });
+    } else {
+      Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
+    }
   }
 
   verEnviadosExterno(){
-    this.cargando = true;
-    this.documentoService.findEnviadosExternosMP(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>{
-      this.createTable(response);
-      this.cargando = false;
-    }, error => {
-      this.cargando = false;
-      Swal.fire(`LO SENTIMOS`, 'SE PRESENTO UN INCONVENIENTE CON EL REPORTE DE DOCUMENTOS', 'info');
-    });
+    if (this.range.value['start']!= null && this.range.value['end']!=null){
+      this.cargando = true;
+      this.titulo = "LISTA DE DOCUMENTOS ENVIADOS"
+      this.documentoService.findEnviadosExternosMP(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>{
+        this.createTable(response);
+        this.cargando = false;
+      }, error => {
+        this.cargando = false;
+        Swal.fire(`LO SENTIMOS`, 'SE PRESENTO UN INCONVENIENTE CON EL REPORTE DE DOCUMENTOS', 'info');
+      });
+    } else {
+      Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
+    }
   }
 
   verDocumentoRegistrados(){
-    this.cargando = true;
-    this.documentoService.findByOrganizacionDestino(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any)=> {
-      this.createTable(data);
-      this.cargando = false;
-    }, error=> {
-      this.cargando=false;
-      Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
-    });
+    if (this.range.value['start']!= null && this.range.value['end']!=null){
+      this.cargando = true;
+      this.titulo = "LISTA DE DOCUMENTOS REGISTRADOS"
+      this.documentoService.findByOrganizacionDestino(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any)=> {
+        this.createTable(data);
+        this.cargando = false;
+      }, error=> {
+        this.cargando=false;
+        Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
+      });
+    } else {
+      Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
+    }
   }
 
   viewSeguimiento(documentoSeleccionado?:any): void {
@@ -113,6 +132,14 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
       width: '60%',
       height: '95%',
       data: documentoSeleccionado,
+    });
+  }
+
+  viewTimeline(vidDocumento: any){
+    const dialogRef = this.dialog.open(TimelineComponent, {
+      width: '60%',
+      height: '95%',
+      data: vidDocumento,
     });
   }
 

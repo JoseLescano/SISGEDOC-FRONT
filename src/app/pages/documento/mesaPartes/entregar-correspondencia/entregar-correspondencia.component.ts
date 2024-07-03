@@ -27,6 +27,7 @@ export class EntregarCorrespondenciaComponent implements OnInit {
   form:FormGroup;
   lista:any;
 
+  destino : any;
   selection = new SelectionModel<Correspondencia>(true, []);
 
   constructor(
@@ -40,29 +41,21 @@ export class EntregarCorrespondenciaComponent implements OnInit {
     this.organizacionService.getWithCodigoCopere().subscribe((response:any)=>{
       this.remitentes = response.data as Organizacion[];
     });
-    this.initForm();
     this.cargando = false;
-  }
-
-  initForm(){
-    this.form = new FormGroup({
-      'destino': new FormControl('', [Validators.required]),
-      'lista-correspondencia': new FormControl([], [Validators.required])
-    })
-    //this.form.controls['lista-correspondencia'].setValue(this.selection.selected);
-    //selection
   }
 
   buscarCorrespondencia(idOrganizacion: any){
     this.cargando = true;
+    this.dataSource = new MatTableDataSource<Correspondencia>;
     this.correspondenciaService.listEntregarByOP(idOrganizacion).subscribe((response:any)=> {
-      if (response != null)
+      this.destino = idOrganizacion;
+      if (response != null){
+        this.cargando = false;
         this.createTable(response.data);
-      else {
-        this.form.reset();
+      } else {
+        this.cargando = false;
         Swal.fire('Sin resultados', 'No se encuentra correspondencia para unidad seleccionada', 'info');
       }
-      this.cargando = false;
     }, error => {
       Swal.fire('Lo sentimos', 'Se presento un inconveniente en la busqueda', 'info');
     });
@@ -99,18 +92,12 @@ export class EntregarCorrespondenciaComponent implements OnInit {
     this.dataSource = new MatTableDataSource(correspondencia);
   }
 
-  // ngAfterViewInit() {
-  //   this.dataSource.paginator = this.paginator;
-  //   this.dataSource.sort = this.sort;
-  // }
-
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   abrirValidarCredenciales(informacion:any): void {
-    debugger;
     const dialogRef = this.dialog.open(ValidarRecojoComponent,{
       width: '50%',
       data: informacion
@@ -119,9 +106,8 @@ export class EntregarCorrespondenciaComponent implements OnInit {
   }
 
   operate(){
-    debugger;
     let listaCorrespondenciaSeleccionada = this.selection.selected;
-    let destino = this.form.controls['destino'].value;
+    let destino = this.destino;
     let informacion = {
       lista: listaCorrespondenciaSeleccionada,
       destino: destino
@@ -129,6 +115,7 @@ export class EntregarCorrespondenciaComponent implements OnInit {
     if (listaCorrespondenciaSeleccionada.length==0 || listaCorrespondenciaSeleccionada==null){
       Swal.fire('Lo sentimos', 'DEBE SELECCIONAR CORRESPONDENCIA A ENTREGAR', 'warning');
     }else {
+      debugger;
       this.abrirValidarCredenciales(informacion);
       // Swal.fire('OPERACION REALIZADA', 'SE ENTREGO CORRESPONDENCIA!', 'success');
     }
