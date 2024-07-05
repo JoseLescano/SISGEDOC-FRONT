@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { AuthenticationResponse } from 'src/app/_model/authentication-response';
 import { VerificationRequest } from 'src/app/_model/verification-request';
@@ -108,7 +109,18 @@ debugger;
             this.cerrarDialogo.emit();
             if (response && response.access_token) {
               sessionStorage.setItem(environment.TOKEN_NAME, response.access_token);
-              this.router.navigate(['/perfiles']);
+              let token = sessionStorage.getItem(environment.TOKEN_NAME);
+              const helper = new JwtHelperService();
+              debugger;
+              const decodedToken = helper.decodeToken(token);
+              const username = decodedToken.sub;
+              const perfil = decodedToken.perfil;
+              sessionStorage.setItem(environment.rol, perfil.rol.codigo );
+              sessionStorage.setItem(environment.codigoOrganizacion, perfil.organizacion.codigoInterno);
+              sessionStorage.setItem(environment.cargoSeleccionado, perfil.nombre + " - " +  perfil.organizacion.acronimo);
+              debugger;
+              sessionStorage.setItem(environment.nombreOrganizacion, perfil.organizacion.acronimo);
+              this.router.navigate(['/principal/dashboard']);
               Swal.fire('Bienvenido al SISGEDO','', 'success');
             } else {
               console.error('No access_token in response');
