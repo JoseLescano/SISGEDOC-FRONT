@@ -286,4 +286,10 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/existByDocumento`, formData);
   }
 
+  findDecretadoForBarChart(codigoOrganizacion:any){
+    let formData:FormData = new FormData();
+    formData.append('codigoOrganizacion', codigoOrganizacion);
+    return this.http.post(`${environment.HOST}documentos/findDecretadoForBarChart`, formData);
+  }
+
 }

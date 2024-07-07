@@ -1,6 +1,7 @@
 <h1>Dashboard</h1>
 <h3>BIENVENIDO AL SISTEMA DE GESTIÓN DOCUMENTARIO - EP</h3>
-<div class="widget-container" style="cursor: pointer;">
+<div class="container loader" *ngIf="cargando"></div>
+<div class="widget-container " style="cursor: pointer;" *ngIf="!cargando">
     <div class="widget green" (click)="viewRemitidos()">
       <div class="icon">
         <i class="fas fa-upload"></i>
@@ -28,4 +29,19 @@
         <div class="bottom">PENDIENTES</div>
       </div>
     </div>
+    
   </div>
+
+<div class="row mt-5" >
+  <mat-card class="col-6" style="margin-right: 5px;">
+    <mat-card-header class="title-form">
+      <mat-card-title >GRAFICA DE DOCUMENTO DECRETADOS</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <canvas  id="canvas">{{ barChart }}</canvas>
+    </mat-card-content>
+  </mat-card>
+  
+  
+  
+</div>

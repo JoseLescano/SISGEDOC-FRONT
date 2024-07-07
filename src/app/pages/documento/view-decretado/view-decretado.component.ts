@@ -86,16 +86,14 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
   }
 
   createTable(documento: Documento[]){
     this.dataSource = new MatTableDataSource(documento);
+    setTimeout(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+    });
   }
   openDialog(documentoSeleccionado?:any): void {
     const dialogRef = this.dialog.open(ViewDocumentoComponent, {

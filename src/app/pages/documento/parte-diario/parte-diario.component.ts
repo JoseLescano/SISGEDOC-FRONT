@@ -33,15 +33,26 @@ export class ParteDiarioComponent implements OnInit, AfterViewInit {
               public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.documentoService.findParaParte(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>{
-      this.createTable(response);
+    this.cargando = true;
+    this.documentoService.findParaParte(sessionStorage.getItem(environment.codigoOrganizacion))
+    .subscribe({
+      next: (response:any)=>{
+        this.createTable(response);
+        this.cargando = false;
+      }, error: (err:any)=> {
+        this.cargando = false
+        Swal.fire('LO SENTIMOS','SE PRESENTO UN INCONVENIENTE', 'info');
+      }
     });
   }
 
   createTable(documentos: Documento[]): void {
+    
     this.dataSource = new MatTableDataSource(documentos);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
   }
 
   viewTimeline(vidDocumento: any){
@@ -61,8 +72,10 @@ export class ParteDiarioComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
   }
 
   verDocumento(documentoSeleccionado?:any): void {

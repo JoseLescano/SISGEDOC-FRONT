@@ -1,4 +1,7 @@
-<div class="row">
+<div class="container loader" *ngIf="cargando">
+  
+</div>
+<div class="row" *ngIf="!cargando">
   <div class="col-2">
     <mat-card class="m-2 " style="border-radius: 10px;">
       <mat-card-header class="title-form">
@@ -107,9 +110,9 @@
         <mat-paginator [pageSizeOptions]="[10, 15, 25, 100]"  aria-label="Select page of users"></mat-paginator>
       </div>
     </mat-card-content>
-    <mat-card-footer>
+    <!-- <mat-card-footer>
       <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
-    </mat-card-footer>
+    </mat-card-footer> -->
   </mat-card>
 
   </div>

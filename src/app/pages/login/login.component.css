@@ -12,8 +12,8 @@ body {
 
 }
 .box {
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 1);
-  background-color: rgba(13, 58, 16, 0.95);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+  background-color: #333;
   width: 430px; /* Ancho personalizado */
   height: 460px; /* Alto personalizado */
   position: relative;
@@ -21,7 +21,7 @@ body {
   opacity: 1;
   float: left;
   padding: 0px 10px 10px 10px;
-  border-radius: 10px;
+  border-radius: 30px;
   transform: scale(1);
   -webkit-transform: scale(1);
   -ms-transform: scale(1);
@@ -36,6 +36,16 @@ body {
 .login-wrapper .example-full-width,
 .login-wrapper .btn-block {
   width: 100%;
+}
+input{
+  background-color: #eee;
+  border: none;
+  margin: 8px 0;
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 8px;
+  width: 100%;
+  outline: none;
 }
 .login-wrapper mat-card-header mat-card-title {
   font-size: 28px;
@@ -59,6 +69,7 @@ body {
   font-size: 20px;
   border-radius: 10px;
   width: 100%;
+  text-transform: uppercase;
   background-color: green; /* Color verde */
   color: white; /* Letras blancas */
   border: 1px solid black; /* Borde negro */

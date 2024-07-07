@@ -48,19 +48,15 @@ export class CrearDocumentoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.cargando = true;
+    
     this.initForm();
-    this.organizacionService.findFirmantes(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>  {
-      this.firmantes = response.data
-    });
-    // this.firmanteFilter$ = this.firmanteControl.valueChanges.pipe(map(val => this.filterfirmantes(val)));
-    this.claseService.findForCrearDocumento().subscribe((response:any)=> this.clases = response.data );
-    this.cargando = false;
+    
   }
 
   // =======================================================================================================
 
   initForm(){
+    this.cargando = true;
     this.form = new FormGroup({
       'firmante': new FormControl('', [Validators.required]),
       'tipoDocumento': new FormControl('', [Validators.required]),
@@ -73,6 +69,12 @@ export class CrearDocumentoComponent implements OnInit {
 
     this.form.controls['nroCorrelativo'].disable();
 
+    this.organizacionService.findFirmantes(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>  {
+      this.firmantes = response.data
+    });
+    
+    this.claseService.findForCrearDocumento().subscribe((response:any)=> this.clases = response.data );
+    this.cargando = false;
   }
 
   findDestinatarios(){

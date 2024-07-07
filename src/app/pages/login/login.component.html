@@ -13,21 +13,17 @@
   <div class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
       <mat-card class="box">
         <mat-card-header>
-          <mat-card-title>SISTEMA GESTIÓN DOCUMENTARIO DEL EJÉRCITO - EP</mat-card-title>
+          <mat-card-title>SISTEMA DE GESTIÓN DOCUMENTARIO DEL EJÉRCITO - SISGEDO EP</mat-card-title>
         </mat-card-header>
         <br>
-        <form class="form-group" [formGroup]="_formulario" (ngSubmit)="login()" #loginForm="ngForm">
+        <form class="form-group" style="margin-top: 20px;" [formGroup]="_formulario" (ngSubmit)="login()" #loginForm="ngForm">
           <mat-card-content>
-            <mat-form-field class="example-full-width">
               <input matInput type="text" name="username" formControlName="username"
-                     placeholder="Usuario Chasqui" [(ngModel)]="username" class="username" (input)="convertirAMayusculas()" maxlength="60" />
-            </mat-form-field>
-            <mat-form-field class="example-full-width">
+                     placeholder="Usuario Chasqui" [(ngModel)]="username" class="username" (input)="convertirAMayusculas()" maxlength="60" />            
               <input matInput type="password" formControlName="password" name="password"
                      placeholder="Contraseña" [(ngModel)]="password" class="password" required minlength="8"
                      maxlength="30" />
-            </mat-form-field>
-            <button id="login" type="submit" class="custom-button">Iniciar Sesión
+            <button id="login" type="submit" class="custom-button" style="margin-top: 10px;">Iniciar Sesión
               <i class="fa fa-sign-in" aria-hidden="true"></i>
             </button>
           </mat-card-content>
@@ -38,5 +34,3 @@
     </div>
 </body>
 
-<mat-card *ngIf="message">{{message}}</mat-card>
-<mat-card *ngIf="error">{{error}}</mat-card>

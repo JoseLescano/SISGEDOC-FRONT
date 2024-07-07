@@ -1,6 +1,7 @@
 
 <!-- <div class="container mt-2"> -->
-  <mat-card class="m-2" >
+  <div class="container loader" *ngIf="cargando"></div>
+  <mat-card class="m-2" *ngIf="!cargando">
     <mat-card-header class="title-form">
       <mat-card-title >LISTA DE DOCUMENTOS PENDIENTES</mat-card-title>
     </mat-card-header>
@@ -10,7 +11,7 @@
     </mat-form-field>
   <mat-card-content>
     <div class="mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)">
+      <table mat-table [dataSource]="dataSource" matSort>
 
         <ng-container matColumnDef="Nro">
           <th mat-header-cell mat-sort-header  *matHeaderCellDef> Nro. Registro </th>
@@ -66,7 +67,7 @@
         </tr>
       </table>
 
-      <mat-paginator [pageSizeOptions]="[10, 15, 25, 100]"  
+      <mat-paginator [pageSizeOptions]="[ 10, 15, 25, 100]"  
         aria-label="Select page of users"></mat-paginator>
     </div>
   </mat-card-content>

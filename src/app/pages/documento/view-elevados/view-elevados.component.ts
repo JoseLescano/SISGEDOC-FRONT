@@ -94,8 +94,10 @@ export class ViewElevadosComponent implements OnInit, AfterViewInit {
 
   createTable(documento: Documento[]){
     this.dataSource = new MatTableDataSource(documento);
+    setTimeout(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+    });
   }
   openDialog(documentoSeleccionado?:any): void {
     const dialogRef = this.dialog.open(ViewDocumentoComponent, {

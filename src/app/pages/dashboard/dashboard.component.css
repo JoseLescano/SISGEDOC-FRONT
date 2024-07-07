@@ -1,5 +1,6 @@
 h1{
     color: #495057;
+    margin-top: 5px;
 }
 .widget-container {
     width:  100%;
@@ -8,7 +9,7 @@ h1{
     cursor: pointer;
     .widget {
       width: 500px;
-      height: 150px;
+      height: 120px;
       background-color: #fff;
       color: #fff;
       border-radius: 5px;
