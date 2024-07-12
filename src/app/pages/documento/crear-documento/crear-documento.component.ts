@@ -48,9 +48,9 @@ export class CrearDocumentoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    
+
     this.initForm();
-    
+
   }
 
   // =======================================================================================================
@@ -72,7 +72,7 @@ export class CrearDocumentoComponent implements OnInit {
     this.organizacionService.findFirmantes(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>  {
       this.firmantes = response.data
     });
-    
+
     this.claseService.findForCrearDocumento().subscribe((response:any)=> this.clases = response.data );
     this.cargando = false;
   }
@@ -170,7 +170,6 @@ export class CrearDocumentoComponent implements OnInit {
 
   generarPlantilla() {
     if (this.validarPlantilla()) {
-      this.cargando = true;
       this.getUltimoNumero().pipe(
         switchMap(() => {
           var tipoDocumento = this.form.get('tipoDocumento').value;
@@ -189,10 +188,8 @@ export class CrearDocumentoComponent implements OnInit {
       ).subscribe((response: any) => {
         if (response.httpStatus === 'CREATED') {
             this.downloadWord(response.data[0]);
-            this.cargando = false;
         }
       }, error => {
-        this.cargando = false;
         Swal.fire('Lo sentimos', 'Se presentó un inconveniente en la generación del Word', 'info');
       });
     }
@@ -259,25 +256,27 @@ export class CrearDocumentoComponent implements OnInit {
           if (this.selectedFiles[0].type == 'application/pdf') {
             this.convertirArchivoABase64(this.selectedFiles.item(0));
           }else {
-            this.cargando = true;
             this.documentoWordTempl = this.selectedFiles.item(0); // Guardo el documento word temp
             this.documentoService
             .convertFileToPDF(this.selectedFiles.item(0))
-            .subscribe((resp: any) => {
-              let byteArray = new Uint8Array(atob(resp[0]).split('').map((char) => char.charCodeAt(0)));
-              let file = new Blob([byteArray], { type: 'application/pdf' });
-              var rf_file = new File([file], URL.createObjectURL(file), {
-                type: 'application/pdf',
-              });
-              let list = new DataTransfer();
-              list.items.add(rf_file);
-              this.selectedFiles = list.files;
-              this.url_pdf = this.selectedFiles[0].name;
-              this.cargando = false;
-              this.convertirArchivoABase64(this.selectedFiles.item(0));
-            }, error => {
-              this.cargando = false;
-              Swal.fire('Lo sentimos', 'Se presento un inconveniente al convertir Word a PDF', 'info');
+            .subscribe( {
+              next: (resp: any) => {
+                this.cargando = true;
+                let byteArray = new Uint8Array(atob(resp[0]).split('').map((char) => char.charCodeAt(0)));
+                let file = new Blob([byteArray], { type: 'application/pdf' });
+                var rf_file = new File([file], URL.createObjectURL(file), {
+                  type: 'application/pdf',
+                });
+                let list = new DataTransfer();
+                list.items.add(rf_file);
+                this.selectedFiles = list.files;
+                this.url_pdf = this.selectedFiles[0].name;
+                this.cargando = false;
+                this.convertirArchivoABase64(this.selectedFiles.item(0));
+              } , error: (err: any) => {
+                this.cargando = false;
+                Swal.fire('Lo sentimos', 'Se presento un inconveniente al convertir Word a PDF', 'info');
+              }
             });
           }
         }

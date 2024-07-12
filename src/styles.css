@@ -1,6 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@ng-select/ng-select/themes/material.theme.css";
 @import '@angular/cdk/overlay-prebuilt.css';
+@import url('https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -12,20 +14,29 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
   width: 100%;
 }
 
+.permanent-marker-regular {
+  font-family: "Arvo", serif;
+  font-weight: 700;
+  font-style: normal;
+}
 
 table {
   width: 100%;
 }
 
+
+
 .mat-header-row
 {
   text-transform: uppercase;
   align-items: center;
-  font-weight: 600;  
+  font-weight: 400;
+
 }
 table th {
   text-align: center;
   align-content: center;
+  font-weight: 600;
 }
 
 .btn-opcion{
@@ -36,12 +47,13 @@ table th {
 }
 
 .title-form{
-  align-items: center;
-  place-content: center;
-  color: #675b45;
+  align-items: left;
+  place-content: left;
+  color: black;
   font-weight: bold;
-  text-decoration: underline;
   margin-bottom: 2px;
+  font-size: 8px;
+  margin-left: -5px;
 }
 
 

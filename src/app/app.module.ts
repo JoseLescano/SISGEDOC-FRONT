@@ -22,6 +22,7 @@ import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { FullscreenOverlayContainer, OverlayContainer, OverlayModule } from '@angular/cdk/overlay';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { MatInputModule } from '@angular/material/input';
+import { ErrorInterceptor } from './auth/guards/ErrorInterceptor';
 
 
 export function tokenGetter() {
@@ -71,7 +72,7 @@ export function tokenGetter() {
       useValue: environment.recaptcha.siteKeyV3,
     },
     {
-      provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true
+      provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true
     },
     {
       provide: LocationStrategy, useClass: HashLocationStrategy

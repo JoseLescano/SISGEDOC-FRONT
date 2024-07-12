@@ -43,7 +43,7 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
   }
 
   exportTable() {
-    this.excelService.exportTableToExcel('mytable', 'LISTA DE DOCUMENTOS ARCHIVADOS');
+    this.excelService.exportTableToExcel('mytable', 'LISTA DE DOCUMENTOS');
   }
 
   createTable(documento: Documento[]){

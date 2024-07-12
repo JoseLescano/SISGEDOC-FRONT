@@ -10,25 +10,6 @@
     padding-left: 16px;
     padding-right: 16px;
     font-size: 14px;
-    width: 50%;
+    width: 40%;
   }
 
-  .example-flex-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-  .example-button-row {
-    display: table-cell;
-    width: 10px;
-  }
-
-  .example-button-row .mat-button-base {
-    margin: 8px 8px 8px 0;
-  }
-
-  .example-button-container {
-    display: flex;
-    justify-content: center;
-    width: 120px;
-  }

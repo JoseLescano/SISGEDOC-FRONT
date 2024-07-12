@@ -17,6 +17,8 @@ export class DashboardComponent implements OnInit {
   parte: any = '000';
   atendidos : any = '000';
 
+  codigoRol : any = sessionStorage.getItem(environment.rol);
+
   barChart: any;
   type : any = 'bar';
 
@@ -32,19 +34,20 @@ export class DashboardComponent implements OnInit {
   }
 
   contadoresDashboard(){
-    
+
     let codigoOrganizacion = sessionStorage.getItem(environment.codigoOrganizacion);
     this.documentoService.contadoresDashboard(codigoOrganizacion).subscribe((response:any)=> {
-      this.pendientes = response[0] < 10 ? '00'+ response[0]: 
-                        response[0] < 99 && response[0] >10 ? '0'+ response[0]: 
+      this.pendientes = response[0] < 10 ? '00'+ response[0]:
+                        response[0] < 99 && response[0] >10 ? '0'+ response[0]:
                         response[0];
-      this.parte = response[1] < 10 ? '00'+ response[1]: 
-                  response[1] < 99 && response[1] >10 ? '0'+ response[1]: 
+      this.parte = response[1] < 10 ? '00'+ response[1]:
+                  response[1] < 99 && response[1] >10 ? '0'+ response[1]:
                   response[1];
     });
 
-    this.createChart();
-    
+    if (this.codigoRol== '000' || this.codigoRol== '002')
+      this.createChart();
+
   }
 
   viewPendientes(){
@@ -65,15 +68,15 @@ export class DashboardComponent implements OnInit {
         let valores = response.map(x => x.valor)
         this.barChart = new Chart('canvas', {
           type: this.type,
-    
+
           data: {
             // values on X-Axis
             labels: etiquetas,
             datasets: [
               {
-                label: 'DOCUMENTOS DECRETADOS',
+                label: 'DOCUMENTOS EN BANDEJA DE MIS UU',
                 data: valores,
-                backgroundColor: [                  
+                backgroundColor: [
                   'rgba(54, 162, 235, 0.2)',
                   'rgba(153, 102, 255, 0.2)',
                   'rgba(201, 203, 207, 0.2)',
@@ -82,7 +85,7 @@ export class DashboardComponent implements OnInit {
                   'rgba(255, 205, 86, 0.2)',
                   'rgba(75, 192, 192, 0.2)',
                 ],
-                borderColor: [                  
+                borderColor: [
                   'rgb(54, 162, 235)',
                   'rgb(153, 102, 255)',
                   'rgb(201, 203, 207)',
@@ -105,7 +108,7 @@ export class DashboardComponent implements OnInit {
         Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
       }
     });
-    
+
   }
 
 }

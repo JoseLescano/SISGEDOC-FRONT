@@ -4,7 +4,9 @@ body {
   height: 100%;
 }
 .login-wrapper {
-  padding: 8%;;
+  /* padding: 6%; */
+  padding-right: 3%;
+  padding-top: 8%;
   height: 100%;
 }
 .positronx {
@@ -12,21 +14,23 @@ body {
 
 }
 .box {
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
-  background-color: #333;
-  width: 430px; /* Ancho personalizado */
-  height: 460px; /* Alto personalizado */
+  box-shadow: 0 10px 50px rgb(255, 255, 255);
+  background-color: transparent;
+  width: 350px; /* Ancho personalizado */
+  /*height: 460px; /* Alto personalizado */
   position: relative;
   top: 0;
   opacity: 1;
   float: left;
-  padding: 0px 10px 10px 10px;
+  padding: 0px 0px 10px 0px;
   border-radius: 30px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
   transform: scale(1);
   -webkit-transform: scale(1);
   -ms-transform: scale(1);
   z-index: 5;
 }
+
 
 .login-wrapper .example-form {
   min-width: 100%;
@@ -52,9 +56,15 @@ input{
   margin: 0;
   color: #eeeeee;
   font-weight: bold;
+  width: 100%;
+  text-align: center;
 }
 .login-wrapper .mat-card {
-  padding: 40px 70px 50px;
+  /* padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 40px;
+  padding-bottom: 30px; */
+  padding: 40px 30px 30px 30px;
 }
 .login-wrapper .mat-stroked-button {
   border: 1px solid currentColor;
@@ -65,6 +75,8 @@ input{
 }
 
 .custom-button {
+  width: 100px;
+  text-align: center;
   padding: 13px 0;
   font-size: 20px;
   border-radius: 10px;

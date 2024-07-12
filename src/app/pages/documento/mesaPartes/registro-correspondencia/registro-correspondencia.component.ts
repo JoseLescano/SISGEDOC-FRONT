@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { CorrespondenciaOP } from 'src/app/_DTO/CorrespondenciaOP';
 import { Clase } from 'src/app/_model/clase';
 import { Correspondencia } from 'src/app/_model/correspondencia';
@@ -7,6 +8,7 @@ import { Organizacion } from 'src/app/_model/organizacion';
 import { ClaseService } from 'src/app/_service/clase.service';
 import { CorrespondenciaService } from 'src/app/_service/correspondencia.service';
 import { OrganizacionService } from 'src/app/_service/organizacion.service';
+import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -23,6 +25,8 @@ export class RegistroCorrespondenciaComponent implements OnInit {
   mostrarFormDatos: number;
   corresp: CorrespondenciaOP = new CorrespondenciaOP();
 
+  codigoOrganizacion : any = sessionStorage.getItem(environment.codigoOrganizacion);
+
   tipoDocumento: any = [
     { codigo: '0', nombre: 'RUC' },
     { codigo: '1', nombre: 'DNI' },
@@ -31,21 +35,27 @@ export class RegistroCorrespondenciaComponent implements OnInit {
   ];
 
   form:FormGroup;
-  
+
   constructor(
     private organizacionService: OrganizacionService,
     private claseService: ClaseService,
-    private correspondenciaService: CorrespondenciaService
+    private correspondenciaService: CorrespondenciaService,
+    private router : Router
   ) { }
 
   ngOnInit(): void {
-    this.cargando= true;
-    this.organizacionService.getWithCodigoCopere().subscribe((response:any)=>{
-      this.remitentes = response.data;
-    });
-    this.claseService.listar().subscribe((response:any)=> this.clases = response.data );
-    this.initForm();
-    this.cargando= false;
+    if (this.codigoOrganizacion == '120210' ||  this.codigoOrganizacion == '12021001' || this.codigoOrganizacion == '12021002'){
+      this.cargando= true;
+      this.organizacionService.getWithCodigoCopere().subscribe((response:any)=>{
+        this.remitentes = response.data;
+      });
+      this.claseService.listar().subscribe((response:any)=> this.clases = response.data );
+      this.initForm();
+      this.cargando= false;
+    } else {
+      this.router.navigate(['/principal/dashboard']);
+      Swal.fire('LO SENTIMOS', 'USTED NO CUENTA CON LOS PERMISOS CORRESPONDIENTES', 'info');
+    }
   }
 
   initForm(){
@@ -75,13 +85,13 @@ export class RegistroCorrespondenciaComponent implements OnInit {
   mostrarFormExterno(event:any){
     if (event == '3')
       this.mostrarFormDatos = 3;
-    else if (event == '0') 
+    else if (event == '0')
       this.mostrarFormDatos = 0;
     else if (event == '1'|| event == '2')
       this.mostrarFormDatos = 2;
 
   }
-  
+
   operate(){
     this.corresp.origen = this.form.value['origen'];
     this.corresp.destino = this.form.value['destino'];
@@ -96,8 +106,8 @@ export class RegistroCorrespondenciaComponent implements OnInit {
         this.form.reset();
         Swal.fire('Se registro correspondencia', response.message, 'info');
       }
-      else 
-        Swal.fire('Lo sentimos', response.message, 'warning'); 
+      else
+        Swal.fire('Lo sentimos', response.message, 'warning');
     }, error => {
       Swal.fire('Lo sentimos', 'Se presento un inconveniente', 'warning');
     });

@@ -49,19 +49,18 @@
   </div>
 </mat-card>
 <mat-card class="dialog-card large" [ngStyle]="{
-  'padding': status != '0' ? '' : '15px',
   'height': status != '0' ? 'auto' : 'auto',
   'display': status != '0' ? 'flex' : 'auto',
   'flex-direction': 'column',
   'width': status  != '0' ? '300px' : 'auto',
   'justify-content': status  != '0' ? 'center' : 'center',
   'align-items': status  != '0' ? 'center' : 'center'
-}" *ngIf="status  != '0'">
+}" *ngIf="status  != '0'" style="background-color: white;margin-left: -24px;margin-right: -24px;padding: 0px;margin-bottom: -24px;">
   <div class="title-container">
     <h2 class="title">Doble Factor de<br>Autentificación</h2>
   </div>
 
-  <div class="qr-container">
+  <div class="qr-container" >
     <div class="qr-wrapper">
       <input class="validation-input" type="text" id="validationCode" name="validationCode" [(ngModel)]="otpCode"
         maxlength="6" (keypress)="validarNumero($event)" (input)="validarLongitud()" (keydown.enter)="SecretVerify()">
@@ -72,7 +71,7 @@
       <button class="verify-button blue-button" type="button" (click)="SecretVerify()"
         [disabled]="otpCode.length < 6 || showProgressBar || botonBloqueado">Verificar código</button>
       <br>
-      <label class="time-left-message bold-red-text">Te quedan: {{ tiempoRestante }} segundos</label>
+      <label class="time-left-message bold-red-text" style="margin-bottom: 10px;">Te quedan: {{ tiempoRestante }} segundos</label>
     </div>
   </div>
 </mat-card>

@@ -10,7 +10,7 @@
       <li class="sidenav-nav-item">
         <a class="sidenav-nav-link" routerLink="/principal/dashboard">
           <i class="fas fa-home  sidenav-link-icon"></i>
-          <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed" >DASHBOARD</span>
+          <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed" >INICIO</span>
         </a>
       </li>
         <li class="sidenav-nav-item" *ngFor="let data of menus">
@@ -18,7 +18,11 @@
             <a class="sidenav-nav-link" [routerLink]="[data.url]"
                 routerLinkActive="active"
                 [routerLinkActiveOptions]="{exact: true}">
-                <i class="sidenav-link-icon" [class]="data.icon"></i>
+                <i class="sidenav-link-icon" [class]="data.icon"
+                  ></i>
+                  <!-- [style]="data.icon=='fas fa-folder-open'?
+                  {'color': '#ffca2c'}:
+                  {'color': 'white'}" -->
                 <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">
                     {{data.nombre}}
                 </span>

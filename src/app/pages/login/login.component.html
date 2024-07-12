@@ -6,20 +6,32 @@
       display: flex;
       justify-content: right;
       align-items: right;
+
   }
+
 </style>
 
 <body>
+  <h2 style="margin-top: 6%; margin-left: 5%; font-size: 50px; font-weight: 700; color: white;  display: flex;
+      justify-content: left; line-height: 60px;" class="permanent-marker-regular">
+
+      SISTEMA DE GESTIÓN DOCUMENTARIO DEL EJÉRCITO
+  </h2>
   <div class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
-      <mat-card class="box">
-        <mat-card-header>
-          <mat-card-title>SISTEMA DE GESTIÓN DOCUMENTARIO DEL EJÉRCITO - SISGEDO EP</mat-card-title>
-        </mat-card-header>
+      <mat-card class="box ">
+          <div style="width: 100%;text-align: center; ">
+            <p style="margin: 0px; font-size: 60px; color: white; margin-bottom: 5px; " class="permanent-marker-regular">SISGEDO</p>
+
+          </div>
+
         <br>
-        <form class="form-group" style="margin-top: 20px;" [formGroup]="_formulario" (ngSubmit)="login()" #loginForm="ngForm">
-          <mat-card-content>
+        <form class="form-group"  style="margin-top: 20px; padding: 0px;" [formGroup]="_formulario" (ngSubmit)="login()" #loginForm="ngForm">
+          <mat-card-content style="padding: 0px;">
+            <div>
+
+            </div>
               <input matInput type="text" name="username" formControlName="username"
-                     placeholder="Usuario Chasqui" [(ngModel)]="username" class="username" (input)="convertirAMayusculas()" maxlength="60" />            
+                     placeholder="Usuario Chasqui" [(ngModel)]="username" class="username" (input)="convertirAMayusculas()" maxlength="60" />
               <input matInput type="password" formControlName="password" name="password"
                      placeholder="Contraseña" [(ngModel)]="password" class="password" required minlength="8"
                      maxlength="30" />
@@ -28,7 +40,9 @@
             </button>
           </mat-card-content>
         </form>
-        <a mat-button style="color: white;" href="https://ws.ejercito.mil.pe/app-chasqui/">¿Has olvidado la contraseña?</a>
+        <div style="width: 100%; text-align: center;">
+          <a mat-button style="color: white;" href="https://ws.ejercito.mil.pe/app-chasqui/">¿Has olvidado la contraseña?</a>
+        </div>
         <mat-progress-bar class="mat-progress-buffer-custom" *ngIf="loading" mode="indeterminate"></mat-progress-bar>
       </mat-card>
     </div>

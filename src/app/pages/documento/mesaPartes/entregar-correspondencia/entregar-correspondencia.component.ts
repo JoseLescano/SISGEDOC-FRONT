@@ -12,6 +12,8 @@ import {SelectionModel} from '@angular/cdk/collections'
 import Swal from 'sweetalert2';
 import { MatDialog } from '@angular/material/dialog';
 import { ValidarRecojoComponent } from '../validar-recojo/validar-recojo.component';
+import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-entregar-correspondencia',
@@ -30,18 +32,26 @@ export class EntregarCorrespondenciaComponent implements OnInit {
   destino : any;
   selection = new SelectionModel<Correspondencia>(true, []);
 
+  codigoOrganizacion : any = sessionStorage.getItem(environment.codigoOrganizacion);
+
   constructor(
     private organizacionService:OrganizacionService,
     private correspondenciaService: CorrespondenciaService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private router : Router
   ) { }
 
   ngOnInit(): void {
-    this.cargando = true;
-    this.organizacionService.getWithCodigoCopere().subscribe((response:any)=>{
-      this.remitentes = response.data as Organizacion[];
-    });
-    this.cargando = false;
+    if (this.codigoOrganizacion == '120210' ||  this.codigoOrganizacion == '12021001' || this.codigoOrganizacion == '12021002'){
+      this.cargando = true;
+      this.organizacionService.getWithCodigoCopere().subscribe((response:any)=>{
+        this.remitentes = response.data as Organizacion[];
+      });
+      this.cargando = false;
+    } else {
+      this.router.navigate(['/principal/dashboard']);
+      Swal.fire('LO SENTIMOS', 'USTED NO CUENTA CON LOS PERMISOS CORRESPONDIENTES', 'info');
+    }
   }
 
   buscarCorrespondencia(idOrganizacion: any){

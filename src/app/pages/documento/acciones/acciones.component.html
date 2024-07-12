@@ -2,7 +2,7 @@
   <mat-card >
     <mat-card-content style="height: 650px;">
       <div class="row" style="height: 100%;">
-        <div  class="col-sx-12 col-sm-12 col-md-12  col-lg-10"  >
+        <div  class="col-sx-12 col-sm-12 col-md-12  col-lg-9"  >
           <iframe id="embeddedPage" style="width: 100%; height: 100%; border: 1px solid black; border-radius: 5px;" *ngIf="!errorPDF" ></iframe>
           <div  style="width: 100%; height: 100%; border: 1px solid black;
                   border-radius: 5px; align-items: center; align-content: center;
@@ -11,21 +11,24 @@
             <strong style="font-size: 12px;"> Error en PDF!</strong>
           </div>
         </div>
-        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-2 mt-1 ">
-          <div class="card text-bg-dark mb-3" style="width: 100%; height: 80%;">
+        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-3 mt-1 ">
+          <div class="card mb-3" style="width: 100%; height: 62%;background-color: #fdfdff;">
             <div class="card-header">ACCIONES</div>
             <div class="card-body">
               <div class="d-grid gap-2 col-12 mx-auto">
                 <button class="btn btn-success" type="button" [routerLink]="['/principal/decretar', idDocumento]">
                   <i class="fas fa-calendar-day"></i><span> DECRETAR</span>
                 </button>
-                <button class="btn btn-outline-info" type="button" [routerLink]="['/principal/derivar', idDocumento]" >
+                <!-- <button class="btn btn-outline-info" type="button" [routerLink]="['/principal/derivar', idDocumento]" >
+                  <i class="fas fa-exchange-alt"></i> DERIVAR
+                </button> -->
+                <button class="btn btn-primary" type="button" [routerLink]="['/principal/derivar', idDocumento]" >
                   <i class="fas fa-exchange-alt"></i> DERIVAR
                 </button>
                 <button class="btn btn-warning" type="button" [routerLink]="['/principal/archivar', idDocumento]">
                   <i class="fas fa-archive"></i> ARCHIVAR
                 </button>
-                <button class="btn btn-secondary" type="button"  [routerLink]="['/principal/devolver', idDocumento]">
+                <button class="btn btn-success" style="border-color: #48eb3f;background-color: #48eb3f;color: black;" type="button"  [routerLink]="['/principal/devolver', idDocumento]">
                   <i class="fas fa-undo-alt"></i> DEVOLVER
                 </button>
                 <!-- <button class="btn btn-info" type="button" (click)="viewSeguimiento(idDocumento)" >
@@ -43,7 +46,7 @@
                     <li><a class="dropdown-item" (click)="viewGrafica(idDocumento)">GRAFICA</a></li>
                   </ul>
                 </div>
-                <button class="btn btn-primary" type="button" [routerLink]="['/principal/formRespuesta', idDocumento]" >
+                <button class="btn btn-primary" style="border-color: #7c33a0; background-color: #75219f;" type="button" [routerLink]="['/principal/formRespuesta', idDocumento]" >
                   <i class="fas fa-file-import"></i> DAR RESPUESTA
                 </button>
                 <button class="btn btn-danger" type="button" routerLink="/principal/pendientes" >

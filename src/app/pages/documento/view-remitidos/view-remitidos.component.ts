@@ -79,8 +79,10 @@ export class ViewRemitidosComponent implements OnInit {
 
   createTable(documentos: Documento[]): void {
     this.dataSource = new MatTableDataSource(documentos);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
   }
 
   applyFilter(event: Event) {

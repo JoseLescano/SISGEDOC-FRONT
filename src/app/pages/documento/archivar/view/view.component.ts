@@ -76,8 +76,10 @@ export class ViewComponent implements OnInit, AfterViewInit {
 
   createTable(documentos: DocumentoView[]): void {
     this.dataSource = new MatTableDataSource(documentos);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
   }
 
   applyFilter(event: Event) {
@@ -90,10 +92,10 @@ export class ViewComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.dataSource = null;
-    if (this.dataSource!= null){
+    setTimeout(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    }
+    });
   }
 
   openDialog(documentoSeleccionado?:any): void {
@@ -117,7 +119,6 @@ export class ViewComponent implements OnInit, AfterViewInit {
       this.cargando = true;
       this.documentoService.findArchivados1ByOrganizacion(sessionStorage.getItem(environment.codigoOrganizacion),
         environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end'])).subscribe((data: any) => {
-        debugger;
         this.createTable(data);
         this.cargando = false;
       }, (error: any)=> {

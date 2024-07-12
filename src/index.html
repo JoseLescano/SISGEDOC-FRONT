@@ -387,10 +387,10 @@ myDiagramOrganization.nodeTemplate.contextMenu =
 
          // remove the whole subtree, including the node itself
 
-         const node = button.part.adornedPart;
-
-         _this.incallbackDelete(node.qb.CODIGO,()=>{
-
+         const node = button.part.si;
+        debugger;
+         _this.incallbackDelete(node.CODIGO,()=>{
+          debugger;
            if (node !== null) {
              myDiagramOrganization.startTransaction("remove dept");
              myDiagramOrganization.removeParts(node.findTreeParts());
@@ -407,9 +407,9 @@ myDiagramOrganization.nodeTemplate.contextMenu =
      {
 
        click: (e, button) => {
-        debugger;
-       const node = button.part.adornedPart;
-       _this.incallbackUpdate(node.qb,()=>{
+
+       const node = button.part.si;
+       _this.incallbackUpdate(node,()=>{
        })
        }
      }
@@ -418,8 +418,10 @@ myDiagramOrganization.nodeTemplate.contextMenu =
      $(go.TextBlock, "Agregar usuarios"),
      {
        click: (e, button) => {
-       const node = button.part.adornedPart;
-       _this.incallAgregarUsuarios(node.qb,()=>{
+        debugger;
+       const node = button.part.si;
+       debugger;
+       _this.incallAgregarUsuarios(node,()=>{
        })
        }
      }

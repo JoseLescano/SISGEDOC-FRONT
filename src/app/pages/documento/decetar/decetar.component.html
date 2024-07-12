@@ -33,7 +33,8 @@
             </div>
             <div class="row mt-2" >
               <div class="col-md-4">
-                <ng-select placeholder="ORGANIZACION REMITENTE" [virtualScroll]=true formControlName="destino"  class="example-full-width">
+                <ng-select placeholder="ORGANIZACION REMITENTE" [virtualScroll]=true formControlName="destino"
+                    style="font-size: 14px;" class="example-full-width">
                     <mat-option>SELECCIONE</mat-option>
                     <ng-option *ngFor="let c of destinos" [value]="c" >{{c.acronimo}}</ng-option>
                 </ng-select>
@@ -59,26 +60,14 @@
                   <mat-datepicker #dp></mat-datepicker>
                 </mat-form-field>
               </div>
-              <div class="col-md-12">
-                <mat-label><strong style="margin-right: 5px; font-weight: 500;">LISTA DE ACCIONES</strong></mat-label>
-
-                <!-- <div style="display: grid; grid-template-columns: auto auto auto; font-size: 15px; margin-left: 5px;">
-                  <ng-container  *ngFor="let item of acciones"   >
-                    <mat-checkbox     [value]="item.codigo"  (change)="onCheckboxChange(item.codigo, i)" formArrayName="acciones" style="font-size: 20px;">
-                      {{ item.nombre }}
-                    </mat-checkbox>
-                  </ng-container>
-                </div> -->
-                <!-- <ng-select placeholder="LISTA DE ACCIONES" [multiple]="true" [virtualScroll]=true formControlName="acciones"  class="example-full-width">
-                  <mat-option>SELECCIONE</mat-option>
-                  <ng-option *ngFor="let c of acciones" [value]="c.codigo" >{{c.nombre}}</ng-option>
-                </ng-select> -->
+              <div class="col-md-12 mt-2">
+                <mat-label><strong style="margin-right: 5px; font-weight: 600;">LISTA DE ACCIONES</strong></mat-label>
                 <div style="display: grid; grid-template-columns: auto auto auto; margin-top: 5px;" >
                   <ng-container *ngFor="let accion of acciones;">
-                    <label style="display: flex">
-                      <input type="checkbox"  style="position: relative;left: 0px; opacity: 1; size: 20px;"
+                    <label style="display: flex; margin-bottom: 5px;">
+                      <input type="checkbox"  style="position: relative;left: 0px; opacity: 1; size: 20px; padding: 5px; "
                         [value]="accion.codigo" name="group{{i+1 }}" />
-                        <span style="margin-left: 3px;margin-right: 6px; font-weight: 400;  font-size: 18px;">
+                        <span style="margin-left: 3px;margin-right: 6px; font-weight: 200;  font-size: 18px;">
                           {{ accion.nombre | uppercase }}
                         </span>
                       </label>
@@ -97,8 +86,8 @@
         </div>
       </div>
       <mat-card-actions align="end">
-        <button mat-raised-button color="primary" type="submit" [disabled]="formParent.invalid && ultimoDecreto!=null" class="btn-opcion" > GUARDAR </button>
         <button mat-raised-button color="warn" type="button" routerLink="/principal/pendientes" class="btn-opcion" > CANCELAR </button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="formParent.invalid && ultimoDecreto!=null" class="btn-opcion" > GUARDAR </button>
       </mat-card-actions>
     </form>
 

@@ -4,9 +4,9 @@
     </mat-card-header>
     <mat-card-content>
         <form [formGroup]="form" (ngSubmit)="operate()" novalidate >
-            <div class="row">    
+            <div class="row">
                 <div class="col-12">
-                    <ng-select placeholder="ORGANIZACION REMITENTE" [virtualScroll]=true  
+                    <ng-select placeholder="ORGANIZACION REMITENTE" [virtualScroll]=true
                         formControlName="origen" (change)="mostrarPanelRemitenteExterno($event)"  >
                         <mat-option>SELECCIONE</mat-option>
                         <ng-option *ngFor="let c of remitentes" [value]="c.codigoInterno" >{{c.acronimo}}</ng-option>
@@ -14,7 +14,7 @@
                       <!-- <div *ngIf="firstFormGroup.get('organizacionRemitente').errors && firstFormGroup.get('organizacionRemitente').dirty" >
                         <mat-error *ngIf="firstFormGroup.get('organizacionRemitente').hasError('required')">* Campo requerido</mat-error>
                       </div> -->
-                </div> 
+                </div>
                 <!-- 6726 -->
                 <div class="col-6" *ngIf="mostrarTipoIdentidad">
                     <mat-form-field appearance="fill" class="example-full-width">
@@ -48,7 +48,7 @@
                         <input matInput type="text" formControlName="nombreCompletoEntidad" >
                     </mat-form-field>
                 </div>
-                  
+
                 <div class="col-12">
                 <ng-select placeholder="ORGANIZACION DESTINO" [virtualScroll]=true formControlName="destino"   >
                     <mat-option>SELECCIONE</mat-option>
@@ -57,7 +57,7 @@
                     <!-- <div *ngIf="firstFormGroup.get('organizacionRemitente').errors && firstFormGroup.get('organizacionRemitente').dirty" >
                     <mat-error *ngIf="firstFormGroup.get('organizacionRemitente').hasError('required')">* Campo requerido</mat-error>
                     </div> -->
-                </div> 
+                </div>
                 <div class="col-3">
                     <mat-form-field appearance="fill" class="example-full-width">
                         <mat-label>SELECCIONE FECHA</mat-label>
@@ -104,7 +104,7 @@
                         <textarea matInput rows="3" formControlName="observaciones" ></textarea>
                     </mat-form-field>
                 </div>
-            </div>  
+            </div>
             <mat-card-actions >
                 <button mat-flat-button color="primary" type="submit" style="margin-right: 2px;" [disabled]="form.invalid" >REGISTRAR</button>
                 <button mat-flat-button color="accent"  type="button" style="margin-right: 2px;" (click)="cancelar()" >CANCELAR</button>
@@ -116,5 +116,5 @@
     <mat-card-footer>
         <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
     </mat-card-footer>
-    <div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{form.value | json}}</div>
+    <!-- <div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{form.value | json}}</div> -->
 </mat-card>

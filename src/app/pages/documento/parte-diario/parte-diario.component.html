@@ -1,4 +1,4 @@
-<div class="container loader" *ngIf="cargando"></div>
+<!-- <div class="container loader" *ngIf="cargando"></div> -->
 <mat-card class="m-2" *ngIf="!cargando">
     <mat-card-header class="title-form">
       <mat-card-title >DOCUMENTOS PARA LA FIRMA</mat-card-title>
@@ -47,27 +47,25 @@
             <ng-container matColumnDef="Acciones">
               <th mat-header-cell *matHeaderCellDef > Acciones </th>
               <td mat-cell *matCellDef="let row">
-                <div class="example-button-row">
-                  <div class="example-flex-container">
-                    <div class="example-button-container">
-                      <button mat-mini-fab color="primary" class="mr-2"  (click)="verDocumento(row)"
-                        data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver documento">
-                        <i class="far fa-file-pdf"  ></i>
+                <div class="d-grid gap-2 mx-auto">
+                      <button mat-flat-button color="primary" class="mt-2"  (click)="verDocumento(row)">
+                        <i class="far fa-file-pdf" ></i> VER DOCUMENTO
                       </button>
-                      <button mat-mini-fab color="accent" (click)="viewSeguimiento(row.codigo)"
-                        data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver trazabilidad">
-                        <i class="fas fa-info-circle" ></i>
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-success" (click)="viewSeguimiento(row.codigo)">
+                          <i class="fas fa-info-circle"></i> SEGUIMIENTO
+                        </button>
+                        <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                          <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                          <li><a class="dropdown-item"  (click)="viewSeguimiento(row.codigo)">REPORTE</a></li>
+                          <li><a class="dropdown-item" (click)="viewTimeline(row.codigo)">GRAFICA</a></li>
+                        </ul>
+                      </div>
+                      <button mat-flat-button color="warn"  class="mb-2" [routerLink]="['/principal/form', row.codigo]">
+                        <i class="fas fa-signature" ></i> FIRMAR/ELEVAR DOC.
                       </button>
-                      <button mat-mini-fab color="accent" (click)="viewTimeline(row.codigo)"
-                        data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver linea de tiempo">
-                        <i class="fas fa-tasks"></i>
-                      </button>
-                      <button mat-mini-fab color="warn" [routerLink]="['/principal/form', row.codigo]"
-                        data-bs-toggle="tooltip" data-bs-placement="bottom" title="Firmar/Elevar documento">
-                        <i class="fas fa-signature" ></i>
-                      </button>
-                    </div>
-                  </div>
                 </div>
               </td>
             </ng-container>
@@ -82,7 +80,7 @@
           <mat-paginator [pageSizeOptions]="[10, 15, 25, 100]"  aria-label="Select page of users"></mat-paginator>
         </div>
     </mat-card-content>
-    <!-- <mat-card-footer>
+    <mat-card-footer>
       <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
-    </mat-card-footer> -->
+    </mat-card-footer>
   </mat-card>

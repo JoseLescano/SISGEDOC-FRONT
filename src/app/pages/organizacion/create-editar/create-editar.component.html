@@ -5,12 +5,18 @@
     <mat-card-content>
 
         <div class="row">
-            <div class="col">
-                <mat-form-field class="example-full-width" appearance="fill">
-                    <mat-label>Codigo Interno</mat-label>
-                    <input matInput disabled [(ngModel)]="organizacionSeleccionada.codigoInterno">
-                </mat-form-field>
-            </div>
+          <div class="col">
+              <mat-form-field class="example-full-width" appearance="fill">
+                  <mat-label>Codigo Interno</mat-label>
+                  <input matInput disabled [(ngModel)]="organizacionSeleccionada.codigoInterno">
+              </mat-form-field>
+          </div>
+          <!-- <div class="col" *ngIf="codigoPadre!= null && codigoPadre!=''">
+            <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>Codigo Padre</mat-label>
+                <input matInput disabled [(ngModel)]="codigoPadre">
+            </mat-form-field>
+          </div> -->
         </div>
         <div class="row">
             <div class="col">

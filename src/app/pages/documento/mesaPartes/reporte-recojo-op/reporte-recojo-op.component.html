@@ -1,4 +1,5 @@
-<mat-card class="m-2" >
+<div class="container loader" *ngIf="cargando"></div>
+<mat-card class="m-2" *ngIf="!cargando">
     <mat-card-header class="title-form">
         <mat-card-title >LISTA DE DOCUMENTOS POR RECOGER - OP</mat-card-title>
     </mat-card-header>
@@ -68,7 +69,7 @@
             </mat-paginator>
         </div>
     </mat-card-content>
-    <mat-card-footer>
+    <!-- <mat-card-footer>
         <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
-    </mat-card-footer>
+    </mat-card-footer> -->
 </mat-card>

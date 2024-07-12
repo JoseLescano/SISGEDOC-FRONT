@@ -68,15 +68,12 @@ export class OrganizacionService extends GenericService<Organizacion> {
     return this.http.get<Organizacion>(`${environment.HOST}organizaciones/findByCodigoInterno/${codigoInterno}`);
   }
 
-  saveOrganizacion(codigoPadre: any, organizacion: any){
-    let formData: FormData = new FormData();
-    formData.append('aronimo', organizacion.nombreCorto);
-    formData.append('nombre', organizacion.nombreLargo);
-    formData.append('indicativo', organizacion.indicativo);
-    formData.append('cargo', organizacion.cargo);
-    // formData.append('codigo_padre', codigoInternaPadre);
+  saveOrganizacion(organizacion: any, codigoPadre: any){
 
-    return this.http.post(`${environment.HOST}organizaciones/newChildren/${codigoPadre}`, formData);
+    const headers = { 'content-type': 'application/json'}
+    const body=JSON.stringify(organizacion);
+
+    return this.http.post(`${environment.HOST}organizaciones/newChildren/${codigoPadre}`, body, {'headers':headers});
   }
 
   updateOrganizacion(codigoInterno:any, acronimo:any, nombreLargo:any, indicativo:any, cargo:any){

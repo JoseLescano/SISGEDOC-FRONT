@@ -1,4 +1,4 @@
-<div class="container loader" *ngIf="cargando"></div>
+<!-- <div class="container loader" *ngIf="cargando"></div> -->
 <mat-card class="m-2" style="border-radius: 10px; " *ngIf="!cargando">
   <mat-card-header class="title-form">
     <mat-card-title >CREAR NUEVO DOCUMENTO</mat-card-title>
@@ -45,7 +45,7 @@
               </div>
               <div class="col-sm-12  col-lg-10">
                 <mat-tab-group>
-                  <mat-tab label="DATOS PRINCIPALES"> 
+                  <mat-tab label="DATOS PRINCIPALES">
                     <mat-card >
                       <mat-card-content>
                         <div class="row mt-3">
@@ -102,7 +102,7 @@
                           </div>
                         </div>
                         <div class="row">
-    
+
                           <div class="col"  >
                             <div class="wrapper" >
                               <mat-label>DOCUMENTO PRINCIPAL
@@ -116,14 +116,14 @@
                                   <input type="file" (change)="selectArchivoPrincipal($event)"
                                     id="documentoPrincipal"
                                     accept="application/msword, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
-    
+
                               </div>
                               <button  mat-flat-button type="button" color="primary" (click)="firmarDocumento()"
                                 class="form-control mt-2" *ngIf="selectedFiles != null && form.get('firmante').value!=null" >FIRMAR DOCUMENTO</button>
                             </div>
                           </div>
                         </div>
-                        
+
                         <div class="row d-flex flex-row bd-highlight mt-3">
                           <div class="col">
                             <!-- <button class="btn btn-lg btn-outline-success mr-2" type="submit" [disabled]="form.invalid">GUARDAR DOCUMENTO</button> -->
@@ -163,14 +163,14 @@
                       </div>
                   </mat-tab>
                 </mat-tab-group>
-                
+
               </div>
 
             </div>
         </form>
     </mat-card-content>
-    <!-- <mat-card-footer>
+    <mat-card-footer>
       <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
-    </mat-card-footer> -->
-    <!-- <div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{form.value | json}}</div> -->
+    </mat-card-footer>
+    <!-- <div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{form.value | json}}</div>-->
 </mat-card>

@@ -10,6 +10,7 @@ import { Organizacion } from 'src/app/_model/organizacion';
 import { Perfil } from 'src/app/_model/perfil';
 import { Persona } from 'src/app/_model/persona';
 import { Rol } from 'src/app/_model/rol';
+import { OrganizacionService } from 'src/app/_service/organizacion.service';
 import { PerfilService } from 'src/app/_service/perfil.service';
 import { PersonaService } from 'src/app/_service/persona.service';
 import { RoleService } from 'src/app/_service/role.service';
@@ -41,19 +42,28 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
   constructor(
     private matDialog: MatDialogRef<ViewUsariosComponent>,
     private perfilService:PerfilService,
-    @Inject(MAT_DIALOG_DATA) private data: Organizacion,
+    @Inject(MAT_DIALOG_DATA) private data: any,
     private personaService: PersonaService,
-    private rolService: RoleService
+    private rolService: RoleService,
+    private organizacionService: OrganizacionService
   ) { }
 
   ngOnInit(): void {
-    this.organizacionSeleccionada = {...this.data};
-    this.perfilService.findByOrganizacion(this.data.codigoInterno).subscribe((response:any)=> {
-      this.createTable(response);
+    debugger;
+    // this.organizacionSeleccionada = {...this.data};
+    this.organizacionService.findByCodigoInterno(this.data).pipe(switchMap((response:any)=> {
+      debugger;
+      this.organizacionSeleccionada = response.data;
+      this.rolService.findForUsuario().subscribe((responseRoles:any)=>{
+        debugger;
+        this.roles = responseRoles;
+      });
+      return this.perfilService.findByOrganizacion(this.data);
+    })).subscribe((responsePerfil:any)=> {
+      debugger;
+      this.createTable(responsePerfil);
     });
-    this.rolService.findForUsuario().subscribe((response:any)=>{
-      this.roles = response;
-    });
+
   }
 
   buscarPersona(campo:any){

@@ -1,4 +1,5 @@
-<mat-card class="m-2">
+<div class="container loader" *ngIf="cargando"></div>
+<mat-card class="m-2" *ngIf="!cargando">
     <mat-card-header class="title-form">
         <mat-card-title >LISTA DE DOCUMENTOS RECEPCIONADOS</mat-card-title>
     </mat-card-header>
@@ -51,14 +52,13 @@
                   <div class="example-button-row">
                     <div class="example-flex-container">
                       <div class="example-button-container">
-                        <button mat-mini-fab color="primary" class="mr-2" (click)="verDocumento(row)"  
-                        data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver Documento">
-                          <i class="far fa-file-pdf"></i>
+                        <button mat-flat-button  color="primary" class="m-2" (click)="verDocumento(row)">
+                          <i class="far fa-file-pdf"></i> VER DOCUMENTO
                         </button>
-                        <!-- <button mat-mini-fab color="accent"  >
+                        <!-- <button mat-flat-button  color="accent"  >
                           <i class="fas fa-info-circle"></i>
                         </button>
-                        <button mat-mini-fab color="warn" >
+                        <button mat-flat-button  color="warn" >
                             <i class="fas fa-trash"></i>
                         </button> -->
                       </div>
@@ -84,7 +84,7 @@
         <button mat-raised-button color="primary" routerLink="../registrar-documento" class="btn-opcion" >NUEVO REGISTRO FISICO</button>
         <button mat-raised-button color="accent" routerLink="../envio-externo" class="btn-opcion">ENVIAR A DEPENDENCIA EXTERNA</button>
     </mat-card-actions>
-    <mat-card-footer>
+    <!-- <mat-card-footer>
       <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
-    </mat-card-footer>
+    </mat-card-footer> -->
 </mat-card>
