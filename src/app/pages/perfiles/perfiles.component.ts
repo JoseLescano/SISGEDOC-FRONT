@@ -26,7 +26,6 @@ export class PerfilesComponent implements OnInit {
   }
 
   getPerfiles(){
-    debugger;
     this.perfilService.findByUsuariLogueado().subscribe((response:Perfil[])=> {
       if (response== null){
         Swal.fire("Usuario sin perfiles", "Se valida que el usuario no tiene perfiles asignados", "info");
@@ -52,7 +51,6 @@ export class PerfilesComponent implements OnInit {
     sessionStorage.setItem(environment.rol, perfil.rol.codigo );
     //sessionStorage.setItem(environment.TOKEN_AUTH_USERNAME, perfil.usuario+"");
     sessionStorage.setItem(environment.codigoOrganizacion, perfil.organizacion.codigoInterno);
-    debugger;
     sessionStorage.setItem(environment.cargoSeleccionado, perfil.nombre + ' - ' + perfil.organizacion.acronimo);
     this.router.navigate(['/principal/dashboard']);
   }

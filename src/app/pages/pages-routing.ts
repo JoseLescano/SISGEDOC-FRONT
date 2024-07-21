@@ -33,6 +33,7 @@ import { RespuestaComponent } from './documento/respuesta/respuesta.component';
 import { Not403Component } from './not403/not403.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ViewElevadosComponent } from './documento/view-elevados/view-elevados.component';
+import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
 
 const routes: Routes = [
 
@@ -68,6 +69,7 @@ const routes: Routes = [
   { path: 'parte-diario', component: ParteDiarioComponent, canActivate: [IsLoggedInGuard] },
   { path: 'form/:codigoDocumento', component: FormComponent  },
   { path: 'formRespuesta/:codigoDocumento', component: RespuestaComponent  },
+  { path: 'my-profile', component: MiPerfilComponent  },
   { path: 'pages/not-403', component: Not403Component  },
   { path: 'pages/not-404', component: PageNotFoundComponent  },
 ];

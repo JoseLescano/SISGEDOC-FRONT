@@ -40,4 +40,8 @@ export class PersonaService extends GenericService<Persona> {
     return this.http.post(`${environment.HOST}personas/validarEntrega`, formData);
   }
 
+  verFoto(){
+    return this.http.get(`${environment.HOST}personas/verFoto`, { responseType: 'blob' });
+  }
+
 }

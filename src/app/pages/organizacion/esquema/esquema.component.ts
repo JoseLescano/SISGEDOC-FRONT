@@ -104,7 +104,9 @@ export class EsquemaComponent implements OnInit, AfterViewInit {
           return this.organizacionService.findByCodigoInterno(sessionStorage.getItem(environment.codigoOrganizacion));
         })).subscribe({
           next : (response: any)=> {
-            this.organizacionService.setOrganizacionCambio(response.data);
+            this.router.navigate(['/principal/organizacion']).then(() => {
+             location.reload();
+            });
             Swal.fire('OPERACION REALIZADA', 'SE ELIMINO ORGANIZACION', 'info');
           }, error: (err: any) => {
             Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'warning');

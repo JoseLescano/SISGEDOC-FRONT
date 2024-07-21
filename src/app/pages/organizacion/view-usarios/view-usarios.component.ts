@@ -49,21 +49,15 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
-    debugger;
-    // this.organizacionSeleccionada = {...this.data};
     this.organizacionService.findByCodigoInterno(this.data).pipe(switchMap((response:any)=> {
-      debugger;
       this.organizacionSeleccionada = response.data;
       this.rolService.findForUsuario().subscribe((responseRoles:any)=>{
-        debugger;
         this.roles = responseRoles;
       });
       return this.perfilService.findByOrganizacion(this.data);
     })).subscribe((responsePerfil:any)=> {
-      debugger;
       this.createTable(responsePerfil);
     });
-
   }
 
   buscarPersona(campo:any){
@@ -104,7 +98,6 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
   }
 
   registrarPerfil(){
-    debugger;
     if (this.validar()){
       this.perfilService.registrarPerfil(this.organizacionSeleccionada.codigoInterno, this.persona.usuario_CHASQUI,
         this.puesto, this.rolSeleccionado.codigo).subscribe((response:any)=> {
@@ -144,5 +137,26 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
     this.persona.usuario_CHASQUI = perfilSeleccionado.usuario.usuario_CHASQUI;
     this.organizacionSeleccionada.codigoInterno=perfilSeleccionado.organizacion.codigoInterno;
   }
+
+  eliminar(codigo:any){
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: "No podrás revertir esto!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, bórralo.'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.perfilService.eliminarPerfil(codigo).pipe(switchMap((response:any)=> {
+          return this.perfilService.findByOrganizacion(this.data);
+        })).subscribe((responsePerfil:any)=> {
+          Swal.fire('ELIMINACIÓN CORRECTA', 'SE HA ELIIMINADO PERFIL DEL USUARIO CORRECTAMENTE', 'info');
+          this.createTable(responsePerfil);
+        });
+      }
+    })
+  };
 
 }

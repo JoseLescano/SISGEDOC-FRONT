@@ -16,7 +16,7 @@
             <div class="card-header">ACCIONES</div>
             <div class="card-body">
               <div class="d-grid gap-2 col-12 mx-auto">
-                <button class="btn btn-success" type="button" [routerLink]="['/principal/decretar', idDocumento]">
+                <button class="btn btn-success " type="button" [routerLink]="['/principal/decretar', idDocumento]">
                   <i class="fas fa-calendar-day"></i><span> DECRETAR</span>
                 </button>
                 <!-- <button class="btn btn-outline-info" type="button" [routerLink]="['/principal/derivar', idDocumento]" >
@@ -28,7 +28,8 @@
                 <button class="btn btn-warning" type="button" [routerLink]="['/principal/archivar', idDocumento]">
                   <i class="fas fa-archive"></i> ARCHIVAR
                 </button>
-                <button class="btn btn-success" style="border-color: #48eb3f;background-color: #48eb3f;color: black;" type="button"  [routerLink]="['/principal/devolver', idDocumento]">
+                <button class="btn btn-success" style="border-color: #48eb3f;background-color: #48eb3f;color: black;" type="button"
+                 [routerLink]="['/principal/devolver', idDocumento]">
                   <i class="fas fa-undo-alt"></i> DEVOLVER
                 </button>
                 <!-- <button class="btn btn-info" type="button" (click)="viewSeguimiento(idDocumento)" >

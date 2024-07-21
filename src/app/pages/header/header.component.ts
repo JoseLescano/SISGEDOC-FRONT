@@ -6,6 +6,9 @@ import { CdkMenuModule } from '@angular/cdk/menu';
 import { Perfil } from 'src/app/_model/perfil';
 import { PerfilService } from 'src/app/_service/perfil.service';
 import { Router } from '@angular/router';
+import { PersonaService } from 'src/app/_service/persona.service';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { switchMap } from 'rxjs';
 interface SideNavToggle {
   screenWidth: number;
   collapsed: boolean;
@@ -29,21 +32,30 @@ export class HeaderComponent implements OnInit {
   }
   canShowSearchAsOverlay=false;
 
+  imagen: any;
+
   constructor(
     private perfilService: PerfilService,
-    private router: Router
+    private router: Router,
+    private personaService: PersonaService,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
     this.checkCanShowSearchAsOverlay(window.innerWidth);
     this.cargo = sessionStorage.getItem(environment.cargoSeleccionado);
-    this.perfilService.findByUsuariLogueado().subscribe({
-      next: (response:Perfil[])=> {
-        this.perfiles = response;
-      }, error : (err: any) => {
+    this.perfilService.findByUsuariLogueado()
+    .pipe(switchMap((response:Perfil[])=> {
+      this.perfiles = response;
+      return this.personaService.verFoto();
+    })).subscribe(
+      { next: (responseFoto: any)=>  {
+        const objectUrl = URL.createObjectURL(responseFoto);
+        this.imagen = this.sanitizer.bypassSecurityTrustUrl(objectUrl);
+      }, error: (err: any) => {
+          console.error('Error al cargar la imagen', err);
+      }});
 
-      }
-    })
   }
 
   getHeadClass(): string {

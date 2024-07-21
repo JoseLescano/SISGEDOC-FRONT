@@ -14,7 +14,8 @@ export class JwtInterceptor implements HttpInterceptor {
       const helper = new JwtHelperService();
       let token = sessionStorage.getItem(environment.TOKEN_NAME);
       if (token==null){
-        return next.handle(request);
+        this.loginService.logout();
+        return null;
       }else {
         const decodedToken = helper.decodeToken(token);
         const username = decodedToken.sub;
@@ -25,6 +26,8 @@ export class JwtInterceptor implements HttpInterceptor {
                     Authorization: `Bearer ${token}`
                 }
             });
+        }else {
+          this.loginService.logout();
         }
         return next.handle(request);
       }

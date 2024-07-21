@@ -61,7 +61,7 @@
           position: relative;
           .user-avatar{
             margin-bottom: -4px;
-            width: 50px;
+            width: 40px;
             border-radius: 50px;
             box-shadow: 0 0 15px rgb(35, 35, 35 / 15%);
             cursor: pointer;

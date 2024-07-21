@@ -53,10 +53,11 @@ export function tokenGetter() {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        allowedDomains: ["localhost:8080"],
-        //allowedDomains: ["sisgedo.ejercito.mil.pe"],
-        disallowedRoutes: ["http://localhost:8080/login/forget"]
-        //disallowedRoutes: ["https://sisgedo.ejercito.mil.pe"],
+         allowedDomains: ["localhost:8080"],
+        //  allowedDomains: ["sisgedo.ejercito.mil.pe", "sisgedo.ejercito.mil.pe/",
+          // "https://sisgedo.ejercito.mil.pe", "https://sisgedo.ejercito.mil.pe/"],
+       disallowedRoutes: ["http://localhost:8080/login/forget"]
+        //  disallowedRoutes: ["https://sisgedo.ejercito.mil.pe/dev-sisgedo/login/forget"],
       },
     }),
 

@@ -32,7 +32,9 @@ export class ReporteRecojoOPComponent implements OnInit, AfterViewInit {
       sessionStorage.getItem(environment.codigoOrganizacion)).subscribe(
       {
         next: (response:any) => {
-          this.createTable(response.data);
+          if (response!= null){
+            this.createTable(response.data);
+          }
           this.cargando = false;
         },
         error : (err: any) => {

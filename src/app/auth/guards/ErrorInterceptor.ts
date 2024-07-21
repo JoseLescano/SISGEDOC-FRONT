@@ -16,10 +16,19 @@ export class ErrorInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(catchError(err => {
             if ([401, 403].includes(err.status)) {
+              if(err.status==403){
                 Swal.fire('ACCESO DENEGADO', err.error.details, 'info');
                 this.router.navigate(['/principal/dashboard']);
+              }else {
+                Swal.fire('ACCESO DENEGADO', err.error.details, 'info');
+                this.loginService.logout();
+              }
+            }else {
+              if ([0].includes(err.status)){
+                Swal.fire('LO SENTIMOS', 'ERROR EN CONEXION CON EL SERVIDOR', 'info');
+                this.loginService.logout();
+              }
             }
-
             const error = err.error.message || err.statusText;
             return throwError(error);
         }))

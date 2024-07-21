@@ -15,11 +15,11 @@ import Swal from 'sweetalert2';
 export class ListCorrespondenciaComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['Nro', 'Asunto','Documento', 'Origen', 'Destino', 'Fecha Registro',  'Acciones'];
-  dataSource: MatTableDataSource<Correspondencia>;
+  dataSource: MatTableDataSource<Correspondencia> = new MatTableDataSource<Correspondencia>();
   cargando: boolean;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   range = new FormGroup({
     start: new FormControl<Date | null>(null),
@@ -40,27 +40,28 @@ export class ListCorrespondenciaComponent implements OnInit, AfterViewInit {
       this.cargando = false;
       Swal.fire('Lo sentimos', 'Se presento un inconveniente en cargar la información', 'info');
     });
-    
+
   }
 
   createTable(correspondencia: Correspondencia[]){
-    this.dataSource = new MatTableDataSource(correspondencia);
+    this.dataSource.data = correspondencia;
+    setTimeout(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+    });
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
   }
 
 }

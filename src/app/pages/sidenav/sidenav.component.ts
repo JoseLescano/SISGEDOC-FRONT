@@ -66,17 +66,17 @@ export class SidenavComponent implements OnInit {
 
   ngOnInit(): void {
       this.screenWidth = window.innerWidth;
-      this.menuService.getMenuByRol(sessionStorage.getItem(environment.rol)).subscribe((response:any)=> {
-        this.menus = response.data as Menu[];
-      })
-  }
-
-  closeOffCanvas(){
-
-  }
-
-  openOffCanvas(){
-
+      this.menuService.getMenuByRol(sessionStorage.getItem(environment.rol))
+      .subscribe(
+      {
+        next: (response:any)=> {
+          this.menus = response.data as Menu[];
+        },
+        error: (err: any)=> {
+          console.log(err);
+          // if (err.)
+        }
+      });
   }
 
   toggleCollapse(): void {

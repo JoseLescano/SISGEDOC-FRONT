@@ -50,6 +50,7 @@ import { TimelineComponent } from './report/timeline/timeline.component';
 
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CdkMenuModule } from '@angular/cdk/menu';
+import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
 
 @NgModule({
   imports: [
@@ -105,6 +106,7 @@ import { CdkMenuModule } from '@angular/cdk/menu';
     SustentacionComponent,
     ViewElevadosComponent,
     TimelineComponent,
+    MiPerfilComponent,
   ],
    exports:[
 

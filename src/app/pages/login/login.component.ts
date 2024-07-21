@@ -42,8 +42,6 @@ export class LoginComponent{
     private recaptchaV3Service: ReCaptchaV3Service,
     public dialog: MatDialog,
     private loginService: LoginService,
-    private userService: PersonaService,
-    private router: Router
   ) {
     this._formulario = new FormGroup({
       username: new FormControl("", Validators.required),
@@ -62,12 +60,14 @@ export class LoginComponent{
   }
 
   executeReCaptcha(action: string): void {
+
     this.recaptchaV3Service.execute(action).subscribe({
       next: (token) => {
         this.recaptchaToken = token;
         this.performLogin();
       },
       error: (err) => {
+
         console.error('ReCAPTCHA v3 error:', err);
         this.error = 'reCAPTCHA failed';
       }
@@ -85,8 +85,9 @@ export class LoginComponent{
       next : (response)=> {
         this.openModalMfaStatus0(this.username, response);
       },  error : (err) => {
-        this.error = 'Login failed';
-        Swal.fire('VALIDACIÓN INCORRECTA', 'USUARIO Y/O CONTRASEÑA INCORRECTA', 'info')
+        if (err=='Unknown Error')
+          Swal.fire('LO SENTIMOS', 'NO PODEMOS VALIDAR TUS CREDENCIALES', 'info');
+        else Swal.fire('VALIDACIÓN INCORRECTA', 'USUARIO Y/O CONTRASEÑA INCORRECTA', 'info');
       }
     });
   }

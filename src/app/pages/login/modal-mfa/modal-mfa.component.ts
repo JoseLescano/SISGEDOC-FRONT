@@ -37,8 +37,6 @@ export class ModalMfaComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-debugger;
-    console.log(this.data);
     if (this.data.response.status == "0") {
       this.status = "0"
       this.saveTwoFactor();
@@ -55,7 +53,8 @@ debugger;
   }
 
   saveTwoFactor(): void {
-    if (this.data.response.secretImageUri && !this.data.response.secretImageUri.startsWith('data:image/png;base64,')) {
+    if (this.data.response.secretImageUri
+      && !this.data.response.secretImageUri.startsWith('data:image/png;base64,')) {
       this.data.response.secretImageUri = 'data:image/png;base64,' + this.data.response.secretImageUri;
     }
     this.authResponse = this.data.response.secretImageUri;
@@ -101,42 +100,34 @@ debugger;
       code: this.otpCode
     };
 
-    // this.recaptchaV3Service.execute("login_action").subscribe({
-    //   next: (token) => {
-    //     debugger;
-        this.loginService.verifyCode(verifyRequest).subscribe({
-          next: (response) => {
-            this.cerrarDialogo.emit();
-            if (response && response.access_token) {
-              sessionStorage.setItem(environment.TOKEN_NAME, response.access_token);
-              let token = sessionStorage.getItem(environment.TOKEN_NAME);
-              const helper = new JwtHelperService();
-              debugger;
-              const decodedToken = helper.decodeToken(token);
-              const username = decodedToken.sub;
-              const perfil = decodedToken.perfil;
-              sessionStorage.setItem(environment.rol, perfil.rol.codigo );
-              sessionStorage.setItem(environment.codigoOrganizacion, perfil.organizacion.codigoInterno);
-              sessionStorage.setItem(environment.cargoSeleccionado, perfil.nombre + " - " +  perfil.organizacion.acronimo);
-              debugger;
-              sessionStorage.setItem(environment.nombreOrganizacion, perfil.organizacion.acronimo);
-              this.router.navigate(['/principal/dashboard']);
-              Swal.fire('Bienvenido al SISGEDO','', 'success');
-            } else {
-              console.error('No access_token in response');
-            }
-          },
-          error: (err) => {
-            Swal.fire('VERIFICACIÓN INCORRECTA', 'CÓDIGO INGRESADO NO ES VALIDO', 'info');
-          }
-        });
-    //   },
-    //   error: (err) => {
-    //     debugger;
-    //     console.error('ReCAPTCHA v3 error:', err);
-
-    //   }
-    // });
+    this.loginService.verifyCode(verifyRequest).subscribe({
+      next: (response) => {
+        this.cerrarDialogo.emit();
+        if (response && response.access_token) {
+          sessionStorage.setItem(environment.TOKEN_NAME, response.access_token);
+          let token = sessionStorage.getItem(environment.TOKEN_NAME);
+          const helper = new JwtHelperService();
+          debugger;
+          const decodedToken = helper.decodeToken(token);
+          const username = decodedToken.sub;
+          const perfil = decodedToken.perfil;
+          sessionStorage.setItem(environment.rol, perfil.rol.codigo );
+          sessionStorage.setItem(environment.codigoOrganizacion, perfil.organizacion.codigoInterno);
+          sessionStorage.setItem(environment.cargoSeleccionado, perfil.nombre + " - " +  perfil.organizacion.acronimo);
+          debugger;
+          sessionStorage.setItem(environment.nombreOrganizacion, perfil.organizacion.acronimo);
+          this.router.navigate(['/principal/dashboard']).then(() => {
+           location.reload();
+          });
+          Swal.fire('Bienvenido al SISGEDO','', 'success');
+        } else {
+          console.error('No access_token in response');
+        }
+      },
+      error: (err: any) => {
+        Swal.fire('VERIFICACIÓN INCORRECTA', 'CÓDIGO INGRESADO NO ES VALIDO', 'info');
+      }
+    });
 
 
   }

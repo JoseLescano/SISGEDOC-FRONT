@@ -1,6 +1,7 @@
 
 <div class="container loader" *ngIf="cargando"></div>
-<div class="widget-container " style="cursor: pointer;" *ngIf="!cargando && (codigoRol=='000' || codigoRol=='002')">
+<div class="widget-container " style="cursor: pointer;"
+  *ngIf="!cargando && (codigoRol=='000' || codigoRol=='002')">
     <div class="widget green" (click)="viewRemitidos()">
       <div class="icon">
         <i class="fas fa-upload"></i>
@@ -29,19 +30,7 @@
       </div>
     </div>
 
-  </div>
-<app-pendiente *ngIf="codigoRol=='000' || codigoRol=='002'"></app-pendiente>
-
-<div class="row mt-5" *ngIf="false " >
-  <mat-card class="col-6" style="margin-right: 5px;">
-    <mat-card-header class="title-form">
-      <mat-card-title >GRAFICA DE DOCUMENTO EN BANDEJA</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <canvas  id="canvas">{{ barChart }}</canvas>
-    </mat-card-content>
-  </mat-card>
-
-
-
 </div>
+<app-pendiente *ngIf="codigoRol=='000' || codigoRol=='002'"></app-pendiente>
+<app-recibir *ngIf="codigoRol=='001'"></app-recibir>
+<app-esquema *ngIf="codigoRol=='004'"></app-esquema>

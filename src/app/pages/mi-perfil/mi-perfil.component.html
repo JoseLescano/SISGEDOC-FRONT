@@ -1,0 +1,9 @@
+
+  <mat-card class="col m-2" *ngIf="codigoRol=='000' || codigoRol == '002'" >
+    <mat-card-header class="title-form">
+      <mat-card-title >GRAFICA DE DOCUMENTO EN BANDEJA</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <canvas  id="canvas">{{ barChart }}</canvas>
+    </mat-card-content>
+  </mat-card>

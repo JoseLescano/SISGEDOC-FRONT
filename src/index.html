@@ -71,14 +71,14 @@
       var port = "48596";
       startSignature(port, param);
     }
-    // let token=sessionStorage.getItem('access_token')==null;
+    // let token=sessionStorage.getItem('access_token')==null ? environment.TOKEN_NAME: sessionStorage.getItem('access_token');
     let token=sessionStorage.getItem('access_token');
 
     function iniciarFirma(configuracion,incallback){
       var param={
 
-       "param_url": " http://localhost:8080/documentos/firmaPeru/"+configuracion+"?access_token="+token,
-       // "param_url": " https://net.ejercito.mil.pe/dev-sisgedo/documentos/firmaPeru/"+configuracion+"?access_token="+token,
+        "param_url": " http://localhost:8080/documentos/firmaPeru/"+configuracion+"?access_token="+token,
+       //"param_url": " https://net.ejercito.mil.pe/dev-sisgedo/documentos/firmaPeru/"+configuracion+"?access_token="+token,
         "param_token": "162647697663667",
         "document_extension": "pdf"
       }

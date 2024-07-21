@@ -24,6 +24,7 @@
     "@ng-select/ng-select": "^9.1.0",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.3",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "file-saver": "^2.0.5",
     "gojs": "^3.0.0",
     "gojs-angular": "^2.0.7",
