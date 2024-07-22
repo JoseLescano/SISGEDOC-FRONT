@@ -102,16 +102,20 @@ export class RegistroCorrespondenciaComponent implements OnInit {
     this.corresp.folio = this.form.value['folio'];
     this.corresp.asunto = this.form.value['asunto'];
     this.corresp.observaciones = this.form.value['observaciones'];
-    this.correspondenciaService.correspondenciaOP(this.corresp).subscribe((response:any)=> {
-      if (response.httpStatus =='CREATED'){
-        this.form.reset();
-        Swal.fire('Se registro correspondencia', response.message, 'info');
+    this.corresp.organizacionRegistra = sessionStorage.getItem(environment.codigoOrganizacion);
+    this.correspondenciaService.correspondenciaOP(this.corresp).subscribe( {
+      next: (response:any)=> {
+        if (response.httpStatus =='CREATED'){
+          this.form.reset();
+          Swal.fire('Se registro correspondencia', response.message, 'info');
+        } else
+          Swal.fire('Lo sentimos', response.message, 'warning');
+        },
+      error: (err: any) => {
+          Swal.fire('Lo sentimos', 'Se presento un inconveniente', 'warning');
       }
-      else
-        Swal.fire('Lo sentimos', response.message, 'warning');
-    }, error => {
-      Swal.fire('Lo sentimos', 'Se presento un inconveniente', 'warning');
     });
+     
   }
 
   cancelar(){

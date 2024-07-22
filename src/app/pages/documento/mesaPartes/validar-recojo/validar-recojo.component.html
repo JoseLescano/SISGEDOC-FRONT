@@ -1,9 +1,8 @@
-<mat-card class="m-2">
+<mat-card >
     <mat-card-header class="title-form">
         <mat-card-title >VALIDACIÓN DE CREDENCIALES</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-        <div class = "container text-center">
             <mat-form-field appearance="fill" class="example-full-width">
               <mat-label>INGRESE USUARIO</mat-label>
               <input matInput [(ngModel)]="usuario">
@@ -17,7 +16,7 @@
             </mat-form-field>
             <button type = "submit" mat-raised-button color="primary" class="btn-opcion" (click)="validarCredenciales()" >VALIDAR Y ENTREGAR</button>
             <button type="button" style = "margin-left: 20px;" mat-raised-button color="accent" class="btn-opcion" (click)="close()">CANCELAR</button>
-        </div>
+       
     </mat-card-content>
     <mat-card-footer>
       <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>

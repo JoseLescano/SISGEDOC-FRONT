@@ -26,7 +26,6 @@ export class CorrespondenciaService extends GenericService<Correspondencia> {
   }
 
   correspondenciaOP(correspondencia: CorrespondenciaOP){
-    debugger;
     let formData:FormData = new FormData();
     formData.append('origen', correspondencia.origen);
     formData.append('destino', correspondencia.destino);
@@ -36,13 +35,13 @@ export class CorrespondenciaService extends GenericService<Correspondencia> {
     formData.append('folio', correspondencia.folio);
     formData.append('asunto', correspondencia.asunto);
     formData.append('observaciones', correspondencia.observaciones);
+    formData.append('orgRegistra', correspondencia.organizacionRegistra);
 
     return this.http.post(`${environment.HOST}correspondencias/correspondenciaOP`, formData);
   }
 
   entregaCorrespondencia(origen:any, usuarioRecibe:any, 
     contrasena:any, correspondencias:Correspondencia[]){
-    debugger;
     let formData:FormData = new FormData();
     formData.append('origen', origen);
     formData.append('usuarioRecibe',usuarioRecibe);

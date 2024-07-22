@@ -33,25 +33,30 @@ export class ValidarRecojoComponent implements OnInit {
 
   validarCredenciales(){
     this.cargando = true;
-    this.correspondenciaService.entregaCorrespondencia(
-      sessionStorage.getItem(environment.codigoOrganizacion),
-      this.usuario, this.password,
-      this.data.lista).subscribe({
-        next : (response:any)=>{
-
-          if (response.data == 0){
+    if ( this.usuario != null &&  this.password != null){
+      this.correspondenciaService.entregaCorrespondencia(
+        sessionStorage.getItem(environment.codigoOrganizacion),
+        this.usuario, this.password,
+        this.data.lista).subscribe({
+          next : (response:any)=>{
+            if (response.httpStatus == "OK"){
+              this.cargando = false;
+              Swal.fire('VALIDACIÓN CORRECTA', 'SE PROCEDERÁ A ENTREGAR CORRESPONDENCIA', 'success');
+              
+            } else {
+              this.cargando = false;
+              Swal.fire('LO SENTIMOS', response.message, 'warning');
+            }
+          },
+          error: (err: any) => {
             this.cargando = false;
-            Swal.fire('VALIDACIÓN CORRECTA', 'SE PROCEDERÁ A ENTREGAR CORRESPONDENCIA', 'success');
-          } else {
-            this.cargando = false;
-            Swal.fire('LO SENTIMOS', response.message, 'warning');
+            Swal.fire('LO SENTIMOS', "SE PRESENTO UN INCONVENIENTE", 'warning');
           }
-        },
-        error: (err: any) => {
-          this.cargando = false;
-          Swal.fire('LO SENTIMOS', "SE PRESENTO UN INCONVENIENTE", 'warning');
-        }
-      });
+        });
+    } else {
+      this.cargando = false;
+      Swal.fire('LO SENTIMOS', "INGRESE USUARIO Y CONTRASEÑA DEL USUARIO RECEPTOR", 'warning');
+    }
 
   }
 

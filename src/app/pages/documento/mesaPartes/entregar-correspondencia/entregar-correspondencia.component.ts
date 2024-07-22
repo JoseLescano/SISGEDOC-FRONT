@@ -64,7 +64,7 @@ export class EntregarCorrespondenciaComponent implements OnInit {
         this.createTable(response.data);
       } else {
         this.cargando = false;
-        Swal.fire('Sin resultados', 'No se encuentra correspondencia para unidad seleccionada', 'info');
+        Swal.fire('SIN RESULTADOS', 'UNIDAD SIN CORRESPONDENCIA REGISTRADA', 'info');
       }
     }, error => {
       Swal.fire('Lo sentimos', 'Se presento un inconveniente en la busqueda', 'info');
@@ -109,7 +109,7 @@ export class EntregarCorrespondenciaComponent implements OnInit {
 
   abrirValidarCredenciales(informacion:any): void {
     const dialogRef = this.dialog.open(ValidarRecojoComponent,{
-      width: '50%',
+      width: '40%',
       data: informacion
     });
 
@@ -125,7 +125,6 @@ export class EntregarCorrespondenciaComponent implements OnInit {
     if (listaCorrespondenciaSeleccionada.length==0 || listaCorrespondenciaSeleccionada==null){
       Swal.fire('Lo sentimos', 'DEBE SELECCIONAR CORRESPONDENCIA A ENTREGAR', 'warning');
     }else {
-      debugger;
       this.abrirValidarCredenciales(informacion);
       // Swal.fire('OPERACION REALIZADA', 'SE ENTREGO CORRESPONDENCIA!', 'success');
     }

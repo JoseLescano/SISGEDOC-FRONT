@@ -29,16 +29,19 @@ export class DocumentoService  extends GenericService<Documento> {
   }
 
   findByOrganizacionDestino(codigo:any){
-    let token = sessionStorage.getItem(environment.TOKEN_NAME);
-    return this.http.get<Documento[]>(`${environment.HOST}documentos/findByOrganizacionDestino/${codigo}`, {
-      headers: new HttpHeaders()
-            .set('Authorization', `Bearer ${token}`)
-            .set('Content-Type', 'application/json'),
-    });
+    return this.http.get<Documento[]>(`${environment.HOST}documentos/findByOrganizacionDestino/${codigo}`);
+  }
+
+  searchRegistrados(codigo:any){
+    return this.http.get<Documento[]>(`${environment.HOST}documentos/searchRegistrados/${codigo}`);
   }
 
   viewPDF(vidDocumento: any){
     return this.http.get(`${environment.HOST}documentos/viewPDF/${vidDocumento}`);
+  }
+
+  verDocumentoRespuesta(codigoDocumentoPadre: any){
+    return this.http.get(`${environment.HOST}documentos/verDocumentoRespuesta/${codigoDocumentoPadre}`);
   }
 
   getDocumentoSeguimiento(vidDocumento: any){

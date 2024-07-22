@@ -35,6 +35,7 @@ export class ViewDocumentoComponent implements OnInit {
   }
 
   getIdDocumento(): void {
+    debugger;
     this.vidDocumento = this.data.codigo;
     this.viewDocumento(this.vidDocumento);
     this.viewAnexos(this.vidDocumento);
@@ -76,7 +77,6 @@ export class ViewDocumentoComponent implements OnInit {
   }
 
   descargarAnexo(anexo:Anexo){
-    debugger;
     this.anexoService.descargarAnexo(anexo).subscribe((resp: any) => {
         if (resp == null){
             Swal.fire('Lo sentimos', `Archivo no disponible y/o no se encuentra`, 'error');

@@ -22,7 +22,7 @@ import { TimelineComponent } from '../../report/timeline/timeline.component';
 export class ViewRemitidosComponent implements OnInit {
 
   displayedColumns: string[] = ['Nro', 'Asunto', 'Origen','Destino', 'FechaDoc', 'Documento',  'Acciones'];
-  dataSource: MatTableDataSource<Documento>;
+  dataSource: MatTableDataSource<any>;
   cargando: boolean= false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -77,7 +77,7 @@ export class ViewRemitidosComponent implements OnInit {
     });
   }
 
-  createTable(documentos: Documento[]): void {
+  createTable(documentos: any[]): void {
     this.dataSource = new MatTableDataSource(documentos);
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
@@ -107,6 +107,22 @@ export class ViewRemitidosComponent implements OnInit {
       height: '95%',
       data: documentoSeleccionado,
     });
+  }
+
+  VerRespuesta(codigoPadre?:any): void {
+    debugger;
+    let documento : Documento = new Documento();
+    this.documentoService.findRespuestaByVidParent(codigoPadre).subscribe((data:any)=> {
+      debugger;
+      documento = {...data}
+      const dialogRef = this.dialog.open(ViewDocumentoComponent, {
+        width: '60%',
+        height: '95%',      
+        data: documento,
+      });
+    })
+  
+    
   }
 
   viewSeguimiento(documentoSeleccionado?:any): void {

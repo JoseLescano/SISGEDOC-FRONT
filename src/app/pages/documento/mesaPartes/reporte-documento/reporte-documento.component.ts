@@ -117,7 +117,7 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
     if (this.range.value['start']!= null && this.range.value['end']!=null){
       this.cargando = true;
       this.titulo = "LISTA DE DOCUMENTOS REGISTRADOS"
-      this.documentoService.findByOrganizacionDestino(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any)=> {
+      this.documentoService.searchRegistrados(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any)=> {
         this.createTable(data);
         this.cargando = false;
       }, error=> {
