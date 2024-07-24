@@ -136,7 +136,7 @@ export class RespuestaComponent implements OnInit {
       this.documentoar.asunto= this.form.value['asunto'];
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
       if (this.documentoar.organizacionOrigen== sessionStorage.getItem(environment.codigoOrganizacion)){
-        this.documentoService.crearDocumento(this.documentoar, this.vidDocumento).subscribe((response:any)=>{
+        this.documentoService.crearDocumento(this.documentoar, this.vidDocumento, "", false).subscribe((response:any)=>{
           if (response.httpStatus=='CREATED'){
             this.cargando = false;
             this.initForm();

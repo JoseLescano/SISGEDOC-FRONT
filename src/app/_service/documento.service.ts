@@ -142,7 +142,7 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/envioExterno`, formData);
   }
 
-  crearDocumento(documento: any, anexos?:any
+  crearDocumento(documento: any,  nameDocuentoFirmado : any, isFirmado:any, anexos?:any
     // , documentoPadre: any
   ){
 
@@ -157,6 +157,8 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('archivoPrincipal', documento.archivoPrincipal);
     formData.append('organizacionRemitente', documento.organizacionOrigen);
     formData.append('anexos', anexos);
+    formData.append('nameArchivoFirmado', nameDocuentoFirmado);
+    formData.append('isFirmado', isFirmado);
 
 
     return this.http.post(`${environment.HOST}documentos/crearDocumento`, formData);

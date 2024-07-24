@@ -51,22 +51,18 @@ export class FormComponent implements OnInit {
     this.documentoService.findById(this.idDocumento).pipe(switchMap((response:any)=> {
       this.documento = response;
       this.organizacionLogueada = sessionStorage.getItem(environment.codigoOrganizacion);
-      debugger;
       this.documentoService.existByDocumento(this.idDocumento).subscribe((response: any )=> {
-        debugger;
         this.existeWord = response;
       });
       return this.documentoService.findRespuestaByVidParent(this.documento.codigo);
       })).subscribe((responseDocumentoPadre: any)=>{
       if (responseDocumentoPadre!=null){
-        debugger;
         this.documentoRespuesta = responseDocumentoPadre;
         this.mostrarRespuesta = true;
         if (this.documentoRespuesta.organizacionOrigen.codigoInterno==this.organizacionLogueada){
           this.mostrarDistribuir = true;
         }
         this.documentoService.viewPDF(this.documento.codigo).pipe(switchMap((viewDocumento:any)=> {
-          debugger;
           this.crearDocumento(viewDocumento.data, 'documentoReferencia');
           return this.documentoService.viewPDF(this.documentoRespuesta.codigo);
         })).subscribe((responseRespuesta:any)=> {
@@ -77,13 +73,11 @@ export class FormComponent implements OnInit {
           Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR PDF!`, 'warning');
         });
       } else {
-        debugger;
         if (this.documento.organizacionOrigen.codigoInterno==this.organizacionLogueada){
           this.mostrarDistribuir = true;
           this.mostrarRespuesta = true;
         }
         this.documentoService.viewPDF(this.documento.codigo).subscribe((response:any)=> {
-          debugger;
           this.crearDocumento(response.data, 'documentoRespuesta');
         }, (error:any) => {
           this.errorPDF = true;
@@ -267,7 +261,6 @@ export class FormComponent implements OnInit {
       confirmButtonText: "SÍ, DESEO CONTINUAR"
     }).then((result) => {
       if (result.isConfirmed) {
-        debugger;
         if (this.documentoRespuesta==null){
 
           this.decretoService.elevarDocumento(

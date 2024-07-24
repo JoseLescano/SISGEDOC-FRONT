@@ -122,16 +122,49 @@ export class CrearDocumentoComponent implements OnInit {
       this.documentoar.asunto= this.form.value['asunto'];
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
       if (this.documentoar.organizacionOrigen== sessionStorage.getItem(environment.codigoOrganizacion)){
-        this.documentoService.crearDocumento(this.documentoar, this.uploadedFiles).subscribe((response:any)=>{
-          if (response.httpStatus=='CREATED'){
-            this.cargando = false;
-            this.initForm();
-            Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
-          }
-        }, error => {
-          this.cargando = false;
-          Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
-        });
+        if (!this.firmado){
+          Swal.fire({
+            title: "¿ESTÁS SEGURO?",
+            text: "EL DOCUMENTO SERÁ DISTRIBUIDO SIN FIRMA DIGITAL, ¿DESEAS CONTINUAR?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "SÍ, DESEO CONTINUAR"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.documentoService.crearDocumento(this.documentoar, this.nameDocuentoFirmado, this.firmado,  this.uploadedFiles ).subscribe(
+                {
+                  next: (response:any)=> {
+                    if (response.httpStatus=='CREATED'){
+                      this.cargando = false;
+                      this.initForm();
+                      Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
+                    }
+                  }, 
+                  error: (err: any) => {
+                    this.cargando = false;
+                    Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
+                  }
+                }
+              );
+            }
+          }); 
+        }else {
+          this.documentoService.crearDocumento(this.documentoar, this.nameDocuentoFirmado, this.firmado,  this.uploadedFiles ).subscribe(
+            {
+              next: (response:any)=> {
+                if (response.httpStatus=='CREATED'){
+                  this.cargando = false;
+                  this.initForm();
+                  Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
+                }
+              }, 
+              error: (err: any) => {
+                this.cargando = false;
+                Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
+              }
+            }
+          );
+        }
       }else {
         this.documentoService.crearDocumentoParaFirmar(
           this.documentoar,
@@ -148,6 +181,9 @@ export class CrearDocumentoComponent implements OnInit {
       }
      } else {
       this.cargando = false;
+      // if (this.firmado == false)
+      //   Swal.fire('Lo sentimos', `Debe de firmar el documento digitalmente para poder continuar!`, 'info');
+      // else 
       Swal.fire('Lo sentimos', `Se presento un inconveniente!`, 'warning');
     }
   }
@@ -262,6 +298,7 @@ export class CrearDocumentoComponent implements OnInit {
             .subscribe( {
               next: (resp: any) => {
                 this.cargando = true;
+                this.nameDocuentoFirmado = resp[1];
                 let byteArray = new Uint8Array(atob(resp[0]).split('').map((char) => char.charCodeAt(0)));
                 let file = new Blob([byteArray], { type: 'application/pdf' });
                 var rf_file = new File([file], URL.createObjectURL(file), {
@@ -344,7 +381,6 @@ export class CrearDocumentoComponent implements OnInit {
 }
 
   abrirFirmaPeru(documento:any): void {
-    debugger;
     const dialogRef = this.dialog.open(ModalFirmaPeruComponent,{
       width: '90%',
       height: '80%',
@@ -376,7 +412,12 @@ export class CrearDocumentoComponent implements OnInit {
     this.cargando = false;
   }
 
+  nameDocuentoFirmado : string = "";
+  firmado : boolean = false;
   updateIframeWithKeyDigitalGeneral(inNameFile: any,tipo:any) {
+    this.nameDocuentoFirmado = inNameFile;
+    var _this: any = this;
+    _this.firmado = true;
     this.documentoService
       .getFileDocumentKeyDigital(inNameFile)
       .subscribe((resp:any) => {
