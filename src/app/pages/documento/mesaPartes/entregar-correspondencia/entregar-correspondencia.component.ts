@@ -108,9 +108,13 @@ export class EntregarCorrespondenciaComponent implements OnInit {
   }
 
   abrirValidarCredenciales(informacion:any): void {
+    let sendData : any = {
+      data: informacion,
+      tipoOperacion: 0
+    }
     const dialogRef = this.dialog.open(ValidarRecojoComponent,{
       width: '40%',
-      data: informacion
+      data: sendData
     });
 
   }

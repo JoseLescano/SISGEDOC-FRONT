@@ -19,7 +19,7 @@ import Swal from 'sweetalert2';
 export class FormComponent implements OnInit {
 
   documento:Documento;
-  documentoRespuesta : Documento = new Documento() ;
+  documentoRespuesta : Documento = null ;
   errorPDF : boolean = false;
   errorPDFReferencia : boolean = false;
   anexos:Anexo[]=[];
@@ -28,13 +28,15 @@ export class FormComponent implements OnInit {
   url_pdf : any;
   cargando : boolean = false;
   idDocumento: number;
-  cambioPDF : boolean = true;
+  cambioPDF : boolean = false;
 
   mostrarRespuesta: boolean = false;
   mostrarDistribuir: boolean = false;
   organizacionLogueada: string = "";
   existeWord : number = 0;
   descargo:boolean = false;
+  isFirmado: boolean = false;
+  nameDocumentoFirmado : string = "";
 
   constructor(
     private documentoService:DocumentoService,
@@ -47,6 +49,7 @@ export class FormComponent implements OnInit {
 
   ngOnInit(): void {
     const id = +this.route.snapshot.paramMap.get('codigoDocumento');
+    debugger;
     this.idDocumento = id;
     this.documentoService.findById(this.idDocumento).pipe(switchMap((response:any)=> {
       this.documento = response;
@@ -54,18 +57,21 @@ export class FormComponent implements OnInit {
       this.documentoService.existByDocumento(this.idDocumento).subscribe((response: any )=> {
         this.existeWord = response;
       });
-      return this.documentoService.findRespuestaByVidParent(this.documento.codigo);
+      return this.documentoService.findRespuestaByVidParent(this.idDocumento);
       })).subscribe((responseDocumentoPadre: any)=>{
       if (responseDocumentoPadre!=null){
+        debugger;
+        this.documentoRespuesta = new Documento();
         this.documentoRespuesta = responseDocumentoPadre;
         this.mostrarRespuesta = true;
         if (this.documentoRespuesta.organizacionOrigen.codigoInterno==this.organizacionLogueada){
           this.mostrarDistribuir = true;
         }
-        this.documentoService.viewPDF(this.documento.codigo).pipe(switchMap((viewDocumento:any)=> {
+        this.documentoService.viewPDF(this.idDocumento).pipe(switchMap((viewDocumento:any)=> {
           this.crearDocumento(viewDocumento.data, 'documentoReferencia');
-          return this.documentoService.viewPDF(this.documentoRespuesta.codigo);
+          return this.documentoService.viewPDF(this.documentoRespuesta.codigo, this.documentoRespuesta.tipoOrganizacion =='R'? '1': '0');
         })).subscribe((responseRespuesta:any)=> {
+          debugger;
           this.crearDocumento(responseRespuesta.data, 'documentoRespuesta');
         }, (error:any) => {
           this.errorPDF = true;
@@ -73,6 +79,7 @@ export class FormComponent implements OnInit {
           Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR PDF!`, 'warning');
         });
       } else {
+        debugger;
         if (this.documento.organizacionOrigen.codigoInterno==this.organizacionLogueada){
           this.mostrarDistribuir = true;
           this.mostrarRespuesta = true;
@@ -98,23 +105,6 @@ export class FormComponent implements OnInit {
       }
     })
   }
-
-  // getIdDocumento(){
-  //   const id = +this.route.snapshot.paramMap.get('codigoDocumento');
-  //   this.idDocumento = id;
-  //   return this.documentoService.findById(this.idDocumento).pipe(
-  //     switchMap((response:any) => {
-  //       this.documento = response;
-  //       this.organizacionLogueada = sessionStorage.getItem(environment.codigoOrganizacion);
-  //       if (this.organizacionLogueada==this.documento.organizacionOrigen.codigoInterno){
-  //         this.mostrarDistribuir=true;
-  //       }else {
-  //         this.mostrarDistribuir=false;
-  //       }
-  //       return of(true);
-  //     })
-  //   );
-  // }
 
   findAnexosByDocumento(){
     this.anexoService.findByDocumento(this.documento.codigo).subscribe((response:any)=> {
@@ -261,7 +251,7 @@ export class FormComponent implements OnInit {
       confirmButtonText: "SÍ, DESEO CONTINUAR"
     }).then((result) => {
       if (result.isConfirmed) {
-        if (this.documentoRespuesta==null){
+        if (this.documentoRespuesta==null){ // SIN REFERENCIA
 
           this.decretoService.elevarDocumento(
             this.documento.codigo,
@@ -278,14 +268,13 @@ export class FormComponent implements OnInit {
             Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE EN LA ELEVACION DEL DOCUMENTO', 'warning');
           });
 
-        }else {
+        }else { // DOCUMENTO CON REFERENCIA
           this.decretoService.elevarDocumento(
             this.documento.codigo,
             this.organizacionLogueada,
             this.cambioPDF?this.selectedFiles[0]:null,
             this.documentoRespuesta.codigo )
           .subscribe((response:any)=> {
-            debugger;
             if (response.httpStatus=='CREATED'){
               Swal.fire('DOCUMENTO ELEVADO', response.message, 'info');
               this.router.navigate(['/principal/parte-diario']);
@@ -301,53 +290,96 @@ export class FormComponent implements OnInit {
 
   }
 
-  distribuir(){
-    Swal.fire({
-      title: "¿ESTÁS SEGURO?",
-      text: "EL DOCUMENTO SERÁ DISTRIBUIDO, ¿DESEAS CONTINUAR?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "SÍ, DESEO CONTINUAR"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        debugger;
-        if (this.documentoRespuesta==null){
-          this.decretoService.distrubirDocumento(
-            this.documento.codigo,
-            sessionStorage.getItem(environment.codigoOrganizacion),
-            this.cambioPDF?this.selectedFiles:'undefined')
-          .subscribe((response:any)=> {
-            console.log(response);
-            if (response.httpStatus=='CREATED'){
-              Swal.fire("ACCION REALIZADA", response.message, "success");
-              this.router.navigate(['/principal/parte-diario']);
-            }else {
-              Swal.fire("LO SENTIMOS", response.message, "warning");
-            }
-          }, error=> {
-            Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE", "warning");
-          });
-        }else {
-          this.decretoService.distrubirRespuestaDocumento(
-            this.documentoRespuesta.codigo,
-            sessionStorage.getItem(environment.codigoOrganizacion),
-            this.documento.codigo,
-            this.cambioPDF?this.selectedFiles:'undefined')
-          .subscribe((response:any)=> {
-            console.log(response);
-            if (response.httpStatus=='CREATED'){
-              Swal.fire("ACCION REALIZADA", response.message, "success");
-              this.router.navigate(['/principal/parte-diario']);
-            }else {
-              Swal.fire("LO SENTIMOS", response.message, "warning");
-            }
-          }, error=> {
-            Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE", "warning");
-          });
+  distribuirDocumento(){
+    this.decretoService.distrubirDocumento(
+      this.documento.codigo,
+      sessionStorage.getItem(environment.codigoOrganizacion),
+      this.nameDocumentoFirmado,
+      this.isFirmado,
+      this.cambioPDF?this.selectedFiles:'undefined')
+    .subscribe(
+      {
+        next : (response:any)=> {
+          if (response.httpStatus=='CREATED'){
+            Swal.fire("ACCION REALIZADA", response.message, "success");
+            this.router.navigate(['/principal/parte-diario']);
+          }else {
+            Swal.fire("LO SENTIMOS", response.message, "warning");
+          }
+        },
+        error: (err: any) => {
+          Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE", "warning");
         }
+      });
+  }
 
+  distribuirRespuesta(){
+    debugger;
+    this.decretoService.distrubirRespuestaDocumento(
+      this.documentoRespuesta.codigo,
+      sessionStorage.getItem(environment.codigoOrganizacion),
+      this.nameDocumentoFirmado,
+      this.isFirmado,
+      this.documento.codigo,
+      this.documentoRespuesta.tipoOrganizacion =='R'? '1': '0',
+      this.cambioPDF?this.selectedFiles:'undefined')
+    .subscribe(
+      {
+        next: (response:any)=> {
+          if (response.httpStatus=='CREATED'){
+            Swal.fire("ACCION REALIZADA", response.message, "success");
+            this.router.navigate(['/principal/parte-diario']);
+          } else {
+            Swal.fire("LO SENTIMOS", response.message, "warning");
+          }
+        },
+        error : (err: any)=> {
+          Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE", "warning");
+        }
       }
-    });
+    );
+  }
+
+  distribuir(){
+    debugger;
+    if (this.documentoRespuesta!=null){
+      debugger;
+      if (!this.isFirmado){
+        Swal.fire({
+          title: "¿ESTÁS SEGURO?",
+          text: "EL DOCUMENTO SERÁ DISTRIBUIDO SIN FIRMA DIGITAL, ¿DESEAS CONTINUAR?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "SÍ, DESEO CONTINUAR"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            debugger;
+            this.distribuirRespuesta();
+            //this.distribuirDocumento();
+          }
+        }
+       );
+      }else {
+        this.distribuirRespuesta();
+        //this.distribuirDocumento();
+      }
+    }else {
+      if (!this.isFirmado){
+        Swal.fire({
+          title: "¿ESTÁS SEGURO?",
+          text: "EL DOCUMENTO SERÁ DISTRIBUIDO SIN FIRMA DIGITAL, ¿DESEAS CONTINUAR?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "SÍ, DESEO CONTINUAR"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.distribuirDocumento();
+          }
+        });
+      }else {
+        this.distribuirDocumento();
+      }
+    }
   }
 
   _window(): any {
@@ -372,6 +404,8 @@ export class FormComponent implements OnInit {
     this.documentoService
       .getFileDocumentKeyDigital(inNameFile)
       .subscribe((resp:any) => {
+        this.isFirmado = true;
+        this.nameDocumentoFirmado= inNameFile;
         this.crearDocumento(resp,'documentoRespuesta');
       });
   }

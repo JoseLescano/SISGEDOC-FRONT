@@ -34,7 +34,11 @@ export class PerfilService extends GenericService<Perfil> {
   }
 
   findByUsuariLogueado(){
-    return this.http.get<Perfil[]>(`${environment.HOST}perfiles/findByUsuarioLogueado`);
+    let token = sessionStorage.getItem(environment.TOKEN_NAME);
+    return this.http.get<Perfil[]>(`${environment.HOST}perfiles/findByUsuarioLogueado`, {
+      headers: new HttpHeaders()
+            .set('Authorization', `Bearer ${token}`)
+            .set('Content-Type', 'application/json')});
   }
 
   findByOrganizacion(codigoInterno: any){

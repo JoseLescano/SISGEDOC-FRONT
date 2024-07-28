@@ -6,6 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
+    "buildProduction": "ng build --configuration production  --base-href /sisgedo/",
     "test": "ng test"
   },
   "private": true,

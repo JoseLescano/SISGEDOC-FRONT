@@ -21,12 +21,12 @@ export class ErrorInterceptor implements HttpInterceptor {
                 this.router.navigate(['/principal/dashboard']);
               }else {
                 Swal.fire('ACCESO DENEGADO', err.error.details, 'info');
-                this.loginService.logout();
+                //this.loginService.logout();
               }
             }else {
               if ([0].includes(err.status)){
                 Swal.fire('LO SENTIMOS', 'ERROR EN CONEXION CON EL SERVIDOR', 'info');
-                this.loginService.logout();
+                //this.loginService.logout();
               }
             }
             const error = err.error.message || err.statusText;

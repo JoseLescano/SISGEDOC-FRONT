@@ -12,7 +12,7 @@ import { OrganizacionService } from 'src/app/_service/organizacion.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 import { ModalFirmaPeruComponent } from '../modal-firma-peru/modal-firma-peru.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ViewDocumentoComponent } from '../view-documento/view-documento.component';
 import { Documento } from 'src/app/_model/documento.model';
 
@@ -45,6 +45,7 @@ export class RespuestaComponent implements OnInit {
     private correlativoService: CorrelativoService,
     public dialog: MatDialog,
     private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -141,6 +142,7 @@ export class RespuestaComponent implements OnInit {
             this.cargando = false;
             this.initForm();
             Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
+            this.router.navigate(['/principal/pendientes']);
           }
         }, error => {
           this.cargando = false;
@@ -155,6 +157,7 @@ export class RespuestaComponent implements OnInit {
             this.cargando = false;
             this.initForm();
             Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
+            this.router.navigate(['/principal/pendientes']);
           }
         }, error => {
           this.cargando = false;

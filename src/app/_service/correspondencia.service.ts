@@ -40,8 +40,9 @@ export class CorrespondenciaService extends GenericService<Correspondencia> {
     return this.http.post(`${environment.HOST}correspondencias/correspondenciaOP`, formData);
   }
 
-  entregaCorrespondencia(origen:any, usuarioRecibe:any, 
+  entregaCorrespondencia(origen:any, usuarioRecibe:any,
     contrasena:any, correspondencias:Correspondencia[]){
+    debugger;
     let formData:FormData = new FormData();
     formData.append('origen', origen);
     formData.append('usuarioRecibe',usuarioRecibe);

@@ -24,6 +24,7 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
   dataSource: MatTableDataSource<Documento>;
   cargando: boolean;
   titulo: string = "";
+  tipoReporte : number = 0;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -79,6 +80,7 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
   verDecretos(){
     if (this.range.value['start']!= null && this.range.value['end']!=null){
       this.cargando = true;
+      this.tipoReporte = 0;
       this.titulo = "LISTA DE DOCUMENTOS DECRETOS"
       this.documentoService.findDecretados(sessionStorage.getItem(environment.codigoOrganizacion),
         environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end'])
@@ -100,6 +102,7 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
   verEnviadosExterno(){
     if (this.range.value['start']!= null && this.range.value['end']!=null){
       this.cargando = true;
+      this.tipoReporte = 2;
       this.titulo = "LISTA DE DOCUMENTOS ENVIADOS"
       this.documentoService.findEnviadosExternosMP(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>{
         this.createTable(response);
@@ -116,6 +119,7 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
   verDocumentoRegistrados(){
     if (this.range.value['start']!= null && this.range.value['end']!=null){
       this.cargando = true;
+      this.tipoReporte = 1;
       this.titulo = "LISTA DE DOCUMENTOS REGISTRADOS"
       this.documentoService.searchRegistrados(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any)=> {
         this.createTable(data);

@@ -78,7 +78,7 @@
       var param={
 
         "param_url": " http://localhost:8080/documentos/firmaPeru/"+configuracion+"?access_token="+token,
-       //"param_url": " https://net.ejercito.mil.pe/dev-sisgedo/documentos/firmaPeru/"+configuracion+"?access_token="+token,
+       //"param_url": " https://backend.ejercito.mil.pe/back-sisgedo/documentos/firmaPeru/"+configuracion+"?access_token="+token,
         "param_token": "162647697663667",
         "document_extension": "pdf"
       }
@@ -330,12 +330,12 @@
         if (!node) return;
         const thisemp = node.data;
 
-          let=organizationPadre=node.si.CODIGO;
+          let=organizationPadre=node.Qt.CODIGO;
           let dataReturn={
             value:"",
           };
           var arrayItem=new Array();
-          myDiagramOrganization.model.Ne.forEach(dataElement => {
+          myDiagramOrganization.model.Re.forEach(dataElement => {
               if(dataElement.parent==thisemp.key){
                 arrayItem.push(dataElement);
               }
@@ -387,7 +387,7 @@ myDiagramOrganization.nodeTemplate.contextMenu =
 
          // remove the whole subtree, including the node itself
 
-         const node = button.part.si;
+         const node = button.part.Qt;
         debugger;
          _this.incallbackDelete(node.CODIGO,()=>{
           debugger;
@@ -408,7 +408,7 @@ myDiagramOrganization.nodeTemplate.contextMenu =
 
        click: (e, button) => {
 
-       const node = button.part.si;
+       const node = button.part.Qt;
        _this.incallbackUpdate(node,()=>{
        })
        }
@@ -419,7 +419,7 @@ myDiagramOrganization.nodeTemplate.contextMenu =
      {
        click: (e, button) => {
         debugger;
-       const node = button.part.si;
+       const node = button.part.Qt;
        debugger;
        _this.incallAgregarUsuarios(node,()=>{
        })

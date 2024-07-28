@@ -36,8 +36,10 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get<Documento[]>(`${environment.HOST}documentos/searchRegistrados/${codigo}`);
   }
 
-  viewPDF(vidDocumento: any){
-    return this.http.get(`${environment.HOST}documentos/viewPDF/${vidDocumento}`);
+  viewPDF(vidDocumento: any, isAntiguo?:any){
+    debugger;
+    return this.http.get(`${environment.HOST}documentos/viewPDF/${vidDocumento}`,
+      {params: {respuestaAntigua: isAntiguo }});
   }
 
   verDocumentoRespuesta(codigoDocumentoPadre: any){
@@ -116,7 +118,7 @@ export class DocumentoService  extends GenericService<Documento> {
     documento.anexos.forEach(file => {
       formData.append('anexo', file);
     });
-    
+
     formData.append('organizacionPartida', documento.organizacionPartida);
     return this.http.post(`${environment.HOST}documentos/recibirDocumentoMP`, formData);
   }
@@ -142,10 +144,11 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/envioExterno`, formData);
   }
 
-  crearDocumento(documento: any,  nameDocuentoFirmado : any, isFirmado:any, anexos?:any
+  crearDocumento(documento: any,  nameDocuentoFirmado : any,
+     isFirmado:any, anexos?:any
     // , documentoPadre: any
   ){
-
+    debugger;
     let formData:FormData = new FormData();
     formData.append('clase', documento.clase);
     formData.append('nroOrden', documento.nroOrden);
@@ -156,7 +159,9 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('copiasInformativas', documento.copiasInformativas);
     formData.append('archivoPrincipal', documento.archivoPrincipal);
     formData.append('organizacionRemitente', documento.organizacionOrigen);
-    formData.append('anexos', anexos);
+    anexos.forEach(file => {
+      formData.append('anexos', file);
+    });
     formData.append('nameArchivoFirmado', nameDocuentoFirmado);
     formData.append('isFirmado', isFirmado);
 

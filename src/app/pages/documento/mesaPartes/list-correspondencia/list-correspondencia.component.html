@@ -14,8 +14,8 @@
             <mat-date-range-picker #picker></mat-date-range-picker>
             <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
             <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
-        </mat-form-field> 
-    
+        </mat-form-field>
+
         <mat-form-field appearance="fill" class="example-full-width mt-4">
             <mat-label>Filtro</mat-label>
             <input matInput placeholder="Ingrese valor" (keyup)="applyFilter($event)" #input>
@@ -59,10 +59,10 @@
                     <div class="example-flex-container">
                     <div class="example-button-container">
                         <button mat-mini-fab color="primary" class="mr-2"   >
-                        <i class="far fa-file-pdf"></i>
+                          <i class="fas fa-edit"></i>
                         </button>
-                        <button mat-mini-fab color="accent"  >
-                        <i class="fas fa-info-circle"></i>
+                        <button mat-mini-fab color="warn" (click)="eliminar(row.codigo)" >
+                          <i class="fas fa-trash-alt"></i>
                         </button>
                     </div>
                     </div>

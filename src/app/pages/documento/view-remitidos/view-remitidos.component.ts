@@ -88,9 +88,7 @@ export class ViewRemitidosComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+
   }
 
   ngAfterViewInit() {
@@ -117,12 +115,12 @@ export class ViewRemitidosComponent implements OnInit {
       documento = {...data}
       const dialogRef = this.dialog.open(ViewDocumentoComponent, {
         width: '60%',
-        height: '95%',      
+        height: '95%',
         data: documento,
       });
     })
-  
-    
+
+
   }
 
   viewSeguimiento(documentoSeleccionado?:any): void {

@@ -1,8 +1,9 @@
-
+<!--
   <mat-card >
     <mat-card-content style="height: 650px;">
       <div class="row" style="height: 100%;">
         <div  class="col-sx-12 col-sm-12 col-md-12  col-lg-9"  >
+
           <iframe id="embeddedPage" style="width: 100%; height: 100%; border: 1px solid black; border-radius: 5px;" *ngIf="!errorPDF" ></iframe>
           <div  style="width: 100%; height: 100%; border: 1px solid black;
                   border-radius: 5px; align-items: center; align-content: center;
@@ -19,9 +20,6 @@
                 <button class="btn btn-success " type="button" [routerLink]="['/principal/decretar', idDocumento]">
                   <i class="fas fa-calendar-day"></i><span> DECRETAR</span>
                 </button>
-                <!-- <button class="btn btn-outline-info" type="button" [routerLink]="['/principal/derivar', idDocumento]" >
-                  <i class="fas fa-exchange-alt"></i> DERIVAR
-                </button> -->
                 <button class="btn btn-primary" type="button" [routerLink]="['/principal/derivar', idDocumento]" >
                   <i class="fas fa-exchange-alt"></i> DERIVAR
                 </button>
@@ -32,9 +30,6 @@
                  [routerLink]="['/principal/devolver', idDocumento]">
                   <i class="fas fa-undo-alt"></i> DEVOLVER
                 </button>
-                <!-- <button class="btn btn-info" type="button" (click)="viewSeguimiento(idDocumento)" >
-                  <i class="fas fa-archive"></i> SEGUIMIENTO
-                </button> -->
                 <div class="btn-group">
                   <button type="button" class="btn btn-info">
                     <i class="fas fa-archive"></i> SEGUIMIENTO
@@ -59,4 +54,84 @@
         </div>
       </div>
   </mat-card-content>
-  </mat-card>
+  </mat-card> -->
+<!-- tabs -->
+<div class="tabset" >
+  <!-- Tab 1 -->
+  <input type="radio" name="tabset" id="tab1" aria-controls="marzen" checked>
+  <label for="tab1">DOUMENTO</label>
+  <!-- Tab 2 -->
+  <input type="radio" name="tabset" id="tab2" aria-controls="rauchbier">
+  <label for="tab2">ANEXOS</label>
+
+  <div class="tab-panels" >
+    <section id="marzen" class="tab-panel">
+      <div class="row" style="height: 600px;">
+        <div  class="col-xs-12 col-sm-12 col-md-12 col-lg-9"  >
+          <iframe id="embeddedPage" style="width: 100%; height: 100%; border: 1px solid black; border-radius: 5px;" *ngIf="!errorPDF" ></iframe>
+          <div  style="width: 100%; height: 100%; border: 1px solid black;
+                  border-radius: 5px; align-items: center; align-content: center;
+                  text-align: center; " *ngIf="errorPDF">
+            <i class="fas fa-exclamation-triangle" style="color: red;" ></i>
+            <strong style="font-size: 12px;"> Error en PDF!</strong>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
+        <div class="card mb-3" style="width: 100%; height: 100%;background-color: #fdfdff;">
+          <div class="card-header">ACCIONES</div>
+          <div class="card-body">
+            <div class="d-grid gap-2 col-12 mx-auto">
+              <button class="btn btn-success " type="button" [routerLink]="['/principal/decretar', idDocumento]">
+                <i class="fas fa-calendar-day"></i><span> DECRETAR</span>
+              </button>
+              <button class="btn btn-primary" type="button" [routerLink]="['/principal/derivar', idDocumento]" >
+                <i class="fas fa-exchange-alt"></i> DERIVAR
+              </button>
+              <button class="btn btn-warning" type="button" [routerLink]="['/principal/archivar', idDocumento]">
+                <i class="fas fa-archive"></i> ARCHIVAR
+              </button>
+              <button class="btn btn-success" style="border-color: #48eb3f;background-color: #48eb3f;color: black;" type="button"
+               [routerLink]="['/principal/devolver', idDocumento]">
+                <i class="fas fa-undo-alt"></i> DEVOLVER
+              </button>
+              <div class="btn-group">
+                <button type="button" class="btn btn-info">
+                  <i class="fas fa-archive"></i> SEGUIMIENTO
+                </button>
+                <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                  <span class="visually-hidden">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                  <li><a class="dropdown-item" (click)="viewSeguimiento(idDocumento)">REPORTE</a></li>
+                  <li><a class="dropdown-item" (click)="viewGrafica(idDocumento)">GRAFICA</a></li>
+                </ul>
+              </div>
+              <button class="btn btn-primary" style="border-color: #7c33a0; background-color: #75219f;" type="button" [routerLink]="['/principal/formRespuesta', idDocumento]" >
+                <i class="fas fa-file-import"></i> DAR RESPUESTA
+              </button>
+              <button class="btn btn-danger" type="button" routerLink="/principal/pendientes" >
+                <i class="fas fa-archive"></i> SALIR
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    </section>
+    <section id="rauchbier" class="tab-panel">
+      <mat-selection-list #shoes [multiple]="false" *ngIf="anexos?.length>0">
+        <mat-list-option *ngFor="let item of anexos" (click)="descargarAnexo(item)">
+          <mat-icon mat-list-icon>folder</mat-icon>
+          <div mat-line>{{item.url}}</div>
+          <div mat-line> {{item.fechaCreacion| date}} </div>
+        </mat-list-option>
+      </mat-selection-list>
+
+      <div class="col-md-12 mt-2 alert alert-info" *ngIf="anexos?.length == 0 || anexos == null">
+        No hay registros en la base de datos!
+      </div>
+    </section>
+  </div>
+
+</div>

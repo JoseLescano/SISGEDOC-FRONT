@@ -14,17 +14,20 @@ export class ValidarRecojoComponent implements OnInit {
 
   usuario:any;
   password:any;
+  motivo: string = "";
   cargando : boolean = false;
+  tipoOperacion: any= 0;
 
   constructor(
     public dialogRef: MatDialogRef<ValidarRecojoComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public dataEnviada: any,
     private personaService:PersonaService,
     private correspondenciaService: CorrespondenciaService
   ) { }
 
   ngOnInit(): void {
-    console.log(this.data);
+    console.log(this.dataEnviada);
+    this.tipoOperacion = this.dataEnviada.tipoOperacion;
   }
 
   close(){
@@ -32,17 +35,18 @@ export class ValidarRecojoComponent implements OnInit {
   }
 
   validarCredenciales(){
+    let correspondencia = this.dataEnviada.data.lista;
     this.cargando = true;
     if ( this.usuario != null &&  this.password != null){
       this.correspondenciaService.entregaCorrespondencia(
         sessionStorage.getItem(environment.codigoOrganizacion),
         this.usuario, this.password,
-        this.data.lista).subscribe({
+        correspondencia).subscribe({
           next : (response:any)=>{
             if (response.httpStatus == "OK"){
               this.cargando = false;
               Swal.fire('VALIDACIÓN CORRECTA', 'SE PROCEDERÁ A ENTREGAR CORRESPONDENCIA', 'success');
-              
+
             } else {
               this.cargando = false;
               Swal.fire('LO SENTIMOS', response.message, 'warning');
@@ -57,7 +61,6 @@ export class ValidarRecojoComponent implements OnInit {
       this.cargando = false;
       Swal.fire('LO SENTIMOS', "INGRESE USUARIO Y CONTRASEÑA DEL USUARIO RECEPTOR", 'warning');
     }
-
   }
 
 }

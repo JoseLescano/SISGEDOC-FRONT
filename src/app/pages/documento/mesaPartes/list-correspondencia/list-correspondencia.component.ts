@@ -6,6 +6,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Correspondencia } from 'src/app/_model/correspondencia';
 import { CorrespondenciaService } from 'src/app/_service/correspondencia.service';
 import Swal from 'sweetalert2';
+import { ValidarRecojoComponent } from '../validar-recojo/validar-recojo.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-list-correspondencia',
@@ -27,7 +29,8 @@ export class ListCorrespondenciaComponent implements OnInit, AfterViewInit {
   });
 
   constructor(
-    private correspondenciaService: CorrespondenciaService
+    private correspondenciaService: CorrespondenciaService,
+    public dialog: MatDialog,
   ) { }
 
 
@@ -62,6 +65,38 @@ export class ListCorrespondenciaComponent implements OnInit, AfterViewInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
+  }
+
+  _window(): any {
+    // return the global native browser window object
+    return window;
+  }
+
+  abrirValidarCredenciales(informacion:any): void {
+    let sendData : any = {
+      data: informacion,
+      tipoOperacion: 2
+    }
+    const dialogRef = this.dialog.open(ValidarRecojoComponent,{
+      width: '40%',
+      data: sendData
+    });
+
+  }
+
+  eliminar(correspondencia:any){
+    Swal.fire({
+      title: "¿ESTÁS SEGURO?",
+      text: "LA CORRESPONDENCIA SERÁ ELIMINADA, ¿DESEAS CONTINUAR?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "SÍ, DESEO CONTINUAR"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.abrirValidarCredenciales(correspondencia);
+      }
+	  }
+	 );
   }
 
 }

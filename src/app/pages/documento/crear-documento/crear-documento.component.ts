@@ -131,7 +131,8 @@ export class CrearDocumentoComponent implements OnInit {
             confirmButtonText: "SÍ, DESEO CONTINUAR"
           }).then((result) => {
             if (result.isConfirmed) {
-              this.documentoService.crearDocumento(this.documentoar, this.nameDocuentoFirmado, this.firmado,  this.uploadedFiles ).subscribe(
+              this.documentoService.crearDocumento(this.documentoar, this.nameDocuentoFirmado,
+                this.firmado,  this.uploadedFiles ).subscribe(
                 {
                   next: (response:any)=> {
                     if (response.httpStatus=='CREATED'){
@@ -139,7 +140,7 @@ export class CrearDocumentoComponent implements OnInit {
                       this.initForm();
                       Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
                     }
-                  }, 
+                  },
                   error: (err: any) => {
                     this.cargando = false;
                     Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
@@ -147,9 +148,10 @@ export class CrearDocumentoComponent implements OnInit {
                 }
               );
             }
-          }); 
+          });
         }else {
-          this.documentoService.crearDocumento(this.documentoar, this.nameDocuentoFirmado, this.firmado,  this.uploadedFiles ).subscribe(
+          this.documentoService.crearDocumento(this.documentoar, this.nameDocuentoFirmado,
+            this.firmado,  this.uploadedFiles ).subscribe(
             {
               next: (response:any)=> {
                 if (response.httpStatus=='CREATED'){
@@ -157,7 +159,7 @@ export class CrearDocumentoComponent implements OnInit {
                   this.initForm();
                   Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
                 }
-              }, 
+              },
               error: (err: any) => {
                 this.cargando = false;
                 Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
@@ -183,7 +185,7 @@ export class CrearDocumentoComponent implements OnInit {
       this.cargando = false;
       // if (this.firmado == false)
       //   Swal.fire('Lo sentimos', `Debe de firmar el documento digitalmente para poder continuar!`, 'info');
-      // else 
+      // else
       Swal.fire('Lo sentimos', `Se presento un inconveniente!`, 'warning');
     }
   }
