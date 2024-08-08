@@ -22,7 +22,8 @@ export class FormComponent implements OnInit {
   documentoRespuesta : Documento = null ;
   errorPDF : boolean = false;
   errorPDFReferencia : boolean = false;
-  anexos:Anexo[]=[];
+  anexos:Anexo[]=[]; // de respuesta o documento remitido
+  anexosReferencia: Anexo[] = [];
   selectedFiles: any;
   selectedRespuesta: any;
   url_pdf : any;
@@ -57,6 +58,7 @@ export class FormComponent implements OnInit {
       this.documentoService.existByDocumento(this.idDocumento).subscribe((response: any )=> {
         this.existeWord = response;
       });
+      this.findAnexosByDocumento();
       return this.documentoService.findRespuestaByVidParent(this.idDocumento);
       })).subscribe((responseDocumentoPadre: any)=>{
       if (responseDocumentoPadre!=null){
@@ -296,7 +298,7 @@ export class FormComponent implements OnInit {
       sessionStorage.getItem(environment.codigoOrganizacion),
       this.nameDocumentoFirmado,
       this.isFirmado,
-      this.cambioPDF?this.selectedFiles:'undefined')
+      this.cambioPDF?this.selectedFiles[0]:'undefined')
     .subscribe(
       {
         next : (response:any)=> {
@@ -419,6 +421,7 @@ export class FormComponent implements OnInit {
   }
 
   seleccionarDocumento(event: any): void {
+    this.cambioPDF = true;
     this.selectedFiles = null;
     const fileTemp = event.target.files[0];
     const fileType = fileTemp.type;
@@ -440,7 +443,6 @@ export class FormComponent implements OnInit {
             .convertFileToPDF(this.selectedFiles.item(0))
             .subscribe((resp: any) => {
               this.crearDocumento(resp, 'documentoRespuesta');
-              this.cambioPDF = true;
               this.cargando = false;
             }, error => {
               this.cargando = false;

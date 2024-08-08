@@ -104,7 +104,10 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
       this.cargando = true;
       this.tipoReporte = 2;
       this.titulo = "LISTA DE DOCUMENTOS ENVIADOS"
-      this.documentoService.findEnviadosExternosMP(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>{
+      this.documentoService.findEnviadosExternosMP(
+        sessionStorage.getItem(environment.codigoOrganizacion),
+        environment.convertDateToStr(this.range.value['start']),
+        environment.convertDateToStr(this.range.value['end'])).subscribe((response:any)=>{
         this.createTable(response);
         this.cargando = false;
       }, error => {

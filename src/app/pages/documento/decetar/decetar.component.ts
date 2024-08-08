@@ -150,7 +150,7 @@ export class DecetarComponent implements OnInit {
   }
 
   operate(){
-
+    this.cargando = true;
     let formDecretos = this.formParent.value['decretos'];
     for (let index = 0; index < formDecretos.length; index++) {
       let dd : DecretoDTO= new DecretoDTO();
@@ -161,8 +161,6 @@ export class DecetarComponent implements OnInit {
       dd.observacion = formDecretos[index].observaciones;
       dd.prioridad = formDecretos[index].prioridad;
 
-      //let acciones = formDecretos[index].acciones;
-
       let acciones = this.getValueCheckBox(formDecretos[index].idGroup);
       let decretosAcciones: DecretoAccionDTO[] = [];
       for (let y = 0; y < acciones.length; y++) {
@@ -171,23 +169,25 @@ export class DecetarComponent implements OnInit {
         decretosAcciones.push(da);
       }
       dd.acciones = decretosAcciones;
-
-
       this.decretos.push(dd);
     }
     this.decretoDocumento.codigoDocumento = this.formParent.value['codigoDocumento'];
     this.decretoDocumento.decretoActual = this.ultimoDecreto;
     this.decretoDocumento.decretos = this.decretos;
-    console.log(this.decretoDocumento);
-
+    debugger;
     this.decretoService.decretarDocumento(this.decretoDocumento).subscribe((response:any)=> {
       if (response.httpStatus == 'CREATED'){
+        this.cargando = false;
         this.router.navigate(["/principal/pendientes"])
         Swal.fire('OPERACION REALIZADA', response.message, 'info');
 
       }
-      else Swal.fire('LO SENTIMOS', response.message, 'info');
+      else {
+        this.cargando = false;
+        Swal.fire('LO SENTIMOS', response.message, 'info');
+      }
     },(error: any) => {
+      this.cargando = false;
       Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'warning');
     });
 

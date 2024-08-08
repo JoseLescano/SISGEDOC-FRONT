@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { GenericService } from './generic.service';
 import { Correspondencia } from '../_model/correspondencia';
 import { Subject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { CorrespondenciaOP } from '../_DTO/CorrespondenciaOP';
 
@@ -42,7 +42,11 @@ export class CorrespondenciaService extends GenericService<Correspondencia> {
 
   entregaCorrespondencia(origen:any, usuarioRecibe:any,
     contrasena:any, correspondencias:Correspondencia[]){
-    debugger;
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
     let formData:FormData = new FormData();
     formData.append('origen', origen);
     formData.append('usuarioRecibe',usuarioRecibe);
@@ -51,7 +55,8 @@ export class CorrespondenciaService extends GenericService<Correspondencia> {
       formData.append('correspondencias', item.codigo.toString());
     })
 
-    return this.http.post(`${environment.HOST}correspondencias/entregaCorrespondencia`, formData);
+    return this.http.post(`${environment.HOST}correspondencias/entregaCorrespondencia`,
+      formData, { responseType: 'blob' });
   }
 
 

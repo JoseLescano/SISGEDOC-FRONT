@@ -48,9 +48,10 @@ import { SustentacionComponent } from './documento/archivar/sustentacion/sustent
 import { ViewElevadosComponent } from './documento/view-elevados/view-elevados.component';
 import { TimelineComponent } from './report/timeline/timeline.component';
 
-import { OverlayModule } from '@angular/cdk/overlay';
-import { CdkMenuModule } from '@angular/cdk/menu';
 import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
+import { ViewCorregirComponent } from './documento/corregir/view-corregir/view-corregir.component';
+import { FormCorregirComponent } from './documento/corregir/form-corregir/form-corregir.component';
+import { ReporteDocumentoDecretoComponent } from './report/reporte-documento-decretado/reporte-documento-decretado.component';
 
 @NgModule({
   imports: [
@@ -107,6 +108,9 @@ import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
     ViewElevadosComponent,
     TimelineComponent,
     MiPerfilComponent,
+    ViewCorregirComponent,
+    FormCorregirComponent,
+    ReporteDocumentoDecretoComponent
   ],
    exports:[
 

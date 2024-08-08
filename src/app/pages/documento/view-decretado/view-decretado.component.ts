@@ -12,6 +12,7 @@ import { SeguimientoComponent } from '../../report/seguimiento/seguimiento.compo
 import { FormControl, FormGroup } from '@angular/forms';
 import { ExcelService } from 'src/app/_service/excel.service';
 import { TimelineComponent } from '../../report/timeline/timeline.component';
+import { ReporteDocumentoDecretoComponent } from '../../report/reporte-documento-decretado/reporte-documento-decretado.component';
 
 @Component({
   selector: 'app-view-decretado',
@@ -71,6 +72,19 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
     }else {
       Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
     }
+  }
+
+  imprimir(){
+    let data : any = {
+      fechaInicio:  environment.convertDateToStr(this.range.value['start']),
+      fechaFin: environment.convertDateToStr(this.range.value['end']),
+      codigoOrganizacion: sessionStorage.getItem(environment.codigoOrganizacion)
+    }
+    const dialogRef = this.dialog.open(ReporteDocumentoDecretoComponent, {
+      width: '60%',
+      height: '95%',
+      data: data
+    });
   }
 
   exportTable() {

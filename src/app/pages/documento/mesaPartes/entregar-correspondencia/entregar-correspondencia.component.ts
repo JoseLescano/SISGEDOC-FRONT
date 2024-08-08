@@ -22,7 +22,7 @@ import { Router } from '@angular/router';
 })
 export class EntregarCorrespondenciaComponent implements OnInit {
 
-  displayedColumns: string[] = ['select', 'Nro', 'Asunto','Documento', 'Origen', 'Destino', 'Fecha Registro'];
+  displayedColumns: string[] = ['select', 'Nro', 'Asunto','Documento', 'Origen', 'Destino', 'Fecha Registro', 'Folio'];
   dataSource: MatTableDataSource<Correspondencia>;
   cargando: boolean;
   remitentes:Organizacion[] = [];

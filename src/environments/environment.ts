@@ -2,8 +2,8 @@ import * as moment from "moment";
 
 export const environment = {
   production: false,
-  HOST: 'http://localhost:8080/',
-  // HOST: 'https://backend.ejercito.mil.pe/back-sisgedo/',
+  //HOST: 'http://localhost:8080/',
+  HOST: 'https://sisgedo.ejercito.mil.pe/back-sisgedo/',
   codigoOrganizacion: '3302010102',
   TOKEN_AUTH_USERNAME: '', // almacena usuario del token
   TOKEN_NAME: 'access_token', // token completo
@@ -31,6 +31,11 @@ export const environment = {
     return myDate;
   },
   convertDateToStr:function(inDate:any,inFormat:any="DD-MM-YYYY"){
+    var date=new Date(inDate);
+    var myDate = moment(date).format(inFormat);
+    return myDate;
+  },
+  convertDateToStr2:function(inDate:any,inFormat:any="DD/MM/YYYY"){
     var date=new Date(inDate);
     var myDate = moment(date).format(inFormat);
     return myDate;

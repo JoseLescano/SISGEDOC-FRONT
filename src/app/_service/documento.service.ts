@@ -37,7 +37,6 @@ export class DocumentoService  extends GenericService<Documento> {
   }
 
   viewPDF(vidDocumento: any, isAntiguo?:any){
-    debugger;
     return this.http.get(`${environment.HOST}documentos/viewPDF/${vidDocumento}`,
       {params: {respuestaAntigua: isAntiguo }});
   }
@@ -61,6 +60,12 @@ export class DocumentoService  extends GenericService<Documento> {
   findDecretados(codigoOrganizacion:any, fechaI?:any, fechaF?:any){
     return this.http.get<Documento[]>(`${environment.HOST}documentos/findDecretados`,
       { params: { codigoInterno: codigoOrganizacion, fi:fechaI, ff:fechaF }});
+  }
+
+  findForCorregir(codigoOrganizacion:any){
+    let formData:FormData = new FormData();
+    formData.append('codigoInterno', codigoOrganizacion);
+    return this.http.post(`${environment.HOST}documentos/findForCorregir`, formData);
   }
 
   findDecretados1(codigoInterno:any, fechaI?:any, fechaF?:any){
@@ -95,8 +100,12 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/searchByOrganizacion`, formData);
   }
 
-  findEnviadosExternosMP(codigoInterno:any){
-    return this.http.get<Documento[]>(`${environment.HOST}documentos/findEnviadosExternosMP/${codigoInterno}`);
+  findEnviadosExternosMP(codigoInterno:any, fechaI?:any, fechaF?:any){
+    let formData : FormData = new FormData();
+    formData.append('codigoInterno', codigoInterno);
+    formData.append('fi', fechaI);
+    formData.append('ff', fechaF);
+    return this.http.post(`${environment.HOST}documentos/findEnviadosExternosMP`, formData);
   }
 
   recibirDocumentoMP(documento: any){
@@ -145,8 +154,7 @@ export class DocumentoService  extends GenericService<Documento> {
   }
 
   crearDocumento(documento: any,  nameDocuentoFirmado : any,
-     isFirmado:any, anexos?:any
-    // , documentoPadre: any
+     isFirmado:any, anexos?:any, documentoPadre?: any
   ){
     debugger;
     let formData:FormData = new FormData();
@@ -164,6 +172,7 @@ export class DocumentoService  extends GenericService<Documento> {
     });
     formData.append('nameArchivoFirmado', nameDocuentoFirmado);
     formData.append('isFirmado', isFirmado);
+    formData.append('codigoDocumentoPadre', documentoPadre);
 
 
     return this.http.post(`${environment.HOST}documentos/crearDocumento`, formData);
@@ -230,28 +239,35 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('destinos', documento.destinos);
     formData.append('copiasInformativas', documento.copiasInformativas);
     formData.append('archivoPrincipal', documento.archivoPrincipal);
-    formData.append('anexo', documento.anexos);
+    documento.anexos.forEach(item => {
+      formData.append('anexo', item);
+    });
     formData.append('organizacionOrigen', documento.organizacionOrigen);
     formData.append('organizacionRemitente', organizacionRemitente);
     formData.append('word', word);
     return this.http.post(`${environment.HOST}documentos/remitirDocumentoForFirma`, formData);
   }
 
-  crearRespuestaParaFirmar(documento: any, organizacionRemitente:any, codigoDocumentoPadre:any){
+  crearRespuestaParaFirmar(documento: any, organizacionRemitente:any,
+    codigoDocumentoPadre:any, nameDocuentoFirmado, isFirmado, anexos?:any){
     debugger;
     let formData:FormData = new FormData();
     formData.append('clase', documento.clase);
     formData.append('nroOrden', documento.nroOrden);
     formData.append('indicativo', documento.indicativo);
-    formData.append('prioridad', documento.prioridad);
+    //formData.append('prioridad', documento.prioridad);
     formData.append('asunto', documento.asunto);
     formData.append('destinos', documento.destinos);
     formData.append('copiasInformativas', documento.copiasInformativas);
     formData.append('archivoPrincipal', documento.archivoPrincipal);
-    formData.append('anexo', documento.anexos);
+    anexos.forEach(item => {
+      formData.append('anexo', item);
+    });
     formData.append('organizacionOrigen', documento.organizacionOrigen);
     formData.append('organizacionRemitente', organizacionRemitente);
     formData.append('codigoDocumentoPadre', codigoDocumentoPadre);
+    formData.append('nameArchivoFirmado', nameDocuentoFirmado);
+    formData.append('isFirmado', isFirmado);
     return this.http.post(`${environment.HOST}documentos/remitirRespuestaForFirma`, formData);
   }
 
@@ -300,6 +316,17 @@ export class DocumentoService  extends GenericService<Documento> {
     let formData:FormData = new FormData();
     formData.append('codigoOrganizacion', codigoOrganizacion);
     return this.http.post(`${environment.HOST}documentos/findDecretadoForBarChart`, formData);
+  }
+
+  reportDecretados(origen:any, fechaInicio: any, fechaFin: any){
+
+    let formData:FormData = new FormData();
+    formData.append('idOrganizacion', origen);
+    formData.append('fechaInicio',fechaInicio);
+    formData.append('fechafin', fechaFin);
+
+    return this.http.post(`${environment.HOST}documentos/reportDecretados`,
+      formData);
   }
 
 }

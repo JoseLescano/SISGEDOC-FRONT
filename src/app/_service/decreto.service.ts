@@ -26,6 +26,7 @@ export class DecretoService extends GenericService<Decreto> {
   }
 
   decretarDocumento(decretoDocumento: DecretoDocumentoDTO): Observable<any>{
+
     return this.http.post(`${environment.HOST}decretos/decretarDocumento`,  decretoDocumento);
   }
 
@@ -57,14 +58,17 @@ export class DecretoService extends GenericService<Decreto> {
     return this.http.post(`${environment.HOST}decretos/elevarDocumento`,  formData);
   }
 
-  distrubirDocumento(documento: any, origen: any,nameDocuentoFirmado : any, isFirmado:any, archivoFirmado?:any){
+  distrubirDocumento(
+    documento: any, origen: any,
+    nameDocuentoFirmado : any, isFirmado:any,
+    archivoFirmado?:any){
     debugger;
     let formData: FormData= new FormData();
     formData.append('codigoDocumento', documento);
     formData.append('origen', origen);
     formData.append('nameArchivoFirmado', nameDocuentoFirmado);
     formData.append('isFirmado', isFirmado);
-    formData.append('archivoFirmado', archivoFirmado[0]);
+    formData.append('archivoFirmado', archivoFirmado);
     return this.http.post(`${environment.HOST}decretos/distrubirDocumento`,  formData);
   }
 

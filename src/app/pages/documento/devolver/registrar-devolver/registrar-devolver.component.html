@@ -28,7 +28,9 @@
                       <textarea matInput rows="7" [(ngModel)]="observaciones" ></textarea>
                   </mat-form-field>
                     <div class="col-md-12" style="text-align: right;">
-                        <button mat-raised-button color="primary" style="margin-right: 5px;" (click)="devolverDocumento(vidDocumento)" [disabled]="observaciones==''" >GUARDAR</button>
+                        <button mat-raised-button color="primary" style="margin-right: 5px;"
+                          (click)="devolverDocumento(vidDocumento)"
+                          [disabled]="observaciones=='' || cargando" >GUARDAR</button>
                         <button mat-raised-button color="warn" routerLink="/principal/pendientes">CANCELAR</button>
                     </div>
                 </mat-tab>
@@ -37,6 +39,9 @@
           </div>
         </div>
     </mat-card-content>
+    <mat-card-footer>
+      <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
+    </mat-card-footer>
   </mat-card>
 
 </div>

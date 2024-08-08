@@ -1,15 +1,21 @@
 <div class="container loader" *ngIf="cargando"></div>
 <mat-card class="m-2" *ngIf="!cargando">
+  <div class="d-flex justify-content-between align-items-center">
     <mat-card-header class="title-form">
-        <mat-card-title >LISTA DE DOCUMENTOS RECEPCIONADOS</mat-card-title>
+      <mat-card-title >LISTA DE DOCUMENTOS RECEPCIONADOS</mat-card-title>
     </mat-card-header>
+    <button mat-flat-button style="background: rgba(25, 135, 84); color: #fff; "
+    (click)="exportTable()" *ngIf="dataSource!=null">
+      <i class="fas fa-file-excel"></i> EXPORTAR A EXCEL
+    </button>
+  </div>
     <mat-card-content>
-        <mat-form-field appearance="fill" class="example-full-width">
+        <mat-form-field appearance="fill" class="example-full-width mt-2">
             <mat-label>Filtro</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Ingrese valor" #input>
         </mat-form-field>
         <div class="mat-elevation-z8">
-            <table mat-table [dataSource]="dataSource" matSort >
+            <table mat-table [dataSource]="dataSource" matSort  id="mytable" >
 
               <!-- <ng-container matColumnDef="#">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header > # </th>
@@ -81,6 +87,7 @@
           </div>
     </mat-card-content>
     <mat-card-actions align="end">
+        <!-- <button mat-flat-button  class="btn-opcion" style="color: #fff; background: #198754; border-color: #198754; "  (click)="exportTable()"> <i class="fas fa-file-excel"></i> EXPORTAR A EXCEL</button> -->
         <button mat-raised-button color="primary" routerLink="../registrar-documento" class="btn-opcion" >NUEVO REGISTRO FISICO</button>
         <button mat-raised-button color="accent" routerLink="../envio-externo" class="btn-opcion">ENVIAR A DEPENDENCIA EXTERNA</button>
     </mat-card-actions>

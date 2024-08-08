@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { CorrespondenciaService } from 'src/app/_service/correspondencia.service';
 import { PersonaService } from 'src/app/_service/persona.service';
 import { environment } from 'src/environments/environment';
@@ -22,7 +23,8 @@ export class ValidarRecojoComponent implements OnInit {
     public dialogRef: MatDialogRef<ValidarRecojoComponent>,
     @Inject(MAT_DIALOG_DATA) public dataEnviada: any,
     private personaService:PersonaService,
-    private correspondenciaService: CorrespondenciaService
+    private correspondenciaService: CorrespondenciaService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -38,29 +40,54 @@ export class ValidarRecojoComponent implements OnInit {
     let correspondencia = this.dataEnviada.data.lista;
     this.cargando = true;
     if ( this.usuario != null &&  this.password != null){
+      debugger;
       this.correspondenciaService.entregaCorrespondencia(
         sessionStorage.getItem(environment.codigoOrganizacion),
         this.usuario, this.password,
-        correspondencia).subscribe({
-          next : (response:any)=>{
-            if (response.httpStatus == "OK"){
-              this.cargando = false;
-              Swal.fire('VALIDACIÓN CORRECTA', 'SE PROCEDERÁ A ENTREGAR CORRESPONDENCIA', 'success');
-
-            } else {
-              this.cargando = false;
-              Swal.fire('LO SENTIMOS', response.message, 'warning');
-            }
-          },
-          error: (err: any) => {
-            this.cargando = false;
-            Swal.fire('LO SENTIMOS', "SE PRESENTO UN INCONVENIENTE", 'warning');
+        correspondencia).subscribe(
+          {
+            next: (response) => {
+              debugger;
+                Swal.fire('VALIDACION CORRECTA', "SE PROCEDERÁ A ENTREGAR LAS CORRESPONDENCIA", 'success');
+                const blob = new Blob([response], { type: 'application/pdf' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'RangVisitaReport.pdf';
+                a.click();
+                window.URL.revokeObjectURL(url);
+                this.cargando = false;
+                this.router.navigate(['/principal/entregarCorrespondencia']).then(() => {
+                  // Do something
+                  location.reload();
+                });
+              },
+              error: (error: any) => {
+                debugger;
+                this.cargando = false;
+                Swal.fire('LO SENTIMOS',  "SE PRESENTO UN INCONVENIENTE", 'info');
+              }
           }
-        });
-    } else {
-      this.cargando = false;
-      Swal.fire('LO SENTIMOS', "INGRESE USUARIO Y CONTRASEÑA DEL USUARIO RECEPTOR", 'warning');
+        );
+      }
     }
+
+  openPDF(response) {
+    const byteArray = this.convertListToByteArray(response);
+    const blob = new Blob([byteArray], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+    window.open(url);
+  }
+
+  private convertListToByteArray(byteArrayList: any[]): Uint8Array {
+    const totalLength = byteArrayList.reduce((acc, val) => acc + val.length, 0);
+    const result = new Uint8Array(totalLength);
+    let offset = 0;
+    byteArrayList.forEach(bytes => {
+      result.set(new Uint8Array(bytes), offset);
+      offset += bytes.length;
+    });
+    return result;
   }
 
 }

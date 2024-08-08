@@ -18,7 +18,7 @@ import Swal from 'sweetalert2';
 export class CreateEditarComponent implements OnInit {
 
   codigoInterno:any = "";
-  codigoPadre : any = "";
+  codigoPadre : String = "";
   organizacionSeleccionada : Organizacion = new Organizacion();
   form : FormGroup;
   titulo : string = "EDITAR ORGANIZACION";
@@ -56,8 +56,13 @@ export class CreateEditarComponent implements OnInit {
       })).subscribe((response:any)=> {
         debugger;
         this.organizacionService.setOrganizacionCambio(response.data);
+
           Swal.fire('OPERACION REALIZADA', 'SE REGISTRO ORGANIZACION CON EXITO', 'info');
           this.close();
+          this.router.navigate(['/principal/organizacion']).then(() => {
+            // Do something
+            location.reload();
+          });
 
       }, error => {
         Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
@@ -75,7 +80,10 @@ export class CreateEditarComponent implements OnInit {
               this.organizacionService.setOrganizacionCambio(response.data);
                 Swal.fire('OPERACION REALIZADA', 'SE ACTUALIZO ORGANIZACION CON EXITO', 'info');
                 this.close();
-                // this.router.navigate(['/principal/organizacion']);
+                this.router.navigate(['/principal/organizacion']).then(() => {
+                  // Do something
+                  location.reload();
+                });
 
             }, error => {
               Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');

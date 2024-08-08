@@ -62,24 +62,26 @@
                       <input type="file" (change)="seleccionarDocumento($event)"
                         id="updateWord" style="display: none;"
                         accept="application/msword, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
-                      <button mat-flat-button color="primary" (click)="eventClick()" *ngIf="descargo" >
-                        <i class="fas fa-redo-alt"></i><span> REEMPLAZAR </span>
-                      </button>
-                      <button mat-flat-button color="warn" (click)="descargarWordDocumento()" *ngIf="existeWord>0 && !descargo" >
-                        <i class="fas fa-file-download"></i><span> DESCARGAR Y CORREGIR </span>
-                      </button>
-                      <!-- <button mat-flat-button color="warn" >
-                        <i class="fas fa-pencil-ruler"></i><span> ENVIAR A CORREGIR </span>
-                      </button> -->
-                      <button mat-flat-button color="primary" *ngIf="mostrarDistribuir" (click)="distribuir()" >
-                        <i class="fas fa-paper-plane"></i><span> DISTRIBUIR</span>
-                      </button>
-                      <button mat-flat-button color="primary"  (click)="firmarDocumento()" *ngIf="mostrarDistribuir" >
-                        <i class="fas fa-file-signature"></i><span> FIRMAR</span>
-                      </button>
-                      <button mat-flat-button color="primary" *ngIf="!mostrarDistribuir" (click)="elevarDocumento()" >
-                        <i class="fas fa-hand-point-up"></i> ELEVAR
-                      </button>
+                        <button mat-flat-button color="warn" (click)="descargarWordDocumento()" *ngIf="existeWord>0 && !descargo" >
+                          <i class="fas fa-file-download"></i><span> DESCARGAR Y CORREGIR </span>
+                        </button>
+                        <!-- <button mat-flat-button color="warn" >
+                          <i class="fas fa-pencil-ruler"></i><span> ENVIAR A CORREGIR </span>
+                        </button> -->
+                        <button mat-flat-button color="primary" *ngIf="mostrarDistribuir" (click)="distribuir()" >
+                          <i class="fas fa-paper-plane"></i><span> DISTRIBUIR</span>
+                        </button>
+                        <button mat-flat-button color="primary"  (click)="firmarDocumento()" *ngIf="mostrarDistribuir" >
+                          <i class="fas fa-file-signature"></i><span> FIRMAR</span>
+                        </button>
+                        <button mat-flat-button color="primary" *ngIf="!mostrarDistribuir" (click)="elevarDocumento()" >
+                          <i class="fas fa-hand-point-up"></i> ELEVAR
+                        </button>
+
+                        <button mat-flat-button style="background: #157347; color: #fff;"(click)="eventClick()"  >
+                          <i class="fas fa-redo-alt"></i><span> REEMPLAZAR </span>
+                        </button>
+
                       <!-- <button mat-flat-button color="warn" type="button">
                         <i class="fas fa-pen-square" style="color: #fff;"></i> CORREGIR
                       </button> -->

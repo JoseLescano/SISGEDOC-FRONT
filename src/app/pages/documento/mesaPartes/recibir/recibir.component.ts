@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import { RegistrarMPComponent } from '../registrar/registrarMP.component';
 import { environment } from 'src/environments/environment';
 import { ViewDocumentoComponent } from '../../view-documento/view-documento.component';
+import { ExcelService } from 'src/app/_service/excel.service';
 
 @Component({
   selector: 'app-recibir',
@@ -25,7 +26,8 @@ export class RecibirComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private documentoService:DocumentoService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private excelService: ExcelService
   ) { }
 
   ngOnInit(): void {
@@ -37,6 +39,10 @@ export class RecibirComponent implements OnInit, AfterViewInit {
       this.cargando=false;
       Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
     });
+  }
+
+  exportTable() {
+    this.excelService.exportTableToExcel('mytable', 'LISTA DE DOCUMENTOS RECIBIDOS');
   }
 
   createTable(documento: Documento[]){

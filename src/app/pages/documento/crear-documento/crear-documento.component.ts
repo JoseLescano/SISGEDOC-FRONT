@@ -78,7 +78,6 @@ export class CrearDocumentoComponent implements OnInit {
   }
 
   findDestinatarios(){
-
     let firmante = this.form.get('firmante').value;
     let tipoDocumento = this.form.get('tipoDocumento').value;
 
@@ -121,6 +120,7 @@ export class CrearDocumentoComponent implements OnInit {
       this.documentoar.copiasInformativas = this.form.value['copiaInformativa'];
       this.documentoar.asunto= this.form.value['asunto'];
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
+      this.documentoar.anexos = this.uploadedFiles;
       if (this.documentoar.organizacionOrigen== sessionStorage.getItem(environment.codigoOrganizacion)){
         if (!this.firmado){
           Swal.fire({
@@ -207,6 +207,7 @@ export class CrearDocumentoComponent implements OnInit {
   }
 
   generarPlantilla() {
+    this.cargando = true;
     if (this.validarPlantilla()) {
       this.getUltimoNumero().pipe(
         switchMap(() => {
@@ -217,7 +218,6 @@ export class CrearDocumentoComponent implements OnInit {
           var indicativo = this.form.get('indicativo').value;
           var copiasInformativas = this.form.get('copiaInformativa').value;
           var correlativo = this.form.get('nroCorrelativo').value;
-
           return this.documentoService.generarPlantillaWord(
               tipoDocumento, asunto, destino, firmante.codigoInterno,
               indicativo, correlativo, copiasInformativas
@@ -227,7 +227,9 @@ export class CrearDocumentoComponent implements OnInit {
         if (response.httpStatus === 'CREATED') {
             this.downloadWord(response.data[0]);
         }
+        this.cargando = false;
       }, error => {
+        this.cargando = false;
         Swal.fire('Lo sentimos', 'Se presentó un inconveniente en la generación del Word', 'info');
       });
     }
@@ -286,9 +288,11 @@ export class CrearDocumentoComponent implements OnInit {
         && fileType !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
         event.target.value = ''; // Borra la selección del archivo
         this.selectedFiles=null;
+        this.cargando = false;
         Swal.fire('Lo sentimos', `Debe de seleccionar un documento PDF ó WORD`, 'info');
     } else{
         if(event.target.files.length>0){
+
           this.selectedFiles = event.target.files;
           this.url_pdf = this.selectedFiles[0].name;
           if (this.selectedFiles[0].type == 'application/pdf') {

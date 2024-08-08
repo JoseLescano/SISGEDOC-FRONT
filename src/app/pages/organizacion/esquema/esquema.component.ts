@@ -48,7 +48,7 @@ export class EsquemaComponent implements OnInit, AfterViewInit {
     this.createDiagramaOrganizacion();
   }
 
-  openDialog(codigoOrganizacion:any, codigoPadre?:any){
+  openDialog(codigoOrganizacion:any, codigoPadre?:String){
     let informacion = {
       editar: codigoOrganizacion,
       padre: codigoPadre
@@ -125,7 +125,7 @@ export class EsquemaComponent implements OnInit, AfterViewInit {
         this.createTable(resp);
         _this.organizaciones = resp;
         this._window().createDiagramaOrganizacion(resp,
-            function(stringOrganizationPadre:any, dataRespuesta:any,incallbackOut:any){
+            function(stringOrganizationPadre:String, dataRespuesta:any,incallbackOut:any){
               _this.openDialog(null, stringOrganizationPadre);
           },
           function(codigoInterna:any, callBackOutEliminar:any){

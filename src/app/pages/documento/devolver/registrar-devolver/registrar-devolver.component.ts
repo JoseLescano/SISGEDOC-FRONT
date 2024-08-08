@@ -17,6 +17,7 @@ export class RegistrarDevolverComponent implements OnInit {
   vidDocumento:any;
   observaciones : any = '';
   errorPDF : boolean = false;
+  cargando : boolean = false;
 
   constructor(
     private documentoService:DocumentoService,
@@ -37,11 +38,14 @@ export class RegistrarDevolverComponent implements OnInit {
   }
 
   viewDocumento(vidDocumento: any){
+    this.cargando = true;
     this.documentoService.viewPDF(vidDocumento).subscribe((response: any)=>{
       this.crearDocumento(response.data);
+      this.cargando = false;
       this.errorPDF = false;
     }, error => {
       this.errorPDF = true;
+      this.cargando = false;
       Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR PDF!`, 'warning');
     });
   }
@@ -61,23 +65,28 @@ export class RegistrarDevolverComponent implements OnInit {
   }
 
   devolverDocumento(codigoDocumento:any){
-    debugger;
+
     if (this.observaciones!='' && this.observaciones!=null){
+      this.cargando = true;
       let documento : any = codigoDocumento;
       let observacion = this.observaciones;
       let origen = sessionStorage.getItem(environment.codigoOrganizacion);
 
       this.decretoService.devolverDocumento(documento, origen, observacion).subscribe((response:any)=>{
-        if(response.data){
-          this.router.navigate(['./pendientes']);
-          Swal.fire(response.message,'Se retorno documento al escalon superior', 'info')
+        if(response.httpStatus == 'CREATED'){
+          this.cargando = false;
+          this.router.navigate(['/principal/dashboard']);
+          Swal.fire('ACCION REALIZADA',response.message, 'info')
         }else {
-          Swal.fire('Se presento un inconveniente', response.message, 'info')
+          this.cargando = false;
+          Swal.fire('LO SENTIMOS', response.message, 'info');
         }
       }, (error:any)=> {
+        this.cargando = false;
         Swal.fire('Lo sentimos!', `No podemos devolver documento`, 'info');
       });
     }else {
+      this.cargando = false;
       Swal.fire('Lo sentimos!', `Debe de ingresar una observación para continuar con el registro`, 'info');
     }
   }

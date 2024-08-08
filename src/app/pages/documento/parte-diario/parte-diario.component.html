@@ -63,8 +63,12 @@
                           <li><a class="dropdown-item" (click)="viewTimeline(row.codigo)">GRAFICA</a></li>
                         </ul>
                       </div>
-                      <button mat-flat-button color="warn"  class="mb-2" [routerLink]="['/principal/form', row.codigo]">
+                      <button mat-flat-button color="warn"   [routerLink]="['/principal/form', row.codigo]">
                         <i class="fas fa-signature" ></i> FIRMAR/ELEVAR DOC.
+                      </button>
+                      <button class="btn btn-success" style="border-color: #7c33a0; background-color: #75219f; margin-bottom: 5px;" type="button"
+                        [routerLink]="['/principal/archivar', row.codigo]">
+                        <i class="fas fa-archive"></i> ARCHIVAR
                       </button>
                 </div>
               </td>

@@ -35,19 +35,19 @@ export class RegistrarDerivacionComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.cargando = true;
-    this.getIdDocumento();
-    this.getOrganizacion();
-    this.cargando = false;
     this.initForm();
   }
 
   initForm(){
+    this.cargando = true;
+    this.getIdDocumento();
+    this.getOrganizacion();
     this.form = new FormGroup({
       'codigoDocumento': new FormControl(this.vidDocumento, [Validators.required]),
       'destino': new FormControl('', [Validators.required]),
       'observacion': new FormControl(null, [Validators.required, Validators.min(10)])
     });
+    this.cargando = false;
   }
 
   getIdDocumento(): void {
@@ -88,16 +88,22 @@ export class RegistrarDerivacionComponent implements OnInit {
 
   operate(){
     if (this.form.valid){
+      this.cargando = true;
       let documento: any = this.vidDocumento;
       let origen = sessionStorage.getItem(environment.codigoOrganizacion);
       let destino = this.form.value['destino'];
       let observacion = this.form.value['observacion'];
       this.decretoService.derivarDocumento(documento, origen, destino, observacion).subscribe((response:any)=>{
         if(response.httpStatus == 'CREATED'){
-          Swal.fire('Operacion realizada', response.message, 'info');
+          this.cargando = false;
+          Swal.fire('OPERACION REALIZADA', response.message, 'info');
           this.router.navigate(['/principal/pendientes']);
+        }else {
+          this.cargando = false;
+          Swal.fire('LO SENTIMOS', response.message, 'info');
         }
       }, error => {
+        this.cargando = false;
         Swal.fire('Lo sentimos', 'Se presento un inconveniente', 'warning');
       });
     }
