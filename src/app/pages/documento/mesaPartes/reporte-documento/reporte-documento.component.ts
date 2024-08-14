@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import { SeguimientoComponent } from 'src/app/pages/report/seguimiento/seguimiento.component';
 import { ExcelService } from 'src/app/_service/excel.service';
 import { TimelineComponent } from 'src/app/pages/report/timeline/timeline.component';
+import { ReporteDocumentoDecretoComponent } from 'src/app/pages/report/reporte-documento-decretado/reporte-documento-decretado.component';
 
 @Component({
   selector: 'app-reporte-documento',
@@ -20,11 +21,13 @@ import { TimelineComponent } from 'src/app/pages/report/timeline/timeline.compon
 })
 export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['Nro', 'Asunto','Documento', 'Origen', 'Destino', 'FechaDoc',  'Acciones'];
+  displayedColumns: string[] = ['Prioridad', 'Nro', 'Asunto','Documento', 'Origen', 'Destino', 'FechaDoc',  'Acciones'];
   dataSource: MatTableDataSource<Documento>;
   cargando: boolean;
+  cargandoDescarga : boolean = false;
   titulo: string = "";
   tipoReporte : number = 0;
+  forDay: boolean = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -33,6 +36,8 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
     start: new FormControl<Date | null>(null),
     end: new FormControl<Date | null>(null),
   });
+
+  fechaSeleccionada: any = "";
 
   constructor(
     private documentoService:DocumentoService,
@@ -81,6 +86,7 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
     if (this.range.value['start']!= null && this.range.value['end']!=null){
       this.cargando = true;
       this.tipoReporte = 0;
+      this.forDay = false;
       this.titulo = "LISTA DE DOCUMENTOS DECRETOS"
       this.documentoService.findDecretados(sessionStorage.getItem(environment.codigoOrganizacion),
         environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end'])
@@ -103,6 +109,7 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
     if (this.range.value['start']!= null && this.range.value['end']!=null){
       this.cargando = true;
       this.tipoReporte = 2;
+      this.forDay = false;
       this.titulo = "LISTA DE DOCUMENTOS ENVIADOS"
       this.documentoService.findEnviadosExternosMP(
         sessionStorage.getItem(environment.codigoOrganizacion),
@@ -119,12 +126,36 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
     }
   }
 
+  verEnviadosExternoForDay(){
+    if (this.fechaSeleccionada!=null){
+      this.cargando = true;
+      this.tipoReporte = 2;
+      this.forDay = true;
+      this.titulo = "LISTA DE DOCUMENTOS ENVIADOS"
+      this.documentoService.findEnviadosExternosMP(
+        sessionStorage.getItem(environment.codigoOrganizacion),
+        environment.convertDateToStr(this.fechaSeleccionada)).subscribe((response:any)=>{
+        this.createTable(response);
+        this.cargando = false;
+      }, error => {
+        this.cargando = false;
+        Swal.fire(`LO SENTIMOS`, 'SE PRESENTO UN INCONVENIENTE CON EL REPORTE DE DOCUMENTOS', 'info');
+      });
+    } else {
+      Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
+    }
+  }
+
   verDocumentoRegistrados(){
     if (this.range.value['start']!= null && this.range.value['end']!=null){
       this.cargando = true;
       this.tipoReporte = 1;
+      this.forDay = false;
       this.titulo = "LISTA DE DOCUMENTOS REGISTRADOS"
-      this.documentoService.searchRegistrados(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any)=> {
+      this.documentoService.searchRegistrados(
+        sessionStorage.getItem(environment.codigoOrganizacion),
+        environment.convertDateToStr(this.range.value['start']),
+        environment.convertDateToStr(this.range.value['end'])).subscribe((data: any)=> {
         this.createTable(data);
         this.cargando = false;
       }, error=> {
@@ -136,6 +167,25 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
     }
   }
 
+  verDocumentoRegistradosForDay(){
+    if (this.fechaSeleccionada!=null){
+      this.cargando = true;
+      this.tipoReporte = 1;
+      this.forDay = true;
+      this.titulo = "LISTA DE DOCUMENTOS REGISTRADOS"
+      this.documentoService.searchRegistrados(
+        sessionStorage.getItem(environment.codigoOrganizacion),
+        environment.convertDateToStr(this.fechaSeleccionada)).subscribe((data: any)=> {
+        this.createTable(data);
+        this.cargando = false;
+      }, error=> {
+        this.cargando=false;
+        Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
+      });
+    } else {
+      Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
+    }
+  }
   viewSeguimiento(documentoSeleccionado?:any): void {
     const dialogRef = this.dialog.open(SeguimientoComponent, {
       width: '60%',
@@ -150,6 +200,156 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
       height: '95%',
       data: vidDocumento,
     });
+  }
+
+  imprimir(){
+    if (this.range.value['start']!= null && this.range.value['end']!=null){
+      this.cargandoDescarga = true;
+      let data : any = {
+        fechaInicio:  environment.convertDateToStr(this.range.value['start']),
+        fechaFin: environment.convertDateToStr(this.range.value['end']),
+        codigoOrganizacion: sessionStorage.getItem(environment.codigoOrganizacion)
+      }
+      const dialogRef = this.dialog.open(ReporteDocumentoDecretoComponent, {
+        width: '60%',
+        height: '95%',
+        data: data
+      });
+      this.cargandoDescarga = false;
+    } else {
+      Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
+    }
+  }
+
+  buscarDecratadosForDay(){
+    if (this.fechaSeleccionada!=null){
+      this.cargando = true;
+      this.tipoReporte = 0;
+      this.forDay = true;
+      this.titulo = "LISTA DE DOCUMENTOS DECRETADOS"
+      this.documentoService.findDecretadosForDay(
+        sessionStorage.getItem(environment.codigoOrganizacion),
+        environment.convertDateToStr(this.fechaSeleccionada))
+        .subscribe((data: any) => {
+        this.createTable(data);
+        this.cargando = false;
+      }, (error: any)=> {
+        this.cargando = false;
+        Swal.fire('LO SENTIMOS', `Se presento un inconveniente en la consulta`, 'warning');
+      });
+    }else {
+      Swal.fire('LO SENTIMOS', 'INGRESE FECHA', 'info');
+    }
+  }
+
+  downloadExcel(): void {
+    debugger;
+    if (this.forDay){
+      debugger;
+      if (this.tipoReporte == 0){
+        this.excelService.downloadDecretadosForDay(
+          sessionStorage.getItem(environment.codigoOrganizacion),
+          environment.convertDateToStr(this.fechaSeleccionada))
+          .subscribe((blob: Blob) => {
+            this.descargarExporExcel(blob, "REPORTE DE DOCUMENTO DECRETADOS POR FECHA" );
+            this.cargandoDescarga = false;
+          }, error => {
+            this.cargandoDescarga = false;
+            Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE CON LA DESCARGA DEL EXCEL", "info")
+          });
+      }
+      if (this.tipoReporte == 1){
+        this.excelService.exportRegistradosExcel(
+          sessionStorage.getItem(environment.codigoOrganizacion),
+          environment.convertDateToStr(this.fechaSeleccionada))
+          .subscribe((blob: Blob) => {
+            this.descargarExporExcel(blob, "REPORTE DE DOCUMENTO REGISTRADOS POR FECHA" );
+            this.cargandoDescarga = false;
+          }, error => {
+            this.cargandoDescarga = false;
+            Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE CON LA DESCARGA DEL EXCEL", "info")
+          });
+      }
+      if (this.tipoReporte == 2){
+        this.excelService.exportEnviadosExcel(
+          sessionStorage.getItem(environment.codigoOrganizacion),
+          environment.convertDateToStr(this.fechaSeleccionada))
+          .subscribe((blob: Blob) => {
+            this.descargarExporExcel(blob, "REPORTE DE DOCUMENTO ENVIADOS POR FECHA" );
+            this.cargandoDescarga = false;
+          }, error => {
+            this.cargandoDescarga = false;
+            Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE CON LA DESCARGA DEL EXCEL", "info")
+          });
+      }
+    } else {
+      debugger;
+      if (this.tipoReporte == 0){
+        this.excelService.downloadDecretadosByFechas(
+          sessionStorage.getItem(environment.codigoOrganizacion),
+          environment.convertDateToStr(this.range.value['start']),
+          environment.convertDateToStr(this.range.value['end']))
+          .subscribe((blob: Blob) => {
+            this.descargarExporExcel(blob, "REPORTE DE DOCUMENTO DECRETADOS ENTRE FECHAS " );
+            this.cargandoDescarga = false;
+          }, error => {
+            this.cargandoDescarga = false;
+            Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE CON LA DESCARGA DEL EXCEL", "info")
+          });
+      }
+      if (this.tipoReporte == 1){
+        this.excelService.exportRegistradosExcel(
+          sessionStorage.getItem(environment.codigoOrganizacion),
+          environment.convertDateToStr(this.range.value['start']),
+          environment.convertDateToStr(this.range.value['end']))
+          .subscribe((blob: Blob) => {
+            this.descargarExporExcel(blob, "REPORTE DE DOCUMENTO REGISTRADOS ENTRE FECHAS " );
+            this.cargandoDescarga = false;
+          }, error => {
+            this.cargandoDescarga = false;
+            Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE CON LA DESCARGA DEL EXCEL", "info")
+          });
+      }
+      if (this.tipoReporte == 2){
+        this.excelService.exportEnviadosExcel(
+          sessionStorage.getItem(environment.codigoOrganizacion),
+          environment.convertDateToStr(this.range.value['start']),
+          environment.convertDateToStr(this.range.value['end']))
+          .subscribe((blob: Blob) => {
+            this.descargarExporExcel(blob, "REPORTE DE DOCUMENTO ENVIADOS ENTRE FECHAS " );
+            this.cargandoDescarga = false;
+          }, error => {
+            this.cargandoDescarga = false;
+            Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE CON LA DESCARGA DEL EXCEL", "info")
+          });
+      }
+    }
+
+    // if (this.range.value['start']!= null && this.range.value['end']!=null){
+    //   this.cargandoDescarga = true;
+    //   this.excelService.downloadDecretadosByFechas(
+    //     sessionStorage.getItem(environment.codigoOrganizacion),
+    //     environment.convertDateToStr(this.range.value['start']),
+    //     environment.convertDateToStr(this.range.value['end']),
+    // ).subscribe((blob: Blob) => {
+    //     this.descargarExporExcel(blob, "REPORTE DE DOCUMENTO DECRETADOS ENTRE FECHAS " );
+    //     this.cargandoDescarga = false;
+    //   }, error => {
+    //     this.cargandoDescarga = false;
+    //     Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE CON LA DESCARGA DEL EXCEL", "info")
+    //   });
+    // }else {
+    //   Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
+    // }
+  }
+
+  descargarExporExcel(blob:any, nombreDescarga:any){
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${nombreDescarga}.xlsx`;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 
 }

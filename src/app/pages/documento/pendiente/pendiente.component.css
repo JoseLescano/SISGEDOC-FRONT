@@ -25,9 +25,16 @@ th{
 }
 
 .mat-column-Asunto {
-  width: 40%;
+  width: 50%;
+  padding: 10px 10px;
+}
+
+.mat-column-Prioridad {
+  width:5%;
 }
 
 .mat-column-Acciones{
   width: 10%;
+  align-items: center;
+
 }

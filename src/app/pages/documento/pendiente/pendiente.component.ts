@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { ExcelService } from 'src/app/_service/excel.service';
 
 
 
@@ -20,7 +21,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 })
 export class PendienteComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['Acciones', 'Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.'];
+  displayedColumns: string[] = ['Acciones', 'Nro',  'Asunto', 'Documento', 'Origen', 'FechaDoc.','Prioridad'];
   dataSource: MatTableDataSource<Documento> = new MatTableDataSource<Documento>();
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
@@ -28,7 +29,8 @@ export class PendienteComponent implements OnInit, AfterViewInit {
   cargando: boolean;
 
   constructor(private documentoService: DocumentoService,
-              public dialog: MatDialog) { }
+              public dialog: MatDialog,
+            private excelService: ExcelService) { }
 
   ngOnInit(): void {
     this.cargando = true;
@@ -40,6 +42,19 @@ export class PendienteComponent implements OnInit, AfterViewInit {
         this.cargando = false;
         Swal.fire('Lo sentimos', `Se presentó un inconveniente en la consulta`, 'warning');
       });
+  }
+
+  downloadExcel(): void {
+    this.excelService.downloadPendientes(
+      sessionStorage.getItem(environment.codigoOrganizacion))
+      .subscribe((blob: Blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `documentos_pendientes.xlsx`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
   }
 
   ngAfterViewInit() {

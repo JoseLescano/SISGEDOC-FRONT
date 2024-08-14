@@ -25,7 +25,7 @@ import { TimelineComponent } from 'src/app/pages/report/timeline/timeline.compon
 export class ViewComponent implements OnInit, AfterViewInit {
 
   // displayedColumns: string[] = ['Estado', 'Nro', 'Origen', 'FechaDoc', 'Documento', 'Asunto', 'Motivo', 'Acciones'];
-  displayedColumns: string[] = ['Nro', 'Asunto', 'Origen', 'FechaDoc', 'Documento', 'Motivo',  'Acciones'];
+  displayedColumns: string[] = ['Prioridad', 'Nro', 'Asunto', 'Origen', 'FechaDoc', 'Documento', 'Motivo',  'Acciones'];
   dataSource: MatTableDataSource<DocumentoView>;
   cargando: boolean = false;
 

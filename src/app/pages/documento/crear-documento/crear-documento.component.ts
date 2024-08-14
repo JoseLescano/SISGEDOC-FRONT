@@ -174,11 +174,14 @@ export class CrearDocumentoComponent implements OnInit {
           if (response.httpStatus=='CREATED'){
             this.cargando = false;
             this.initForm();
-            Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
+            Swal.fire(`ACCION REALIZADA CORRECTAMENTE`, response.message, 'info');
+          } else {
+            this.cargando = false;
+            Swal.fire(`LO SENTIMOS`, response.message, 'info');
           }
         }, error => {
           this.cargando = false;
-          Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
+          Swal.fire('LO SENTIMOS', `No se ha registrado documento`, 'info');
         });
       }
      } else {

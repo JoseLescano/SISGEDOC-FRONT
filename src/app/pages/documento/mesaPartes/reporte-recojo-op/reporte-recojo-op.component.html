@@ -12,7 +12,7 @@
             <table mat-table [dataSource]="dataSource" matSort >
             <ng-container matColumnDef="Nro">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Nro">Nro. registro</th>
-                <td mat-cell *matCellDef="let row"><strong>{{row.codigo }}</strong></td>
+                <td mat-cell *matCellDef="let row"><strong>{{row.id }}</strong></td>
             </ng-container>
 
             <ng-container matColumnDef="Asunto">
@@ -22,17 +22,17 @@
 
             <ng-container matColumnDef="Documento">
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 250px; margin: 5px;">Documento</th>
-            <td mat-cell *matCellDef="let row" style="padding: 10px;"> {{row.clase.nombre + ' Nro. ' + row.nroSobre  }} </td>
+            <td mat-cell *matCellDef="let row" style="padding: 10px;"> {{row.documento  }} </td>
         </ng-container>
 
             <ng-container matColumnDef="Origen">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Origen</th>
-                <td mat-cell *matCellDef="let row"> {{row.origen.acronimo }} </td>
+                <td mat-cell *matCellDef="let row"> {{row.organizacionOrigen }} </td>
             </ng-container>
 
             <ng-container matColumnDef="Destino">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Destino</th>
-                <td mat-cell *matCellDef="let row"> {{row.destino.acronimo }} </td>
+                <td mat-cell *matCellDef="let row"> {{row.organizacionDestino }} </td>
             </ng-container>
 
             <ng-container matColumnDef="Fecha Registro">

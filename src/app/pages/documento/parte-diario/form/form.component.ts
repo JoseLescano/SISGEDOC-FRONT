@@ -64,13 +64,14 @@ export class FormComponent implements OnInit {
       if (responseDocumentoPadre!=null){
         debugger;
         this.documentoRespuesta = new Documento();
-        this.documentoRespuesta = responseDocumentoPadre;
+        this.documentoRespuesta = {...responseDocumentoPadre};
         this.mostrarRespuesta = true;
         if (this.documentoRespuesta.organizacionOrigen.codigoInterno==this.organizacionLogueada){
           this.mostrarDistribuir = true;
         }
         this.documentoService.viewPDF(this.idDocumento).pipe(switchMap((viewDocumento:any)=> {
           this.crearDocumento(viewDocumento.data, 'documentoReferencia');
+          debugger;
           return this.documentoService.viewPDF(this.documentoRespuesta.codigo, this.documentoRespuesta.tipoOrganizacion =='R'? '1': '0');
         })).subscribe((responseRespuesta:any)=> {
           debugger;

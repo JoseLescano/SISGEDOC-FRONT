@@ -1,7 +1,5 @@
 .mat-column-Nro{
-    width: 32px;
-    border-right: 1px solid currentColor;
-    padding-right: 24px;
+    width: 10px;
     text-align: center;
     font-weight: 500;
   }

@@ -32,13 +32,18 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get<Documento[]>(`${environment.HOST}documentos/findByOrganizacionDestino/${codigo}`);
   }
 
-  searchRegistrados(codigo:any){
-    return this.http.get<Documento[]>(`${environment.HOST}documentos/searchRegistrados/${codigo}`);
+  searchRegistrados(codigo:any, fi:any, ff?:any){
+    let formData: FormData= new FormData();
+    formData.append('codigoInterno', codigo);
+    formData.append('fi', fi);
+    formData.append('ff', ff);
+
+    return this.http.post(`${environment.HOST}documentos/searchRegistrados`, formData);
   }
 
   viewPDF(vidDocumento: any, isAntiguo?:any){
     return this.http.get(`${environment.HOST}documentos/viewPDF/${vidDocumento}`,
-      {params: {respuestaAntigua: isAntiguo }});
+      {params: {respuestaAntigua: isAntiguo, codigoOrganizacion: sessionStorage.getItem(environment.codigoOrganizacion) }});
   }
 
   verDocumentoRespuesta(codigoDocumentoPadre: any){
@@ -51,10 +56,6 @@ export class DocumentoService  extends GenericService<Documento> {
 
   findRespuestaByVidParent(codigoDocumentoPadre: any){
     return this.http.get(`${environment.HOST}documentos/findRespuestaByVidParent/${codigoDocumentoPadre}`);
-  }
-
-  findRecibosMP(codigoOrganizacion){
-    return this.http.get<Documento[]>(`${environment.HOST}documentos/findRecibosMP/${codigoOrganizacion}`);
   }
 
   findDecretados(codigoOrganizacion:any, fechaI?:any, fechaF?:any){
@@ -74,6 +75,13 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('fi', fechaI);
     formData.append('ff', fechaF);
     return this.http.post(`${environment.HOST}documentos/findDecretados1`, formData);
+  }
+
+  findDecretadosForDay(codigoInterno:any, fechaI:any){
+    let formData:FormData = new FormData();
+    formData.append('codigoInterno', codigoInterno);
+    formData.append('fecha', fechaI);
+    return this.http.post(`${environment.HOST}documentos/findDecretadosForDay`, formData);
   }
 
   findArchivadosByOrganizacion(codigoInterno:any){
@@ -100,7 +108,8 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/searchByOrganizacion`, formData);
   }
 
-  findEnviadosExternosMP(codigoInterno:any, fechaI?:any, fechaF?:any){
+  findEnviadosExternosMP(codigoInterno:any,
+    fechaI?:any, fechaF?:any){
     let formData : FormData = new FormData();
     formData.append('codigoInterno', codigoInterno);
     formData.append('fi', fechaI);
