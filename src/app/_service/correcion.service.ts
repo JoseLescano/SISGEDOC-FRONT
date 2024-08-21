@@ -20,4 +20,14 @@ export class CorrecionService extends GenericService<CorrecionDTO> {
     return this.http.get(`${environment.HOST}correciones/findByDecreto/${idDecreto}`);
   }
 
+
+  registrarCorrecion(idDocumento:any, idDecreto: any, observacion: any){
+    debugger;
+    let formData: FormData = new FormData();
+    formData.append('idDocumento', idDocumento);
+    formData.append('idDecreto', idDecreto);
+    formData.append('observacion', observacion);
+    return this.http.post(`${environment.HOST}correciones/registrarCorrecion`, formData);
+  }
+
 }

@@ -1,5 +1,5 @@
 import { Component, ElementRef, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, switchMap } from 'rxjs';
 import { Anexo } from 'src/app/_model/anexo';
@@ -10,6 +10,7 @@ import { DocumentoRespuestaService } from 'src/app/_service/documento-respuesta.
 import { DocumentoService } from 'src/app/_service/documento.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
+import { RegistrarCorrecionComponent } from '../../corregir/registrar-correcion/registrar-correcion.component';
 
 @Component({
   selector: 'app-form',
@@ -29,6 +30,7 @@ export class FormComponent implements OnInit {
   url_pdf : any;
   cargando : boolean = false;
   idDocumento: number;
+  idDecreto : number;
   cambioPDF : boolean = false;
 
   mostrarRespuesta: boolean = false;
@@ -45,12 +47,13 @@ export class FormComponent implements OnInit {
     private documentoRespuestaService: DocumentoRespuestaService,
     private anexoService: AnexoService,
     private decretoService: DecretoService,
-    private router: Router
+    private router: Router,    
+    public dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
     const id = +this.route.snapshot.paramMap.get('codigoDocumento');
-    debugger;
+    this.idDecreto = +this.route.snapshot.paramMap.get('idDecreto');
     this.idDocumento = id;
     this.documentoService.findById(this.idDocumento).pipe(switchMap((response:any)=> {
       this.documento = response;
@@ -59,7 +62,7 @@ export class FormComponent implements OnInit {
         this.existeWord = response;
       });
       this.findAnexosByDocumento();
-      return this.documentoService.findRespuestaByVidParent(this.idDocumento);
+      return this.documentoService.findRespuestaByVidParent(this.idDocumento, this.idDecreto);
       })).subscribe((responseDocumentoPadre: any)=>{
       if (responseDocumentoPadre!=null){
         debugger;
@@ -259,6 +262,7 @@ export class FormComponent implements OnInit {
           this.decretoService.elevarDocumento(
             this.documento.codigo,
             sessionStorage.getItem(environment.codigoOrganizacion),
+            this.idDecreto,
             this.cambioPDF?this.selectedFiles:null)
           .subscribe((response:any)=> {
             if (response.httpStatus=='CREATED'){
@@ -274,7 +278,8 @@ export class FormComponent implements OnInit {
         }else { // DOCUMENTO CON REFERENCIA
           this.decretoService.elevarDocumento(
             this.documento.codigo,
-            this.organizacionLogueada,
+            sessionStorage.getItem(environment.codigoOrganizacion),
+            this.idDecreto,
             this.cambioPDF?this.selectedFiles[0]:null,
             this.documentoRespuesta.codigo )
           .subscribe((response:any)=> {
@@ -299,6 +304,7 @@ export class FormComponent implements OnInit {
       sessionStorage.getItem(environment.codigoOrganizacion),
       this.nameDocumentoFirmado,
       this.isFirmado,
+      this.idDecreto,
       this.cambioPDF?this.selectedFiles[0]:'undefined')
     .subscribe(
       {
@@ -325,6 +331,7 @@ export class FormComponent implements OnInit {
       this.isFirmado,
       this.documento.codigo,
       this.documentoRespuesta.tipoOrganizacion =='R'? '1': '0',
+      this.idDecreto,
       this.cambioPDF?this.selectedFiles:'undefined')
     .subscribe(
       {
@@ -483,6 +490,17 @@ export class FormComponent implements OnInit {
     iframe.contentWindow.location.replace(fileURL);
   }
 
+
+  abrirModal(): void {
+    let data: any = {
+      documento: this.idDocumento,
+      decreto: this.idDecreto
+    }
+    const dialogRef = this.dialog.open(RegistrarCorrecionComponent, {
+      width: '60%',
+      data: data,
+    });
+  }
 
 
 

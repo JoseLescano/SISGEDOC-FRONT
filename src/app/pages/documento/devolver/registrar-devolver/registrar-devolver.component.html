@@ -1,4 +1,67 @@
-<div class="container mt-2" style="height: 90%;">
+<!-- <div class="container mt-2"  style="height: 700px;">
+  <mat-card style="height: 100%;">
+    <mat-card-content style="height: 100%;">
+        <div class="row" style="height: 100%;">
+          <div class="col-sm-12 col-lg-7"  >
+            <iframe id="embeddedPage" style="width: 100%; height: 100%" *ngIf="!errorPDF"></iframe>
+            <div  style="width: 100%; height: 100%; border: 1px solid black;
+                  border-radius: 5px; align-items: center; align-content: center;
+                  text-align: center; " *ngIf="errorPDF">
+            <i class="fas fa-exclamation-triangle" style="color: red;" ></i>
+            <strong style="font-size: 12px;"> Error en PDF!</strong>
+          </div>
+          </div>
+          <div class="col-sm-12 mt-sm-3 col-lg-5" >
+            <mat-card-header>
+              <mat-card-title>DEVOLVER DOCUMENTO </mat-card-title>
+            </mat-card-header>
+            <form class="example-form mt-2" [formGroup]="form" (ngSubmit)="devolverDocumento()" novalidate>
+              <mat-tab-group mat-align-tabs="start">
+                <mat-tab label="DATOS GENERALES">
+                  
+                  <mat-form-field  appearance="fill">
+                    <mat-label>CODIGO DE DOCUMENTO</mat-label>
+                    <input matInput disabled value="{{vidDocumento}}">
+                  </mat-form-field>
+                  <ng-select placeholder="DESTINO" [virtualScroll]=true formControlName="destino"
+                      class="example-full-width">
+                      <mat-option>SELECCIONE</mat-option>
+                      <ng-option *ngFor="let c of destinos" [value]="c.codigoInterno" >{{c.acronimo}}</ng-option>
+                  </ng-select>
+
+                  <ng-select placeholder="MOTIVO" [virtualScroll]=true formControlName="destino"
+                      class="example-full-width">
+                      <mat-option>SELECCIONE</mat-option>
+                      <ng-option *ngFor="let c of motivos" [value]="c.idMotivo" >{{c.descripcion}}</ng-option>
+                  </ng-select>
+                  
+                  <mat-form-field class="example-full-width" appearance="fill">
+                      <mat-label>DESCRIPCION</mat-label>
+                      <textarea matInput rows="7" [(ngModel)]="observaciones" ></textarea>
+                  </mat-form-field>
+                    <div class="col-md-12" style="text-align: right;">
+                        <button mat-raised-button color="primary" style="margin-right: 5px;" type="submit"
+                          (click)="devolverDocumento()"
+                          [disabled]="observaciones=='' || cargando" >GUARDAR</button>
+                        <button mat-raised-button color="warn" type="button" routerLink="./principal/pendientes">CANCELAR</button>
+                    </div>
+                </mat-tab>
+              </mat-tab-group>
+            </form>
+          </div>
+        </div>
+    </mat-card-content>
+    <mat-card-footer>
+      <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
+    </mat-card-footer>
+  </mat-card>
+
+</div>
+
+ -->
+
+
+ <div class="container mt-2" style="height: 90%;">
   <mat-card style="height: 100%;">
     <mat-card-content style="height: 100%;">
         <div class="row" style="height: 100%;">

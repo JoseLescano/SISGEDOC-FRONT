@@ -28,8 +28,8 @@ export class DecetarComponent implements OnInit {
   idDocumento: number;
   menus:any[]=[];
   acciones:Accion[] =  [];
-  ultimoDecreto: Decreto= new Decreto();
   cargando : boolean = false;
+  codigoDecreto: any;
 
   formParent : FormGroup = new FormGroup({});
   origen : Organizacion = new Organizacion();
@@ -62,21 +62,13 @@ export class DecetarComponent implements OnInit {
 
     this.getIdDocumento();
     this.initFormParent();
-    this.getUltimoDecreto();
     this.cargando =false;
   }
 
   getIdDocumento(): void {
     const id = +this.route.snapshot.paramMap.get('codigoDocumento');
+    this.codigoDecreto = this.route.snapshot.paramMap.get('idDecreto');
     this.idDocumento = id;
-  }
-
-  getUltimoDecreto(){
-
-    this.decretoService.ultimoDecreto(this.idDocumento, sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any) => {
-      debugger;
-      this.ultimoDecreto = data;
-    });
   }
 
   initFormParent(){
@@ -172,7 +164,7 @@ export class DecetarComponent implements OnInit {
       this.decretos.push(dd);
     }
     this.decretoDocumento.codigoDocumento = this.formParent.value['codigoDocumento'];
-    this.decretoDocumento.decretoActual = this.ultimoDecreto;
+    this.decretoDocumento.decretoActual = this.codigoDecreto;
     this.decretoDocumento.decretos = this.decretos;
     debugger;
     this.decretoService.decretarDocumento(this.decretoDocumento).subscribe((response:any)=> {

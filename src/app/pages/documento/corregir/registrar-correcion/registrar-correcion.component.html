@@ -1,0 +1,48 @@
+
+<mat-card >
+    
+    <mat-card-header class="title-form">
+        <mat-card-title >REGISTRAR CORRECION</mat-card-title>
+      </mat-card-header>
+    <mat-card-content>
+        <form  [formGroup]="form" (ngSubmit)="operate()" novalidate>
+            <div [hidden]="true">
+                <mat-form-field >
+                    <input matInput  formControlName="idDecreto" required  >
+                </mat-form-field>
+            </div>  
+            <div class="row">
+                <div class="col-3">
+                    <mat-form-field class="example-full-width" appearance="fill">
+                        <mat-label>Codigo Documento</mat-label>
+                        <input matInput placeholder="CODIGO DOCUMENTO" disabled value="{{vidDocumento}}">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <mat-form-field class="example-full-width" appearance="fill" >
+                        <mat-label>Observaciones</mat-label>
+                        <textarea matInput rows="5" formControlName="observacion"></textarea>
+                        <mat-error *ngIf="form.controls['observacion'].hasError('required')">
+                            Observacion es <strong>requerido</strong>
+                        </mat-error>
+                        <mat-error *ngIf="form.controls['observacion'].hasError('minlength')">
+                            Caracteres mínimo es <strong>10</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <mat-card-actions>
+                <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Guardar Correccion</button>
+                <button mat-raised-button color="warn" type="button" (click)="close()" >Cancelar</button>
+            </mat-card-actions>
+        </form>
+    </mat-card-content>
+    <mat-card-footer>
+        <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
+      </mat-card-footer>
+    
+    <div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{form.value | json}}</div>
+</mat-card>
+

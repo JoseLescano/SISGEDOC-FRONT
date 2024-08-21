@@ -54,8 +54,11 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get(`${environment.HOST}documentos/getDocumentoSeguimiento/${vidDocumento}`);
   }
 
-  findRespuestaByVidParent(codigoDocumentoPadre: any){
-    return this.http.get(`${environment.HOST}documentos/findRespuestaByVidParent/${codigoDocumentoPadre}`);
+  findRespuestaByVidParent(codigoDocumentoPadre: any, codigoDecreto?:any){
+    let formData:FormData = new FormData();
+    formData.append('codigoDocumentoPadre', codigoDocumentoPadre);
+    formData.append('codigoDecreto', codigoDecreto);
+    return this.http.post(`${environment.HOST}documentos/findRespuestaByVidParent`, formData);
   }
 
   findDecretados(codigoOrganizacion:any, fechaI?:any, fechaF?:any){
@@ -187,12 +190,13 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/crearDocumento`, formData);
   }
 
-  archivarDocumento(vidDocumento:any, orgOrigen:any, observaciones:any,url_pdf?:any){
+  archivarDocumento(vidDocumento:any, orgOrigen:any, observaciones:any, codigoDecreto: any,url_pdf?:any){
     debugger;
     let formData:FormData = new FormData();
     formData.append('vidDocumento', vidDocumento);
     formData.append('orgOrigen', orgOrigen);
     formData.append('observaciones', observaciones);
+    formData.append('codigoDecreto', codigoDecreto);
     formData.append('url_pdf', url_pdf);
     return this.http.post(`${environment.HOST}documentos/archivarDocumento`, formData);
   }
@@ -336,6 +340,14 @@ export class DocumentoService  extends GenericService<Documento> {
 
     return this.http.post(`${environment.HOST}documentos/reportDecretados`,
       formData);
+  }
+
+  registrarVisualizacion(vidDocumento:any, orgOrganizacion:any){
+    debugger;
+    let formData:FormData = new FormData();
+    formData.append('codigoDocumento', vidDocumento);
+    formData.append('codigoOrganizacion', orgOrganizacion);
+    return this.http.post(`${environment.HOST}documentoVisualizados/registrarVisualizacion`, formData);
   }
 
 }

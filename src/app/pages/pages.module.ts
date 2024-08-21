@@ -52,6 +52,7 @@ import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
 import { ViewCorregirComponent } from './documento/corregir/view-corregir/view-corregir.component';
 import { FormCorregirComponent } from './documento/corregir/form-corregir/form-corregir.component';
 import { ReporteDocumentoDecretoComponent } from './report/reporte-documento-decretado/reporte-documento-decretado.component';
+import { RegistrarCorrecionComponent } from './documento/corregir/registrar-correcion/registrar-correcion.component';
 
 @NgModule({
   imports: [
@@ -110,7 +111,8 @@ import { ReporteDocumentoDecretoComponent } from './report/reporte-documento-dec
     MiPerfilComponent,
     ViewCorregirComponent,
     FormCorregirComponent,
-    ReporteDocumentoDecretoComponent
+    ReporteDocumentoDecretoComponent,
+    RegistrarCorrecionComponent
   ],
    exports:[
 

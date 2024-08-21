@@ -5,6 +5,7 @@ import { Anexo } from 'src/app/_model/anexo';
 import { Documento } from 'src/app/_model/documento.model';
 import { AnexoService } from 'src/app/_service/anexo.service';
 import { DocumentoService } from 'src/app/_service/documento.service';
+import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -43,7 +44,7 @@ export class ViewDocumentoComponent implements OnInit {
 
   viewDocumento(vidDocumento: any){
     this.documentoService.viewPDF(vidDocumento).subscribe((response: any)=>{
-      this.crearDocumento(response.data);
+      this.crearDocumento(response.data);      
       this.errorPDF = false;
     }, error => {
       this.close();

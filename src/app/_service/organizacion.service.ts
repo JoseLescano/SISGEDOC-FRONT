@@ -89,4 +89,10 @@ export class OrganizacionService extends GenericService<Organizacion> {
     return this.http.put(`${environment.HOST}organizaciones/eliminar/${codigoInterno}`, codigoInterno);
   }
 
+  findByDevolver(idDecreto: any){
+    let formData: FormData = new FormData();
+    formData.append("idDecreto", idDecreto);
+    return this.http.post(`${environment.HOST}organizaciones/findByDevolver`, formData);
+  }
+
 }

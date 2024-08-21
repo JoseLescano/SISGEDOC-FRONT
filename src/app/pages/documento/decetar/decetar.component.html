@@ -88,7 +88,7 @@
       <mat-card-actions align="end">
         <button mat-raised-button color="warn" type="button" routerLink="/principal/pendientes" class="btn-opcion" > CANCELAR </button>
         <button mat-raised-button color="primary" type="submit"
-          [disabled]="(formParent.invalid && ultimoDecreto!=null) || cargando"
+          [disabled]="(formParent.invalid && codigoDecreto!=null) || cargando"
           class="btn-opcion" > GUARDAR </button>
       </mat-card-actions>
     </form>

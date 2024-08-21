@@ -8,6 +8,8 @@ import { SeguimientoComponent } from '../../report/seguimiento/seguimiento.compo
 import { TimelineComponent } from '../../report/timeline/timeline.component';
 import { AnexoService } from 'src/app/_service/anexo.service';
 import { Anexo } from 'src/app/_model/anexo';
+import { environment } from 'src/environments/environment';
+import { RegistrarComponent } from '../archivar/registrar/registrar.component';
 
 @Component({
   selector: 'app-acciones',
@@ -18,6 +20,7 @@ export class AccionesComponent implements OnInit {
 
   url_pdf: any;
   idDocumento : any;
+  codigoDecreto: any;
   errorPDF : boolean = false;
   anexos: Anexo[] = [];
 
@@ -36,6 +39,7 @@ export class AccionesComponent implements OnInit {
 
   getIdDocumento(): void {
     const id = +this.route.snapshot.paramMap.get('codigoDocumento');
+    this.codigoDecreto = +this.route.snapshot.paramMap.get('idDecreto');
     this.idDocumento = id;
     this.viewDocumento(id);
   }
@@ -48,11 +52,29 @@ export class AccionesComponent implements OnInit {
     });
   }
 
+  goArchivar(idDocumento:any, idDecreto: any): void {
+    let data : any = {
+      documento: idDocumento,
+      decreto: idDecreto
+    }
+    const dialogRef = this.dialog.open(RegistrarComponent, {
+      width: '80%',
+      data: data,
+    });
+  }
+
 
   viewDocumento(vidDocumento: any){
     this.documentoService.viewPDF(vidDocumento).subscribe((response: any)=>{
 
       this.crearDocumento(response.data);
+      this.documentoService.registrarVisualizacion(
+        vidDocumento, 
+        sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=> {
+
+        }, error => {
+          Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR PDF!`, 'warning');
+        });
       this.findAnexosByDocumento();
       this.errorPDF = false;
     }, (error:any) => {
@@ -87,14 +109,6 @@ export class AccionesComponent implements OnInit {
   verSeguimiento(vidDocumento: any){
     this.documentoService.findDecretoByDocumento(vidDocumento).subscribe(data => {
       console.log(data)
-    });
-  }
-
-  abrirDecretar(vidDocumento:any){
-    const dialogRef = this.dialog.open(DecetarComponent, {
-      width: '60%',
-      height: '95%',
-      data: vidDocumento
     });
   }
 

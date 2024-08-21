@@ -30,7 +30,8 @@ export class PendienteComponent implements OnInit, AfterViewInit {
 
   constructor(private documentoService: DocumentoService,
               public dialog: MatDialog,
-            private excelService: ExcelService) { }
+            private excelService: ExcelService,
+            private _liveAnnouncer: LiveAnnouncer) { }
 
   ngOnInit(): void {
     this.cargando = true;
@@ -83,5 +84,17 @@ export class PendienteComponent implements OnInit, AfterViewInit {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
+  }
+
+  announceSortChange(sortState: Sort) {
+    // This example uses English messages. If your application supports
+    // multiple language, you would internationalize these strings.
+    // Furthermore, you can customize the message to add additional
+    // details about the values being sorted.
+    if (sortState.direction) {
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+      this._liveAnnouncer.announce('Sorting cleared');
+    }
   }
 }

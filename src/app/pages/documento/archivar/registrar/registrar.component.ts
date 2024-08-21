@@ -14,14 +14,16 @@ export class RegistrarComponent implements OnInit {
 
   url_pdf: any;
   vidDocumento:any;
+  codigoDecreto: any;
   observaciones : any = '';
   selectedFiles: any;
   errorPDF : boolean = false;
 
-  constructor( private documentoService:DocumentoService,
-                  private route: ActivatedRoute,
-                  private elRef: ElementRef,
-                  private router: Router) { }
+  constructor( 
+    private documentoService:DocumentoService,
+    private route: ActivatedRoute,
+    private elRef: ElementRef,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.getIdDocumento();
@@ -29,6 +31,7 @@ export class RegistrarComponent implements OnInit {
 
   getIdDocumento(): void {
     const id = +this.route.snapshot.paramMap.get('codigoDocumento');
+    this.codigoDecreto = this.route.snapshot.paramMap.get('idDecreto');
     this.vidDocumento = id;
     this.viewDocumento(id);
   }
@@ -62,7 +65,7 @@ export class RegistrarComponent implements OnInit {
     if (this.observaciones != '' && this.observaciones != null){
       debugger;
       this.documentoService.archivarDocumento(this.vidDocumento, sessionStorage.getItem(environment.codigoOrganizacion),
-         this.observaciones, this.selectedFiles == null? '':  this.selectedFiles.item(0)).subscribe((response: any)=> {
+         this.observaciones, this.codigoDecreto, this.selectedFiles == null? '':  this.selectedFiles.item(0)).subscribe((response: any)=> {
           debugger;
          if (response.httpStatus=='OK'){
            Swal.fire(response.message, `Se archivo documento correctamente`, 'info');

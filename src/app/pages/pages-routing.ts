@@ -36,6 +36,7 @@ import { ViewElevadosComponent } from './documento/view-elevados/view-elevados.c
 import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
 import { ViewCorregirComponent } from './documento/corregir/view-corregir/view-corregir.component';
 import { FormCorregirComponent } from './documento/corregir/form-corregir/form-corregir.component';
+import { RegistrarCorrecionComponent } from './documento/corregir/registrar-correcion/registrar-correcion.component';
 
 const routes: Routes = [
 
@@ -44,12 +45,13 @@ const routes: Routes = [
   { path:'pendientes', component:PendienteComponent, canActivate: [IsLoggedInGuard]},
   { path:'dashboard', component:DashboardComponent},
 
-  { path:'decretar/:codigoDocumento', component:DecetarComponent},
-  { path: 'acciones/:codigoDocumento', component: AccionesComponent},
-  { path: 'archivar/:codigoDocumento', component: RegistrarComponent },
+  { path:'decretar/:codigoDocumento/:idDecreto', component:DecetarComponent},
+  { path: 'acciones/:codigoDocumento/:idDecreto', component: AccionesComponent},
+  { path: 'archivar/:codigoDocumento/:idDecreto', component: RegistrarComponent },
   { path: 'corregir/:codigoDocumento', component: FormCorregirComponent },
-  { path: 'devolver/:codigoDocumento', component: RegistrarDevolverComponent },
-  { path: 'derivar/:codigoDocumento', component: RegistrarDerivacionComponent },
+  { path: 'devolver/:codigoDocumento/:idDecreto', component: RegistrarDevolverComponent },
+  { path: 'derivar/:codigoDocumento/:idDecreto', component: RegistrarDerivacionComponent },
+  // { path: 'enviar-corregir/:codigoDocumento/:idDecreto', component: RegistrarCorrecionComponent },
   { path: 'crear-documento', component: CrearDocumentoComponent, canActivate: [IsLoggedInGuard] },
   { path: 'resetear-authentificacion', component: DobleAutentificacionComponent, canActivate: [IsLoggedInGuard] },
   { path: 'buscar-documento', component: BuscarDocumentoComponent },
@@ -70,7 +72,7 @@ const routes: Routes = [
   { path: 'list-correspondencia', component: ListCorrespondenciaComponent },
   { path: 'entregarCorrespondencia', component: EntregarCorrespondenciaComponent, canActivate: [IsLoggedInGuard] },
   { path: 'parte-diario', component: ParteDiarioComponent, canActivate: [IsLoggedInGuard] },
-  { path: 'form/:codigoDocumento', component: FormComponent  },
+  { path: 'form/:codigoDocumento/:idDecreto', component: FormComponent  },
   { path: 'formRespuesta/:codigoDocumento', component: RespuestaComponent  },
   { path: 'my-profile', component: MiPerfilComponent  },
   { path: 'pages/not-403', component: Not403Component  },

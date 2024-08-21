@@ -24,6 +24,7 @@ export class RegistrarDerivacionComponent implements OnInit {
   destinos:Organizacion[] = [];
   cargando: boolean = false;
   form:FormGroup;
+  codigoDecreto: any;
 
   constructor(
     private documentoService:DocumentoService,
@@ -52,6 +53,7 @@ export class RegistrarDerivacionComponent implements OnInit {
 
   getIdDocumento(): void {
     const id = +this.route.snapshot.paramMap.get('codigoDocumento');
+    this.codigoDecreto = this.route.snapshot.paramMap.get('idDecreto');
     this.vidDocumento = id;
     this.viewDocumento(id);
   }
@@ -93,7 +95,7 @@ export class RegistrarDerivacionComponent implements OnInit {
       let origen = sessionStorage.getItem(environment.codigoOrganizacion);
       let destino = this.form.value['destino'];
       let observacion = this.form.value['observacion'];
-      this.decretoService.derivarDocumento(documento, origen, destino, observacion).subscribe((response:any)=>{
+      this.decretoService.derivarDocumento(documento, origen, destino, observacion, this.codigoDecreto).subscribe((response:any)=>{
         if(response.httpStatus == 'CREATED'){
           this.cargando = false;
           Swal.fire('OPERACION REALIZADA', response.message, 'info');

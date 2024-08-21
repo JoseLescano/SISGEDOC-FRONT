@@ -18,8 +18,8 @@ export class SeguimientoComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) private data:any,
   private matDialog: MatDialogRef<ViewDocumentoComponent>,
-private documentoService:DocumentoService,
-private elRef: ElementRef,) { }
+  private documentoService:DocumentoService,
+  private elRef: ElementRef,) { }
 
   ngOnInit(): void {
     this.getIdDocumento();

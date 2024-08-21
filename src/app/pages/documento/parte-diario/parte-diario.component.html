@@ -24,12 +24,12 @@
 
             <ng-container matColumnDef="Origen">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Origen</th>
-              <td mat-cell *matCellDef="let row"> {{row.organizacionOrigen.acronimo }} </td>
+              <td mat-cell *matCellDef="let row"> {{row.remitente }} </td>
             </ng-container>
 
             <ng-container matColumnDef="Destino">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Destino</th>
-                <td mat-cell *matCellDef="let row"> {{row.organizacionDestino.acronimo }} </td>
+                <td mat-cell *matCellDef="let row"> {{row.destinatario }} </td>
             </ng-container>
 
             <ng-container matColumnDef="FechaDoc">
@@ -39,7 +39,7 @@
 
             <ng-container matColumnDef="Documento">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 250px; margin: 5px;">Documento</th>
-                <td mat-cell *matCellDef="let row" style="padding: 10px;"> {{row.clase.nombre + ' Nro. ' + row.nroOrden  }} </td>
+                <td mat-cell *matCellDef="let row" style="padding: 10px;"> {{row.clase+' Nro. ' + row.nroOrden + '/ ' + row.indicativo  }} </td>
             </ng-container>
 
 
@@ -63,11 +63,11 @@
                           <li><a class="dropdown-item" (click)="viewTimeline(row.codigo)">GRAFICA</a></li>
                         </ul>
                       </div>
-                      <button mat-flat-button color="warn"   [routerLink]="['/principal/form', row.codigo]">
+                      <button mat-flat-button color="warn"   [routerLink]="['/principal/form', row.codigo, row.codigoDecreto]">
                         <i class="fas fa-signature" ></i> FIRMAR/ELEVAR DOC.
                       </button>
                       <button class="btn btn-success" style="border-color: #7c33a0; background-color: #75219f; margin-bottom: 5px;" type="button"
-                        [routerLink]="['/principal/archivar', row.codigo]">
+                        [routerLink]="['/principal/archivar', row.codigo, row.codigoDecreto]">
                         <i class="fas fa-archive"></i> ARCHIVAR
                       </button>
                 </div>
