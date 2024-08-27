@@ -36,6 +36,7 @@ export class RespuestaComponent implements OnInit {
   mostrarFirma : boolean = false;
   documentoar : DocumentoArchivoAnexo = new DocumentoArchivoAnexo();
   vidDocumento :any;
+  codigoDecreto: any;
   uploadedFiles : any = [];
 
   nameDocuentoFirmado : string = "";
@@ -66,6 +67,7 @@ export class RespuestaComponent implements OnInit {
 
   getIdDocumento(): void {
     const id = +this.route.snapshot.paramMap.get('codigoDocumento');
+    this. codigoDecreto = +this.route.snapshot.paramMap.get('idDecreto');
     this.vidDocumento = id;
   }
 
@@ -159,7 +161,7 @@ export class RespuestaComponent implements OnInit {
         this.documentoService.crearRespuestaParaFirmar(
           this.documentoar,
           sessionStorage.getItem(environment.codigoOrganizacion),
-          this.vidDocumento, this.nameDocuentoFirmado, this.firmado, this.uploadedFiles).subscribe((response:any)=>{
+          this.vidDocumento, this.nameDocuentoFirmado, this.firmado, this.codigoDecreto, this.uploadedFiles).subscribe((response:any)=>{
           if (response.httpStatus=='CREATED'){
             this.cargando = false;
             this.initForm();

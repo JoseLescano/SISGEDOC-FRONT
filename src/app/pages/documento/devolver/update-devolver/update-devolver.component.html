@@ -1,0 +1,35 @@
+<mat-card class="m-2">
+  <mat-card-header class="title-form">
+    <mat-card-title >ACTUALIZAR DOCUMENTO</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+      <div class="tabset" >
+        <!-- Tab 1 -->
+        <input type="radio" name="tabset" id="tab1" aria-controls="marzen" checked>
+        <label for="tab1">DOCUMENTO</label>
+
+        <div class="tab-panels col-6">
+          <section id="marzen" class="tab-panel">
+            <div class="row " style="height: 600px;">
+              <iframe id="viewDocumento" style="width: 100%; height: 75%" *ngIf="!errorPDF"></iframe>
+              <div  style="width: 100%; height: 75%; border: 1px solid black;
+                    border-radius: 5px; align-items: center; align-content: center;
+                    text-align: center; " *ngIf="errorPDF">
+                <i class="fas fa-exclamation-triangle" style="color: red;" ></i>
+                <strong style="font-size: 12px;"> Error en PDF!</strong>
+              </div>
+              <div class="col-xs-12 col-sm-12 col-md-12"  >
+                <div class="wrapper" >
+                  <div class="form">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>CARGAR ARCHIVO PARA ACTUALIZAR</p>
+                    <input type="file" id="documentoPrincipal" accept="application/msword, application/pdf" (change)="selectArchivoPrincipal($event)" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+  </mat-card-content>
+</mat-card>

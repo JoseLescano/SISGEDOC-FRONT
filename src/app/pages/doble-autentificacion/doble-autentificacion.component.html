@@ -28,7 +28,7 @@
 
     </mat-card-content>
     <mat-card-actions>
-      <button class="btn btn-outline-primary" style="margin-right: 3px;" [disabled]="persona==null" (click)="resetear(persona.usuario_CHASQUI)" >Resetear Autentif.</button>
+      <a class="btn btn-outline-primary" style="margin-right: 3px;" href="https://net.ejercito.mil.pe/chasqui" target="_blank" >Resetear Autentif.</a>
       <button class="btn btn-outline-success" style="margin-right: 3px;">Eliminar perfiles</button>
       <button class="btn btn-outline-danger" (click)="limpiar()" >Limpiar</button>
     </mat-card-actions>
@@ -93,7 +93,7 @@
             </tr>
           </table>
 
-          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"  aria-label="Select page of users"></mat-paginator>
+          <mat-paginator [pageSizeOptions]="[10, 15, 25, 100]"  aria-label="Select page of users"></mat-paginator>
         </div>
     </mat-card-content>
     <mat-card-actions align="start">

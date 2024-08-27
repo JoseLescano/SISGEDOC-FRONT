@@ -108,19 +108,21 @@ export class ViewRemitidosComponent implements OnInit {
   }
 
   VerRespuesta(codigoPadre?:any): void {
-    debugger;
     let documento : Documento = new Documento();
-    this.documentoService.findRespuestaByVidParent(codigoPadre).subscribe((data:any)=> {
-      debugger;
-      documento = {...data}
-      const dialogRef = this.dialog.open(ViewDocumentoComponent, {
-        width: '60%',
-        height: '95%',
-        data: documento,
-      });
+    this.documentoService.findRespuestaByVidParent(codigoPadre,0).subscribe(
+      {
+        next : (response: any)=> {
+          documento = {...response}
+          const dialogRef = this.dialog.open(ViewDocumentoComponent, {
+            width: '60%',
+            height: '95%',
+            data: documento,
+        });
+      },
+      error : (err: any)=> {
+        Swal.fire('LO SENTIMOS', 'NO PODEMOS CARGAR DOCUMENTOS PDF', 'error');
+      }
     })
-
-
   }
 
   viewSeguimiento(documentoSeleccionado?:any): void {

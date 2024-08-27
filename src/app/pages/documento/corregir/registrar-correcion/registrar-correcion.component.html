@@ -1,6 +1,6 @@
 
 <mat-card >
-    
+
     <mat-card-header class="title-form">
         <mat-card-title >REGISTRAR CORRECION</mat-card-title>
       </mat-card-header>
@@ -10,7 +10,7 @@
                 <mat-form-field >
                     <input matInput  formControlName="idDecreto" required  >
                 </mat-form-field>
-            </div>  
+            </div>
             <div class="row">
                 <div class="col-3">
                     <mat-form-field class="example-full-width" appearance="fill">
@@ -42,7 +42,7 @@
     <mat-card-footer>
         <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
       </mat-card-footer>
-    
-    <div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{form.value | json}}</div>
+
+    <!-- <div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{form.value | json}}</div> -->
 </mat-card>
 

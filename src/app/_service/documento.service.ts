@@ -262,7 +262,7 @@ export class DocumentoService  extends GenericService<Documento> {
   }
 
   crearRespuestaParaFirmar(documento: any, organizacionRemitente:any,
-    codigoDocumentoPadre:any, nameDocuentoFirmado, isFirmado, anexos?:any){
+    codigoDocumentoPadre:any, nameDocuentoFirmado: any, isFirmado: any, codigoDecreto: any, anexos?:any){
     debugger;
     let formData:FormData = new FormData();
     formData.append('clase', documento.clase);
@@ -281,6 +281,7 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('codigoDocumentoPadre', codigoDocumentoPadre);
     formData.append('nameArchivoFirmado', nameDocuentoFirmado);
     formData.append('isFirmado', isFirmado);
+    formData.append('codigoDecreto', codigoDecreto);
     return this.http.post(`${environment.HOST}documentos/remitirRespuestaForFirma`, formData);
   }
 
@@ -348,6 +349,12 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('codigoDocumento', vidDocumento);
     formData.append('codigoOrganizacion', orgOrganizacion);
     return this.http.post(`${environment.HOST}documentoVisualizados/registrarVisualizacion`, formData);
+  }
+
+  findDevueltosByOrganizacion(codigoInterno:any){
+    let formData:FormData = new FormData();
+    formData.append('codigoInterno', codigoInterno);
+    return this.http.post(`${environment.HOST}documentos/findDevueltosByOrganizacion`, formData);
   }
 
 }

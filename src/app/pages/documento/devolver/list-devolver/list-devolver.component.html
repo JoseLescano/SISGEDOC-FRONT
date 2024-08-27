@@ -1,0 +1,97 @@
+
+
+<!-- <div class="container mt-2"> -->
+  <div class="container loader" *ngIf="cargando"></div>
+  <mat-card class="m-2" *ngIf="!cargando">
+    <div class="d-flex justify-content-between align-items-center">
+      <mat-card-header class="title-form">
+        <mat-card-title >LISTA DE DOCUMENTOS DEVUELTOS</mat-card-title>
+      </mat-card-header>
+      <button mat-flat-button style="background: rgba(25, 135, 84); color: #fff; "
+       *ngIf="dataSource!=null" (click)="downloadExcel()" >
+        <i class="fas fa-file-excel"></i> EXPORTAR A EXCEL
+      </button>
+    </div>
+    <mat-form-field appearance="fill" class="example-full-width mt-2">
+      <mat-label>Filtro</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ingrese valor" #input>
+    </mat-form-field>
+  <mat-card-content>
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)">
+
+        <ng-container matColumnDef="Nro">
+          <th mat-header-cell mat-sort-header  *matHeaderCellDef mat-sort-header sortActionDescription="Sort by codigo"> Nro. Registro </th>
+          <td mat-cell *matCellDef="let row"> {{row.codigo}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Asunto">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by asunto">Asunto</th>
+          <td mat-cell *matCellDef="let row"> {{row.asunto}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Prioridad">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header mat-sort-header>Prioridad</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="badge text-bg-success" *ngIf="row.prioridad=='NORMAL'">NORMAL</span>
+            <span class="badge text-bg-warning" *ngIf="row.prioridad=='URGENTE'">URGENTE</span>
+            <span class="badge text-bg-danger" *ngIf="row.prioridad=='MUY URGENTE'">MUY URGENTE</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Documento">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Documento</th>
+          <td mat-cell *matCellDef="let row"> {{row.clase + ' Nro. ' + row.nroOrden }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Origen">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Origen">Origen</th>
+          <td mat-cell *matCellDef="let row"> {{row.remitente }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="FechaDoc.">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>FechaDoc.</th>
+          <td mat-cell *matCellDef="let row"> {{row.fechaDocumento |date:"dd-MM-yyyy"}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Acciones">
+          <th mat-header-cell *matHeaderCellDef > Acciones </th>
+          <td mat-cell *matCellDef="let row">
+            <div class="d-grid gap-2 ">
+              <button mat-flat-button  color="primary" class="mt-2"  (click)="openDialog(row)" >
+                <i class="far fa-file-pdf" ></i> VER DOCUMENTO
+              </button>
+              <div class="btn-group">
+                <button type="button" class="btn btn-success" (click)="viewSeguimiento(row.codigo)">
+                  <i class="fas fa-info-circle"></i> SEGUIMIENTO
+                </button>
+                <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                  <span class="visually-hidden">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                  <li><a class="dropdown-item"  (click)="viewSeguimiento(row.codigo)">REPORTE</a></li>
+                  <li><a class="dropdown-item" (click)="viewTimeline(row.codigo)">GRAFICA</a></li>
+                </ul>
+              </div>
+              <button mat-flat-button color="accent" class="mb-2" [routerLink]="['../update-devueltos', row.codigo, row.codigoDecreto]">
+                <i class="fas fa-book-reader"></i> VERIFICAR</button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">Sin datos obtenidos...</td>
+        </tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[ 10, 15, 25, 100]"
+        aria-label="Select page of users"></mat-paginator>
+    </div>
+  </mat-card-content>
+  <mat-card-footer>
+    <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
+  </mat-card-footer>
+</mat-card>

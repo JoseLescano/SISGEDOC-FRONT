@@ -31,7 +31,7 @@ export class DecretoService extends GenericService<Decreto> {
   }
 
 
-  devolverDocumento(documento: any, origen: any, observacion:any, codigoDecreto: any){
+  devolverDocumento(documento: any, origen: any, observacion:any, codigoDecreto: any, codigoDestino?: any){
     let formData: FormData= new FormData();
     formData.append('codigoDocumento', documento);
     formData.append('codigoOrigen', origen);

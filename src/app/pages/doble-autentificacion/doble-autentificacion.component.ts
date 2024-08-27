@@ -56,17 +56,37 @@ export class DobleAutentificacionComponent implements OnInit, AfterViewInit {
   }
 
   buscarPersona(campo:any){
-    this.cargando = true;
-    this.personaService.findByCampo(this.campoIngresado).subscribe((data:any)=>{
-      this.persona = data;
-      this.nombreCompleado = this.persona.grado_LARGA + ' '+ this.persona.arma_LARGA + ' '+  this.persona.apellidos+  ' ' + this.persona.nombres;
-      this.buscarPerfiles();
-      this.cargando=false;
-    }, (error: any)=> {
-      this.persona = null;
-      this.cargando=false;
-      Swal.fire('Sin resultados', `No se encuentra información`, 'info');
-    })
+
+    this.personaService.findByCampo(this.campoIngresado).subscribe(
+      {
+        next: (data:any)=> {
+          if (data!= null){
+            this.cargando = true;
+            debugger;
+            this.persona = data;
+            this.nombreCompleado = this.persona.grado_LARGA + ' '+ this.persona.arma_LARGA + ' '+  this.persona.apellidos+  ' ' + this.persona.nombres;
+            this.buscarPerfiles();
+            this.cargando=false;
+          }else {
+            this.cargando=false;
+            Swal.fire('SIN RESULTADOS', `NO SE ENCONTRO DATOS CON EL CIP INGRESADO`, 'info');
+          }
+        },
+        error: (error: any)=> {
+          debugger;
+          this.persona = null;
+          this.cargando=false;
+          Swal.fire('LO SENTIMOS', error, 'info');
+        }
+
+      })
+  }
+
+  validarNumero(event: KeyboardEvent) {
+    const inputChar = String.fromCharCode(event.charCode);
+    if (!/^\d+$/.test(inputChar)) {
+      event.preventDefault();
+    }
   }
 
   buscarPerfiles(){

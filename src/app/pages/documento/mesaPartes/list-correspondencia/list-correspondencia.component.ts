@@ -8,6 +8,8 @@ import { CorrespondenciaService } from 'src/app/_service/correspondencia.service
 import Swal from 'sweetalert2';
 import { ValidarRecojoComponent } from '../validar-recojo/validar-recojo.component';
 import { MatDialog } from '@angular/material/dialog';
+import { environment } from 'src/environments/environment';
+import { ReportCorrespondenciaComponent } from 'src/app/pages/report/report-correspondencia/report-correspondencia.component';
 
 @Component({
   selector: 'app-list-correspondencia',
@@ -16,7 +18,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class ListCorrespondenciaComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['Nro', 'Asunto','Documento', 'Origen', 'Destino', 'Fecha Registro',  'Acciones'];
+  displayedColumns: string[] = ['Estado', 'Nro', 'Asunto','Documento', 'Origen', 'Destino', 'Fecha Registro', 'Folio',  'Acciones'];
   dataSource: MatTableDataSource<Correspondencia> = new MatTableDataSource<Correspondencia>();
   cargando: boolean;
 
@@ -36,14 +38,34 @@ export class ListCorrespondenciaComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.cargando = true;
-    this.correspondenciaService.listar().subscribe((response:any) => {
-      this.createTable(response.data);
+    this.correspondenciaService.searchByFechas().subscribe((response:any) => {
+      if (response!= null)
+        this.createTable(response.data);
       this.cargando = false;
     }, error => {
       this.cargando = false;
       Swal.fire('Lo sentimos', 'Se presento un inconveniente en cargar la información', 'info');
     });
 
+  }
+
+  buscarFechas(){
+    if (this.range.value['start']!= null && this.range.value['end']!=null){
+      this.cargando = true;
+      this.correspondenciaService.searchByFechas(
+        environment.convertDateToStr(this.range.value['start']),
+         environment.convertDateToStr(this.range.value['end'])).subscribe((response: any) => {
+        debugger;
+        if (response!= null)
+          this.createTable(response.data);
+        this.cargando = false;
+      }, (error: any)=> {
+        this.cargando = false;
+        Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
+      });
+    }else {
+      Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
+    }
   }
 
   createTable(correspondencia: Correspondencia[]){
@@ -97,6 +119,14 @@ export class ListCorrespondenciaComponent implements OnInit, AfterViewInit {
       }
 	  }
 	 );
+  }
+
+  viewSeguimiento(codigo?:any): void {
+    const dialogRef = this.dialog.open(ReportCorrespondenciaComponent, {
+      width: '60%',
+      height: '95%',
+      data: codigo,
+    });
   }
 
 }

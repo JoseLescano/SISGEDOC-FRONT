@@ -53,6 +53,9 @@ import { ViewCorregirComponent } from './documento/corregir/view-corregir/view-c
 import { FormCorregirComponent } from './documento/corregir/form-corregir/form-corregir.component';
 import { ReporteDocumentoDecretoComponent } from './report/reporte-documento-decretado/reporte-documento-decretado.component';
 import { RegistrarCorrecionComponent } from './documento/corregir/registrar-correcion/registrar-correcion.component';
+import { ListDevolverComponent } from './documento/devolver/list-devolver/list-devolver.component';
+import { UpdateDevolverComponent } from './documento/devolver/update-devolver/update-devolver.component';
+import { ReportCorrespondenciaComponent } from './report/report-correspondencia/report-correspondencia.component';
 
 @NgModule({
   imports: [
@@ -112,7 +115,10 @@ import { RegistrarCorrecionComponent } from './documento/corregir/registrar-corr
     ViewCorregirComponent,
     FormCorregirComponent,
     ReporteDocumentoDecretoComponent,
-    RegistrarCorrecionComponent
+    RegistrarCorrecionComponent,
+    ListDevolverComponent,
+    UpdateDevolverComponent,
+    ReportCorrespondenciaComponent
   ],
    exports:[
 

@@ -24,6 +24,8 @@ export class RegistrarDevolverComponent implements OnInit {
   errorPDF : boolean = false;
   cargando : boolean = false;
   destinos: OrganizacionDiagram[] = [];
+  viewObservacion: boolean = false;
+
   motivos: any[] = [
     {
       idMotivo: 1, descripcion: 'MAL REDACTADO'
@@ -50,6 +52,7 @@ export class RegistrarDevolverComponent implements OnInit {
 
   ngOnInit(): void {
     this.getIdDocumento();
+    this.initForm();
   }
 
   getIdDocumento(): void {
@@ -57,14 +60,14 @@ export class RegistrarDevolverComponent implements OnInit {
     this.codigoDecreto = this.route.snapshot.paramMap.get('idDecreto');
     this.vidDocumento = id;
     this.viewDocumento(id);
-    //this.findByDevolver();
+    // this.findByDevolver();
   }
 
   viewDocumento(vidDocumento: any){
     this.cargando = true;
     this.documentoService.viewPDF(vidDocumento).subscribe((response: any)=>{
       this.crearDocumento(response.data);
-      
+
       this.cargando = false;
       this.errorPDF = false;
     }, error => {
@@ -79,9 +82,9 @@ export class RegistrarDevolverComponent implements OnInit {
     this.form = new FormGroup({
       'idDocumento': new FormControl(this.vidDocumento, [Validators.required]),
       'idDecreto': new FormControl(this.codigoDecreto, [Validators.required]),
-      'destino': new FormControl('', [Validators.required]),
-      'motivo': new FormControl('', [Validators.required]),
-      'descripcion': new FormControl('', [Validators.required, Validators.minLength(10)])
+      // 'destino': new FormControl('', [Validators.required]),
+      // 'motivo': new FormControl('', [Validators.required]),
+      'descripcion': new FormControl('', [Validators.minLength(10)])
     })
   }
 
@@ -99,15 +102,30 @@ export class RegistrarDevolverComponent implements OnInit {
 
   }
 
-  devolverDocumento(codigoDocumento?:any){
+  insertObservaciones(){
+    let motivo = this.form.get('motivo').value;
+    if (motivo.idMotivo=='4')
+      this.viewObservacion = true;
+    else this.viewObservacion = false;
+  }
 
-    if (this.observaciones!='' && this.observaciones!=null){
+  devolverDocumento(){
+    debugger;
+    // let motivo = this.form.controls['motivo'].value;
+    let observacion = this.form.controls['descripcion'].value;
+    if (this.form.valid ){
       this.cargando = true;
-      let documento : any = codigoDocumento; //this.form.controls['idDocumento'].value;
-      let observacion = this.observaciones;
+      let documento : any = this.vidDocumento; //this.form.controls['idDocumento'].value;
       let origen = sessionStorage.getItem(environment.codigoOrganizacion);
+      // let destino = this.form.controls['destino'].value;
 
-      this.decretoService.devolverDocumento(documento, origen, observacion, this.codigoDecreto).subscribe((response:any)=>{
+      this.decretoService.devolverDocumento(
+        documento, origen,
+        // observacion!=''? motivo.descripcion + ' :' + observacion : observacion,
+        observacion,
+         this.codigoDecreto
+        //  , destino
+        ).subscribe((response:any)=>{
         if(response.httpStatus == 'CREATED'){
           this.cargando = false;
           this.router.navigate(['/principal/dashboard']);

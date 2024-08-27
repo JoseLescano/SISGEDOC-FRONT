@@ -37,6 +37,8 @@ import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
 import { ViewCorregirComponent } from './documento/corregir/view-corregir/view-corregir.component';
 import { FormCorregirComponent } from './documento/corregir/form-corregir/form-corregir.component';
 import { RegistrarCorrecionComponent } from './documento/corregir/registrar-correcion/registrar-correcion.component';
+import { ListDevolverComponent } from './documento/devolver/list-devolver/list-devolver.component';
+import { UpdateDevolverComponent } from './documento/devolver/update-devolver/update-devolver.component';
 
 const routes: Routes = [
 
@@ -53,7 +55,7 @@ const routes: Routes = [
   { path: 'derivar/:codigoDocumento/:idDecreto', component: RegistrarDerivacionComponent },
   // { path: 'enviar-corregir/:codigoDocumento/:idDecreto', component: RegistrarCorrecionComponent },
   { path: 'crear-documento', component: CrearDocumentoComponent, canActivate: [IsLoggedInGuard] },
-  { path: 'resetear-authentificacion', component: DobleAutentificacionComponent, canActivate: [IsLoggedInGuard] },
+  { path: 'admUser', component: DobleAutentificacionComponent, canActivate: [IsLoggedInGuard] },
   { path: 'buscar-documento', component: BuscarDocumentoComponent },
   { path: 'recibir-documento', component: RecibirComponent, canActivate: [IsLoggedInGuard] },
   { path: 'registrar-documento', component: RegistrarMPComponent },
@@ -73,11 +75,13 @@ const routes: Routes = [
   { path: 'entregarCorrespondencia', component: EntregarCorrespondenciaComponent, canActivate: [IsLoggedInGuard] },
   { path: 'parte-diario', component: ParteDiarioComponent, canActivate: [IsLoggedInGuard] },
   { path: 'form/:codigoDocumento/:idDecreto', component: FormComponent  },
-  { path: 'formRespuesta/:codigoDocumento', component: RespuestaComponent  },
+  { path: 'formRespuesta/:codigoDocumento/:idDecreto', component: RespuestaComponent  },
   { path: 'my-profile', component: MiPerfilComponent  },
   { path: 'pages/not-403', component: Not403Component  },
   { path: 'pages/not-404', component: PageNotFoundComponent  },
   { path: 'documentos-corregir', component: ViewCorregirComponent  },
+  { path: 'documentos-devueltos', component: ListDevolverComponent  },
+  { path: 'update-devueltos/:codigoDocumento/:idDecreto', component: UpdateDevolverComponent  },
 ];
 
 

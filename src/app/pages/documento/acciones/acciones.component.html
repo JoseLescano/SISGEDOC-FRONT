@@ -59,7 +59,7 @@
 <div class="tabset" >
   <!-- Tab 1 -->
   <input type="radio" name="tabset" id="tab1" aria-controls="marzen" checked>
-  <label for="tab1">DOUMENTO</label>
+  <label for="tab1">DOCUMENTO</label>
   <!-- Tab 2 -->
   <input type="radio" name="tabset" id="tab2" aria-controls="rauchbier">
   <label for="tab2">ANEXOS</label>
@@ -106,7 +106,7 @@
                   <li><a class="dropdown-item" (click)="viewGrafica(idDocumento)">GRAFICA</a></li>
                 </ul>
               </div>
-              <button class="btn btn-primary" style="border-color: #7c33a0; background-color: #75219f;" type="button" [routerLink]="['/principal/formRespuesta', idDocumento]" >
+              <button class="btn btn-primary" style="border-color: #7c33a0; background-color: #75219f;" type="button" [routerLink]="['/principal/formRespuesta', idDocumento, codigoDecreto]" >
                 <i class="fas fa-file-import"></i> DAR RESPUESTA
               </button>
               <button class="btn btn-danger" type="button" routerLink="/principal/pendientes" >
