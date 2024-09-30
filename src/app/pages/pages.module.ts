@@ -56,6 +56,9 @@ import { RegistrarCorrecionComponent } from './documento/corregir/registrar-corr
 import { ListDevolverComponent } from './documento/devolver/list-devolver/list-devolver.component';
 import { UpdateDevolverComponent } from './documento/devolver/update-devolver/update-devolver.component';
 import { ReportCorrespondenciaComponent } from './report/report-correspondencia/report-correspondencia.component';
+import { AllUnidadesComponent } from './organizacion/all-unidades/all-unidades.component';
+import { AdmDocumentoComponent } from './documento/adm-documento/adm-documento.component';
+import { PersonaExternaComponent } from './persona-externa/persona-externa.component';
 
 @NgModule({
   imports: [
@@ -118,7 +121,10 @@ import { ReportCorrespondenciaComponent } from './report/report-correspondencia/
     RegistrarCorrecionComponent,
     ListDevolverComponent,
     UpdateDevolverComponent,
-    ReportCorrespondenciaComponent
+    ReportCorrespondenciaComponent,
+    AllUnidadesComponent,
+    AdmDocumentoComponent,
+    PersonaExternaComponent
   ],
    exports:[
 

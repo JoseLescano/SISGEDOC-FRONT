@@ -108,6 +108,11 @@ export class CrearDocumentoComponent implements OnInit {
 
 
   operate(){
+    /*
+    this.documentoService.uploadFTP(this.selectedFiles.item(0)).subscribe((response: any)=> {
+      console.log(response)
+    });
+    */
 
     if(this.form.valid && this.selectedFiles != null){
       this.cargando = true;
@@ -191,6 +196,7 @@ export class CrearDocumentoComponent implements OnInit {
       // else
       Swal.fire('Lo sentimos', `Se presento un inconveniente!`, 'warning');
     }
+
   }
 
 

@@ -1,35 +1,51 @@
-<mat-card class="m-2">
-  <mat-card-header class="title-form">
-    <mat-card-title >ACTUALIZAR DOCUMENTO</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-      <div class="tabset" >
-        <!-- Tab 1 -->
-        <input type="radio" name="tabset" id="tab1" aria-controls="marzen" checked>
-        <label for="tab1">DOCUMENTO</label>
 
-        <div class="tab-panels col-6">
-          <section id="marzen" class="tab-panel">
-            <div class="row " style="height: 600px;">
-              <iframe id="viewDocumento" style="width: 100%; height: 75%" *ngIf="!errorPDF"></iframe>
-              <div  style="width: 100%; height: 75%; border: 1px solid black;
-                    border-radius: 5px; align-items: center; align-content: center;
-                    text-align: center; " *ngIf="errorPDF">
-                <i class="fas fa-exclamation-triangle" style="color: red;" ></i>
-                <strong style="font-size: 12px;"> Error en PDF!</strong>
-              </div>
-              <div class="col-xs-12 col-sm-12 col-md-12"  >
-                <div class="wrapper" >
-                  <div class="form">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <p>CARGAR ARCHIVO PARA ACTUALIZAR</p>
-                    <input type="file" id="documentoPrincipal" accept="application/msword, application/pdf" (change)="selectArchivoPrincipal($event)" />
+<form class="example-form m-2" [formGroup]="form" (ngSubmit)="actualizarDocumento()" novalidate >
+  <mat-card style="height: 600px;">
+    <mat-card-content style="height: 100%;">
+        <div class="row " style="height: 100%;">
+          <div class="col-sm-12 col-lg-7 "  >
+            <iframe id="embeddedPage" style="width: 100%; height: 100%" *ngIf="!errorPDF"></iframe>
+            <div  style="width: 100%; height: 100%; border: 1px solid black;
+                  border-radius: 5px; align-items: center; align-content: center;
+                  text-align: center; " *ngIf="errorPDF">
+            <i class="fas fa-exclamation-triangle" style="color: red;" ></i>
+            <strong style="font-size: 12px;"> Error en PDF!</strong>
+          </div>
+          </div>
+
+          <div class="col-sm-12 mt-sm-3 col-lg-5" >
+            <mat-card-header>
+              <mat-card-title>ENVIAR DOCUMENTO </mat-card-title>
+            </mat-card-header>
+
+                  <mat-form-field  appearance="fill">
+                    <mat-label>CODIGO DE DOCUMENTO</mat-label>
+                    <input matInput disabled value="{{vidDocumento}}">
+                  </mat-form-field>
+
+                  <ng-select placeholder="DESTINO" [virtualScroll]=true formControlName="destino"
+                      class="example-full-width">
+                      <mat-option>SELECCIONE</mat-option>
+                      <ng-option *ngFor="let c of destinos" [value]="c.codigoInterno" >{{c.acronimo}}</ng-option>
+                  </ng-select>
+
+                  <mat-form-field class="example-full-width" appearance="fill"
+
+                  >
+                      <mat-label>DESCRIPCION</mat-label>
+                      <textarea matInput rows="7" formControlName="descripcion" ></textarea>
+                  </mat-form-field>
+                  <div class="col-12 mt-2">
+                   <button mat-raised-button color="primary" style="margin-right: 5px;" type="submit"
+                             [disabled]="form.invalid || cargando" >GUARDAR</button>
+                           <button mat-raised-button color="warn" type="button" routerLink="/principal/documentos-devueltos">CANCELAR</button>
                   </div>
-                </div>
-              </div>
             </div>
-          </section>
-        </div>
-      </div>
-  </mat-card-content>
-</mat-card>
+            </div>
+      </mat-card-content>
+      <mat-card-footer>
+        <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
+      </mat-card-footer>
+    </mat-card>
+  </form>
+    <!-- <div class="bg-info p-3 text-dark bg-opacity-50 mw-100 " style="border-radius: 10px;">{{form.value | json}}</div> -->

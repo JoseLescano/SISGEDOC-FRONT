@@ -50,8 +50,8 @@
               </mat-tab>
             </mat-tab-group>
             <div class="col-md-12 mt-2" style="text-align: right;">
-              <button mat-raised-button color="primary" style="margin-right: 5px;" (click)="corregirDocumento()" [disabled]="observaciones==''" >GUARDAR</button>
-              <button mat-raised-button color="warn" (click)="close()">CANCELAR</button>
+              <button mat-raised-button color="primary" style="margin-right: 5px;" type="submit" (click)="corregirDocumento()" [disabled]="observaciones==''" >GUARDAR</button>
+              <button mat-raised-button color="warn" type="button" (click)="close()">CANCELAR</button>
           </div>
         </div>
       </div>

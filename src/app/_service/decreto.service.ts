@@ -31,12 +31,13 @@ export class DecretoService extends GenericService<Decreto> {
   }
 
 
-  devolverDocumento(documento: any, origen: any, observacion:any, codigoDecreto: any, codigoDestino?: any){
+  devolverDocumento(documento: any, origen: any, observacion:any, codigoDecreto: any, codigoDestino: any){
     let formData: FormData= new FormData();
     formData.append('codigoDocumento', documento);
     formData.append('codigoOrigen', origen);
     formData.append('observacion', observacion);
-    formData.append('codigoDecreto', codigoDecreto);
+    formData.append('codigoDecreto', codigoDecreto)
+    formData.append('codigoDestino', codigoDestino)
     return this.http.post(`${environment.HOST}decretos/devolverDocumento`,  formData);
 
   }
@@ -93,6 +94,15 @@ export class DecretoService extends GenericService<Decreto> {
     formData.append('isAntiguo', isAntiguo);
     formData.append('archivoFirmado', archivoFirmado[0]);
     return this.http.post(`${environment.HOST}decretos/distrubirRespuestaDocumento`,  formData);
+  }
+
+  actualizarDocumento(observacion:any, codigoDecreto: any, codigoDestino: any){
+    let formData: FormData= new FormData();
+    formData.append('observacion', observacion);
+    formData.append('codigoDecreto', codigoDecreto)
+    formData.append('codigoDestino', codigoDestino)
+    return this.http.post(`${environment.HOST}decretos/actualizarDecreto`,  formData);
+
   }
 
 

@@ -78,7 +78,7 @@
             <td mat-cell *matCellDef="let row" >
               <span class="badge rounded-pill text-bg-primary " style="font-size: 12px;" *ngIf="row.estadoDocumento=='REMITIDO'" >REMITIDO</span>
               <span class="badge rounded-pill text-bg-danger" style="font-size: 12px;" *ngIf="row.estadoDocumento=='FINALIZADO'" >FINALIZADO</span>
-              <span class="badge rounded-pill text-bg-success" style="font-size: 12px;" *ngIf="row.estadoDocumento=='DECRETADO'" >DECRETADO</span>
+              <span class="badge rounded-pill text-bg-success" style="font-size: 12px;" *ngIf="row.estadoDocumento=='DECRETADO' || row.estadoDocumento=='ENVIADO'" >{{row.estadoDocumento}}</span>
               <span class="badge rounded-pill text-bg-dark" style="font-size: 12px;" *ngIf="row.estadoDocumento=='POR FIRMAR'">POR FIRMAR</span>
               <span class="badge rounded-pill text-bg-warning" style="font-size: 12px;" *ngIf="row.estadoDocumento=='ARCHIVO'">ARCHIVADO</span>
               <span class="badge rounded-pill text-bg-info" style="font-size: 12px;" *ngIf="row.estadoDocumento=='RECIBIDO'">RECIBIDO</span>

@@ -128,7 +128,7 @@ a {
 
 .social {
   position: fixed;
-  top: 80%;
+  top: 70%;
 }
 .social ul {
   padding: 0px;
@@ -162,12 +162,14 @@ a {
 }
 .social ul li i {
   margin-left: 12px;
-  color: #000;
+  color: #504375;
   padding: 10px;
   border-radius: 50%;
   width: 35px;
   height: 35px;
   font-size: 20px;
-  background: #158fa2;
+  background:  #fff;
   transform: rotate(0deg);
 }
+
+

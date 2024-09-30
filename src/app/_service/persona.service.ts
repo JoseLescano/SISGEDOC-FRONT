@@ -28,9 +28,6 @@ export class PersonaService extends GenericService<Persona> {
     return this.http.get<Persona[]>(`${environment.HOST}personas/findByCampo`, { params: { valor: campo }} );
   }
 
-  resetearByCampo(valor:any){
-    return this.http.delete(`${environment.HOST}dobleAuthe/resetearByCampo/${valor}`);
-  }
 
   validarEntrega(usuario:any, password:any){
     let formData:FormData= new FormData();
@@ -42,6 +39,12 @@ export class PersonaService extends GenericService<Persona> {
 
   verFoto(){
     return this.http.get(`${environment.HOST}personas/verFoto`, { responseType: 'blob' });
+  }
+
+  findPersonaExternaByDNI(DNI: any){
+    let formData:FormData= new FormData();
+    formData.append('dni', DNI);
+    return this.http.post(`${environment.HOST}personasExterno/findByDNI`,  formData );
   }
 
 }

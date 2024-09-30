@@ -73,8 +73,12 @@
                   <li><a class="dropdown-item" (click)="viewTimeline(row.codigo)">GRAFICA</a></li>
                 </ul>
               </div>
-              <button mat-flat-button color="accent" class="mb-2" [routerLink]="['../update-devueltos', row.codigo, row.codigoDecreto]">
-                <i class="fas fa-book-reader"></i> VERIFICAR</button>
+              <button mat-flat-button color="accent"  [routerLink]="['../update-devueltos', row.codigo, row.codigoDecreto]">
+                <i class="fas fa-book-reader"></i> ENVIAR </button>
+
+              <button class="btn btn-warning mb-2" type="button" [routerLink]="['/principal/archivar', row.codigo, row.codigoDecreto]">
+                <i class="fas fa-archive"></i> ARCHIVAR
+              </button>
             </div>
           </td>
         </ng-container>

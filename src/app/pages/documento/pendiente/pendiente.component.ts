@@ -31,18 +31,35 @@ export class PendienteComponent implements OnInit, AfterViewInit {
   constructor(private documentoService: DocumentoService,
               public dialog: MatDialog,
             private excelService: ExcelService,
-            private _liveAnnouncer: LiveAnnouncer) { }
+            private _liveAnnouncer: LiveAnnouncer) {
+      this.dataSource = new MatTableDataSource<any>([]);
+  }
 
   ngOnInit(): void {
     this.cargando = true;
     this.documentoService.findByOrganizacionDestino(sessionStorage.getItem(environment.codigoOrganizacion))
-      .subscribe((data: Documento[]) => {
-        this.createTable(data);
-        this.cargando = false;
-      }, error => {
-        this.cargando = false;
-        Swal.fire('Lo sentimos', `Se presentó un inconveniente en la consulta`, 'warning');
-      });
+      .subscribe(
+        {
+          next : (data: Documento[]) => {
+            this.createTable(data);
+            this.cargando = false;
+
+          }, error: err => {
+            debugger;
+            console.log(err)
+            this.cargando = false;
+            Swal.fire('Lo sentimos', err, 'warning');
+          }
+        }
+    );
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      switch(property) {
+        case 'Nro': return item.codigo;
+        case 'Asunto': return item.asunto.toLowerCase();
+        // Añade más casos según tus columnas
+        default: return item[property];
+      }
+    };
   }
 
   downloadExcel(): void {
@@ -59,10 +76,8 @@ export class PendienteComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    setTimeout(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    });
   }
 
   applyFilter(event: Event) {

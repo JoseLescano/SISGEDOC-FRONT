@@ -90,6 +90,17 @@ export class ExcelService {
     );
   }
 
+  exportSuperAdm(codigoInterno: string): Observable<Blob> {
+    let formData : FormData = new FormData();
+    formData.append('codigoOrganizacion', codigoInterno);
+    const url = `${environment.HOST}documentos/exportSuperAdm`;
+    return this.http.post(url, formData, { responseType: 'blob' }).pipe(
+      map((res: Blob) => {
+        return res;
+      })
+    );
+  }
+
 
 
 }

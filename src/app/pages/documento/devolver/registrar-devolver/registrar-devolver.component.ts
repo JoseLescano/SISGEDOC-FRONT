@@ -60,7 +60,7 @@ export class RegistrarDevolverComponent implements OnInit {
     this.codigoDecreto = this.route.snapshot.paramMap.get('idDecreto');
     this.vidDocumento = id;
     this.viewDocumento(id);
-    // this.findByDevolver();
+    this.findByDevolver();
   }
 
   viewDocumento(vidDocumento: any){
@@ -82,8 +82,8 @@ export class RegistrarDevolverComponent implements OnInit {
     this.form = new FormGroup({
       'idDocumento': new FormControl(this.vidDocumento, [Validators.required]),
       'idDecreto': new FormControl(this.codigoDecreto, [Validators.required]),
-      // 'destino': new FormControl('', [Validators.required]),
-      // 'motivo': new FormControl('', [Validators.required]),
+       'destino': new FormControl('', [Validators.required]),
+      //'motivo': new FormControl('', [Validators.required]),
       'descripcion': new FormControl('', [Validators.minLength(10)])
     })
   }
@@ -117,14 +117,13 @@ export class RegistrarDevolverComponent implements OnInit {
       this.cargando = true;
       let documento : any = this.vidDocumento; //this.form.controls['idDocumento'].value;
       let origen = sessionStorage.getItem(environment.codigoOrganizacion);
-      // let destino = this.form.controls['destino'].value;
+      let destino = this.form.controls['destino'].value;
 
       this.decretoService.devolverDocumento(
         documento, origen,
         // observacion!=''? motivo.descripcion + ' :' + observacion : observacion,
         observacion,
-         this.codigoDecreto
-        //  , destino
+         this.codigoDecreto, destino
         ).subscribe((response:any)=>{
         if(response.httpStatus == 'CREATED'){
           this.cargando = false;

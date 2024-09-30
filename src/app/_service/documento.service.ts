@@ -32,6 +32,14 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get<Documento[]>(`${environment.HOST}documentos/findByOrganizacionDestino/${codigo}`);
   }
 
+  findByOrganizacionDestinoForSuperAdm(codigo:any, fi:any, ff:any){
+    let formData: FormData= new FormData();
+    formData.append('codigoInterno', codigo);
+    formData.append('fi', fi);
+    formData.append('ff', ff);
+    return this.http.post(`${environment.HOST}documentos/findByOrganizacionDestinoForSuperAdm`, formData);
+  }
+
   searchRegistrados(codigo:any, fi:any, ff?:any){
     let formData: FormData= new FormData();
     formData.append('codigoInterno', codigo);
@@ -201,6 +209,17 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/archivarDocumento`, formData);
   }
 
+  archivarDocumentoForSuperAdm(codigoInterno:any, observaciones:any, fi: any, ff:any, usuario:any){
+    debugger;
+    let formData:FormData = new FormData();
+    formData.append('codigoInterno', codigoInterno);
+    formData.append('fi', fi);
+    formData.append('ff', ff);
+    formData.append('usuarioSolicitante', usuario);
+    formData.append('observacion', observaciones);
+    return this.http.post(`${environment.HOST}documentos/archivarDocumentoForSuperAdm`, formData);
+  }
+
   generarPlantillaWord(tipo_documento:any, asunto: any, uu_destino: any, uu_origen: any,
     fr_indicativo: any, fr_correlativo: any, fr_copia_informativa ?: any
   ){
@@ -332,6 +351,16 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/findDecretadoForBarChart`, formData);
   }
 
+  getDocumentoBandejaNucleo(){
+    return this.http.get(`${environment.HOST}documentos/getDocumentoBandejaNucleo`);
+  }
+
+  getDocumentoBandejaBySuperAdm(codigoInterno:string){
+    let formData:FormData = new FormData();
+    formData.append('codigoInterno', codigoInterno);
+    return this.http.post(`${environment.HOST}documentos/getDocumentoBandejaBySuperAdm`, formData);
+  }
+
   reportDecretados(origen:any, fechaInicio: any, fechaFin: any){
 
     let formData:FormData = new FormData();
@@ -355,6 +384,12 @@ export class DocumentoService  extends GenericService<Documento> {
     let formData:FormData = new FormData();
     formData.append('codigoInterno', codigoInterno);
     return this.http.post(`${environment.HOST}documentos/findDevueltosByOrganizacion`, formData);
+  }
+
+  uploadFTP(archivoPrincipal:any){
+    let formData:FormData = new FormData();
+    formData.append('archivoPrincipal', archivoPrincipal);
+    return this.http.post(`${environment.HOST}documentos/uploadZipFTP`, formData);
   }
 
 }

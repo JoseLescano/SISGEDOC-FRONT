@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-md-4" >
           <mat-form-field appearance="fill"class="example-full-width" >
-              <mat-label>Ingrese campo</mat-label>
+              <mat-label>Ingrese nro. CIP</mat-label>
               <input matInput placeholder="Ingrese número CIP ó DNI ó marbete" [(ngModel)]="campoIngresado" required (keydown.enter)="buscarPersona($event)">
               <mat-hint align="start" *ngIf="campoIngresado?.length>= 5" style="color: #06d76c; margin-bottom: 5px;"  ><strong>Presione la tecla Enter</strong> </mat-hint>
               <!-- <mat-error >x</mat-error> -->
@@ -28,9 +28,10 @@
 
     </mat-card-content>
     <mat-card-actions>
-      <a class="btn btn-outline-primary" style="margin-right: 3px;" href="https://net.ejercito.mil.pe/chasqui" target="_blank" >Resetear Autentif.</a>
-      <button class="btn btn-outline-success" style="margin-right: 3px;">Eliminar perfiles</button>
-      <button class="btn btn-outline-danger" (click)="limpiar()" >Limpiar</button>
+      <a mat-raised-button color="primary" href="https://net.ejercito.mil.pe/soporte" target="_blank" >Resetear Autentif.</a>
+
+      <button mat-raised-button color="warn" style="margin-right: 3px;">Eliminar perfiles</button>
+      <button mat-raised-button color="accent" (click)="limpiar()" >Limpiar</button>
     </mat-card-actions>
     <mat-card-footer>
       <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>

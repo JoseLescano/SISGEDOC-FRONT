@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -68,15 +69,19 @@ export class DobleAutentificacionComponent implements OnInit, AfterViewInit {
             this.buscarPerfiles();
             this.cargando=false;
           }else {
+            this.persona = null;
+            this.nombreCompleado = '';
             this.cargando=false;
-            Swal.fire('SIN RESULTADOS', `NO SE ENCONTRO DATOS CON EL CIP INGRESADO`, 'info');
+            Swal.fire('SIN RESULTADOS', `NO SE ENCONTRO DATOS CON EL CIP INGRESADOx`, 'info');
           }
         },
-        error: (error: any)=> {
+        error: (error: any| HttpErrorResponse)=> {
           debugger;
-          this.persona = null;
+          this.nombreCompleado = '';
+          this.persona.correo_CHASQUI = '';
+          this.dataSource = null;
           this.cargando=false;
-          Swal.fire('LO SENTIMOS', error, 'info');
+          Swal.fire('LO SENTIMOS', `NO SE ENCONTRO DATOS CON EL CIP INGRESADO`, 'info');
         }
 
       })
@@ -100,14 +105,7 @@ export class DobleAutentificacionComponent implements OnInit, AfterViewInit {
     this.nombreCompleado = '';
     this.cargando = false;
     this.campoIngresado = '';
-  }
-
-  resetear(chasqui:any){
-    this.personaService.resetearByCampo(chasqui).subscribe((data:any)=> {
-      Swal.fire('REGISTRO CON ÉXITO', `Se ha reseteado la cuenta de usuario con éxito`, 'info');
-    }, (error:any) => {
-      Swal.fire('USUARIO SIN DOBLE AUTENTIFICACION', `Usuario no tiene doble autentificación`, 'info');
-    });
+    this.dataSource = null;
   }
 
   eliminarPerfil(codigo:any){

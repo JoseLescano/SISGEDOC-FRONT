@@ -36,6 +36,13 @@ export class OrganizacionService extends GenericService<Organizacion> {
       });
   }
 
+  destinatariosExternoByDecreto(codigoInterno: any, decreto: any){
+    let formData: FormData = new FormData();
+    formData.append("codigoInterno", codigoInterno);
+    formData.append("codigoDecreto", decreto);
+    return this.http.post<Organizacion[]>(`${environment.HOST}organizaciones/destinatariosExternoByDecreto`, formData);
+  }
+
   getRemitentesInterno(){
     return this.http.get<Organizacion[]>(`${environment.HOST}organizaciones/getRemitentesInterno`);
   }
@@ -93,6 +100,10 @@ export class OrganizacionService extends GenericService<Organizacion> {
     let formData: FormData = new FormData();
     formData.append("idDecreto", idDecreto);
     return this.http.post(`${environment.HOST}organizaciones/findByDevolver`, formData);
+  }
+
+  getUnidadNucleo(){
+    return this.http.get(`${environment.HOST}organizaciones/getUnidadNucleo`);
   }
 
 }

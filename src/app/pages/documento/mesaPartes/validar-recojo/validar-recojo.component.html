@@ -1,28 +1,60 @@
-<mat-card >
-    <mat-card-header class="title-form">
-        <mat-card-title >VALIDACIÓN DE CREDENCIALES</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-            <mat-form-field appearance="fill" class="example-full-width">
-              <mat-label>INGRESE USUARIO</mat-label>
-              <input matInput [(ngModel)]="usuario">
-            </mat-form-field>
-            <mat-form-field appearance="fill"  class="example-full-width">
-              <mat-label>INGRESE CONTRASEÑA</mat-label>
-              <input matInput type="password" [(ngModel)]="password">
-              <!-- <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-              </button> -->
-            </mat-form-field>
-            <!-- <mat-form-field appearance="fill" class="example-full-width" *ngIf="tipoOperacion>0">
-              <mat-label>MOTIVO</mat-label>
-              <input matInput [(ngModel)]="motivo">
-            </mat-form-field> -->
-            <button type = "submit" mat-raised-button color="primary" class="btn-opcion" (click)="validarCredenciales()" >VALIDAR Y ENTREGAR</button>
-            <button type="button" style = "margin-left: 20px;" mat-raised-button color="accent" class="btn-opcion" (click)="close()">CANCELAR</button>
+<div class="tabset" >
+  <!-- Tab 1 -->
+  <input type="radio" name="tabset" id="tab1" aria-controls="marzen" checked>
+  <label for="tab1">CREDENCIALES</label>
+  <!-- Tab 2 -->
+  <input type="radio" name="tabset" id="tab2" aria-controls="rauchbier">
+  <label for="tab2">DNI</label>
 
-    </mat-card-content>
-    <mat-card-footer>
-      <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
-    </mat-card-footer>
-</mat-card>
+  <div class="tab-panels" >
+    <section id="marzen" class="tab-panel">
+      <mat-card >
+        <mat-card-content>
+                <mat-form-field appearance="fill" class="example-full-width">
+                  <mat-label>INGRESE USUARIO</mat-label>
+                  <input matInput [(ngModel)]="usuario">
+                </mat-form-field>
+                <mat-form-field appearance="fill"  class="example-full-width">
+                  <mat-label>INGRESE CONTRASEÑA</mat-label>
+                  <input matInput type="password" [(ngModel)]="password">
+                  <!-- <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                  </button> -->
+                </mat-form-field>
+                <!-- <mat-form-field appearance="fill" class="example-full-width" *ngIf="tipoOperacion>0">
+                  <mat-label>MOTIVO</mat-label>
+                  <input matInput [(ngModel)]="motivo">
+                </mat-form-field> -->
+                <button type = "submit" mat-raised-button color="primary" class="btn-opcion" (click)="validarCredenciales()" >VALIDAR Y ENTREGAR</button>
+                <button type="button" style = "margin-left: 20px;" mat-raised-button color="accent" class="btn-opcion" (click)="close()">CANCELAR</button>
+
+        </mat-card-content>
+        <mat-card-footer>
+          <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
+        </mat-card-footer>
+    </mat-card>
+
+    </section>
+    <section id="rauchbier" class="tab-panel">
+      <mat-card >
+        <mat-card-content>
+          <mat-form-field appearance="fill"class="example-full-width" >
+              <mat-label>Ingrese nro. DNI</mat-label>
+              <input matInput placeholder="Ingrese número DNI" [(ngModel)]="dniIngresado" required >
+              <!-- <mat-hint align="start" style="color: #06d76c; margin-bottom: 5px;" *ngIf="dniIngresado?.length==8" ><strong>Presione la tecla Enter</strong> </mat-hint> -->
+              <!-- <mat-error >x</mat-error> -->
+          </mat-form-field>
+      <!-- <div class="col-12">
+        <mat-form-field appearance="fill" class="example-full-width">
+            <mat-label>Nombre completo</mat-label>
+            <input matInput [(ngModel)]="nombreCompleado" disabled>
+        </mat-form-field>
+      </div> -->
+    <button type = "submit" mat-raised-button color="primary" class="btn-opcion" (click)="validarDniAndEntregar()" >VALIDAR Y ENTREGAR</button>
+    <button type="button" style = "margin-left: 20px;" mat-raised-button color="accent" class="btn-opcion" (click)="close()">CANCELAR</button>
+  </mat-card-content>
+  </mat-card>
+
+    </section>
+  </div>
+</div>

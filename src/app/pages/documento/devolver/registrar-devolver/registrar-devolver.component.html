@@ -22,12 +22,12 @@
                     <mat-label>CODIGO DE DOCUMENTO</mat-label>
                     <input matInput disabled value="{{vidDocumento}}">
                   </mat-form-field>
-                  <!-- <ng-select placeholder="DESTINO" [virtualScroll]=true formControlName="destino"
+                  <ng-select placeholder="DESTINO" [virtualScroll]=true formControlName="destino"
                       class="example-full-width">
                       <mat-option>SELECCIONE</mat-option>
                       <ng-option *ngFor="let c of destinos" [value]="c.codigoInterno" >{{c.acronimo}}</ng-option>
                   </ng-select>
-
+            <!--
                   <ng-select placeholder="MOTIVO" [virtualScroll]=true formControlName="motivo"
                       class="example-full-width"  (change)="insertObservaciones()">
                       <mat-option>SELECCIONE</mat-option>
@@ -36,17 +36,13 @@
                   <mat-form-field class="example-full-width" appearance="fill"
 
                   >
-                  <!-- <mat-form-field class="example-full-width" appearance="fill"
-                   *ngIf="viewObservacion"
-                   > -->
                       <mat-label>DESCRIPCION</mat-label>
                       <textarea matInput rows="7" formControlName="descripcion" ></textarea>
                   </mat-form-field>
                   <div class="col-12 mt-2">
                    <button mat-raised-button color="primary" style="margin-right: 5px;" type="submit"
-                             (click)="devolverDocumento()"
                              [disabled]="form.invalid || cargando" >GUARDAR</button>
-                           <button mat-raised-button color="warn" type="button" routerLink="./principal/pendientes">CANCELAR</button>
+                           <button mat-raised-button color="warn" type="button" routerLink="/principal/pendientes">CANCELAR</button>
                   </div>
             </div>
             </div>
@@ -56,7 +52,7 @@
       </mat-card-footer>
     </mat-card>
   </form>
-    <div class="bg-info p-3 text-dark bg-opacity-50 mw-100 " style="border-radius: 10px;">{{form.value | json}}</div>
+    <!-- <div class="bg-info p-3 text-dark bg-opacity-50 mw-100 " style="border-radius: 10px;">{{form.value | json}}</div> -->
 
 
 

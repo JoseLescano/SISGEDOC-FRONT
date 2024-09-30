@@ -39,6 +39,9 @@ import { FormCorregirComponent } from './documento/corregir/form-corregir/form-c
 import { RegistrarCorrecionComponent } from './documento/corregir/registrar-correcion/registrar-correcion.component';
 import { ListDevolverComponent } from './documento/devolver/list-devolver/list-devolver.component';
 import { UpdateDevolverComponent } from './documento/devolver/update-devolver/update-devolver.component';
+import { AllUnidadesComponent } from './organizacion/all-unidades/all-unidades.component';
+import { AdmDocumentoComponent } from './documento/adm-documento/adm-documento.component';
+import { PersonaExternaComponent } from './persona-externa/persona-externa.component';
 
 const routes: Routes = [
 
@@ -56,6 +59,8 @@ const routes: Routes = [
   // { path: 'enviar-corregir/:codigoDocumento/:idDecreto', component: RegistrarCorrecionComponent },
   { path: 'crear-documento', component: CrearDocumentoComponent, canActivate: [IsLoggedInGuard] },
   { path: 'admUser', component: DobleAutentificacionComponent, canActivate: [IsLoggedInGuard] },
+  { path: 'allUnidades', component: AllUnidadesComponent, canActivate: [IsLoggedInGuard] },
+  { path: 'admDocumento', component: AdmDocumentoComponent, canActivate: [IsLoggedInGuard] },
   { path: 'buscar-documento', component: BuscarDocumentoComponent },
   { path: 'recibir-documento', component: RecibirComponent, canActivate: [IsLoggedInGuard] },
   { path: 'registrar-documento', component: RegistrarMPComponent },
@@ -81,6 +86,7 @@ const routes: Routes = [
   { path: 'pages/not-404', component: PageNotFoundComponent  },
   { path: 'documentos-corregir', component: ViewCorregirComponent  },
   { path: 'documentos-devueltos', component: ListDevolverComponent  },
+  { path: 'persExterno', component: PersonaExternaComponent  },
   { path: 'update-devueltos/:codigoDocumento/:idDecreto', component: UpdateDevolverComponent  },
 ];
 

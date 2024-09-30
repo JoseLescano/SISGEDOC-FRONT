@@ -41,16 +41,13 @@ export class CorrespondenciaService extends GenericService<Correspondencia> {
   }
 
   entregaCorrespondencia(origen:any, usuarioRecibe:any,
-    contrasena:any, correspondencias:Correspondencia[]){
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
+    contrasena:any, correspondencias:Correspondencia[], dniExterno?:any){
 
     let formData:FormData = new FormData();
     formData.append('origen', origen);
     formData.append('usuarioRecibe',usuarioRecibe);
     formData.append('contrasena', contrasena);
+    formData.append('dniExterno', dniExterno);
     correspondencias.forEach(item => {
       formData.append('correspondencias', item.codigo.toString());
     })

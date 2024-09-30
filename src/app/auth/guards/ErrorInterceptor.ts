@@ -13,27 +13,28 @@ export class ErrorInterceptor implements HttpInterceptor {
       private loginService: LoginService,
       private router: Router) { }
 
+    error: any = '';
+
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
         return next.handle(request).pipe(catchError(err => {
             if ([401, 403].includes(err.status)) {
-              debugger;
               if(err.status==403){
-                debugger;
-                Swal.fire('ACCESO DENEGADO', err.error.details, 'info');
-                this.router.navigate(['/principal/dashboard']);
+                this.error = 'NO CUENTA CON LAS CREDENCIALES CORRESPONDENTES';
+                this.loginService.logout();
               }else {
-                Swal.fire('ACCESO DENEGADO', 'SESION EXPIRADA', 'info');
+                this.error = 'SESION EXPIRADA';
                 this.loginService.logout();
               }
             }else {
               if ([0].includes(err.status)){
                 debugger;
-                Swal.fire('LO SENTIMOS', 'ERROR EN CONEXION CON EL SERVIDOR', 'info');
+                this.error ='ERROR EN CONEXION CON EL SERVIDOR';
                 //this.loginService.logout();
               }
             }
-            const error = err.error.message || err.statusText;
-            return throwError(error);
+            // const error = err.error.message || err.statusText;
+            return throwError(this.error);
         }))
     }
 }

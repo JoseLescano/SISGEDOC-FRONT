@@ -1,0 +1,119 @@
+
+<mat-card>
+  <mat-card-header class="title-form">
+    <mat-card-title >REGISTRO DE PERSONAL EXTERNO</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+      <form [formGroup]="myForm" (submit)="operate()" >
+      <div class="row mt-2">
+        <div class="col-6">
+          <span style="font-size: 12px">
+            <i class="mdi mdi-information" style="font-size: 8px; color: #ea5d5d;"
+            *ngIf="myForm.get('nombres')?.hasError('required') || myForm.get('nombres')?.hasError('minlength')" >
+            </i>
+            NOMBRES
+          </span>
+          <input type="text" class="form-control" formControlName="nombres" >
+        </div>
+        <div class="col-6">
+          <span style="font-size: 12px">
+            <i class="mdi mdi-information" style="font-size: 8px; color: #ea5d5d;"
+            *ngIf="myForm.get('apellidos')?.hasError('required') || myForm.get('apellidos')?.hasError('minlength')">
+            </i>
+            APELLIDOS
+          </span>
+          <input type="text" class="form-control" formControlName="apellidos">
+        </div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-6">
+          <span style="font-size: 12px">
+            <i class="mdi mdi-information" style="font-size: 8px; color: #ea5d5d;"
+            *ngIf="myForm.get('nroDocumento')?.hasError('required') " >
+            </i>
+            NRO. DOCUMENTO
+          </span>
+          <input type="number" class="form-control" formControlName="nroDocumento" >
+        </div>
+        <div class="col-6">
+          <span style="font-size: 12px">
+            <i class="mdi mdi-information" style="font-size: 8px; color: #ea5d5d;"
+            *ngIf="myForm.get('email')?.hasError('required') " >
+            </i>
+            EMAIL
+          </span>
+          <input type="email" class="form-control" formControlName="email" >
+        </div>
+      </div>
+
+
+      <div class="row mt-3" style="text-align: center;" >
+        <div class="col-12">
+          <button class="btn btn-outline-primary mr-2" type="submit"  [disabled]="myForm.invalid" >GUARDAR</button>
+          <button class="btn btn-outline-danger mr-2" type="button"  (click)="getPersonalExterno()">CANCELAR</button>
+        </div>
+      </div>
+    </form>
+  </mat-card-content>
+
+  </mat-card>
+
+<!-- <div class="bg-info p-3 text-light fw-bolder bg-opacity-10 shadow rounded">
+  {{myForm.value | json}}
+</div> -->
+
+<div class="card mt-3">
+  <div class="card-body">
+    <div class="d-flex justify-content-between" style="align-items: center">
+      LISTA DEL PERSONAL
+    </div>
+    <div class="table-responsive mt-2" *ngIf="personas?.length>0">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>Nro. documento</th>
+            <th>Email</th>
+            <th>Estado</th>
+            <th colspan="2" class="text-nowrap w100" style="text-align: center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let person of personas">
+            <td>{{person.vid}}</td>
+            <td>{{person.nombres}}</td>
+            <td>{{person.apellidos}}</td>
+            <td>{{person.nroDocumento}}</td>
+            <td>{{person.email}}</td>
+            <td *ngIf="person.estado==1">
+              <span class="badge bg-success rounded-pill">ACTIVO</span>
+            </td>
+            <td *ngIf="person.estado==0">
+              <span class="badge bg-warning rounded-pill">INACTIVO</span>
+            </td>
+            <td class="w80" style="text-align: center; padding: 0px; width: 88px">
+              <span style="font-size: 8px">EDITAR</span>
+              <button style="text-align: center" class="btn btn-warning btn-sm waves-effect waves-light"
+                  type="button"  (click)="editar(person)" >
+                <span class="btn-label">
+                  <i class="mdi mdi-clipboard-check"></i>
+                </span>
+              </button>
+            </td>
+            <td class="w80" style="text-align: center; padding: 0px; width: 88px" >
+              <span style="font-size: 8px">CAMBIAR ESTADO</span>
+              <button style="text-align: center" class="btn btn-success btn-sm waves-effect waves-light"
+                  type="button" (click)="cambiarEstado(person.vid)" >
+                <span class="btn-label">
+                <i class="mdi mdi-table"></i>
+                </span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+</div>

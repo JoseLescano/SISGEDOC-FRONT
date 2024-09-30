@@ -35,6 +35,7 @@ import {
   RecaptchaSettings,
   RECAPTCHA_SETTINGS,
 } from 'ng-recaptcha';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 @NgModule({
@@ -43,6 +44,9 @@ import {
     CommonModule
   ],
   exports: [
+    MatSortModule,
+    MatFormFieldModule,
+
     RecaptchaModule,
     RecaptchaFormsModule,
     RecaptchaModule,
@@ -68,7 +72,6 @@ import {
     MatTooltipModule,
    // MatPaginator,
    MatProgressBarModule,
-   MatSortModule,
    MatCheckboxModule,
    MatChipsModule,
 

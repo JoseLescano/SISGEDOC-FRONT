@@ -35,7 +35,7 @@
               <div class="col-md-4">
                 <ng-select placeholder="ORGANIZACION REMITENTE" [virtualScroll]=true formControlName="destino"
                     style="font-size: 14px;" class="example-full-width">
-                    <mat-option>SELECCIONE</mat-option>
+                    <ng-option>TODAS MIS UNIDADES</ng-option>
                     <ng-option *ngFor="let c of destinos" [value]="c" >{{c.acronimo}}</ng-option>
                 </ng-select>
               </div>
@@ -98,4 +98,3 @@
     <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
   </mat-card-footer>
 </mat-card>
-<!-- <div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{formParent.value | json}}</div> -->

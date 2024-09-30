@@ -2,13 +2,13 @@
 <div class="container loader" *ngIf="cargando"></div>
 <div class="widget-container " style="cursor: pointer;"
   *ngIf="!cargando && (codigoRol=='000' || codigoRol=='002')">
-    <div class="widget green" (click)="viewRemitidos()">
+    <div class="widget green" (click)="viewDevueltos()">
       <div class="icon">
-        <i class="fas fa-upload"></i>
+        <i class="fas fa-undo-alt"></i>
       </div>
       <div class="value">
-        <div class="top">{{atendidos}}</div>
-        <div class="bottom">ATENDIDOS</div>
+        <div class="top">{{devueltos}}</div>
+        <div class="bottom">DEVUELTOS</div>
       </div>
     </div>
     <div class="widget yellow" (click)="viewParteDiario()">
