@@ -1,12 +1,6 @@
 <div class="head" [ngClass]="getHeadClass()">
   <div class="head-content">
     <div class="head-content-left">
-      <!-- <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
-        <ol class="breadcrumb breadcrumb-chevron p-3 rounded-3 text-success">
-          <li class="breadcrumb-item"><a >Principal</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-        </ol>
-      </nav> -->
       <h3 style="margin-left: 10px; font-weight: 600; font-size: 20px; align-items: center; padding-top: 20px;" class="permanent-marker-regular">
         SISTEMA DE GESTIÓN DOCUMENTARIO DEL EJÉRCITO
       </h3>
@@ -74,12 +68,35 @@
 </div>
 
 <mat-menu #menu="matMenu">
-  <button mat-menu-item routerLink="/principal/my-profile" >
-    <mat-icon>assignment_ind</mat-icon>
+
+      <button mat-menu-item routerLink="/principal/my-profile" >
+
+        <i class="fas fa-id-card-alt" style="margin-top: 5px; margin-right: 5px;  color: rgba(0, 0, 0, .54);
+        max-height: 24px;
+        max-width: 24px;"></i>
+        <span>Ver Perfil</span>
+      </button>
+
+      <button mat-menu-item  routerLink="/login">
+        <i class="fas fa-sign-out-alt"  style="margin-top: 5px; margin-right: 5px;  color: rgba(0, 0, 0, .54);
+        max-height: 24px;
+        max-width: 24px;"></i>
+        <span>Cerrar Sesión</span>
+    </button>
+
+  <!-- <button mat-menu-item routerLink="/principal/my-profile" >
+
+    <i class="fas fa-id-card-alt" style="margin-right: 16px; vertical-align: middle; color: rgba(0, 0, 0, .54); user-select: none;
+    background-repeat: no-repeat;
+    display: inline-block;
+    fill: currentColor;
+    height: 24px;
+    width: 24px;
+    overflow: hidden;"></i>
     <span>Ver Perfil</span>
   </button>
   <button mat-menu-item  routerLink="/login">
       <mat-icon>exit_to_app</mat-icon>
       <span>Cerrar Sesión</span>
-  </button>
+  </button> -->
 </mat-menu>

@@ -37,6 +37,8 @@ export class ViewComponent implements OnInit, AfterViewInit {
     end: new FormControl<Date | null>(null),
   });
 
+  fechaSeleccionada : any;
+
   constructor(private documentoService: DocumentoService,
               private route: ActivatedRoute,
               private router: Router,
@@ -128,6 +130,21 @@ export class ViewComponent implements OnInit, AfterViewInit {
     }else {
       Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
     }
+  }
+
+  contexto: string = '';
+
+  buscarPorContexto(contexto:any){
+      this.cargando = true;
+      // this.documentoService.findArchivadosByContexto(sessionStorage.getItem(environment.codigoOrganizacion),
+      //   environment.convertDateToStr(this.range.value['start']),
+      //   environment.convertDateToStr(this.range.value['end'])).subscribe((data: any) => {
+      //   this.createTable(data);
+      //   this.cargando = false;
+      // }, (error: any)=> {
+      //    this.cargando = false;
+      //   Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
+      // });
   }
 
   viewTimeline(vidDocumento: any){

@@ -325,6 +325,12 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/findArchivados1ByOrganizacion`, formData);
   }
 
+  findArchivadosByContexto(contexto:any){
+    let formData:FormData = new FormData();
+    formData.append('contexto', contexto);
+    return this.http.post(`${environment.HOST}documentos/findArchivadosByContexto`, formData);
+  }
+
   findElevados(codigoInterno:any, fechaInicio?:any, fechaFin?:any ){
     let formData:FormData = new FormData();
     formData.append('codigoInterno', codigoInterno);

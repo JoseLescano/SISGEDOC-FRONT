@@ -13,9 +13,9 @@
           rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
           crossorigin="anonymous">
 
-  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <!-- <link rel="preconnect" href="https://fonts.gstatic.com"> -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
 
 
@@ -309,6 +309,7 @@
             $(go.Shape, "PlusLine", { width: 10, height: 10 }),
             {
               name: "BUTTON", alignment: go.Spot.Right, opacity: 0,  // initially not visible
+
               click: (e, button) => _this.addEmployee(button.part)
             },
             // button is visible either when node is selected or on mouse-over
@@ -335,7 +336,9 @@
             value:"",
           };
           var arrayItem=new Array();
-          myDiagramOrganization.model.Re.forEach(dataElement => {
+          debugger;
+          let model = myDiagramOrganization.model.Re != null ? myDiagramOrganization.model.Re : myDiagramOrganization.model.Ne;
+          model.forEach(dataElement => {
               if(dataElement.parent==thisemp.key){
                 arrayItem.push(dataElement);
               }
@@ -375,6 +378,7 @@ myDiagramOrganization.nodeTemplate.contextMenu =
    $("ContextMenuButton",
      $(go.TextBlock, "Agregar Organizacion"),
      {
+
        click: (e, button) =>{ _this.addEmployee(button.part.adornedPart)}
      }
    ),
@@ -387,7 +391,7 @@ myDiagramOrganization.nodeTemplate.contextMenu =
 
          // remove the whole subtree, including the node itself
 
-         const node = button.part.Qt;
+        const node = button.part.Qt == null ?   button.part.si : button.part.Qt ;
         debugger;
          _this.incallbackDelete(node.CODIGO,()=>{
           debugger;
@@ -407,8 +411,8 @@ myDiagramOrganization.nodeTemplate.contextMenu =
      {
 
        click: (e, button) => {
-
-       const node = button.part.Qt;
+      debugger;
+       const node = button.part.Qt == null ?   button.part.si : button.part.Qt ;
        _this.incallbackUpdate(node,()=>{
        })
        }
@@ -419,7 +423,7 @@ myDiagramOrganization.nodeTemplate.contextMenu =
      {
        click: (e, button) => {
         debugger;
-       const node = button.part.Qt;
+        const node = button.part.Qt == null ?   button.part.si : button.part.Qt ;
        debugger;
        _this.incallAgregarUsuarios(node,()=>{
        })
@@ -573,7 +577,7 @@ this.load=function() {
 		var item=	{"key":KEYPARENT=lista[i].KEY,
 		"name":lista[i].acronimo,
 		"CODIGO":lista[i].codigoInterno,
-		"pic":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Emblem_of_the_Peruvian_Army.svg/1200px-Emblem_of_the_Peruvian_Army.svg.png",
+		"pic":"./assets/logo_ejercito.png",
 		 "parent":lista[i].KEYPARENT
 		 };
 		 	 listaFormt.push(item);
@@ -581,7 +585,7 @@ this.load=function() {
 		 		var item=	{"key":KEYPARENT=lista[i].KEY,
 		"name":lista[i].acronimo,
 		"CODIGO":lista[i].codigoInterno,
-		"pic":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Emblem_of_the_Peruvian_Army.svg/1200px-Emblem_of_the_Peruvian_Army.svg.png",
+		"pic":"./assets/logo_ejercito.png",
 		 }
 		 listaFormt.push(item);
 
@@ -598,18 +602,6 @@ this.load=function() {
 	return   '{ "class": "go.TreeModel","nodeDataArray":'+JSON.stringify(listaFormt)+'}';
 
   }
-  function importarGoJS() {
-  var script = document.createElement('script');
-  script.src = 'https://walla.ejercito.mil.pe/sisgedo/assets/diagram/go/,DanaInfo=sw.ejercito.mil.pe,SSL,CT=js+go.js'; // Reemplaza 'ruta/a/go.js' con la ubicación real de tu archivo go.js
-  document.head.appendChild(script);
-
-  script.onload = function() {
-    // El código de inicialización de GoJS o el código que utiliza GoJS va aquí
-    var $ = go.GraphObject.make;
-    var myDiagram = $(go.Diagram, "myDiagramDiv");
-    // Otro código relacionado con GoJS
-  };
-}
 
 
 

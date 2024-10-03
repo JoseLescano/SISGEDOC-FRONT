@@ -34,6 +34,7 @@ export class DashboardComponent implements OnInit {
 
     let codigoOrganizacion = sessionStorage.getItem(environment.codigoOrganizacion);
     this.documentoService.contadoresDashboard(codigoOrganizacion).subscribe((response:any)=> {
+      debugger;
       this.pendientes = response[0] < 10 ? '000'+ response[0]:
                         (response[0] < 99 && response[0] >9) ? '00'+ response[0]:
                         response[0];
