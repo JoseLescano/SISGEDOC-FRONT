@@ -47,7 +47,7 @@ export class FormComponent implements OnInit {
     private documentoRespuestaService: DocumentoRespuestaService,
     private anexoService: AnexoService,
     private decretoService: DecretoService,
-    private router: Router,    
+    private router: Router,
     public dialog: MatDialog,
   ) { }
 
@@ -70,14 +70,13 @@ export class FormComponent implements OnInit {
         this.documentoRespuesta = {...responseDocumentoPadre};
         this.mostrarRespuesta = true;
         if (this.documentoRespuesta.organizacionOrigen.codigoInterno==this.organizacionLogueada){
+          debugger;
           this.mostrarDistribuir = true;
         }
         this.documentoService.viewPDF(this.idDocumento).pipe(switchMap((viewDocumento:any)=> {
           this.crearDocumento(viewDocumento.data, 'documentoReferencia');
-          debugger;
           return this.documentoService.viewPDF(this.documentoRespuesta.codigo, this.documentoRespuesta.tipoOrganizacion =='R'? '1': '0');
         })).subscribe((responseRespuesta:any)=> {
-          debugger;
           this.crearDocumento(responseRespuesta.data, 'documentoRespuesta');
         }, (error:any) => {
           this.errorPDF = true;
@@ -87,6 +86,7 @@ export class FormComponent implements OnInit {
       } else {
         debugger;
         if (this.documento.organizacionOrigen.codigoInterno==this.organizacionLogueada){
+          debugger;
           this.mostrarDistribuir = true;
           this.mostrarRespuesta = true;
         }
@@ -121,7 +121,6 @@ export class FormComponent implements OnInit {
   }
 
   crearDocumento(resp: any, iframeId: string) {
-    debugger;
     const byteArray = new Uint8Array(atob(resp[0]).split('').map((char) => char.charCodeAt(0)));
     const file = new Blob([byteArray], { type: 'application/pdf' });
     const fileURL = URL.createObjectURL(file);

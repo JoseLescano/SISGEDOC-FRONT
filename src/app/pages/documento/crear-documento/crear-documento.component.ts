@@ -11,7 +11,8 @@ import { OrganizacionService } from 'src/app/_service/organizacion.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 import { ModalFirmaPeruComponent } from '../modal-firma-peru/modal-firma-peru.component';
-import { of, switchMap } from 'rxjs';
+import { finalize, of, switchMap } from 'rxjs';
+import { FirmaPeruService } from 'src/app/_service/firma-peru.service';
 
 @Component({
   selector: 'app-crear-documento',
@@ -44,7 +45,8 @@ export class CrearDocumentoComponent implements OnInit {
     private claseService: ClaseService,
     private documentoService: DocumentoService,
     private correlativoService: CorrelativoService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private firmaPeruService: FirmaPeruService
   ) { }
 
   ngOnInit(): void {
@@ -415,44 +417,51 @@ export class CrearDocumentoComponent implements OnInit {
     return window;
   }
 
-  firmarDocumento(){
-    var _this:any=this;
+  firmarDocumento() {
     this.cargando = true;
-    this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response:any)=>{
-      var nameFile=response[1];
-       this._window().iniciarFirma((response[1]),
-        function(){ _this.updateIframeWithKeyDigitalGeneral(nameFile); }
-      );
+    this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response: any) => {
+      debugger;
+      var nameFile = response[1];
+      this.firmaPeruService.iniciarFirma(response[1]).then(() => {
+        Swal.fire('FIRMA COMPLETADA', 'SE FIRMO DOCUMENTO CORRECTAMENTE', 'info');
+        this.updateIframeWithKeyDigitalGeneral(nameFile);
+      }).catch((error) => {
+        Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
+        console.error('Error durante la firma:', error);
+      });
     });
     this.cargando = false;
   }
 
+  updateIframeWithKeyDigitalGeneral(inNameFile: any) {
+    debugger;
+    this.nameDocuentoFirmado = inNameFile;
+    this.firmado = true;
+    this.documentoService.getFileDocumentKeyDigital(inNameFile).subscribe((resp: any) => {
+      debugger;
+      const byteArray = new Uint8Array(atob(resp).split('').map((char) => char.charCodeAt(0)));
+      const file = new Blob([byteArray], { type: 'application/pdf' });
+      const rf_file = new File([file], URL.createObjectURL(file), { type: 'application/pdf' });
+      const list = new DataTransfer();
+      list.items.add(rf_file);
+      this.selectedFiles = list.files;
+    });
+  }
+
+  // firmarDocumento(){
+  //   var _this:any=this;
+  //   this.cargando = true;
+  //   this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response:any)=>{
+  //     var nameFile=response[1];
+  //      this._window().iniciarFirma((response[1]),
+  //       function(){ _this.updateIframeWithKeyDigitalGeneral(nameFile); }
+  //     );
+  //   });
+  //   this.cargando = false;
+  // }
+
   nameDocuentoFirmado : string = "";
   firmado : boolean = false;
-  updateIframeWithKeyDigitalGeneral(inNameFile: any,tipo:any) {
-    this.nameDocuentoFirmado = inNameFile;
-    var _this: any = this;
-    _this.firmado = true;
-    this.documentoService
-      .getFileDocumentKeyDigital(inNameFile)
-      .subscribe((resp:any) => {
-        let byteArray = new Uint8Array(
-          atob(resp)
-            .split('')
-            .map((char) => char.charCodeAt(0))
-        );
-        let file = new Blob([byteArray], { type: 'application/pdf' });
-        var rf_file = new File([file], URL.createObjectURL(file), {
-          type: 'application/pdf',
-        });
-        let listFile = [rf_file];
-        let list = new DataTransfer();
-        list.items.add(rf_file);
-
-        this.selectedFiles = list.files;
-      });
-
-  }
 
 
 }
