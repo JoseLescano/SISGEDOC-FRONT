@@ -95,7 +95,8 @@ export class FirmaPeruService {
       });
 
       try {
-        const token = sessionStorage.getItem('access_token');
+        // const token = sessionStorage.getItem('access_token');
+        const token = sessionStorage.getItem('access_token')==null ? environment.TOKEN_NAME: sessionStorage.getItem('access_token');
         const param = {
           "param_url": `${environment.HOST}documentos/firmaPeru/${configuracion}?access_token=${token}`,
           "param_token": "162647697663667",

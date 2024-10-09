@@ -11,6 +11,7 @@ import { DocumentoService } from 'src/app/_service/documento.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 import { RegistrarCorrecionComponent } from '../../corregir/registrar-correcion/registrar-correcion.component';
+import { FirmaPeruService } from 'src/app/_service/firma-peru.service';
 
 @Component({
   selector: 'app-form',
@@ -49,6 +50,7 @@ export class FormComponent implements OnInit {
     private decretoService: DecretoService,
     private router: Router,
     public dialog: MatDialog,
+    private firmaPeruService: FirmaPeruService
   ) { }
 
   ngOnInit(): void {
@@ -395,16 +397,31 @@ export class FormComponent implements OnInit {
     return window;
   }
 
+  // firmarDocumento(){
+  //   var _this:any=this;
+  //     this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response:any)=>{
+  //       var nameFile=response[1];
+  //       this._window().iniciarFirma((response[1]),
+  //       function(){_this.updateIframeWithKeyDigitalGeneral(nameFile);}
+  //     );
+  //     }, error => {
+  //       Swal.fire("LO SENTIMOS", "HUBO UN INCONVENIENTE EN LA FIRMA DEL DOCUMENTO", "info");
+  //     });
+
+  // }
+
   firmarDocumento(){
-    var _this:any=this;
-      this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response:any)=>{
-        var nameFile=response[1];
-        this._window().iniciarFirma((response[1]),
-        function(){_this.updateIframeWithKeyDigitalGeneral(nameFile);}
-      );
-      }, error => {
-        Swal.fire("LO SENTIMOS", "HUBO UN INCONVENIENTE EN LA FIRMA DEL DOCUMENTO", "info");
+    this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response: any) => {
+      debugger;
+      var nameFile = response[1];
+      this.firmaPeruService.iniciarFirma(response[1]).then(() => {
+        Swal.fire('FIRMA COMPLETADA', 'SE FIRMO DOCUMENTO CORRECTAMENTE, SE ACTUALIZARÁ DOCUMENTO', 'info');
+        this.updateIframeWithKeyDigitalGeneral(nameFile);
+      }).catch((error) => {
+        Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
+        console.error('Error durante la firma:', error);
       });
+    });
 
   }
 

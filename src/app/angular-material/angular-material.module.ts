@@ -26,7 +26,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { MatSortModule } from '@angular/material/sort';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatChipsModule} from '@angular/material/chips';
 
 import {
@@ -46,7 +46,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   exports: [
     MatSortModule,
     MatFormFieldModule,
-
+    MatSlideToggleModule,
     RecaptchaModule,
     RecaptchaFormsModule,
     RecaptchaModule,
