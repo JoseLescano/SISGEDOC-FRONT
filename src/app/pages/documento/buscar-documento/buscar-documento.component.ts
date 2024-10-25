@@ -21,12 +21,15 @@ import { TimelineComponent } from '../../report/timeline/timeline.component';
 })
 export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['Estado', 'Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'Decretado a.', 'Acciones'];
-  dataSource: MatTableDataSource<Documento>;
-  cargando: boolean;
+  displayedColumns: string[] = ['Prioridad', 'Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'Decretado a.', 'Acciones'];
+  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
+  cargando: boolean = false;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  textoIngresado : string = '';
+
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
   range = new FormGroup({
     start: new FormControl<Date | null>(null),
     end: new FormControl<Date | null>(null),
@@ -41,20 +44,18 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
             ) { }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      this.generarReporte(+params.get('tipoReporte'));
-    });
+    this.generarReporte();
   }
 
   exportTable() {
     this.excelService.exportTableToExcel('tbDecretados', 'LISTA DE DOCUMENTOS DECRETADOS');
   }
 
-  buscarFechas(){
-    if (this.range.value['start']!= null && this.range.value['end']!=null){
+  byTexto(){
+    if (this.textoIngresado.trim() != '' || this.textoIngresado != null){
       this.cargando = true;
-      this.documentoService.searchByOrganizacion(sessionStorage.getItem(environment.codigoOrganizacion),
-        environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end'])).subscribe((data: any) => {
+      this.documentoService.searchByOrganizacion(sessionStorage.getItem(environment.codigoOrganizacion), this.textoIngresado,
+      '', '').subscribe((data: any) => {
         debugger;
         this.createTable(data);
         this.cargando = false;
@@ -62,10 +63,28 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
         this.cargando = false;
         Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
       });
-    }else {
-      Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
-    }
+     }else {
+       Swal.fire('LO SENTIMOS', 'INGRESE CAMPO REQUERIDO PARA LA BUSQUEDA', 'info');
+     }
   }
+  betweenFechas(){
+    if (this.range.value['start']!= null && this.range.value['end']!=null){
+      this.cargando = true;
+      this.documentoService.searchByOrganizacion(sessionStorage.getItem(environment.codigoOrganizacion),'',
+      environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end'])).subscribe((data: any) => {
+        debugger;
+        this.createTable(data);
+        this.cargando = false;
+      }, (error: any)=> {
+        this.cargando = false;
+        Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
+      });
+     }else {
+       Swal.fire('LO SENTIMOS', 'INGRESE CAMPOS REQUERIDOS PARA LA BUSQUEDA', 'info');
+     }
+  }
+
+
 
   viewTimeline(vidDocumento: any){
     const dialogRef = this.dialog.open(TimelineComponent, {
@@ -75,13 +94,13 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  generarReporte(tipoReporte: number): void {
+  generarReporte(): void {
     this.cargando = true;
 
-      this.documentoService.searchByOrganizacion(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe( {
+      this.documentoService.searchByOrganizacion(sessionStorage.getItem(environment.codigoOrganizacion), '').subscribe( {
         next : (data: any) =>{
-          debugger;
           this.createTable(data);
+          Swal.fire("LISTA DE DOCUMENTOS ENCONTRADOS", "SE OBTUVO DOCUMENTOS DE LOS ULTIMOS 7 DÍAS", "info");
           this.cargando = false;
         }, error: (error: any)=> {
          this.cargando = false;
@@ -91,8 +110,11 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.dataSource = null;
+    if (this.dataSource!= null){
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    }
   }
 
   applyFilter(event: Event) {
@@ -104,12 +126,27 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
     }
   }
 
-  createTable(documento: Documento[]){
-    this.dataSource = new MatTableDataSource(documento);
+  createTable(documentos: any[]): void {
+    this.dataSource = new MatTableDataSource(documentos);
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+
+      this.dataSource.sortingDataAccessor = (item, property) => {
+        switch(property) {
+          case 'Nro': return item.codigo;
+          case 'Asunto': return item.asunto.toLowerCase();
+          case 'FechaDoc': return item.fechaDocumento;
+          case 'Documento': return item.clase + ' Nro. ' + item.nroOrden;
+          case 'Origen': return item.remitente.toLowerCase();
+          case 'Destino': return item.destinatario.toLowerCase();
+          case 'Prioridad': return item.prioridad.toLowerCase();
+          // Añade más casos según tus columnas
+          default: return item[property];
+        }
+      };
     });
+
   }
   openDialog(documentoSeleccionado?:any): void {
     const dialogRef = this.dialog.open(ViewDocumentoComponent, {
@@ -117,6 +154,25 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
       height: '95%',
       data: documentoSeleccionado,
     });
+  }
+
+  verRespuesta(documentoSeleccionado?:any): void {
+    debugger;
+    this.documentoService.verDocumentoRespuesta(documentoSeleccionado).subscribe(
+      {
+        next : (response: any)=> {
+          debugger;
+          const dialogRef = this.dialog.open(ViewDocumentoComponent, {
+            width: '60%',
+            height: '95%',
+            data: response,
+          });
+        }, error : (err:any)=> {
+
+        }
+      }
+    );
+
   }
 
   viewSeguimiento(documentoSeleccionado?:any): void {

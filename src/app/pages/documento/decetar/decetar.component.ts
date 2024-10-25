@@ -1,16 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl, ValidationErrors, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DecretoAccionDTO } from 'src/app/_DTO/DecretoAccionDTO';
-import { DecretoDTO } from 'src/app/_DTO/DecretoDTO';
-import { DecretoDocumentoDTO } from 'src/app/_DTO/DecretoDocumentoDTO';
+import { forkJoin } from 'rxjs';
+import { insertDTO } from 'src/app/_DTO/InsertDTO';
 import { Accion } from 'src/app/_model/accion';
-import { Decreto } from 'src/app/_model/decreto';
 import { Organizacion } from 'src/app/_model/organizacion';
 import { Prioridad } from 'src/app/_model/prioridad';
 import { AccionService } from 'src/app/_service/accion.service';
 import { DecretoService } from 'src/app/_service/decreto.service';
-import { DocumentoService } from 'src/app/_service/documento.service';
 import { OrganizacionService } from 'src/app/_service/organizacion.service';
 import { PrioridadService } from 'src/app/_service/prioridad.service';
 import { environment } from 'src/environments/environment';
@@ -23,187 +20,202 @@ import Swal from 'sweetalert2';
 })
 export class DecetarComponent implements OnInit {
 
-  destinos:Organizacion[] = [];
+  decretoForm: FormGroup;
+  organizaciones: Organizacion[] = [];
   prioridades: Prioridad[] = [];
-  idDocumento: number;
-  menus:any[]=[];
-  acciones:Accion[] =  [];
+  accionesDisponibles: Accion[] = [];
+  idDocumento: any = '';
+  codigoDecreto : any = '';
+  minDate: Date;
   cargando : boolean = false;
-  codigoDecreto: any;
-
-  formParent : FormGroup = new FormGroup({});
-  origen : Organizacion = new Organizacion();
 
   constructor(
+    private fb: FormBuilder,
     private accionService: AccionService,
     private organizacionService: OrganizacionService,
     private prioridadService:PrioridadService,
-    private documentoService: DocumentoService,
     private decretoService: DecretoService,
     private route: ActivatedRoute,
     private router: Router,
-  ) { }
+  ) {}
 
-  ngOnInit(): void {
-    this.cargando = true;
-    this.organizacionService.getChildrenByCodigo(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=> {
-      this.destinos = response.data;
-      if (this.destinos.length==0){
-        this.router.navigate(['./principal/pendientes']);
-        Swal.fire('LO SENTIMOS', `SE VALIDA QUE NO TIENE ORGANIZACIONES A SU MANDO!`, 'warning');
-      }
-    });
-    this.accionService.listar().subscribe((response:any)=> {
-      this.acciones = response.data;
-    });
-    this.prioridadService.listar().subscribe((response:any)=> {
-      this.prioridades = response;
-    });
+  ngOnInit() {
+    this.inicializarFormulario();
+    this.cargarDatosDelBackend();
+    this.minDate = new Date(); // Fecha actual
 
-    this.getIdDocumento();
-    this.initFormParent();
-    this.cargando =false;
   }
 
   getIdDocumento(): void {
-    const id = +this.route.snapshot.paramMap.get('codigoDocumento');
+    this.idDocumento = this.route.snapshot.paramMap.get('codigoDocumento');
     this.codigoDecreto = this.route.snapshot.paramMap.get('idDecreto');
-    this.idDocumento = id;
   }
 
-  initFormParent(){
-    this.origen.codigoInterno  = sessionStorage.getItem(environment.codigoOrganizacion);
-    this.formParent = new FormGroup(
-      {
-        codigoDocumento: new FormControl(this.idDocumento, [Validators.required]),
-        origen: new FormControl(this.origen, [Validators.required]),
-        decretos: new FormArray([], [Validators.required])
+  inicializarFormulario() {
+    this.getIdDocumento();
+    this.decretoForm = this.fb.group({
+      numeroDocumento: [this.idDocumento, Validators.required],
+      numeroDecreto: [this.codigoDecreto, Validators.required],
+      decretos: this.fb.array([])
+    });
+    this.agregarDecreto(); // Agregar el primer decreto por defecto
+
+  }
+
+  cargarDatosDelBackend() {
+    forkJoin({
+      organizaciones: this.organizacionService.getChildrenByCodigo(sessionStorage.getItem(environment.codigoOrganizacion)),
+      prioridades: this.prioridadService.listar(),
+      acciones: this.accionService.listar()
+    }).subscribe({
+      next: (result:any) => {
+        this.organizaciones = result.organizaciones.data;
+        if (this.organizaciones.length==0){
+          this.router.navigate(['./principal/pendientes']);
+          Swal.fire('LO SENTIMOS', `SE VALIDA QUE NO TIENE ORGANIZACIONES A SU MANDO!`, 'info');
+        }
+        this.prioridades = result.prioridades;
+        this.accionesDisponibles = result.acciones.data;
+        this.agregarDecreto(); // Agregamos el primer decreto después de cargar los datos
+      },
+      error: (error) => console.error('Error cargando datos:', error)
+    });
+  }
+
+  get decretos() {
+    return this.decretoForm.get('decretos') as FormArray;
+  }
+
+  crearDecretoFormGroup(): FormGroup {
+    return this.fb.group({
+      destinos: ['', Validators.required],
+      prioridad: ['', Validators.required],
+      fechaLimite: ['', [Validators.required]],
+      acciones: this.fb.array(
+        this.accionesDisponibles.map(accion =>
+          this.fb.group({
+            id: [accion.codigo],
+            nombre: [accion.nombre],
+            seleccionada: [false]
+          })
+        ),
+        [this.alMenosUnaAccionSeleccionada]
+      ),
+      observacion: ['']
+    });
+  }
+
+  alMenosUnaAccionSeleccionada(control: AbstractControl): ValidationErrors | null {
+    const acciones = control as FormArray;
+    const seleccionadas = acciones.controls.some(accion => accion.get('seleccionada')?.value === true);
+    return seleccionadas ? null : { noAccionSeleccionada: true };
+  }
+
+  agregarDecreto() {
+    if (this.accionesDisponibles.length > 0) {
+      this.decretos.push(this.crearDecretoFormGroup());
+    } else {
+      console.error('No se pueden agregar decretos sin acciones disponibles');
+    }
+  }
+
+  eliminarDecreto(index: number) {
+    this.decretos.removeAt(index);
+  }
+
+  getDecretosControls() {
+    return (this.decretoForm.get('decretos') as FormArray).controls;
+  }
+
+  getAccionesControls(decreto: AbstractControl) {
+    return (decreto.get('acciones') as FormArray).controls;
+  }
+
+
+  onSubmit() {
+    if (this.decretoForm.valid) {
+      this.cargando = true;
+      let dto : insertDTO= new insertDTO();
+      dto.codigoDocumento = this.idDocumento;
+      dto.codigoDecreto = this.codigoDecreto;
+      dto.organizacionOrigen = sessionStorage.getItem(environment.codigoOrganizacion);
+
+      const formValue = this.decretoForm.value; // capturamos el formulario
+
+      // capturamos los decetros del form
+      const decretosConAccionesSeleccionadas = formValue.decretos.map((decreto: any) => {
+        const accionesSeleccionadas = decreto.acciones
+          .filter((accion: any) => accion.seleccionada)
+          .map((accion: any) => accion.id );
+
+        return {
+          ...decreto,
+          acciones: accionesSeleccionadas
+        };
       });
-      this.addDecreto();
-  }
 
-  initAcciones(): FormArray {
-    const accionesArray = new FormArray([]);
-    this.acciones.forEach(() => {
-      accionesArray.push(new FormControl(false)); // Agregar control deseleccionado (false) por defecto
-    });
-    return accionesArray;
-  }
-  idItemAdd:number=0;
-  initFormDecreto(): FormGroup{
-    let formControl : FormControl = new FormControl;
-    this.idItemAdd++;
-    return new FormGroup(
-      {
-        destino: new FormControl('', [Validators.required]),
-        prioridad: new FormControl('', [Validators.required]),
-        fechaLimite: new FormControl('', [Validators.required]),
-        acciones: new FormControl([]),
-        observaciones: new FormControl(''),
-        idGroup:new FormControl(this.idItemAdd),
-      }
-    );
-  }
+      dto.decretos = decretosConAccionesSeleccionadas;
+      console.log(dto);
 
-  addDecreto(): void {
-    const refDecreto = this.formParent.get('decretos') as FormArray;
-    refDecreto.push(this.initFormDecreto());
-  }
-
-  getCrl(key:string, form: FormGroup):any{
-    return form.get(key);
-  }
-
-  getDecreto(key:string, decetro: FormArray):any{
-    return decetro.get(key);
-  }
-
-
-  remove(rowIndex:any){
-    const refDecreto = this.formParent.get('decretos') as FormArray;
-    refDecreto.removeAt(rowIndex);
-  }
-
-  decretoDocumento: DecretoDocumentoDTO = new DecretoDocumentoDTO();
-  decretos : DecretoDTO[] = [];
-
-  getValueCheckBox(idGroup: any):string[]{
-    var checkboxes: any = document.getElementsByName(
-      "group"+idGroup
-    );
-    var numberOfCheckedItems = 0;
-    let lista: string[] = [];
-    for (var i = 0; i < checkboxes.length; i++) {
-      if (checkboxes[i].checked) {
-        lista.push(checkboxes[i].value);
-      }
-    }
-    return lista;
-  }
-
-  operate(){
-    this.cargando = true;
-    let formDecretos = this.formParent.value['decretos'];
-    for (let index = 0; index < formDecretos.length; index++) {
-      let dd : DecretoDTO= new DecretoDTO();
-      // dd.documento = this.formParent.value['codigoDocumento'];
-      dd.origen = this.formParent.value['origen'];
-      dd.destino = formDecretos[index].destino;
-      dd.fechaLimite = environment.convertDateToStr(formDecretos[index].fechaLimite);
-      dd.observacion = formDecretos[index].observaciones;
-      dd.prioridad = formDecretos[index].prioridad;
-
-      let acciones = this.getValueCheckBox(formDecretos[index].idGroup);
-      let decretosAcciones: DecretoAccionDTO[] = [];
-      for (let y = 0; y < acciones.length; y++) {
-        let da: DecretoAccionDTO = new DecretoAccionDTO();
-        da.accion = acciones[y];
-        decretosAcciones.push(da);
-      }
-      dd.acciones = decretosAcciones;
-      this.decretos.push(dd);
-    }
-    this.decretoDocumento.codigoDocumento = this.formParent.value['codigoDocumento'];
-    this.decretoDocumento.decretoActual = this.codigoDecreto;
-    this.decretoDocumento.decretos = this.decretos;
-    debugger;
-    this.decretoService.decretarDocumento(this.decretoDocumento).subscribe((response:any)=> {
-      if (response.httpStatus == 'CREATED'){
+      this.decretoService.decretarDocumento2(dto).subscribe((response:any)=> {
+        if (response.httpStatus == 'CREATED'){
+          this.cargando = false;
+          this.router.navigate(["/principal/pendientes"])
+          Swal.fire('OPERACION REALIZADA', response.message, 'info');
+        }
+        else {
+          this.cargando = false;
+          Swal.fire('LO SENTIMOS', response.message, 'info');
+        }
+      },(error: any) => {
         this.cargando = false;
-        this.router.navigate(["/principal/pendientes"])
-        Swal.fire('OPERACION REALIZADA', response.message, 'info');
+        Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'warning');
+      });
 
+    } else {
+      console.log('Formulario inválido');
+      this.marcarTodoComoTocado(this.decretoForm);
+    }
+  }
+
+  marcarTodoComoTocado(formGroup: FormGroup | FormArray) {
+    Object.values(formGroup.controls).forEach(control => {
+      if (control instanceof FormGroup || control instanceof FormArray) {
+        this.marcarTodoComoTocado(control);
+      } else {
+        control.markAsTouched();
       }
-      else {
-        this.cargando = false;
-        Swal.fire('LO SENTIMOS', response.message, 'info');
-      }
-    },(error: any) => {
-      this.cargando = false;
-      Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'warning');
     });
-
-
   }
 
-  onCheckboxChange(item: any, index:any) {
-    // debugger;
-    // let selectDecreto = (this.formParent.controls['decretos'] as FormArray);
-    // let selectFormAccion = (selectDecreto.controls[index] as FormArray);
-    // let accion =  selectFormAccion.controls['acciones'] as FormArray;
-    // console.log(item)
-    // let arrayAccion = Object.assign([], accion);
-    // arrayAccion.append(item);
-    // accion.setValue(arrayAccion);
+  eliminarOtrosDecretos(indexAConservar: number) {
+    const decretosAEliminar = this.decretos.controls.filter((_, index) => index !== indexAConservar);
 
-    // if (event.target.checked) {
-    //   selectAccion.push(new FormControl(event.target.value));
-    // } else {
-    //   const index = selectAccion.controls.findIndex(x =>
-    //     x.value === event.target.value
-    //   );
-    //   selectAccion.removeAt(index);
-    // }
+    decretosAEliminar.forEach(() => {
+      this.decretos.removeAt(0); // Siempre se elimina el primero hasta que quede el seleccionado
+    });
   }
 
+  accionesInvalidas(decreto: AbstractControl): boolean {
+    const acciones = decreto.get('acciones');
+    return acciones ? acciones.invalid && acciones.touched : false;
+  }
+
+  disableOtherOptions: boolean = false; // Deshabilitar solo otras opciones
+
+  onSelectionChange(event: any, i: number) {
+    const selectedValues = event.value;
+
+    if (selectedValues.includes('----')) {
+      // Si selecciona "TODAS MIS UNIDADES", desmarcar otras opciones
+      const decretoControl = this.decretos.at(i) as FormGroup;
+      decretoControl.get('destinos')?.setValue(['----']);
+      this.disableOtherOptions = true;
+      // Eliminar todos los demás decretos excepto el seleccionado
+      this.eliminarOtrosDecretos(i);
+    } else {
+      // Si se desmarca "TODAS MIS UNIDADES", habilitar las demás
+      this.disableOtherOptions = false;
+    }
+  }
 }

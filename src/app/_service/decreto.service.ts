@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GenericService } from './generic.service';
 import { Decreto } from '../_model/decreto';
-import { Observable, Subject } from 'rxjs';
+import { catchError, Observable, Subject, throwError } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { DecretoDTO } from '../_DTO/DecretoDTO';
@@ -28,6 +28,18 @@ export class DecretoService extends GenericService<Decreto> {
   decretarDocumento(decretoDocumento: DecretoDocumentoDTO): Observable<any>{
 
     return this.http.post(`${environment.HOST}decretos/decretarDocumento`,  decretoDocumento);
+  }
+
+  decretarDocumento2(decretoDocumento: any): Observable<any>{
+    const headers = { 'Content-Type': 'application/json' };
+
+    return this.http.post(`${environment.HOST}decretos/decretarDocumento2`,  decretoDocumento, { headers })
+    .pipe(
+      catchError(error => {
+        console.error('Error en la solicitud:', error);
+        return throwError(error);
+      })
+    );
   }
 
 

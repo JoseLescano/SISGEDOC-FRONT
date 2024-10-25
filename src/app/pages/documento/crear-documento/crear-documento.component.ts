@@ -110,11 +110,6 @@ export class CrearDocumentoComponent implements OnInit {
 
 
   operate(){
-    /*
-    this.documentoService.uploadFTP(this.selectedFiles.item(0)).subscribe((response: any)=> {
-      console.log(response)
-    });
-    */
 
     if(this.form.valid && this.selectedFiles != null){
       this.cargando = true;
@@ -218,8 +213,8 @@ export class CrearDocumentoComponent implements OnInit {
   }
 
   generarPlantilla() {
-    this.cargando = true;
     if (this.validarPlantilla()) {
+      this.cargando = true;
       this.getUltimoNumero().pipe(
         switchMap(() => {
           var tipoDocumento = this.form.get('tipoDocumento').value;
@@ -234,15 +229,18 @@ export class CrearDocumentoComponent implements OnInit {
               indicativo, correlativo, copiasInformativas
           );
         })
-      ).subscribe((response: any) => {
-        if (response.httpStatus === 'CREATED') {
-            this.downloadWord(response.data[0]);
-        }
+      ).subscribe({
+        next: (response:any ) => {
+          if (response.httpStatus === 'CREATED') {
+              this.downloadWord(response.data[0]);
+              this.cargando = false;
+          }else {
+            this.cargando = false;
+          }
+        }, error: (err) => {
+          Swal.fire('LO SENTIMOS', err, 'info');
         this.cargando = false;
-      }, error => {
-        this.cargando = false;
-        Swal.fire('Lo sentimos', 'Se presentó un inconveniente en la generación del Word', 'info');
-      });
+      }});
     }
 }
 
@@ -418,19 +416,20 @@ export class CrearDocumentoComponent implements OnInit {
   }
 
   firmarDocumento() {
-    this.cargando = true;
     this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response: any) => {
+      this.cargando = true;
       debugger;
       var nameFile = response[1];
       this.firmaPeruService.iniciarFirma(response[1]).then(() => {
+        this.cargando = false;
         Swal.fire('FIRMA COMPLETADA', 'SE FIRMO DOCUMENTO CORRECTAMENTE', 'info');
         this.updateIframeWithKeyDigitalGeneral(nameFile);
       }).catch((error) => {
+        this.cargando = false;
         Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
         console.error('Error durante la firma:', error);
       });
     });
-    this.cargando = false;
   }
 
   updateIframeWithKeyDigitalGeneral(inNameFile: any) {

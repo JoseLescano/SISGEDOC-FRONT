@@ -22,11 +22,10 @@ export class ViewCorregirComponent implements OnInit, AfterViewInit {
 
   cargando: boolean = false;
 
-  displayedColumns: string[] = ['Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'Destinatario', 'Acciones'];
-  dataSource: MatTableDataSource<Documento>;
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  displayedColumns: string[] = ['Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'Destino', 'Acciones'];
+  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private excelService: ExcelService,
@@ -71,13 +70,26 @@ export class ViewCorregirComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  createTable(documento: Documento[]){
-    this.dataSource = new MatTableDataSource(documento);
+  createTable(documentos: any[]): void {
+    this.dataSource = new MatTableDataSource(documentos);
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    });
-  }
+
+      this.dataSource.sortingDataAccessor = (item, property) => {
+      switch(property) {
+        case 'Nro': return item.codigo;
+        case 'Asunto': return item.asunto.toLowerCase();
+        case 'FechaDoc': return item.fechaDocumento;
+        case 'Documento': return item.clase + ' Nro. ' + item.nroOrden;
+        case 'Origen': return item.remitente.toLowerCase();
+        case 'Destino': return item.destinatario.toLowerCase();
+        case 'Prioridad': return item.prioridad.toLowerCase();
+        // Añade más casos según tus columnas
+        default: return item[property];
+      }};
+      });
+    }
 
   viewTimeline(vidDocumento: any){
     const dialogRef = this.dialog.open(TimelineComponent, {

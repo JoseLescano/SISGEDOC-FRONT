@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { PersonaExterno } from '../_model/personaExterno';
 
-const base_url: any = environment.HOST+'personalExterno/';
+const base_url: any = environment.HOST+'personasExterno';
 
 @Injectable({
   providedIn: 'root'
@@ -12,17 +13,17 @@ export class PersonalExternoService {
   constructor(private http: HttpClient) { }
 
   getPersonalExterno(){
-    const url = base_url + `getPersonalExterno`;
-    return this.http.get(url);
+    const url = base_url;
+    return this.http.get<PersonaExterno[]>(url);
   }
 
   registrarPersonal(personal: any){
-    const url = base_url + `registrarPersonal`;
+    const url = base_url + `/registrarPersonal`;
     return this.http.post(url, personal);
   }
 
   cambiarEstadoPersonal(vid: any){
-    const url = base_url + `cambiarEstadoPersonal`;
+    const url = base_url + `/cambiarEstadoPersonal`;
     return this.http.post(url, vid);
   }
 

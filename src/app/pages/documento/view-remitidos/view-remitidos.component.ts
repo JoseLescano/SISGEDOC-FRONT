@@ -22,11 +22,12 @@ import { TimelineComponent } from '../../report/timeline/timeline.component';
 export class ViewRemitidosComponent implements OnInit {
 
   displayedColumns: string[] = ['Nro', 'Asunto', 'Origen','Destino', 'FechaDoc', 'Documento',  'Acciones'];
-  dataSource: MatTableDataSource<any>;
+  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
   cargando: boolean= false;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
   range = new FormGroup({
     start: new FormControl<Date | null>(null),
     end: new FormControl<Date | null>(null),
@@ -46,10 +47,7 @@ export class ViewRemitidosComponent implements OnInit {
   // =======================================================================================================
 
   ngOnInit(): void {
-
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      this.generarReporte();
-    });
+    this.generarReporte();
   }
 
   viewTimeline(vidDocumento: any){
@@ -75,6 +73,7 @@ export class ViewRemitidosComponent implements OnInit {
         Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
       }
     });
+
   }
 
   createTable(documentos: any[]): void {
@@ -82,7 +81,22 @@ export class ViewRemitidosComponent implements OnInit {
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+
+      this.dataSource.sortingDataAccessor = (item, property) => {
+        switch(property) {
+          case 'Nro': return item.codigo;
+          case 'Asunto': return item.asunto.toLowerCase();
+          case 'FechaDoc': return item.fechaDocumento;
+          case 'Documento': return item.clase + ' Nro. ' + item.nroOrden;
+          case 'Origen': return item.remitente.toLowerCase();
+          case 'Destino': return item.destinatario.toLowerCase();
+          case 'Prioridad': return item.prioridad.toLowerCase();
+          // Añade más casos según tus columnas
+          default: return item[property];
+        }
+      };
     });
+
   }
 
   applyFilter(event: Event) {

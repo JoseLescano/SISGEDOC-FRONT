@@ -16,22 +16,26 @@ export class ErrorInterceptor implements HttpInterceptor {
     error: any = '';
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
         return next.handle(request).pipe(catchError(err => {
-            if ([401, 403].includes(err.status)) {
+          debugger;
+            if ([401, 403,404].includes(err.status)) {
               if(err.status==403){
                 this.error = 'NO CUENTA CON LAS CREDENCIALES CORRESPONDENTES';
                 this.loginService.logout();
+              }  if(err.status==404){
+                this.error = 'RECURSO QUE ESTÁS BUSCANDO NO EXISTE O HA SIDO MOVIDO';
               }else {
-                this.error = 'SESION EXPIRADA';
+                this.error = err.error.message;
                 this.loginService.logout();
               }
             }else {
-              if ([0].includes(err.status)){
-                debugger;
-                this.error ='ERROR EN CONEXION CON EL SERVIDOR';
-                //this.loginService.logout();
-              }
+              debugger;
+              if ([500,400].includes(err.status)){
+                if(err.status==500)
+                  this.error ='ERROR INTERNO DE SERVIDOR';
+                else if(err.status==400)
+                  this.error ='ERROR EN LA LOGICA DE NEGOCIO';
+              } else this.error = err.error.message;
             }
             // const error = err.error.message || err.statusText;
             return throwError(this.error);

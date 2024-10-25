@@ -29,7 +29,7 @@
         </div>
         <mat-selection-list #shoes [multiple]="false" *ngIf="anexos?.length>0">
           <mat-list-option *ngFor="let item of anexos" (click)="descargarAnexo(item)">
-            <mat-icon mat-list-icon>folder</mat-icon>
+            <i class="far fa-file-archive" style="size: 32px;"></i>
             <div mat-line>{{item.url}}</div>
             <div mat-line> {{item.fechaCreacion| date : 'dd MMM YYYY'}} </div>
           </mat-list-option>

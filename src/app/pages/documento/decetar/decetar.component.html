@@ -1,50 +1,43 @@
-<mat-card class="m-2">
+<mat-card>
   <mat-card-header class="title-form">
     <mat-card-title >DECRETO DE DOCUMENTO</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <!-- <div class="row"  >
-      <div class="col-md-4">
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>NUM.DE REGISTRO</mat-label>
-          <input matInput disabled [(ngModel)]="idDocumento">
-        </mat-form-field>
-      </div>
-    </div>
-    <mat-divider></mat-divider> -->
-
     <div class="row mt-2">
-      <div class="col-md-12 mt-2">
-        <strong style="margin-right: 5px;">DETALLES DE DECRETO</strong>
-        <button mat-mini-fab color="primary" (click)="addDecreto()" aria-label="Example icon button with a delete icon">
-          <i class="fas fa-plus"></i>
-        </button>
+      <div class="row mt-2">
+        <div class="col-md-12 mt-2">
+          <strong style="margin-right: 5px;">DETALLES DE DECRETO</strong>
+          <button mat-mini-fab color="primary" (click)="agregarDecreto()" *ngIf="!disableOtherOptions" aria-label="Example icon button with a delete icon">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
       </div>
-    </div>
-    <form [formGroup]="formParent" novalidate (ngSubmit)="operate()" >
-      <div  formArrayName="decretos">
-        <div *ngFor="let de of getCrl('decretos', formParent).controls; index as i">
-          <div [formGroupName]="i" style="border: 2px; border-color: #675b45; border-style: dotted;
-                                        border-radius: 10px;  margin-top: 3px;padding: 10px; ">
-            <div class="alert alert-info alert-dismissible  mt-2 fade show" role="alert">
+      <form *ngIf="accionesDisponibles.length > 0" [formGroup]="decretoForm" (ngSubmit)="onSubmit()">
+        <input formControlName="numeroDocumento" placeholder="Número de decreto" hidden >
+
+        <div formArrayName="decretos" >
+          <div *ngFor="let decreto of getDecretosControls(); let i = index" [formGroupName]="i" style="border: 2px; border-color: #675b45; border-style: dotted;
+                                          border-radius: 10px;  margin-top: 3px;padding: 10px; ">
+            <div class="alert alert-info alert-dismissible  mt-2 fade show" role="alert" *ngIf="decretos.length > 1">
               <i class="fas fa-info-circle"></i>
-              <strong style="margin-left: 5px;"> Número de decreto: {{i+1}}</strong>
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="remove(i)" ></button>
+              <strong style="margin-left: 5px;"> Número de decreto: {{i + 1}}</strong>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" *ngIf="decretos.length > 1" (click)="eliminarDecreto(i)" ></button>
             </div>
             <div class="row mt-2" >
               <div class="col-md-4">
-                <ng-select placeholder="ORGANIZACION REMITENTE" [virtualScroll]=true formControlName="destino"
-                    style="font-size: 14px;" class="example-full-width">
-                    <!-- <ng-option>TODAS MIS UNIDADES</ng-option> -->
-                    <ng-option *ngFor="let c of destinos" [value]="c" >{{c.acronimo}}</ng-option>
-                </ng-select>
+                <mat-form-field appearance="fill" class="example-full-width">
+                  <mat-label>ORGANIZACION DESTINO</mat-label>
+                  <mat-select formControlName="destinos" multiple (selectionChange)="onSelectionChange($event, i)">
+                    <mat-option value="----">TODAS MIS UNIDADES</mat-option>
+                    <mat-option *ngFor="let c of organizaciones" [value]="c.codigoInterno" [disabled]="disableOtherOptions">{{c.acronimo}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
               </div>
-              <div class="col-md-4" >
+              <div class="col-md-4">
                 <mat-form-field appearance="fill" class="example-full-width">
                   <mat-label>PRIORIDAD</mat-label>
                   <mat-select matInput formControlName="prioridad" >
-                    <mat-option>SELECCIONE</mat-option>
-                    <mat-option  *ngFor="let c of prioridades"  [value]="c">
+                    <mat-option  *ngFor="let c of prioridades"  [value]="c.codigo">
                       {{c.nombre}}
                     </mat-option>
                   </mat-select>
@@ -54,47 +47,46 @@
               <div class="col-md-4">
                 <mat-form-field appearance="fill" class="example-full-width">
                   <mat-label>PLAZO LIMITE</mat-label>
-                  <input matInput [matDatepicker]="dp" formControlName="fechaLimite">
+                  <input matInput [matDatepicker]="dp" [min]="minDate" formControlName="fechaLimite">
                   <mat-hint>DD/MM/YYYY</mat-hint>
                   <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
                   <mat-datepicker #dp></mat-datepicker>
                 </mat-form-field>
               </div>
-              <div class="col-md-12 mt-2">
-                <mat-label><strong style="margin-right: 5px; font-weight: 600;">LISTA DE ACCIONES</strong></mat-label>
-                <div style="display: grid; grid-template-columns: auto auto auto; margin-top: 5px;" >
-                  <ng-container *ngFor="let accion of acciones;">
-                    <label style="display: flex; margin-bottom: 5px;">
-                      <input type="checkbox"  style="position: relative;left: 0px; opacity: 1; size: 20px; padding: 5px; "
-                        [value]="accion.codigo" name="group{{i+1 }}" />
-                        <span style="margin-left: 3px;margin-right: 6px; font-weight: 200;  font-size: 18px;">
-                          {{ accion.nombre | uppercase }}
-                        </span>
-                      </label>
-                  </ng-container>
-                </div>
-              </div>
-              <div class="col-md-12 mt-2">
-                <mat-form-field appearance="fill" class="example-full-width">
-                  <mat-label>OBSERVACIONES</mat-label>
-                  <textarea matInput rows="2" formControlName="observaciones" ></textarea>
-              </mat-form-field>
-              </div>
             </div>
-            <!-- <mat-divider></mat-divider> -->
+            <mat-label><strong style="margin-right: 5px; font-weight: 600;">LISTA DE ACCIONES <span *ngIf="accionesInvalidas(decreto)" style="color: red; " >  (OBLIGATORIO)</span></strong> </mat-label>
+            <div formArrayName="acciones" class="col-md-12 mt-2"
+            style="display: grid; grid-template-columns: auto auto auto; margin-top: 2px;">
+              <ng-container  *ngFor="let accion of getAccionesControls(decreto); let j = index" [formGroupName]="j"
+              >
+                <label style="display: flex; margin-bottom: 5px;">
+                  <mat-checkbox formControlName="seleccionada" color="primary" style="position: relative;left: 0px; opacity: 1; size: 20px; padding: 2px; ">
+                    <span style="margin-left: 3px;margin-right: 6px; font-weight: 200;  font-size: 18px;">
+                      {{accion.get('nombre')?.value  | uppercase}}
+                    </span>
+                  </mat-checkbox>
+                </label>
+              </ng-container>
+            </div>
+            <div class="col-md-12 mt-2">
+              <mat-form-field appearance="fill" class="example-full-width">
+                <mat-label>OBSERVACIONES</mat-label>
+                <textarea matInput rows="2" formControlName="observacion" placeholder="Observaciones"></textarea>
+              </mat-form-field>
+            </div>
           </div>
         </div>
-      </div>
-      <mat-card-actions align="end">
-        <button mat-raised-button color="warn" type="button" routerLink="/principal/pendientes" class="btn-opcion" > CANCELAR </button>
-        <button mat-raised-button color="primary" type="submit"
-          [disabled]="(formParent.invalid && codigoDecreto!=null) || cargando"
-          class="btn-opcion" > GUARDAR </button>
-      </mat-card-actions>
-    </form>
 
+        <mat-card-actions align="end">
+
+          <button mat-raised-button color="warn" type="button" routerLink="/principal/pendientes" class="btn-opcion" > CANCELAR </button>
+          <button mat-raised-button color="primary" type="submit"
+            class="btn-opcion" [disabled]="(decretoForm.invalid) || cargando" > GUARDAR </button>
+        </mat-card-actions>
+      </form>
+    </div>
   </mat-card-content>
   <mat-card-footer>
-    <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
+    <mat-progress-bar mode="indeterminate"  *ngIf="accionesDisponibles.length === 0 || cargando" ></mat-progress-bar>
   </mat-card-footer>
-</mat-card>
+  </mat-card>

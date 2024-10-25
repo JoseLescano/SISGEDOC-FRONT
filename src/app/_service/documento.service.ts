@@ -111,9 +111,10 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/findRemitidos`, formData);
   }
 
-  searchByOrganizacion(codigoInterno:any, fechaInicio?:any, fechaFin?:any ){
+  searchByOrganizacion(codigoInterno:any, contexto:any, fechaInicio?:any, fechaFin?:any){
     let formData:FormData = new FormData();
     formData.append('codigoInterno', codigoInterno);
+    formData.append('contexto', contexto);
     formData.append('fi', fechaInicio);
     formData.append('ff', fechaFin);
     return this.http.post(`${environment.HOST}documentos/searchByOrganizacion`, formData);
@@ -129,7 +130,6 @@ export class DocumentoService  extends GenericService<Documento> {
   }
 
   recibirDocumentoMP(documento: any){
-    debugger;
     let formData:FormData = new FormData();
     formData.append('tipoOrganizacion', documento.tipoOrganizacion);
     formData.append('organizacionOrigen', documento.organizacionOrigen);
@@ -153,7 +153,6 @@ export class DocumentoService  extends GenericService<Documento> {
   }
 
   envioExterno(documento: any){
-    debugger;
     let formData:FormData = new FormData();
     formData.append('clase', documento.clase);
     formData.append('nroOrden', documento.nroOrden);
@@ -176,7 +175,7 @@ export class DocumentoService  extends GenericService<Documento> {
   crearDocumento(documento: any,  nameDocuentoFirmado : any,
      isFirmado:any, anexos?:any, documentoPadre?: any
   ){
-    debugger;
+
     let formData:FormData = new FormData();
     formData.append('clase', documento.clase);
     formData.append('nroOrden', documento.nroOrden);
@@ -199,7 +198,6 @@ export class DocumentoService  extends GenericService<Documento> {
   }
 
   archivarDocumento(vidDocumento:any, orgOrigen:any, observaciones:any, codigoDecreto: any,url_pdf?:any){
-    debugger;
     let formData:FormData = new FormData();
     formData.append('vidDocumento', vidDocumento);
     formData.append('orgOrigen', orgOrigen);
@@ -210,7 +208,6 @@ export class DocumentoService  extends GenericService<Documento> {
   }
 
   archivarDocumentoForSuperAdm(codigoInterno:any, observaciones:any, fi: any, ff:any, usuario:any){
-    debugger;
     let formData:FormData = new FormData();
     formData.append('codigoInterno', codigoInterno);
     formData.append('fi', fi);
@@ -261,7 +258,6 @@ export class DocumentoService  extends GenericService<Documento> {
   }
 
   crearDocumentoParaFirmar(documento: any, organizacionRemitente:any, word?:any){
-    debugger;
     let formData:FormData = new FormData();
     formData.append('clase', documento.clase);
     formData.append('nroOrden', documento.nroOrden);
@@ -282,7 +278,6 @@ export class DocumentoService  extends GenericService<Documento> {
 
   crearRespuestaParaFirmar(documento: any, organizacionRemitente:any,
     codigoDocumentoPadre:any, nameDocuentoFirmado: any, isFirmado: any, codigoDecreto: any, anexos?:any){
-    debugger;
     let formData:FormData = new FormData();
     formData.append('clase', documento.clase);
     formData.append('nroOrden', documento.nroOrden);
@@ -379,7 +374,6 @@ export class DocumentoService  extends GenericService<Documento> {
   }
 
   registrarVisualizacion(vidDocumento:any, orgOrganizacion:any){
-    debugger;
     let formData:FormData = new FormData();
     formData.append('codigoDocumento', vidDocumento);
     formData.append('codigoOrganizacion', orgOrganizacion);
@@ -392,10 +386,10 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/findDevueltosByOrganizacion`, formData);
   }
 
-  uploadFTP(archivoPrincipal:any){
+  findBySuperAdm(campo:any){
     let formData:FormData = new FormData();
-    formData.append('archivoPrincipal', archivoPrincipal);
-    return this.http.post(`${environment.HOST}documentos/uploadZipFTP`, formData);
+    formData.append('campo', campo);
+    return this.http.post(`${environment.HOST}documentos/findBySuperAdm`, formData);
   }
 
 }

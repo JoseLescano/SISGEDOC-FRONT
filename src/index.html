@@ -13,10 +13,7 @@
           rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
           crossorigin="anonymous">
 
-  <!-- <link rel="preconnect" href="https://fonts.gstatic.com"> -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-  <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
-  <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
 
 
   <!-- Para la animacion del login -->
@@ -32,63 +29,11 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!-- <script src="https://apps.firmaperu.gob.pe/web/clienteweb/firmaperu.min.js"></script> -->
   <script type="text/javascript">
-    // var jqFirmaPeru = jQuery.noConflict(true);
     var _this = this;
     function getJquery(){
       return $;
     }
-    // window.addEventListener('load', function () {
-    //   // getJquery()('.preloader-proceso-firma').fadeOut();
-    //   jQuery=jqFirmaPeru;
-    //     $=jqFirmaPeru;
-    //   document.addEventListener('keydown', function(event) {
-    //     if (event.key === "Escape") {
-    //             event.preventDefault();
-    //             event.stopPropagation();
-    //         }
-    //   });
-    // })
-
-    // LAST_CALLBACK_INICIAR=null;
-    // LAST_CALLBACK_CANCEL=null;
-
-    // function signatureInit(){
-    //   console.log('Iniciando....');
-    // }
-    // function signatureOk(){
-    //   if(LAST_CALLBACK_INICIAR!=null && LAST_CALLBACK_INICIAR!=undefined){
-    //     LAST_CALLBACK_INICIAR();
-    //   }
-    //   console.log('Documento Firmado');
-    // }
-    // function signatureCancel() {
-    //   console.log('Operacion Cancelada');
-    // }
-    // function sendParam(data){
-    //   var param = data;
-    //   var port = "48596";
-    //   startSignature(port, param);
-    // }
-    // // let token=sessionStorage.getItem('access_token')==null ? environment.TOKEN_NAME: sessionStorage.getItem('access_token');
-    // let token=sessionStorage.getItem('access_token');
-
-    // function iniciarFirma(configuracion,incallback){
-    //   var param={
-
-    //   "param_url": " http://localhost:8080/documentos/firmaPeru/"+configuracion+"?access_token="+token,
-    //   //"param_url": " https://sisgedo.ejercito.mil.pe/back-sisgedo/documentos/firmaPeru/"+configuracion+"?access_token="+token,
-    //     "param_token": "162647697663667",
-    //     "document_extension": "pdf"
-    //   }
-    //   LAST_CALLBACK_INICIAR=incallback;
-    //   var json = JSON.stringify(param);
-    //   var base64 = btoa(json);
-    //   var port="48596";
-    //   startSignature(port,base64)
-    // }
-
     function createDiagramaOrganizacion(lista,incallback,incallbackDelete, incallbackUpdate,incallAgregarUsuarios ){
       var ss=new ClassDiagramOrganization();
       ss.DataJson=ss.convertJsonOrg(lista);

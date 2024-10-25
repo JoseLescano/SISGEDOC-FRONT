@@ -76,9 +76,11 @@ export class FormComponent implements OnInit {
           this.mostrarDistribuir = true;
         }
         this.documentoService.viewPDF(this.idDocumento).pipe(switchMap((viewDocumento:any)=> {
+          debugger;
           this.crearDocumento(viewDocumento.data, 'documentoReferencia');
           return this.documentoService.viewPDF(this.documentoRespuesta.codigo, this.documentoRespuesta.tipoOrganizacion =='R'? '1': '0');
         })).subscribe((responseRespuesta:any)=> {
+          debugger;
           this.crearDocumento(responseRespuesta.data, 'documentoRespuesta');
         }, (error:any) => {
           this.errorPDF = true;
@@ -258,13 +260,14 @@ export class FormComponent implements OnInit {
       confirmButtonText: "SÍ, DESEO CONTINUAR"
     }).then((result) => {
       if (result.isConfirmed) {
+        debugger;
         if (this.documentoRespuesta==null){ // SIN REFERENCIA
 
           this.decretoService.elevarDocumento(
             this.documento.codigo,
             sessionStorage.getItem(environment.codigoOrganizacion),
             this.idDecreto,
-            this.cambioPDF?this.selectedFiles:null)
+            this.cambioPDF?this.nameDocumentoFirmado:'')
           .subscribe((response:any)=> {
             if (response.httpStatus=='CREATED'){
               Swal.fire('DOCUMENTO ELEVADO', response.message, 'info');
@@ -277,11 +280,12 @@ export class FormComponent implements OnInit {
           });
 
         }else { // DOCUMENTO CON REFERENCIA
+          debugger;
           this.decretoService.elevarDocumento(
             this.documento.codigo,
             sessionStorage.getItem(environment.codigoOrganizacion),
             this.idDecreto,
-            this.cambioPDF?this.selectedFiles[0]:null,
+            this.cambioPDF?this.nameDocumentoFirmado:'',
             this.documentoRespuesta.codigo )
           .subscribe((response:any)=> {
             if (response.httpStatus=='CREATED'){
@@ -300,6 +304,7 @@ export class FormComponent implements OnInit {
   }
 
   distribuirDocumento(){
+    this.cargando = true;
     this.decretoService.distrubirDocumento(
       this.documento.codigo,
       sessionStorage.getItem(environment.codigoOrganizacion),
@@ -311,13 +316,16 @@ export class FormComponent implements OnInit {
       {
         next : (response:any)=> {
           if (response.httpStatus=='CREATED'){
+            this.cargando = false;
             Swal.fire("ACCION REALIZADA", response.message, "success");
             this.router.navigate(['/principal/parte-diario']);
           }else {
+            this.cargando = false;
             Swal.fire("LO SENTIMOS", response.message, "warning");
           }
         },
         error: (err: any) => {
+          this.cargando = false;
           Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE", "warning");
         }
       });
@@ -325,6 +333,7 @@ export class FormComponent implements OnInit {
 
   distribuirRespuesta(){
     debugger;
+    this.cargando = true;
     this.decretoService.distrubirRespuestaDocumento(
       this.documentoRespuesta.codigo,
       sessionStorage.getItem(environment.codigoOrganizacion),
@@ -338,13 +347,16 @@ export class FormComponent implements OnInit {
       {
         next: (response:any)=> {
           if (response.httpStatus=='CREATED'){
+            this.cargando = false;
             Swal.fire("ACCION REALIZADA", response.message, "success");
             this.router.navigate(['/principal/parte-diario']);
           } else {
+            this.cargando = false;
             Swal.fire("LO SENTIMOS", response.message, "warning");
           }
         },
         error : (err: any)=> {
+          this.cargando = false;
           Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE", "warning");
         }
       }
@@ -411,28 +423,39 @@ export class FormComponent implements OnInit {
   // }
 
   firmarDocumento(){
+    this.cargando = true;
     this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response: any) => {
       debugger;
       var nameFile = response[1];
       this.firmaPeruService.iniciarFirma(response[1]).then(() => {
+        this.cargando = false;
         Swal.fire('FIRMA COMPLETADA', 'SE FIRMO DOCUMENTO CORRECTAMENTE, SE ACTUALIZARÁ DOCUMENTO', 'info');
         this.updateIframeWithKeyDigitalGeneral(nameFile);
       }).catch((error) => {
+        this.cargando = false;
         Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
         console.error('Error durante la firma:', error);
       });
+    }, error => {
+      this.cargando = false;
+      Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
     });
 
   }
 
   updateIframeWithKeyDigitalGeneral(inNameFile: any) {
     this.cambioPDF = true;
+    this.cargando = true;
     this.documentoService
       .getFileDocumentKeyDigital(inNameFile)
       .subscribe((resp:any) => {
         this.isFirmado = true;
+        this.cargando = false;
         this.nameDocumentoFirmado= inNameFile;
         this.crearDocumento(resp,'documentoRespuesta');
+      }, error => {
+        this.cargando = false;
+        Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
       });
   }
 

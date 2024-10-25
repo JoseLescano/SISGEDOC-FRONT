@@ -1,67 +1,92 @@
 <div class="row">
-  <div class="col-xs-12 col-sm-12 col-lg-12">
-    <div class="row mt-2">
-      <div class="col-xs-12 col-sm-12 col-lg-6">
-        <mat-card class="m-2 " style="border-radius: 10px;">
-          <mat-card-content >
-            <div class="row d-flex justify-content-around align-items-center">
-              <div class="col-6">
-                <mat-form-field appearance="fill" style="margin-right: 5px;" >
-                  <mat-label>Ingrese rango de fechas</mat-label>
-                  <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
-                    <input matStartDate formControlName="start" placeholder="Start date">
-                    <input matEndDate formControlName="end" placeholder="End date">
-                  </mat-date-range-input>
-                  <mat-hint>MM-DD-YYYY – MM-DD-YYYY</mat-hint>
-                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                  <mat-date-range-picker #picker></mat-date-range-picker>
+  <div class="col-12">
+    <mat-card class="m-2" style="border-radius: 10px;">
+      <!-- <mat-card-header class="title-form">
+        <mat-card-title >BUSCAR DOCUMENTO</mat-card-title>
+      </mat-card-header> -->
+      <mat-card-content>
+        <div class="tabset" >
+          <!-- Tab 1 -->
+          <input type="radio" name="tabset" id="tab1" aria-controls="entreFechas" checked>
+          <label for="tab1">BUSQUEDA ENTRE FECHAS</label>
+          <!-- Tab 2 -->
+          <!-- <input type="radio" name="tabset" id="tab2" aria-controls="porFecha">
+          <label for="tab2">BUSQUEDA POR DIA</label> -->
 
-                  <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
-                  <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
-              </mat-form-field>
+          <input type="radio" name="tabset" id="tab3" aria-controls="texto">
+          <label for="tab3">BUSQUEDA POR TEXTO</label>
+          <div class="tab-panels" >
+            <section id="entreFechas" class="tab-panel">
+			        <div class="row">
+                <div class="col-6">
+                  <mat-form-field appearance="fill" class="example-full-width">
+                      <mat-label>Ingrese rango de fechas</mat-label>
+                      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                        <input matStartDate formControlName="start" placeholder="Start date">
+                        <input matEndDate formControlName="end" placeholder="End date">
+                      </mat-date-range-input>
+                      <mat-hint>DD-MM-YYYY – DD-MM-YYYY</mat-hint>
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-date-range-picker #picker></mat-date-range-picker>
+
+                      <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                      <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-6 align-content-center justify-content-evenly">
+                  <button mat-flat-button color="primary" style="margin-right: 5px;"  (click)="betweenFechas()" >
+                    <i class="fas fa-search"></i> BUSCAR </button>
+                  <!-- <mat-divider class="m-2" ></mat-divider> -->
+                  <button mat-flat-button style="background: rgba(25, 135, 84); color: #fff; " >
+                    <i class="fas fa-file-excel"></i> EXPORTAR A EXCEL</button>
+                </div>
+
               </div>
-              <div class="col-6 d-flex justify-content-around align-items-center">
-                <button mat-flat-button color="primary" style="margin-right: 5px;"  (click)="buscarFechas()" >
-                  <i class="fas fa-search"></i> BUSCAR </button>
-                <!-- <mat-divider class="m-2" ></mat-divider> -->
-                <button mat-flat-button color="accent"  (click)="exportTable()">
-                  <i class="fas fa-file-excel"></i> EXPORTAR A EXCEL</button>
+            </section>
+            <!-- <section id="porFecha" class="tab-panel">
+              <div class="row ">
+                <div class="col-6">
+                  <mat-form-field appearance="fill" class="example-full-width">
+                    <mat-label>Ingrese fecha</mat-label>
+                    <input matInput [matDatepicker]="datepicker" >
+                    <mat-hint>DD-MM-YYYY</mat-hint>
+                    <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #datepicker>
+                      <mat-datepicker-actions>
+                        <button mat-button matDatepickerCancel>Cancel</button>
+                        <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+                      </mat-datepicker-actions>
+                    </mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-6 align-content-center justify-content-evenly">
+                  <button mat-flat-button color="primary" style="margin-right: 5px;"  >
+                    <i class="fas fa-search"></i> BUSCAR </button>
+                  <button mat-flat-button style="background: rgba(25, 135, 84); color: #fff; "  >
+                    <i class="fas fa-file-excel"></i> EXPORTAR A EXCEL</button>
                 </div>
               </div>
-
-
-          </mat-card-content>
-        </mat-card>
-      </div>
-      <div class="col-xs-12 col-sm-12 col-lg-6">
-        <mat-card class="m-2 " style="border-radius: 10px;">
-          <mat-card-content>
-            <div class="row d-flex justify-content-around align-items-center">
-              <div class="col-9">
-                <mat-form-field appearance="fill" class="example-full-width mt-2">
-                  <mat-label>Ingrese valor</mat-label>
-                  <input matInput placeholder="Ingrese texto">
-                </mat-form-field>
+            </section> -->
+            <section id="texto" class="tab-panel">
+              <div class="row">
+                <div class="col-6">
+                  <mat-form-field appearance="fill" class="example-full-width">
+                    <mat-label>Ingrese dato</mat-label>
+                    <input matInput placeholder="Ingrese nro de registro o asunto o documento"  [(ngModel)]="textoIngresado" >
+                  </mat-form-field>
+                </div>
+                <div class="col-6 align-content-center justify-content-evenly">
+                  <button mat-flat-button color="primary" style="margin-right: 5px;"  (click)="byTexto()" >
+                    <i class="fas fa-search"></i> BUSCAR </button>
+                </div>
               </div>
-              <div class="col-3">
-                <button mat-flat-button color="primary" (click)="buscarFechas()" >
-                  <i class="fas fa-search"></i> BUSCAR </button>
-              </div>
-              <!-- .text-bg-dark {
-                color: #fff !important;
-                background-color: #b1b2b9;
-
-
-
-            } -->
-              </div>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </div>
-
+            </section>
+            </div>
+        </div>
+      </mat-card-content>
+      </mat-card>
   </div>
-  <div class="col-xs-12 col-sm-12 col-lg-12">
+  <div class="col-xs-12 col-sm-12 col-lg-12" *ngIf="!cargando">
     <mat-card class="m-2" >
       <mat-card-header class="title-form">
         <mat-card-title >LISTA DE DOCUMENTOS</mat-card-title>
@@ -73,16 +98,19 @@
     <mat-card-content>
       <div class="mat-elevation-z8">
         <table mat-table [dataSource]="dataSource" matSort id="tbDecretados" >
-          <ng-container matColumnDef="Estado">
-            <th mat-header-cell mat-sort-header  *matHeaderCellDef> Estado </th>
+          <ng-container matColumnDef="Prioridad">
+            <th mat-header-cell mat-sort-header  *matHeaderCellDef> Prioridad </th>
             <td mat-cell *matCellDef="let row" >
-              <span class="badge rounded-pill text-bg-primary " style="font-size: 12px;" *ngIf="row.estadoDocumento=='REMITIDO'" >REMITIDO</span>
+              <!-- <span class="badge rounded-pill text-bg-primary " style="font-size: 12px;" *ngIf="row.estadoDocumento=='REMITIDO'" >REMITIDO</span>
               <span class="badge rounded-pill text-bg-danger" style="font-size: 12px;" *ngIf="row.estadoDocumento=='FINALIZADO'" >FINALIZADO</span>
               <span class="badge rounded-pill text-bg-success" style="font-size: 12px;" *ngIf="row.estadoDocumento=='DECRETADO' || row.estadoDocumento=='ENVIADO'" >{{row.estadoDocumento}}</span>
               <span class="badge rounded-pill text-bg-dark" style="font-size: 12px;" *ngIf="row.estadoDocumento=='POR FIRMAR'">POR FIRMAR</span>
               <span class="badge rounded-pill text-bg-warning" style="font-size: 12px;" *ngIf="row.estadoDocumento=='ARCHIVO'">ARCHIVADO</span>
               <span class="badge rounded-pill text-bg-info" style="font-size: 12px;" *ngIf="row.estadoDocumento=='RECIBIDO'">RECIBIDO</span>
-              <span class="badge rounded-pill text-bg-secondary" style="font-size: 12px;" *ngIf="row.estadoDocumento=='POR REVISAR'">POR REVISAR</span>
+              <span class="badge rounded-pill text-bg-secondary" style="font-size: 12px;" *ngIf="row.estadoDocumento=='POR REVISAR'">POR REVISAR</span> -->
+              <span class="badge text-bg-success" *ngIf="row.prioridad=='NORMAL'">NORMAL</span>
+              <span class="badge text-bg-warning" *ngIf="row.prioridad=='URGENTE'">URGENTE</span>
+              <span class="badge text-bg-danger" *ngIf="row.prioridad=='MUY URGENTE'">MUY URGENTE</span>
             </td>
           </ng-container>
 
@@ -107,7 +135,7 @@
           </ng-container>
 
           <ng-container matColumnDef="Decretado a.">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Origen">Decretado a.</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Origen">Destino</th>
             <td mat-cell *matCellDef="let row"> {{row.llegada }} </td>
           </ng-container>
 
@@ -128,7 +156,7 @@
                   <button mat-flat-button  color="primary" class="mt-2"  (click)="openDialog(row)" >
                     <i class="far fa-file-pdf" ></i> VER DOCUMENTO
                   </button>
-                  <div class="btn-group mb-2">
+                  <div class="btn-group">
                     <button mat-flat-button style="background: rgba(25, 135, 84); color: #fff; " type="button"  (click)="viewSeguimiento(row.codigo)">
                       <i class="fas fa-info-circle"></i> SEGUIMIENTO
                     </button>
@@ -140,6 +168,10 @@
                       <li><a class="dropdown-item" (click)="viewTimeline(row.codigo)">GRAFICA</a></li>
                     </ul>
                   </div>
+
+                  <button mat-flat-button  color="accent" class="mb-2" (click)="verRespuesta(row.codigo)" *ngIf="row.tieneRespuesta>0" >
+                    <i class="far fa-file-pdf" ></i> VER RESPUESTA/FIRMA
+                  </button>
               </div>
             </td>
           </ng-container>
@@ -160,6 +192,7 @@
     </mat-card-footer>
     </mat-card>
   </div>
+  <div class="container loader" *ngIf="cargando"></div>
 </div>
 
 

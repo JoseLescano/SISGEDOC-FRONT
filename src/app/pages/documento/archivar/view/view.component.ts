@@ -26,11 +26,10 @@ export class ViewComponent implements OnInit, AfterViewInit {
 
   // displayedColumns: string[] = ['Estado', 'Nro', 'Origen', 'FechaDoc', 'Documento', 'Asunto', 'Motivo', 'Acciones'];
   displayedColumns: string[] = ['Prioridad', 'Nro', 'Asunto', 'Origen', 'FechaDoc', 'Documento', 'Motivo',  'Acciones'];
-  dataSource: MatTableDataSource<DocumentoView>;
+  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   cargando: boolean = false;
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
   range = new FormGroup({
     start: new FormControl<Date | null>(null),
@@ -76,13 +75,27 @@ export class ViewComponent implements OnInit, AfterViewInit {
     });
   }
 
-  createTable(documentos: DocumentoView[]): void {
+  createTable(documentos: any[]): void {
     this.dataSource = new MatTableDataSource(documentos);
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    });
-  }
+
+      this.dataSource.sortingDataAccessor = (item, property) => {
+      switch(property) {
+        case 'Nro': return item.codigo;
+        case 'Asunto': return item.asunto.toLowerCase();
+        case 'FechaDoc': return item.fechaDocumento;
+        case 'Documento': return item.clase + ' Nro. ' + item.nroOrden;
+        case 'Origen': return item.remitente.toLowerCase();
+        case 'Destino': return item.destinatario.toLowerCase();
+        case 'Prioridad': return item.prioridad.toLowerCase();
+        case 'Motivo': return item.observacionDecreto.toLowerCase();
+        // Añade más casos según tus columnas
+        default: return item[property];
+      }};
+      });
+    }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

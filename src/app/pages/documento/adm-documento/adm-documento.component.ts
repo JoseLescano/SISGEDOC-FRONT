@@ -16,6 +16,8 @@ import { Persona } from 'src/app/_model/persona';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Organizacion } from 'src/app/_model/organizacion';
 import { OrganizacionService } from 'src/app/_service/organizacion.service';
+import { ViewDocumentoComponent } from '../view-documento/view-documento.component';
+import { SeguimientoComponent } from '../../report/seguimiento/seguimiento.component';
 
 @Component({
   selector: 'app-adm-documento',
@@ -24,17 +26,20 @@ import { OrganizacionService } from 'src/app/_service/organizacion.service';
 })
 export class AdmDocumentoComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['Nro',  'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'Acciones'];
+  displayedColumns: string[] = ['Nro',  'Asunto', 'Documento', 'Origen', 'Destino', 'FechaDoc.'];
+  displayedBusqueda: string[] = ['Nro',  'Asunto', 'Documento', 'Origen', 'Destino', 'FechaDoc.', 'Acciones'];
+
   dataSource: MatTableDataSource<Documento> = new MatTableDataSource<Documento>();
+  dataSourceBusqueda: MatTableDataSource<any> = new MatTableDataSource<any>();
   campoIngresado: any;
+
+  busquedaDocumentoByAdm: any;
 
   tipoBusqueda: any = [
     {id: 1, text: 'NUCLEO'},
     {id: 2, text: 'ESCALON INMEDIATO'},
     {id: 3, text: 'DOC. EN BANDEJA'},
   ];
-
-  busquedaSeleccionada: number=0;
   cargandoNucleo : boolean;
   documentoBandejaBySuperAdm: boolean;
 
@@ -47,8 +52,13 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
   CIPIngresado: any;
   observacionArchivado: any = '';
 
+  @ViewChild(MatPaginator, { static: false }) paginatorBusqueda!: MatPaginator;
+  @ViewChild(MatSort) sortBusqueda!: MatSort;
+
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+
+
   cargando: boolean = true;
   cargandoArchivado: boolean = false;
 
@@ -151,6 +161,8 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      this.dataSourceBusqueda.paginator = this.paginatorBusqueda;
+      this.dataSourceBusqueda.sort = this.sortBusqueda;
     });
   }
 
@@ -164,6 +176,15 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+    });
+  }
+
+
+  createTableBusqueda(documento: any[]) {
+    this.dataSourceBusqueda.data = documento;
+    setTimeout(() => {
+      this.dataSourceBusqueda.paginator = this.paginatorBusqueda;
+      this.dataSourceBusqueda.sort = this.sortBusqueda;
     });
   }
 
@@ -380,6 +401,31 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
     a.download = `${nombreDescarga}.xlsx`;
     a.click();
     window.URL.revokeObjectURL(url);
+  }
+
+  busquedaDocumentoBySuperADM(){
+    this.documentoService.findBySuperAdm(this.busquedaDocumentoByAdm).subscribe({
+      next: (response: any)=> {
+        console.log(response);
+        this.createTableBusqueda(response);
+      }
+    });
+  }
+
+  openDialog(documentoSeleccionado?:any): void {
+    const dialogRef = this.dialog.open(ViewDocumentoComponent, {
+      width: '60%',
+      height: '95%',
+      data: documentoSeleccionado,
+    });
+  }
+
+  viewSeguimiento(documentoSeleccionado?:any): void {
+    const dialogRef = this.dialog.open(SeguimientoComponent, {
+      width: '60%',
+      height: '95%',
+      data: documentoSeleccionado,
+    });
   }
 
 }

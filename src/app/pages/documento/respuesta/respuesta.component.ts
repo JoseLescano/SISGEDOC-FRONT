@@ -15,6 +15,7 @@ import { ModalFirmaPeruComponent } from '../modal-firma-peru/modal-firma-peru.co
 import { ActivatedRoute, Router } from '@angular/router';
 import { ViewDocumentoComponent } from '../view-documento/view-documento.component';
 import { Documento } from 'src/app/_model/documento.model';
+import { FirmaPeruService } from 'src/app/_service/firma-peru.service';
 
 @Component({
   selector: 'app-respuesta',
@@ -49,7 +50,8 @@ export class RespuestaComponent implements OnInit {
     private correlativoService: CorrelativoService,
     public dialog: MatDialog,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private firmaPeruService: FirmaPeruService
   ) { }
 
   ngOnInit(): void {
@@ -142,7 +144,9 @@ export class RespuestaComponent implements OnInit {
       this.documentoar.asunto= this.form.value['asunto'];
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
       this.documentoar.anexos = this.uploadedFiles;
+      debugger;
       if (this.documentoar.organizacionOrigen== sessionStorage.getItem(environment.codigoOrganizacion)){
+        debugger;
         this.documentoService.crearDocumento(
           this.documentoar, this.nameDocuentoFirmado,
           this.firmado, this.uploadedFiles, this.vidDocumento
@@ -158,6 +162,7 @@ export class RespuestaComponent implements OnInit {
           Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
         });
       }else {
+        debugger;
         this.documentoService.crearRespuestaParaFirmar(
           this.documentoar,
           sessionStorage.getItem(environment.codigoOrganizacion),
@@ -343,14 +348,32 @@ export class RespuestaComponent implements OnInit {
     return window;
   }
 
-  firmarDocumento(){
+  // firmarDocumento(){
+  //   this.cargando = true;
+  //   this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response:any)=>{
+  //     this.nameDocuentoFirmado = response[1];
+  //     this.firmado = true;
+  //      this._window().iniciarFirma(response[1]);
+  //   });
+  //   this.cargando = false;
+  // }
+
+  firmarDocumento() {
     this.cargando = true;
-    this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response:any)=>{
-      this.nameDocuentoFirmado = response[1];
-      this.firmado = true;
-       this._window().iniciarFirma(response[1]);
+    this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response: any) => {
+      var nameFile = response[1];
+      this.firmaPeruService.iniciarFirma(response[1]).then(() => {
+        this.nameDocuentoFirmado = response[1];
+        this.firmado = true;
+        this.cargando = false;
+        Swal.fire('FIRMA COMPLETADA', 'SE FIRMO DOCUMENTO CORRECTAMENTE', 'info');
+      }).catch((error) => {
+        this.cargando = false;
+        Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
+        console.error('Error durante la firma:', error);
+      });
     });
-    this.cargando = false;
+
   }
 
   selectAnexos(event: any): void {
