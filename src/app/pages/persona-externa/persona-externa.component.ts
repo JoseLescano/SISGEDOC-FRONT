@@ -93,7 +93,6 @@ export class PersonaExternaComponent implements OnInit {
   }
 
   operate(){
-    //debugger;
     if (this.myForm.valid){
 
       if (this.myForm.get('codigo')?.value > 0){

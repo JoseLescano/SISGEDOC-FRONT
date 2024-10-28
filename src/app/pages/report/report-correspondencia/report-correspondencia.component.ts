@@ -34,9 +34,7 @@ export class ReportCorrespondenciaComponent implements OnInit {
   }
 
   viewDocumento(vidDocumento: any){
-    debugger;
     this.correspondenciaService.reportCorrespondencia(vidDocumento).subscribe((response: any)=>{
-      debugger;
       this.crearDocumento(response);
     }, error => {
       this.close();
@@ -45,7 +43,6 @@ export class ReportCorrespondenciaComponent implements OnInit {
   }
 
   crearDocumento(resp: any){
-    debugger;
     let byteArray = new Uint8Array(
       atob(resp[0])
         .split('')
@@ -54,7 +51,6 @@ export class ReportCorrespondenciaComponent implements OnInit {
     let file = new Blob([byteArray], { type: 'application/pdf' });
     let fileURL = URL.createObjectURL(file);
     this.url_pdf = fileURL;
-    debugger;
     let iframe:any = this.elRef.nativeElement.querySelector('iframe')as HTMLIFrameElement;
     iframe.contentWindow.location.replace(fileURL);
 

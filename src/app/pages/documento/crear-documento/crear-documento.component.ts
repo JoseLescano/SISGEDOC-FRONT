@@ -113,6 +113,24 @@ export class CrearDocumentoComponent implements OnInit {
 
     if(this.form.valid && this.selectedFiles != null){
       this.cargando = true;
+      // Obtén el archivo principal
+      const archivoPrincipal = this.selectedFiles.item(0);
+      // Inicializa el tamaño total
+      let totalSize = archivoPrincipal.size;
+
+      // Suma los tamaños de los anexos
+      if (this.uploadedFiles) {
+        this.uploadedFiles.forEach(file => {
+          totalSize += file.size;
+        });
+      }
+
+      // Validar que el tamaño total no exceda 20 MB (20 * 1024 * 1024 bytes)
+      if (totalSize > 20 * 1024 * 1024) {
+        this.cargando = false;
+        Swal.fire('Lo sentimos', 'El tamaño total de los archivos no puede exceder 20 MB.', 'warning');
+        return; // Detener la ejecución si el tamaño es mayor a 20 MB
+      }
       this.documentoar.organizacionOrigen = this.form.value['firmante'].codigoInterno;
 
       this.documentoar.clase = this.form.value['tipoDocumento'];
@@ -391,7 +409,7 @@ export class CrearDocumentoComponent implements OnInit {
         this.abrirFirmaPeru(base64);
     };
     reader.onerror = error => {
-        console.log('Error: ', error);
+        // console.log('Error: ', error);
   };
 }
 
@@ -418,7 +436,6 @@ export class CrearDocumentoComponent implements OnInit {
   firmarDocumento() {
     this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response: any) => {
       this.cargando = true;
-      debugger;
       var nameFile = response[1];
       this.firmaPeruService.iniciarFirma(response[1]).then(() => {
         this.cargando = false;
@@ -433,11 +450,9 @@ export class CrearDocumentoComponent implements OnInit {
   }
 
   updateIframeWithKeyDigitalGeneral(inNameFile: any) {
-    debugger;
     this.nameDocuentoFirmado = inNameFile;
     this.firmado = true;
     this.documentoService.getFileDocumentKeyDigital(inNameFile).subscribe((resp: any) => {
-      debugger;
       const byteArray = new Uint8Array(atob(resp).split('').map((char) => char.charCodeAt(0)));
       const file = new Blob([byteArray], { type: 'application/pdf' });
       const rf_file = new File([file], URL.createObjectURL(file), { type: 'application/pdf' });

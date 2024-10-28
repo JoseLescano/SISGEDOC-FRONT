@@ -21,7 +21,6 @@ export class MiPerfilComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    debugger;
     if (this.codigoRol== '000' || this.codigoRol== '002')
       this.createChart();
   }

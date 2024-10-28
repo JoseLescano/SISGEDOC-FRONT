@@ -44,17 +44,14 @@ export class CreateEditarComponent implements OnInit {
 
   operate(){
     if (this.data.padre != null ){
-      debugger;
       let dto : Organizacion = new Organizacion();
       dto.acronimo = this.organizacionSeleccionada.acronimo;
       dto.nombreLargo = this.organizacionSeleccionada.nombreLargo;
       dto.indicativo = this.organizacionSeleccionada.indicativo;
       dto.cargo = this.organizacionSeleccionada.cargo;
       this.organizacionService.saveOrganizacion(dto, this.codigoPadre).pipe(switchMap(()=>{
-        debugger;
           return this.organizacionService.findByCodigoInterno(sessionStorage.getItem(environment.codigoOrganizacion));
       })).subscribe((response:any)=> {
-        debugger;
         this.organizacionService.setOrganizacionCambio(response.data);
 
           Swal.fire('OPERACION REALIZADA', 'SE REGISTRO ORGANIZACION CON EXITO', 'info');

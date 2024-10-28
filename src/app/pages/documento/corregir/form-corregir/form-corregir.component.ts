@@ -47,7 +47,6 @@ export class FormCorregirComponent implements OnInit {
     let decreto = this.data.decreto;
     this.viewDocumento(decreto);
     this.correcionService.findByDecreto(this.data.decreto).subscribe((response:any)=> {
-      debugger;
       this.correciones = response;
     })
   }
@@ -63,7 +62,6 @@ export class FormCorregirComponent implements OnInit {
   }
 
   crearDocumento(resp: any, iframeId: string) {
-    debugger;
     const byteArray = new Uint8Array(atob(resp[0]).split('').map((char) => char.charCodeAt(0)));
     const file = new Blob([byteArray], { type: 'application/pdf' });
     const fileURL = URL.createObjectURL(file);
@@ -167,7 +165,7 @@ export class FormCorregirComponent implements OnInit {
         const base64 = reader.result as string;
     };
     reader.onerror = error => {
-        console.log('Error: ', error);
+        // console.log('Error: ', error);
     };
   }
 

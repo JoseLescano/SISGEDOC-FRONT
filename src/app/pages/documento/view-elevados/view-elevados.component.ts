@@ -40,7 +40,6 @@ export class ViewElevadosComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.cargando = true;
     this.documentoService.findElevados(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any)=> {
-      debugger;
       this.createTable(data);
       this.cargando = false;
     }, error=> {
@@ -54,7 +53,6 @@ export class ViewElevadosComponent implements OnInit, AfterViewInit {
       this.cargando = true;
       this.documentoService.findElevados(sessionStorage.getItem(environment.codigoOrganizacion),
         environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end'])).subscribe((data: any) => {
-        debugger;
         this.createTable(data);
         this.cargando = false;
       }, (error: any)=> {

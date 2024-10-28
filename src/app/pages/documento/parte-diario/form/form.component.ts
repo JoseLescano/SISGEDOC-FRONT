@@ -67,20 +67,16 @@ export class FormComponent implements OnInit {
       return this.documentoService.findRespuestaByVidParent(this.idDocumento, this.idDecreto);
       })).subscribe((responseDocumentoPadre: any)=>{
       if (responseDocumentoPadre!=null){
-        debugger;
         this.documentoRespuesta = new Documento();
         this.documentoRespuesta = {...responseDocumentoPadre};
         this.mostrarRespuesta = true;
         if (this.documentoRespuesta.organizacionOrigen.codigoInterno==this.organizacionLogueada){
-          debugger;
           this.mostrarDistribuir = true;
         }
         this.documentoService.viewPDF(this.idDocumento).pipe(switchMap((viewDocumento:any)=> {
-          debugger;
           this.crearDocumento(viewDocumento.data, 'documentoReferencia');
           return this.documentoService.viewPDF(this.documentoRespuesta.codigo, this.documentoRespuesta.tipoOrganizacion =='R'? '1': '0');
         })).subscribe((responseRespuesta:any)=> {
-          debugger;
           this.crearDocumento(responseRespuesta.data, 'documentoRespuesta');
         }, (error:any) => {
           this.errorPDF = true;
@@ -88,9 +84,7 @@ export class FormComponent implements OnInit {
           Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR PDF!`, 'warning');
         });
       } else {
-        debugger;
         if (this.documento.organizacionOrigen.codigoInterno==this.organizacionLogueada){
-          debugger;
           this.mostrarDistribuir = true;
           this.mostrarRespuesta = true;
         }
@@ -147,7 +141,7 @@ export class FormComponent implements OnInit {
         const base64 = reader.result as string;
     };
     reader.onerror = error => {
-        console.log('Error: ', error);
+        //console.log('Error: ', error);
     };
   }
 
@@ -260,7 +254,6 @@ export class FormComponent implements OnInit {
       confirmButtonText: "SÍ, DESEO CONTINUAR"
     }).then((result) => {
       if (result.isConfirmed) {
-        debugger;
         if (this.documentoRespuesta==null){ // SIN REFERENCIA
 
           this.decretoService.elevarDocumento(
@@ -280,7 +273,6 @@ export class FormComponent implements OnInit {
           });
 
         }else { // DOCUMENTO CON REFERENCIA
-          debugger;
           this.decretoService.elevarDocumento(
             this.documento.codigo,
             sessionStorage.getItem(environment.codigoOrganizacion),
@@ -332,7 +324,6 @@ export class FormComponent implements OnInit {
   }
 
   distribuirRespuesta(){
-    debugger;
     this.cargando = true;
     this.decretoService.distrubirRespuestaDocumento(
       this.documentoRespuesta.codigo,
@@ -364,9 +355,7 @@ export class FormComponent implements OnInit {
   }
 
   distribuir(){
-    debugger;
     if (this.documentoRespuesta!=null){
-      debugger;
       if (!this.isFirmado){
         Swal.fire({
           title: "¿ESTÁS SEGURO?",
@@ -376,7 +365,6 @@ export class FormComponent implements OnInit {
           confirmButtonText: "SÍ, DESEO CONTINUAR"
         }).then((result) => {
           if (result.isConfirmed) {
-            debugger;
             this.distribuirRespuesta();
             //this.distribuirDocumento();
           }
@@ -425,7 +413,6 @@ export class FormComponent implements OnInit {
   firmarDocumento(){
     this.cargando = true;
     this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response: any) => {
-      debugger;
       var nameFile = response[1];
       this.firmaPeruService.iniciarFirma(response[1]).then(() => {
         this.cargando = false;

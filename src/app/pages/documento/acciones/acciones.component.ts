@@ -106,12 +106,7 @@ export class AccionesComponent implements OnInit {
     iframe.contentWindow.location.replace(fileURL);
   }
 
-  verSeguimiento(vidDocumento: any){
-    this.documentoService.findDecretoByDocumento(vidDocumento).subscribe(data => {
-      console.log(data)
-    });
-  }
-
+  
   findAnexosByDocumento(){
     this.anexoService.findByDocumento(this.idDocumento).subscribe((response:any)=> {
       this.anexos = response.data;

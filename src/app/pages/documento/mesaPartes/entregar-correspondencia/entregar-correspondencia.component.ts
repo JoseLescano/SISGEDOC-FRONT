@@ -95,7 +95,7 @@ export class EntregarCorrespondenciaComponent implements OnInit {
   }
 
   agregar(){
-    console.log(this.selection.selected);
+    // this.selection.selected
   }
 
   createTable(correspondencia: Correspondencia[]){

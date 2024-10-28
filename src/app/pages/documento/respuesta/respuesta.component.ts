@@ -55,7 +55,6 @@ export class RespuestaComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    debugger;
     this.cargando = true;
     this.getIdDocumento();
     this.initForm();
@@ -134,6 +133,24 @@ export class RespuestaComponent implements OnInit {
   operate(){
     if(this.form.valid && this.selectedFiles != null){
       this.cargando = true;
+      // Obtén el archivo principal
+      const archivoPrincipal = this.selectedFiles.item(0);
+      // Inicializa el tamaño total
+      let totalSize = archivoPrincipal.size;
+
+      // Suma los tamaños de los anexos
+      if (this.uploadedFiles) {
+        this.uploadedFiles.forEach(file => {
+          totalSize += file.size;
+        });
+      }
+
+      // Validar que el tamaño total no exceda 20 MB (20 * 1024 * 1024 bytes)
+      if (totalSize > 20 * 1024 * 1024) {
+        this.cargando = false;
+        Swal.fire('Lo sentimos', 'El tamaño total de los archivos no puede exceder 20 MB.', 'warning');
+        return; // Detener la ejecución si el tamaño es mayor a 20 MB
+      }
       this.documentoar.organizacionOrigen = this.form.value['firmante'].codigoInterno;
 
       this.documentoar.clase = this.form.value['tipoDocumento'];
@@ -144,9 +161,7 @@ export class RespuestaComponent implements OnInit {
       this.documentoar.asunto= this.form.value['asunto'];
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
       this.documentoar.anexos = this.uploadedFiles;
-      debugger;
       if (this.documentoar.organizacionOrigen== sessionStorage.getItem(environment.codigoOrganizacion)){
-        debugger;
         this.documentoService.crearDocumento(
           this.documentoar, this.nameDocuentoFirmado,
           this.firmado, this.uploadedFiles, this.vidDocumento
@@ -162,7 +177,6 @@ export class RespuestaComponent implements OnInit {
           Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
         });
       }else {
-        debugger;
         this.documentoService.crearRespuestaParaFirmar(
           this.documentoar,
           sessionStorage.getItem(environment.codigoOrganizacion),
@@ -220,7 +234,6 @@ export class RespuestaComponent implements OnInit {
         })
       ).subscribe((response: any) => {
         if (response.httpStatus === 'CREATED') {
-            console.log(response.data);
             this.downloadWord(response.data[0]);
             this.cargando = false;
         }
@@ -326,12 +339,11 @@ export class RespuestaComponent implements OnInit {
         this.abrirFirmaPeru(base64);
     };
     reader.onerror = error => {
-        console.log('Error: ', error);
+       // console.log('Error: ', error);
     };
 }
 
   abrirFirmaPeru(documento:any): void {
-    debugger;
     const dialogRef = this.dialog.open(ModalFirmaPeruComponent,{
       width: '90%',
       height: '95%',

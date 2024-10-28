@@ -63,7 +63,6 @@ export class DobleAutentificacionComponent implements OnInit, AfterViewInit {
         next: (data:any)=> {
           if (data!= null){
             this.cargando = true;
-            debugger;
             this.persona = data;
             this.nombreCompleado = this.persona.grado_LARGA + ' '+ this.persona.arma_LARGA + ' '+  this.persona.apellidos+  ' ' + this.persona.nombres;
             this.buscarPerfiles();
@@ -76,7 +75,6 @@ export class DobleAutentificacionComponent implements OnInit, AfterViewInit {
           }
         },
         error: (error: any| HttpErrorResponse)=> {
-          debugger;
           this.nombreCompleado = '';
           this.persona.correo_CHASQUI = '';
           this.dataSource = null;

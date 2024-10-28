@@ -22,7 +22,6 @@ export class CorrecionService extends GenericService<CorrecionDTO> {
 
 
   registrarCorrecion(idDocumento:any, idDecreto: any, observacion: any){
-    debugger;
     let formData: FormData = new FormData();
     formData.append('idDocumento', idDocumento);
     formData.append('idDecreto', idDecreto);

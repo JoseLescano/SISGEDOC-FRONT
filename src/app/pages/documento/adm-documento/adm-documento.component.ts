@@ -98,7 +98,6 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
         next: (data:any)=> {
           if (data!= null){
             this.cargando = true;
-            debugger;
             this.persona = data;
             this.nombreCompleado = this.persona.grado_LARGA + ' '+ this.persona.arma_LARGA + ' '+  this.persona.apellidos+  ' ' + this.persona.nombres;
             this.cargando=false;
@@ -110,7 +109,6 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
           }
         },
         error: (error: any| HttpErrorResponse)=> {
-          debugger;
           this.nombreCompleado = '';
           this.persona.correo_CHASQUI = '';
           this.dataSource = null;
@@ -135,7 +133,6 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
   }
 
   cargarDocumentos(){
-    debugger;
     this.cargando = true;
     this.documentoService.findByOrganizacionDestinoForSuperAdm(
       this.campoIngresado,
@@ -149,8 +146,6 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
             this.cargando = false;
 
           }, error: err => {
-            debugger;
-            console.log(err)
             this.cargando = false;
             Swal.fire('Lo sentimos', err, 'warning');
           }
@@ -224,7 +219,6 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
     //tDocumentoBandejaBySuperAdm
     this.documentoService.getDocumentoBandejaNucleo().subscribe({
       next: (response: any) => {
-        debugger;
         this.cargandoNucleo = false;
         let etiquetas = response.map(x => x.etiqueta);
         let valores = response.map(x => x.valor);
@@ -296,13 +290,10 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
   }
 
   mostrarGraficaDetalle(id: string, uu:string) {
-    console.log(id);
-
     this.documentoBandejaBySuperAdm = true;
     //
     this.documentoService.getDocumentoBandejaBySuperAdm(id).subscribe({
       next: (response: any) => {
-        debugger;
         this.documentoBandejaBySuperAdm = false;
         // Si ya existe un gráfico previo, destrúyelo.
         if (this.barChartHorizontal) {
@@ -406,7 +397,6 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
   busquedaDocumentoBySuperADM(){
     this.documentoService.findBySuperAdm(this.busquedaDocumentoByAdm).subscribe({
       next: (response: any)=> {
-        console.log(response);
         this.createTableBusqueda(response);
       }
     });

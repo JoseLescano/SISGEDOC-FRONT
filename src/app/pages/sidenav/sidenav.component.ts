@@ -60,9 +60,7 @@ export class SidenavComponent implements OnInit {
     
     this.screenWidth = window.innerWidth;
     if(this.screenWidth <= 768 ) {
-      debugger;
       this.collapsed = false;
-      console.log(this.screenWidth)
       this.onToggleSideNav.emit({collapsed: this.collapsed, screenWidth: this.screenWidth});
     }
   }
@@ -76,7 +74,6 @@ export class SidenavComponent implements OnInit {
           this.menus = response.data as Menu[];
         },
         error: (err: any)=> {
-          console.log(err);
           // if (err.)
         }
       });
@@ -84,7 +81,6 @@ export class SidenavComponent implements OnInit {
 
   toggleCollapse(): void {
     this.collapsed = !this.collapsed;
-    console.log(this.screenWidth)
     this.onToggleSideNav.emit({collapsed: this.collapsed, screenWidth: this.screenWidth});
   }
 

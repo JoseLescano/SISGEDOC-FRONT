@@ -155,7 +155,6 @@ export class DecetarComponent implements OnInit {
       });
 
       dto.decretos = decretosConAccionesSeleccionadas;
-      console.log(dto);
 
       this.decretoService.decretarDocumento2(dto).subscribe((response:any)=> {
         if (response.httpStatus == 'CREATED'){
@@ -173,7 +172,7 @@ export class DecetarComponent implements OnInit {
       });
 
     } else {
-      console.log('Formulario inválido');
+      // Formulario inválido'
       this.marcarTodoComoTocado(this.decretoForm);
     }
   }

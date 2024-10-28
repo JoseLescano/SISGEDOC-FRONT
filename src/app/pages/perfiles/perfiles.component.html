@@ -1,33 +1,32 @@
-<div class="container-fluid">
-  <section>
-    <div class="row">
-      <h2 class="section-heading">PERFILES ASIGNADOS</h2>
+<div class="offcanvas offcanvas-end" tabindex="-1" id="perfiles" >
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">
+      PERFIL DE INGRESO
+    </h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" ></button>
+  </div>
+
+  <div class="offcanvas-body flipInZ" style="font-size: 14px;">
+    <div>
+      Usted actualmente cuenta con varios perfiles de ingreso. Seleccione uno:
     </div>
-    <div class="row">
-      <div class="column" *ngFor="let perfil of perfiles">
-        <div class="card" (click)="seleccionarPerfil(perfil)">
-          <div class="icon-wrapper">
-            <i class="fas fa-user-tag"></i>
-          </div>
-          <h3>{{perfil.nombre}}</h3>
-          <p>
-           {{perfil.organizacion.nombreLargo}}
-           <!-- <br>
-           <span style="font-size: 14px; font-weight: 600;">{{perfil.rol.nombre}}</span> -->
-          </p>
-        </div>
-      </div>
-      <div class="column" *ngIf="perfiles?.length>0">
-        <div class="card-salir" (click)="salir()" >
-          <div class="icon-wrapper-salir">
-            <i class="fas fa-sign-out-alt"></i>
-          </div>
-          <h3>SALIR</h3>
-          <p>
-           SALIR DEL SISTEMA
-          </p>
-        </div>
+    <div class="dropdown-divider"></div>
+    <div class="dropdown-menu-end user-dd animated  show" data-bs-popper="static">
+      <ng-container *ngFor=" let perfil of perfiles; ">
+          <a class="dropdown-item"  style="color: #5b5e62; margin: 15px 15px; cursor: pointer; display:flex; align-items:center;" 
+          (click)="seleccionarPerfil(perfil)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" class="feather feather-user feather-sm text-info me-1 ms-1">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <div style="margin-top: 5px;">{{perfil.nombre}} - {{perfil.organizacion.acronimo}}</div>
+        </a>
+      </ng-container>
+    <div class="dropdown-divider"></div>
+      <div class="pl-4 p-2">
+        <a data-bs-dismiss="offcanvas" class="btn d-block w-100 btn-primary rounded-pill" >Continuar</a>
       </div>
     </div>
-  </section>
+  </div>
+
 </div>

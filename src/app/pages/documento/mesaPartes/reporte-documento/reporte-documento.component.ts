@@ -243,9 +243,7 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
   }
 
   downloadExcel(): void {
-    debugger;
     if (this.forDay){
-      debugger;
       if (this.tipoReporte == 0){
         this.excelService.downloadDecretadosForDay(
           sessionStorage.getItem(environment.codigoOrganizacion),
@@ -283,7 +281,6 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
           });
       }
     } else {
-      debugger;
       if (this.tipoReporte == 0){
         this.excelService.downloadDecretadosByFechas(
           sessionStorage.getItem(environment.codigoOrganizacion),

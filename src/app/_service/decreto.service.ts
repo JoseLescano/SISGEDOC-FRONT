@@ -55,7 +55,6 @@ export class DecretoService extends GenericService<Decreto> {
   }
 
   derivarDocumento(documento: any, origen: any, destino:any, observacion:any, codigoDecreto: any){
-    debugger;
     let formData: FormData= new FormData();
     formData.append('codigoDocumento', documento);
     formData.append('origen', origen);
@@ -80,7 +79,6 @@ export class DecretoService extends GenericService<Decreto> {
     nameDocuentoFirmado : any, isFirmado:any,
     codigoDecreto:any,
     archivoFirmado?:any){
-    debugger;
     let formData: FormData= new FormData();
     formData.append('codigoDocumento', documento);
     formData.append('origen', origen);
@@ -95,7 +93,6 @@ export class DecretoService extends GenericService<Decreto> {
     nameDocuentoFirmado : any, isFirmado:any,
     documentoPadre:any, isAntiguo:any,
      codigoDecreto:any, archivoFirmado?:any){
-    debugger;
     let formData: FormData= new FormData();
     formData.append('codigoDocumento', documento);
     formData.append('origen', origen);

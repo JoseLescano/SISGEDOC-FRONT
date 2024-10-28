@@ -87,14 +87,12 @@ export class UpdateDevolverComponent implements OnInit {
   findByDevolver(){
     this.organizacionService.destinatariosExternoByDecreto(sessionStorage.getItem(environment.codigoOrganizacion), this.codigoDecreto).subscribe({
       next: (response:any)=> {
-        debugger;
         this.destinos = response.data;
       }
     })
   }
 
   actualizarDocumento(){
-    debugger;
     if (this.form.valid ){
       this.cargando = true;
       let observacion = this.form.controls['descripcion'].value;

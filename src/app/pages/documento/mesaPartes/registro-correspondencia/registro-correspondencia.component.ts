@@ -44,7 +44,6 @@ export class RegistroCorrespondenciaComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    debugger;
     if (this.codigoOrganizacion == '120210' ||  this.codigoOrganizacion == '12021001' || this.codigoOrganizacion == '12021002'){
       this.cargando= true;
       this.organizacionService.getWithCodigoCopere().subscribe((response:any)=>{

@@ -55,7 +55,6 @@ export class ListCorrespondenciaComponent implements OnInit, AfterViewInit {
       this.correspondenciaService.searchByFechas(
         environment.convertDateToStr(this.range.value['start']),
          environment.convertDateToStr(this.range.value['end'])).subscribe((response: any) => {
-        debugger;
         if (response!= null)
           this.createTable(response.data);
         this.cargando = false;

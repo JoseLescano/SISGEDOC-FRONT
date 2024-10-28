@@ -85,14 +85,13 @@ export class LoginComponent{
       next : (response)=> {
         this.openModalMfaStatus0(this.username, response);
       },  error : (err) => {
-        debugger;
         if (err=='Unknown Error')
           Swal.fire('LO SENTIMOS', 'NO PODEMOS VALIDAR TUS CREDENCIALES', 'info');
         else if (err == 'USUARIO O CLAVE INCORRECTO')
           Swal.fire('VALIDACIÓN INCORRECTA', 'USUARIO O CLAVE INCORRECTO', 'info');
         else if (err == 'ERROR EN CONEXION CON EL SERVIDOR')
           Swal.fire('LO SENTIMOS', 'ERROR EN CONEXION CON EL SERVIDOR', 'info');
-        else Swal.fire('VALIDACIÓN INCORRECTA', 'USUARIO Y/O CONTRASEÑA INCORRECTA', 'info');
+        else Swal.fire('LO SENTIMOS', err, 'info');
       }
     });
   }

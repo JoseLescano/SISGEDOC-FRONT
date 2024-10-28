@@ -17,9 +17,7 @@
         </div>
         <div class="head-menu-item">
           <button class="head-menu-item-btn ripple"
-            data-bs-toggle="offcanvas" data-bs-target="#perfiles" aria-controls="perfiles"
-            >
-            <!-- <i class="fas fa-th-large menu-icon"></i> -->
+            data-bs-toggle="offcanvas" data-bs-target="#perfiles" aria-controls="perfiles">
             <i class="fas fa-users menu-icon"></i>
           </button>
         </div>
@@ -27,7 +25,7 @@
       <div class="head-user-avatar-container">
         <div class="head-user-avatar" [matMenuTriggerFor]="menu">
           <img [src]="imagen" alt="user" class="user-avatar" *ngIf="imagen != null">
-          <img src="https://sisgedo.ejercito.mil.pe/assets/person.jpeg" alt="user" class="user-avatar" *ngIf="imagen == null">
+          <img src="./../../../assets/person.jpeg" alt="user" class="user-avatar" *ngIf="imagen == null || imagen == ''">
           <div class="circle-indicator pulse"></div>
         </div>
       </div>
@@ -35,37 +33,8 @@
   </div>
 </div>
 
-<div class="offcanvas offcanvas-end" tabindex="-1" id="perfiles" >
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasExampleLabel">
-      PERFIL DE INGRESO
-    </h5>
-    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" ></button>
-  </div>
-
-  <div class="offcanvas-body flipInZ" style="font-size: 14px;">
-    <div>
-      Usted actualmente cuenta con varios perfiles de ingreso. Seleccione uno:
-    </div>
-    <div class="dropdown-divider"></div>
-    <div class="dropdown-menu-end user-dd animated  show" data-bs-popper="static">
-      <ng-container *ngFor=" let perfil of perfiles; ">
-          <a class="dropdown-item"  style="color: #5b5e62; margin: 15px 15px; cursor: pointer; display:flex; align-items:center;" (click)="seleccionarPerfil(perfil)">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round" class="feather feather-user feather-sm text-info me-1 ms-1">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-          <div style="margin-top: 5px;">{{perfil.nombre}} - {{perfil.organizacion.acronimo}}</div>
-        </a>
-      </ng-container>
-    <div class="dropdown-divider"></div>
-      <div class="pl-4 p-2">
-        <a data-bs-dismiss="offcanvas" class="btn d-block w-100 btn-primary rounded-pill" >Continuar</a>
-      </div>
-    </div>
-  </div>
-
-</div>
+<app-perfiles >
+</app-perfiles>
 
 <mat-menu #menu="matMenu">
 

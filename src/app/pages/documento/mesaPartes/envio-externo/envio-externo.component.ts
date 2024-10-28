@@ -95,7 +95,6 @@ export class EnvioExternoComponent implements OnInit {
         {
 
           next : (response:any) => {
-            debugger;
             if (response.httpStatus=='CREATED'){
               this.cargando = false;
               this.initForm();
@@ -108,8 +107,6 @@ export class EnvioExternoComponent implements OnInit {
           },
           error: (err: any) => {
             this.cargando = false;
-            debugger;
-
             if (err.error && err.error.message) {
                 Swal.fire('Lo sentimos', err.error.message, 'info');
             } else {
@@ -118,7 +115,6 @@ export class EnvioExternoComponent implements OnInit {
         }
         });
     } else {
-      debugger;
       this.cargando = false;
       Swal.fire('Lo sentimos', `Se presento un inconveniente!`, 'warning');
     }

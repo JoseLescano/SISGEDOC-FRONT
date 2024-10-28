@@ -7,7 +7,8 @@
       <div class="row mt-2">
         <div class="col-md-12 mt-2">
           <strong style="margin-right: 5px;">DETALLES DE DECRETO</strong>
-          <button mat-mini-fab color="primary" (click)="agregarDecreto()" *ngIf="!disableOtherOptions" aria-label="Example icon button with a delete icon">
+          <button mat-mini-fab color="primary" (click)="agregarDecreto()" 
+            *ngIf="!disableOtherOptions" aria-label="Example icon button with a delete icon">
             <i class="fas fa-plus"></i>
           </button>
         </div>
@@ -16,12 +17,14 @@
         <input formControlName="numeroDocumento" placeholder="Número de decreto" hidden >
 
         <div formArrayName="decretos" >
-          <div *ngFor="let decreto of getDecretosControls(); let i = index" [formGroupName]="i" style="border: 2px; border-color: #675b45; border-style: dotted;
-                                          border-radius: 10px;  margin-top: 3px;padding: 10px; ">
+          <div *ngFor="let decreto of getDecretosControls(); let i = index" [formGroupName]="i" 
+            style="border: 2px; border-color: #675b45; border-style: dotted;
+            border-radius: 10px;  margin-top: 3px;padding: 10px; ">
             <div class="alert alert-info alert-dismissible  mt-2 fade show" role="alert" *ngIf="decretos.length > 1">
               <i class="fas fa-info-circle"></i>
               <strong style="margin-left: 5px;"> Número de decreto: {{i + 1}}</strong>
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" *ngIf="decretos.length > 1" (click)="eliminarDecreto(i)" ></button>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" 
+              *ngIf="decretos.length > 1" (click)="eliminarDecreto(i)" ></button>
             </div>
             <div class="row mt-2" >
               <div class="col-md-4">
@@ -29,7 +32,8 @@
                   <mat-label>ORGANIZACION DESTINO</mat-label>
                   <mat-select formControlName="destinos" multiple (selectionChange)="onSelectionChange($event, i)">
                     <mat-option value="----">TODAS MIS UNIDADES</mat-option>
-                    <mat-option *ngFor="let c of organizaciones" [value]="c.codigoInterno" [disabled]="disableOtherOptions">{{c.acronimo}}</mat-option>
+                    <mat-option *ngFor="let c of organizaciones" [value]="c.codigoInterno" 
+                      [disabled]="disableOtherOptions">{{c.acronimo}}</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -54,13 +58,18 @@
                 </mat-form-field>
               </div>
             </div>
-            <mat-label><strong style="margin-right: 5px; font-weight: 600;">LISTA DE ACCIONES <span *ngIf="accionesInvalidas(decreto)" style="color: red; " >  (OBLIGATORIO)</span></strong> </mat-label>
+            <mat-label>
+              <strong style="margin-right: 5px; font-weight: 600;">LISTA DE ACCIONES 
+                <span *ngIf="accionesInvalidas(decreto)" style="color: red; " >  (OBLIGATORIO)</span>
+              </strong>
+            </mat-label>
             <div formArrayName="acciones" class="col-md-12 mt-2"
             style="display: grid; grid-template-columns: auto auto auto; margin-top: 2px;">
               <ng-container  *ngFor="let accion of getAccionesControls(decreto); let j = index" [formGroupName]="j"
               >
                 <label style="display: flex; margin-bottom: 5px;">
-                  <mat-checkbox formControlName="seleccionada" color="primary" style="position: relative;left: 0px; opacity: 1; size: 20px; padding: 2px; ">
+                  <mat-checkbox formControlName="seleccionada" color="primary" 
+                    style="position: relative;left: 0px; opacity: 1; size: 20px; padding: 2px; ">
                     <span style="margin-left: 3px;margin-right: 6px; font-weight: 200;  font-size: 18px;">
                       {{accion.get('nombre')?.value  | uppercase}}
                     </span>

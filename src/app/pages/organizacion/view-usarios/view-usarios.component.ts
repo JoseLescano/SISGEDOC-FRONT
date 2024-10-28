@@ -130,8 +130,6 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
   }
 
   seleccionarUsuario(perfilSeleccionado:Perfil){
-    debugger;
-    console.log(perfilSeleccionado);
     this.puesto = perfilSeleccionado.nombre;
     this.rolSeleccionado=perfilSeleccionado.rol;
     this.persona.usuario_CHASQUI = perfilSeleccionado.usuario.usuario_CHASQUI;

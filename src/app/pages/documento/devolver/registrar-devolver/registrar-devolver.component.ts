@@ -110,7 +110,6 @@ export class RegistrarDevolverComponent implements OnInit {
   }
 
   devolverDocumento(){
-    debugger;
     // let motivo = this.form.controls['motivo'].value;
     let observacion = this.form.controls['descripcion'].value;
     if (this.form.valid ){

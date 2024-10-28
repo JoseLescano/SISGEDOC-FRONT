@@ -56,7 +56,6 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
       this.cargando = true;
       this.documentoService.searchByOrganizacion(sessionStorage.getItem(environment.codigoOrganizacion), this.textoIngresado,
       '', '').subscribe((data: any) => {
-        debugger;
         this.createTable(data);
         this.cargando = false;
       }, (error: any)=> {
@@ -72,7 +71,6 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
       this.cargando = true;
       this.documentoService.searchByOrganizacion(sessionStorage.getItem(environment.codigoOrganizacion),'',
       environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end'])).subscribe((data: any) => {
-        debugger;
         this.createTable(data);
         this.cargando = false;
       }, (error: any)=> {
@@ -157,11 +155,9 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
   }
 
   verRespuesta(documentoSeleccionado?:any): void {
-    debugger;
     this.documentoService.verDocumentoRespuesta(documentoSeleccionado).subscribe(
       {
         next : (response: any)=> {
-          debugger;
           const dialogRef = this.dialog.open(ViewDocumentoComponent, {
             width: '60%',
             height: '95%',

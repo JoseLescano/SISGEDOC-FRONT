@@ -107,14 +107,12 @@ export class ModalMfaComponent implements OnInit, OnDestroy {
           sessionStorage.setItem(environment.TOKEN_NAME, response.access_token);
           let token = sessionStorage.getItem(environment.TOKEN_NAME);
           const helper = new JwtHelperService();
-          debugger;
           const decodedToken = helper.decodeToken(token);
           const username = decodedToken.sub;
           const perfil = decodedToken.perfil;
           sessionStorage.setItem(environment.rol, perfil.rol.codigo );
           sessionStorage.setItem(environment.codigoOrganizacion, perfil.organizacion.codigoInterno);
           sessionStorage.setItem(environment.cargoSeleccionado, perfil.nombre + " - " +  perfil.organizacion.acronimo);
-          debugger;
           sessionStorage.setItem(environment.nombreOrganizacion, perfil.organizacion.acronimo);
           this.router.navigate(['/principal/dashboard']).then(() => {
            location.reload();

@@ -45,8 +45,6 @@ export class PendienteComponent implements OnInit, AfterViewInit {
             this.cargando = false;
 
           }, error: err => {
-            debugger;
-            console.log(err)
             this.cargando = false;
             Swal.fire('Lo sentimos', err, 'warning');
           }

@@ -60,7 +60,6 @@
           var _chis=this;
           script.onload = function() {
             alert;
-            console.log(go)
             _chis.constDiagram(incallback);
           };
       }else{
@@ -281,7 +280,6 @@
             value:"",
           };
           var arrayItem=new Array();
-          debugger;
           let model = myDiagramOrganization.model.Re != null ? myDiagramOrganization.model.Re : myDiagramOrganization.model.Ne;
           model.forEach(dataElement => {
               if(dataElement.parent==thisemp.key){
@@ -337,9 +335,7 @@ myDiagramOrganization.nodeTemplate.contextMenu =
          // remove the whole subtree, including the node itself
 
         const node = button.part.Qt == null ?   button.part.si : button.part.Qt ;
-        debugger;
          _this.incallbackDelete(node.CODIGO,()=>{
-          debugger;
            if (node !== null) {
              myDiagramOrganization.startTransaction("remove dept");
              myDiagramOrganization.removeParts(node.findTreeParts());
@@ -356,7 +352,6 @@ myDiagramOrganization.nodeTemplate.contextMenu =
      {
 
        click: (e, button) => {
-      debugger;
        const node = button.part.Qt == null ?   button.part.si : button.part.Qt ;
        _this.incallbackUpdate(node,()=>{
        })
@@ -367,9 +362,7 @@ myDiagramOrganization.nodeTemplate.contextMenu =
      $(go.TextBlock, "Agregar usuarios"),
      {
        click: (e, button) => {
-        debugger;
         const node = button.part.Qt == null ?   button.part.si : button.part.Qt ;
-       debugger;
        _this.incallAgregarUsuarios(node,()=>{
        })
        }
@@ -460,7 +453,6 @@ if(incallback!=null && incallback!=undefined){
           var _chis=this;
           script.onload = function() {
             alert;
-            console.log(go)
             _chis.constDiagram(incallback);
 
           };

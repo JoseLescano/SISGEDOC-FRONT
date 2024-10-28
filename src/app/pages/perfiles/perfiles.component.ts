@@ -26,39 +26,24 @@ export class PerfilesComponent implements OnInit {
   }
 
   getPerfiles(){
-    this.perfilService.findByUsuariLogueado().subscribe((response:Perfil[])=> {
-      if (response== null){
-        Swal.fire("Usuario sin perfiles", "Se valida que el usuario no tiene perfiles asignados", "info");
-        this.router.navigate(['/login']);
-      }else {
-        this.perfiles = response;
-        if (this.perfiles?.length<2){
-          sessionStorage.setItem(environment.rol, this.perfiles[0].rol.codigo+"" );
-          sessionStorage.setItem(environment.codigoOrganizacion, this.perfiles[0].organizacion.codigoInterno);
-          sessionStorage.setItem(environment.cargoSeleccionado, this.perfiles[0].nombre);
-          sessionStorage.setItem(environment.nombreOrganizacion, this.perfiles[0].organizacion.acronimo);
-          this.router.navigate(['/principal/dashboard']);
-        }
-      }
-    },(error: any) => {
-      Swal.fire("Lo sentimos", "Se presento un inconveniente", "info");
-      this.router.navigate(['/login']);
-    });
+    this.perfilService.findByUsuariLogueado().subscribe(
+      {
+        next : (response:any)=>{
+          this.perfiles = response;
+        }, error: (err: any) => {
+          console.error('Error al cargar la imagen', err);
+      }});
   }
 
   seleccionarPerfil(perfil: any){
-    //sessionStorage.clear();
     sessionStorage.setItem(environment.rol, perfil.rol.codigo );
-    //sessionStorage.setItem(environment.TOKEN_AUTH_USERNAME, perfil.usuario+"");
     sessionStorage.setItem(environment.codigoOrganizacion, perfil.organizacion.codigoInterno);
     sessionStorage.setItem(environment.cargoSeleccionado, perfil.nombre + ' - ' + perfil.organizacion.acronimo);
-    this.router.navigate(['/principal/dashboard']);
-  }
 
-  salir(){
-    sessionStorage.clear();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/principal/dashboard']).then(() => {
+      // Do something
+     location.reload();
+    });
   }
-
 
 }

@@ -36,7 +36,6 @@ export class ViewDocumentoComponent implements OnInit {
   }
 
   getIdDocumento(): void {
-    debugger;
     this.vidDocumento = this.data.codigo;
     this.viewDocumento(this.vidDocumento);
     this.viewAnexos(this.vidDocumento);
@@ -69,7 +68,6 @@ export class ViewDocumentoComponent implements OnInit {
   viewAnexos(vidDocumento: any){
     this.anexoService.findByDocumento(vidDocumento).subscribe({
       next: (response:any)=> {
-        debugger;
         this.anexos = response.data;
       }, error: (err) => {
         Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE EN CARGAR LOS ANEXOS', 'warning');
