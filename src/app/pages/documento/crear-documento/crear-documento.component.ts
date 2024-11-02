@@ -345,7 +345,7 @@ export class CrearDocumentoComponent implements OnInit {
                 this.cargando = false;
                 this.convertirArchivoABase64(this.selectedFiles.item(0));
                 // debugger;
-                // this.resumen= resp[2];
+                this.resumen= resp[2];
               } , error: (err: any) => {
                 this.cargando = false;
                 Swal.fire('Lo sentimos', 'Se presento un inconveniente al convertir Word a PDF', 'info');
