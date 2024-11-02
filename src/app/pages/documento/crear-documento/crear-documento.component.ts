@@ -35,7 +35,7 @@ export class CrearDocumentoComponent implements OnInit {
   url_pdf = '';
   mostrarFirma : boolean = false;
   documentoar : DocumentoArchivoAnexo = new DocumentoArchivoAnexo();
-
+  resumen:String="";
   documentoWordTempl : any;
 
   // =======================================================================================================
@@ -308,6 +308,7 @@ export class CrearDocumentoComponent implements OnInit {
   }
 
   selectArchivoPrincipal(event: any): void {
+    this.resumen="";
     this.selectedFiles = null;
     const fileTemp = event.target.files[0];
     const fileType = fileTemp.type;
@@ -343,6 +344,8 @@ export class CrearDocumentoComponent implements OnInit {
                 this.url_pdf = this.selectedFiles[0].name;
                 this.cargando = false;
                 this.convertirArchivoABase64(this.selectedFiles.item(0));
+                // debugger;
+                // this.resumen= resp[2];
               } , error: (err: any) => {
                 this.cargando = false;
                 Swal.fire('Lo sentimos', 'Se presento un inconveniente al convertir Word a PDF', 'info');
