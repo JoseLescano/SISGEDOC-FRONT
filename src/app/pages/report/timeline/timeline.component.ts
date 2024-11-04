@@ -25,6 +25,21 @@ export class TimelineComponent implements OnInit {
     //this.asignarEstilosAleatorios();
   }
 
+  generatedNumbers: string[] = [];
+
+  generatePhoneNumber(): string {
+    // Genera los últimos 8 dígitos aleatorios y agrega un '9' al inicio
+    const phoneNumber = '9' + Math.floor(Math.random() * 100000000).toString().padStart(8, '0');
+    return phoneNumber;
+  }
+
+  generateMultiplePhoneNumbers(count: number): void {
+    this.generatedNumbers = [];
+    for (let i = 0; i < count; i++) {
+      this.generatedNumbers.push(this.generatePhoneNumber());
+    }
+  }
+
   viewDecretos(): void {
     this.documentoService.findDecretoGraficaByDocumento(this.idDocumento).subscribe((response: any) => {
       this.decretos = response.map(decreto => {

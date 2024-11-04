@@ -78,6 +78,7 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
   countPendientes:number=0;
   countFirmar:number=0;
   countArchivados:number=0;
+  countRemitidos: number= 0;
 
   constructor(private documentoService: DocumentoService,
     public dialog: MatDialog,
@@ -257,7 +258,18 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
             onClick: (event, elements) => {
               if (elements.length > 0) {
                 const index = elements[0].index;
-                this.countPendientes = valores[index];
+                let idSeleccionado = ids[index];
+                this.documentoService.countStadisticForSuperADM(idSeleccionado).subscribe(
+                  {
+                    next : (response:any)=> {
+                      debugger;
+                      this.countPendientes = response.PENDIENTES;
+                      this.countArchivados = response.ARCHIVADOS;
+                      this.countFirmar = response.PARA_FIRMA;
+                      this.countRemitidos = response.REMITIDOS;
+                    }
+                  }
+                );
               }
             },
             plugins: {

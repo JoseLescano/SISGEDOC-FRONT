@@ -392,4 +392,10 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/findBySuperAdm`, formData);
   }
 
+  countStadisticForSuperADM(codigoInterno:any){
+    let formData:FormData = new FormData();
+    formData.append('codigoInterno', codigoInterno);
+    return this.http.post(`${environment.HOST}documentos/countStadisticForSuperADM`, formData);
+  }
+
 }

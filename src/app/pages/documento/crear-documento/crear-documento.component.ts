@@ -23,6 +23,8 @@ export class CrearDocumentoComponent implements OnInit {
 
   form:FormGroup;
   cargando: boolean = false;
+  cargandoEncriptado: boolean = false;
+  cargandoPlantillaWord : boolean = false;
   firmantes:Organizacion[];
   organizacionesDestino:Organizacion[];
   copiasInformativas:Organizacion[];
@@ -109,6 +111,47 @@ export class CrearDocumentoComponent implements OnInit {
   }
 
 
+  ngAfterViewInit() {
+    // alert();
+
+    const videos: NodeListOf<HTMLVideoElement> = document.querySelectorAll('video');
+
+videos.forEach((video, index) => {
+  video.muted = true; // Asegura que esté silenciado
+  if (index === 0) {
+    video.playbackRate = 2;
+
+  }else{
+    video.playbackRate = 1;
+  }
+
+  video.play().catch(error => {
+    console.log('Autoplay failed:', error);
+  });
+
+
+});
+    //  const video: HTMLVideoElement | null = document.querySelector('video');
+    //  if (video) {
+    //    video.muted = true; // Asegura que esté silenciado
+    //     video.playbackRate = 2;
+    //    video.play().catch(error => {
+    //      console.log('Autoplay failed:', error);
+    //    });
+    //  }
+   }
+  // mostrarEncriptado(){
+  //   const video: HTMLVideoElement | null = document.querySelector('video');
+  //   if (video) {
+  //     video.muted = true; // Asegura que esté silenciado
+  //     video.playbackRate = 2;
+  //     video.play().catch(error => {
+  //       console.log('Autoplay failed:', error);
+  //     });
+  //   }
+  // }
+
+
   operate(){
 
     if(this.form.valid && this.selectedFiles != null){
@@ -142,6 +185,7 @@ export class CrearDocumentoComponent implements OnInit {
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
       this.documentoar.anexos = this.uploadedFiles;
       if (this.documentoar.organizacionOrigen== sessionStorage.getItem(environment.codigoOrganizacion)){
+
         if (!this.firmado){
           Swal.fire({
             title: "¿ESTÁS SEGURO?",
@@ -151,10 +195,13 @@ export class CrearDocumentoComponent implements OnInit {
             confirmButtonText: "SÍ, DESEO CONTINUAR"
           }).then((result) => {
             if (result.isConfirmed) {
+              this.cargandoEncriptado=true;
               this.documentoService.crearDocumento(this.documentoar, this.nameDocuentoFirmado,
                 this.firmado,  this.uploadedFiles ).subscribe(
                 {
                   next: (response:any)=> {
+
+                    this.cargandoEncriptado=false;
                     if (response.httpStatus=='CREATED'){
                       this.cargando = false;
                       this.initForm();
@@ -170,12 +217,15 @@ export class CrearDocumentoComponent implements OnInit {
             }
           });
         }else {
+          this.cargandoEncriptado=true;
           this.documentoService.crearDocumento(this.documentoar, this.nameDocuentoFirmado,
             this.firmado,  this.uploadedFiles ).subscribe(
             {
               next: (response:any)=> {
+                this.cargandoEncriptado=false;
                 if (response.httpStatus=='CREATED'){
                   this.cargando = false;
+
                   this.initForm();
                   Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
                 }
@@ -326,12 +376,13 @@ export class CrearDocumentoComponent implements OnInit {
           if (this.selectedFiles[0].type == 'application/pdf') {
             this.convertirArchivoABase64(this.selectedFiles.item(0));
           }else {
+            this.cargandoPlantillaWord = true;
             this.documentoWordTempl = this.selectedFiles.item(0); // Guardo el documento word temp
             this.documentoService
             .convertFileToPDF(this.selectedFiles.item(0))
             .subscribe( {
               next: (resp: any) => {
-                this.cargando = true;
+
                 this.nameDocuentoFirmado = resp[1];
                 let byteArray = new Uint8Array(atob(resp[0]).split('').map((char) => char.charCodeAt(0)));
                 let file = new Blob([byteArray], { type: 'application/pdf' });
@@ -342,12 +393,12 @@ export class CrearDocumentoComponent implements OnInit {
                 list.items.add(rf_file);
                 this.selectedFiles = list.files;
                 this.url_pdf = this.selectedFiles[0].name;
-                this.cargando = false;
+                this.cargandoPlantillaWord = false;
                 this.convertirArchivoABase64(this.selectedFiles.item(0));
                 // debugger;
                 this.resumen= resp[2];
               } , error: (err: any) => {
-                this.cargando = false;
+                this.cargandoPlantillaWord = false;
                 Swal.fire('Lo sentimos', 'Se presento un inconveniente al convertir Word a PDF', 'info');
               }
             });
