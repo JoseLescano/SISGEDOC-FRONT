@@ -17,6 +17,8 @@
       </div>
     </div>
     <div class="descr">{{(item.observacion=='' || item.observacion== null)? 'SIN OBSERVACIONES': item.observacion | uppercase}}</div>
-    <div class="descr">Fecha de decreto: {{item.fechaDecreto | date : 'dd MMM yyyy, h:mm:ss a'}} <strong style="font-weight: bold;">#{{generatePhoneNumber()}}</strong> </div>
+    <div class="descr">Fecha de decreto: {{item.fechaDecreto | date : 'dd MMM yyyy, h:mm:ss a'}}
+      <!-- <strong style="font-weight: bold;">#{{generatePhoneNumber()}}</strong>  -->
+    </div>
   </li>
 </ul>

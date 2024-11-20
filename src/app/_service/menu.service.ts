@@ -17,12 +17,9 @@ export class MenuService extends GenericService<Menu> {
   }
 
   getMenuByRol(rol:any){
-    let token = sessionStorage.getItem(environment.TOKEN_NAME);
-    return this.http.get<Menu[]>(`${environment.HOST}menus/getMenuByRol/${rol}`, {
-      headers: new HttpHeaders()
-            .set('Authorization', `Bearer ${token}`)
-            .set('Content-Type', 'application/json'),
-    });
+    let formData: FormData = new FormData();
+    formData.append('codigoOrganizacion', sessionStorage.getItem(environment.codigoOrganizacion));
+    return this.http.post<Menu[]>(`${environment.HOST}menus/getMenuByRol/${rol}`, formData);
   }
 
   getMenuChange(){

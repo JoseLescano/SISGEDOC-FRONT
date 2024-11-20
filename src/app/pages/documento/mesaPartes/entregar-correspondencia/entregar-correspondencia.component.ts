@@ -94,10 +94,6 @@ export class EntregarCorrespondenciaComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.codigo + 1}`;
   }
 
-  agregar(){
-    // this.selection.selected
-  }
-
   createTable(correspondencia: Correspondencia[]){
     this.dataSource = new MatTableDataSource(correspondencia);
   }

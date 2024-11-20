@@ -33,12 +33,20 @@
                 </mat-form-field>
             </div>
             <div class="col-4">
-                <ng-select placeholder="ROL" [virtualScroll]=true class="example-full-width" required [(ngModel)]="rolSeleccionado" >
-                    <mat-option>SELECCIONE</mat-option>
-                    <ng-option *ngFor="let r of roles" [value]="r" >
-                        {{r.codigo == "002"? 'JEFE ACCIDENTAL/TEMPORAL': r.codigo == "004"? 'ADMINISTRADOR': r.nombre }}
-                    </ng-option>
-                </ng-select>
+
+              <ng-select
+              placeholder="ROL"
+              [virtualScroll]="true"
+              class="example-full-width"
+              required
+              [(ngModel)]="rolSeleccionado"
+              [compareWith]="compareRoles">
+
+              <option value="">SELECCIONE</option>
+              <ng-option *ngFor="let r of roles" [value]="r">
+                {{ r.codigo === "002" ? 'JEFE ACCIDENTAL/TEMPORAL' : r.codigo === "004" ? 'ADMINISTRADOR' : r.nombre }}
+              </ng-option>
+            </ng-select>
             </div>
         </div>
         <div class="row">
@@ -82,9 +90,9 @@
                 <div class="example-button-row">
                     <div class="example-flex-container">
                       <div class="example-button-container">
-                        <!-- <button mat-mini-fab color="primary" class="mr-2" (click)="seleccionarUsuario(row)" >
+                        <button mat-mini-fab color="primary" (click)="seleccionarUsuario(row)" >
                           <i class="fas fa-edit"></i>
-                        </button> -->
+                       </button>
                         <button mat-mini-fab color="warn" (click)="eliminar(row.codigo)" >
                           <i class="fas fa-trash"></i>
                        </button>

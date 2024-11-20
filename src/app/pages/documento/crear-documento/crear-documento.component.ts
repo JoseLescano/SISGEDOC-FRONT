@@ -23,7 +23,7 @@ export class CrearDocumentoComponent implements OnInit {
 
   form:FormGroup;
   cargando: boolean = false;
-  cargandoEncriptado: boolean = false;
+  // cargandoEncriptado: boolean = false;
   cargandoPlantillaWord : boolean = false;
   firmantes:Organizacion[];
   organizacionesDestino:Organizacion[];
@@ -110,48 +110,6 @@ export class CrearDocumentoComponent implements OnInit {
     this.form.get('indicativo').setValue(organizacion.indicativo);
   }
 
-
-  ngAfterViewInit() {
-    // alert();
-
-    const videos: NodeListOf<HTMLVideoElement> = document.querySelectorAll('video');
-
-videos.forEach((video, index) => {
-  video.muted = true; // Asegura que esté silenciado
-  if (index === 0) {
-    video.playbackRate = 2;
-
-  }else{
-    video.playbackRate = 1;
-  }
-
-  video.play().catch(error => {
-    console.log('Autoplay failed:', error);
-  });
-
-
-});
-    //  const video: HTMLVideoElement | null = document.querySelector('video');
-    //  if (video) {
-    //    video.muted = true; // Asegura que esté silenciado
-    //     video.playbackRate = 2;
-    //    video.play().catch(error => {
-    //      console.log('Autoplay failed:', error);
-    //    });
-    //  }
-   }
-  // mostrarEncriptado(){
-  //   const video: HTMLVideoElement | null = document.querySelector('video');
-  //   if (video) {
-  //     video.muted = true; // Asegura que esté silenciado
-  //     video.playbackRate = 2;
-  //     video.play().catch(error => {
-  //       console.log('Autoplay failed:', error);
-  //     });
-  //   }
-  // }
-
-
   operate(){
 
     if(this.form.valid && this.selectedFiles != null){
@@ -195,13 +153,13 @@ videos.forEach((video, index) => {
             confirmButtonText: "SÍ, DESEO CONTINUAR"
           }).then((result) => {
             if (result.isConfirmed) {
-              this.cargandoEncriptado=true;
+              // this.cargandoEncriptado=true;
               this.documentoService.crearDocumento(this.documentoar, this.nameDocuentoFirmado,
                 this.firmado,  this.uploadedFiles ).subscribe(
                 {
                   next: (response:any)=> {
 
-                    this.cargandoEncriptado=false;
+                    // this.cargandoEncriptado=false;
                     if (response.httpStatus=='CREATED'){
                       this.cargando = false;
                       this.initForm();
@@ -217,12 +175,12 @@ videos.forEach((video, index) => {
             }
           });
         }else {
-          this.cargandoEncriptado=true;
+          // this.cargandoEncriptado=true;
           this.documentoService.crearDocumento(this.documentoar, this.nameDocuentoFirmado,
             this.firmado,  this.uploadedFiles ).subscribe(
             {
               next: (response:any)=> {
-                this.cargandoEncriptado=false;
+                // this.cargandoEncriptado=false;
                 if (response.httpStatus=='CREATED'){
                   this.cargando = false;
 
@@ -396,7 +354,7 @@ videos.forEach((video, index) => {
                 this.cargandoPlantillaWord = false;
                 this.convertirArchivoABase64(this.selectedFiles.item(0));
                 // debugger;
-                this.resumen= resp[2];
+                //this.resumen= resp[2];
               } , error: (err: any) => {
                 this.cargandoPlantillaWord = false;
                 Swal.fire('Lo sentimos', 'Se presento un inconveniente al convertir Word a PDF', 'info');

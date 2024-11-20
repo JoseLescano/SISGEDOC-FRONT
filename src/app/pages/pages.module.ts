@@ -59,6 +59,7 @@ import { ReportCorrespondenciaComponent } from './report/report-correspondencia/
 import { AllUnidadesComponent } from './organizacion/all-unidades/all-unidades.component';
 import { AdmDocumentoComponent } from './documento/adm-documento/adm-documento.component';
 import { PersonaExternaComponent } from './persona-externa/persona-externa.component';
+import { ListPendientesComponent } from './facilita/list-pendientes/list-pendientes.component';
 
 @NgModule({
   imports: [
@@ -124,7 +125,8 @@ import { PersonaExternaComponent } from './persona-externa/persona-externa.compo
     ReportCorrespondenciaComponent,
     AllUnidadesComponent,
     AdmDocumentoComponent,
-    PersonaExternaComponent
+    PersonaExternaComponent,
+    ListPendientesComponent
   ],
    exports:[
 

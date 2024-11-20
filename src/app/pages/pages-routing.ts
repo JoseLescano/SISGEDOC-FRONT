@@ -42,6 +42,7 @@ import { UpdateDevolverComponent } from './documento/devolver/update-devolver/up
 import { AllUnidadesComponent } from './organizacion/all-unidades/all-unidades.component';
 import { AdmDocumentoComponent } from './documento/adm-documento/adm-documento.component';
 import { PersonaExternaComponent } from './persona-externa/persona-externa.component';
+import { ListPendientesComponent } from './facilita/list-pendientes/list-pendientes.component';
 
 const routes: Routes = [
 
@@ -88,6 +89,7 @@ const routes: Routes = [
   { path: 'documentos-devueltos', component: ListDevolverComponent  },
   { path: 'persExterno', component: PersonaExternaComponent  },
   { path: 'update-devueltos/:codigoDocumento/:idDecreto', component: UpdateDevolverComponent  },
+  { path: 'list-facilita', component: ListPendientesComponent  },
 ];
 
 

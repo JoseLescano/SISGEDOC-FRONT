@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -45,7 +45,8 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
     @Inject(MAT_DIALOG_DATA) private data: any,
     private personaService: PersonaService,
     private rolService: RoleService,
-    private organizacionService: OrganizacionService
+    private organizacionService: OrganizacionService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -100,7 +101,7 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
   registrarPerfil(){
     if (this.validar()){
       this.perfilService.registrarPerfil(this.organizacionSeleccionada.codigoInterno, this.persona.usuario_CHASQUI,
-        this.puesto, this.rolSeleccionado.codigo).subscribe((response:any)=> {
+        this.puesto, this.rolSeleccionado).subscribe((response:any)=> {
           if (response.data==0){
             Swal.fire('OPERACION REALIZADA', response.message, 'success');
             this.perfilService.findByOrganizacion(this.organizacionSeleccionada.codigoInterno).subscribe((response:any)=>{
@@ -129,11 +130,19 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
     }
   }
 
-  seleccionarUsuario(perfilSeleccionado:Perfil){
+  seleccionarUsuario(perfilSeleccionado: any) {
     this.puesto = perfilSeleccionado.nombre;
-    this.rolSeleccionado=perfilSeleccionado.rol;
+    this.rolSeleccionado = this.roles.find(role => role.codigo === perfilSeleccionado.rol.codigo); // Buscar rol específico
     this.persona.usuario_CHASQUI = perfilSeleccionado.usuario.usuario_CHASQUI;
-    this.organizacionSeleccionada.codigoInterno=perfilSeleccionado.organizacion.codigoInterno;
+    this.organizacionSeleccionada.codigoInterno = perfilSeleccionado.organizacion.codigoInterno;
+
+    this.cdr.detectChanges(); // Forzar detección de cambios
+
+    console.log(perfilSeleccionado);
+  }
+
+  compareRoles(role1: any, role2: any) {
+    return role1 && role2 ? role1.codigo === role2.codigo : role1 === role2;
   }
 
   eliminar(codigo:any){

@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { OrganizacionDiagram } from 'src/app/_DTO/OrganizacionDiagram';
+import { OrganizacionService } from 'src/app/_service/organizacion.service';
 
 @Component({
   selector: 'app-all-unidades',
@@ -19,15 +20,20 @@ export class AllUnidadesComponent implements OnInit {
     {'id': 4, 'text':'CORREO OLAYA'},
   ];
 
+  itemSeleccionado: number= 0;
+
   displayedColumns: string[] = ['#', 'COD.INTERNO', 'ACRONIMO', 'NOMBRE-COMPLETO', 'ACCIONES'];
   dataSource: MatTableDataSource<OrganizacionDiagram>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() { }
+  constructor(
+    private organizacionService: OrganizacionService
+  ) { }
 
   ngOnInit(): void {
+
   }
 
   ngAfterViewInit() {
@@ -38,16 +44,26 @@ export class AllUnidadesComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
   }
 
   createTable(organizacion: OrganizacionDiagram[]){
     this.dataSource = new MatTableDataSource(organizacion);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+  }
+
+  searchOrganizacion(){
+    this.dataSource = null;
+    if(this.itemSeleccionado ===4){
+      this.organizacionService.getWithCodigoCopere().subscribe(
+        {
+          next: (response: any)=> {
+            debugger
+            this.createTable(response.data);
+          }
+        }
+      )
+    }
   }
 
 

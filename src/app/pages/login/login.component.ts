@@ -1,20 +1,13 @@
 import { ReCaptchaV3Service } from 'ng-recaptcha';
-
-
 import { JwtHelperService } from '@auth0/angular-jwt';
 import swal from 'sweetalert2'
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Perfil } from 'src/app/_model/perfil';
 import { environment } from 'src/environments/environment';
 import { LoginService, ILoginRequest } from 'src/app/_service/login.service';
 import Swal from 'sweetalert2';
-import { PerfilService } from 'src/app/_service/perfil.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalMfaComponent } from './modal-mfa/modal-mfa.component';
-
-import { PersonaService } from 'src/app/_service/persona.service';
 
 
 @Component({
@@ -103,7 +96,6 @@ export class LoginComponent{
     });
     dialogRef.componentInstance.cerrarDialogo.subscribe(() => {
       dialogRef.close();
-  //    this.onSwal();
     });
   }
 
@@ -112,10 +104,7 @@ export class LoginComponent{
     const token = sessionStorage.getItem(environment.TOKEN_NAME);
     const decodedToken = helper.decodeToken(token);
     this.username = decodedToken.sub;
-    // this.userService.get(this.username).subscribe((response) => {
-    //   this.fullname = response.fullname;
-      Swal.fire('Bienvenido al SISGEDO','', 'success');
-    // });
+    Swal.fire('Bienvenido al SISGEDO','', 'success');
   }
 
   resetForm() {
