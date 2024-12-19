@@ -60,6 +60,7 @@ import { AllUnidadesComponent } from './organizacion/all-unidades/all-unidades.c
 import { AdmDocumentoComponent } from './documento/adm-documento/adm-documento.component';
 import { PersonaExternaComponent } from './persona-externa/persona-externa.component';
 import { ListPendientesComponent } from './facilita/list-pendientes/list-pendientes.component';
+import { SafeUrlPipe } from './safe-url.pipe';
 
 @NgModule({
   imports: [
@@ -72,6 +73,7 @@ import { ListPendientesComponent } from './facilita/list-pendientes/list-pendien
     NgSelectModule,
   ],
   declarations: [
+    SafeUrlPipe,
     PendienteComponent,
     ViewComponent,
     AccionesComponent,

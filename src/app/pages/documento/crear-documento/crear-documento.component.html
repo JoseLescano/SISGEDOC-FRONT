@@ -1,4 +1,3 @@
-<!-- <div class="container loader" *ngIf="cargando"></div> -->
 <mat-card class="m-2" style="border-radius: 10px; " >
   <mat-card-header class="title-form">
     <mat-card-title >CREAR NUEVO DOCUMENTO</mat-card-title>
@@ -7,41 +6,54 @@
         <form class="row g-3" [formGroup]="form" (ngSubmit)="operate()" novalidate >
             <div class="row">
               <div class="col-sm-12 col-lg-2">
-                <mat-card>
-                  <mat-card-header class="title-form">
-                    <mat-card-title>
-                      DOCUMENTO A REALIZAR
-                    </mat-card-title>
-                  </mat-card-header>
-                  <mat-card-content>
-                    <div class="row mt-3">
-                      <ng-select  [virtualScroll]=true formControlName="tipoDocumento"
-                        (change)="findDestinatarios()" notFoundText="Sin elementos encontrados" >
-                        <ng-option *ngFor="let c of clases" [value]="c.codigo" >
-                          {{c.nombre}}
-                        </ng-option>
-                      </ng-select>
-                      <div *ngIf="form.get('tipoDocumento').errors && form.get('tipoDocumento').dirty" class="mt-1" >
-                        <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('tipoDocumento').hasError('required')">*Campo requerido</small>
+                <div class="row">
+                  <mat-card>
+                    <mat-card-header class="title-form">
+                      <mat-card-title>
+                        DOCUMENTO A REALIZAR
+                      </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                      <div class="row mt-3">
+                        <ng-select  [virtualScroll]=true formControlName="tipoDocumento"
+                          (change)="findDestinatarios()" notFoundText="Sin elementos encontrados" >
+                          <ng-option *ngFor="let c of clases" [value]="c.codigo" >
+                            {{c.nombre}}
+                          </ng-option>
+                        </ng-select>
+                        <div *ngIf="form.get('tipoDocumento').errors && form.get('tipoDocumento').dirty" class="mt-1" >
+                          <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('tipoDocumento').hasError('required')">*Campo requerido</small>
+                        </div>
                       </div>
-                    </div>
-                    <div class="row">
-                        <mat-form-field appearance="fill" class="example-full-width">
-                            <mat-label>NÚMERO</mat-label>
-                            <input matInput type="number" formControlName="nroCorrelativo"   >
-                          </mat-form-field>
-                    </div>
-                    <div class="row">
-                      <div class="col">
-                        <button mat-flat-button color="primary" style="width: 100%; height: 50px; border-radius: 10px;"
-                        (click)="generarPlantilla()" type="button" >
-                            <!-- <i class="far fa-file-word" style="font-size: 30px;"></i>  -->
-                            GENERAR WORD
-                        </button>
-                    </div>
-                    </div>
-                  </mat-card-content>
-                </mat-card>
+                      <div class="row">
+                          <mat-form-field appearance="fill" class="example-full-width">
+                              <mat-label>NÚMERO</mat-label>
+                              <input matInput type="number" formControlName="nroCorrelativo"   >
+                            </mat-form-field>
+                      </div>
+                      <!-- <div class="row">
+                        <ng-select  [virtualScroll]=true formControlName="prioridad" placeholder="PRIORIDAD DEL DOC."
+                          notFoundText="Sin elementos encontrados" >
+                          <ng-option *ngFor="let item of prioridades" [value]="item.codigo" >
+                            {{item.nombre}}
+                          </ng-option>
+                        </ng-select>
+                        <div *ngIf="form.get('prioridad').errors && form.get('prioridad').dirty" class="mt-1" >
+                          <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('prioridad').hasError('required')">*Campo requerido</small>
+                        </div>
+                      </div> -->
+                      <div class="row">
+                        <div class="col">
+                          <button mat-flat-button color="primary" style="width: 100%; height: 50px; border-radius: 10px;"
+                          (click)="generarPlantilla()" type="button" >
+                              <!-- <i class="far fa-file-word" style="font-size: 30px;"></i>  -->
+                              GENERAR WORD
+                          </button>
+                      </div>
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
+                </div>
               </div>
               <div class="col-sm-12  col-lg-10">
                 <mat-tab-group>
@@ -102,16 +114,6 @@
                           </div>
                         </div>
 
-                        <!-- <div class="row mt-2" *ngIf="resumen!=''">
-                          <div class="col-md-12">
-                              <mat-form-field appearance="fill" class="example-full-width">
-                                  <mat-label>Resumen de documento</mat-label>
-                                  <textarea matInput formControlName="asunto" rows="5"></textarea>
-
-                              </mat-form-field>
-                          </div>
-                        </div> -->
-
                         <div class="row">
 
                           <div class="col"  >
@@ -148,8 +150,7 @@
 
                         <div class="row d-flex flex-row bd-highlight mt-3">
                           <div class="col">
-                            <!-- <button class="btn btn-lg btn-outline-success mr-2" type="submit" [disabled]="form.invalid">GUARDAR DOCUMENTO</button> -->
-                            <button mat-flat-button type="submit" class="btn-opcion" color="primary" [disabled]="form.invalid || selectedFiles== null">GUARDAR DOCUMENTO</button>
+                            <button mat-flat-button type="submit" class="btn-opcion" color="primary" [disabled]="form.invalid && selectedFiles=== null">GUARDAR DOCUMENTO</button>
                             <button mat-flat-button color="warn" type="button" class="btn-opcion" (click)="limpiar()" >CANCELAR</button>
                           </div>
                         </div>
@@ -177,19 +178,10 @@
                                       <span (click)="removeFile(file)">&#215;</span>
                                   </div>
                               </div>
-                              <!-- <div class="total-size">
-                                <h3>Tamaño total: {{ getFileSize(totalFileSize) }}</h3>
-                              </div> -->
                           </div>
                         </div>
                       </div>
                       <div>
-                        <iframe
-                          src="https://s3.us-west-2.amazonaws.com/solicita.gob.pe/bzaa8kut2f8z366n8h6qgfrcmtlj?response-content-disposition=inline%3B%20filename%3D%22PRUEBAS.pdf%22%3B%20filename%2A%3DUTF-8%27%27PRUEBAS.pdf&response-content-type=application%2Fpdf&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA4TCYZV3ZWNKHTWNU%2F20241111%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20241111T233558Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=3f5388c67500338d83a99cca42d84e39c6b689665a689a1a97118765bbdebce0"
-                          width="100%"
-                          height="600px"
-                          style="border: none;"
-                        ></iframe>
                       </div>
                   </mat-tab>
                 </mat-tab-group>

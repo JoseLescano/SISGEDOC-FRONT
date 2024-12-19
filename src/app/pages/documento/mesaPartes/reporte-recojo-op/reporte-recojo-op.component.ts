@@ -16,7 +16,7 @@ import Swal from 'sweetalert2';
 export class ReporteRecojoOPComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['Nro', 'Asunto','Documento', 'Origen', 'Destino', 'Fecha Registro'];
-  dataSource: MatTableDataSource<Correspondencia>;
+  dataSource: MatTableDataSource<Correspondencia> = new MatTableDataSource<any>();;
   cargando: boolean;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;

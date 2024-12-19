@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
 import { ModalFirmaPeruComponent } from '../modal-firma-peru/modal-firma-peru.component';
 import { finalize, of, switchMap } from 'rxjs';
 import { FirmaPeruService } from 'src/app/_service/firma-peru.service';
+import { PrioridadService } from 'src/app/_service/prioridad.service';
 
 @Component({
   selector: 'app-crear-documento',
@@ -39,6 +40,7 @@ export class CrearDocumentoComponent implements OnInit {
   documentoar : DocumentoArchivoAnexo = new DocumentoArchivoAnexo();
   resumen:String="";
   documentoWordTempl : any;
+  prioridades : any = [];
 
   // =======================================================================================================
 
@@ -48,7 +50,8 @@ export class CrearDocumentoComponent implements OnInit {
     private documentoService: DocumentoService,
     private correlativoService: CorrelativoService,
     public dialog: MatDialog,
-    private firmaPeruService: FirmaPeruService
+    private firmaPeruService: FirmaPeruService,
+    private prioridadService: PrioridadService
   ) { }
 
   ngOnInit(): void {
@@ -64,11 +67,12 @@ export class CrearDocumentoComponent implements OnInit {
     this.form = new FormGroup({
       'firmante': new FormControl('', [Validators.required]),
       'tipoDocumento': new FormControl('', [Validators.required]),
-      'nroCorrelativo': new FormControl(null, [Validators.required, Validators.min(1)]),
+      'nroCorrelativo': new FormControl(null, [Validators.required]),
       'indicativo': new FormControl('', [Validators.required]),
       'destinatarios': new FormControl(new Array<String>,[Validators.required]),
       'copiaInformativa': new FormControl(new Array<String>),
-      'asunto': new FormControl('', [Validators.required, Validators.minLength(10)])
+      'asunto': new FormControl('', [Validators.required, Validators.minLength(10)]),
+      // 'prioridad': new FormControl('', [Validators.required])
     });
 
     this.form.controls['nroCorrelativo'].disable();
@@ -78,6 +82,7 @@ export class CrearDocumentoComponent implements OnInit {
     });
 
     this.claseService.findForCrearDocumento().subscribe((response:any)=> this.clases = response.data );
+    this.prioridadService.listar().subscribe((response: any)=> this.prioridades = response);
     this.cargando = false;
   }
 
@@ -112,6 +117,7 @@ export class CrearDocumentoComponent implements OnInit {
 
   operate(){
 
+    let nroCorrelativo = this.form.get('nroCorrelativo').value;
     if(this.form.valid && this.selectedFiles != null){
       this.cargando = true;
       // Obtén el archivo principal
@@ -142,6 +148,7 @@ export class CrearDocumentoComponent implements OnInit {
       this.documentoar.asunto= this.form.value['asunto'];
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
       this.documentoar.anexos = this.uploadedFiles;
+      // this.documentoar.prioridad = this.form.value['prioridad'];
       if (this.documentoar.organizacionOrigen== sessionStorage.getItem(environment.codigoOrganizacion)){
 
         if (!this.firmado){
@@ -175,12 +182,10 @@ export class CrearDocumentoComponent implements OnInit {
             }
           });
         }else {
-          // this.cargandoEncriptado=true;
           this.documentoService.crearDocumento(this.documentoar, this.nameDocuentoFirmado,
             this.firmado,  this.uploadedFiles ).subscribe(
             {
               next: (response:any)=> {
-                // this.cargandoEncriptado=false;
                 if (response.httpStatus=='CREATED'){
                   this.cargando = false;
 
@@ -214,9 +219,6 @@ export class CrearDocumentoComponent implements OnInit {
       }
      } else {
       this.cargando = false;
-      // if (this.firmado == false)
-      //   Swal.fire('Lo sentimos', `Debe de firmar el documento digitalmente para poder continuar!`, 'info');
-      // else
       Swal.fire('Lo sentimos', `Se presento un inconveniente!`, 'warning');
     }
 

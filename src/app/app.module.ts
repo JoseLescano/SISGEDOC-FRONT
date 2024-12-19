@@ -24,7 +24,6 @@ import { CdkMenuModule } from '@angular/cdk/menu';
 import { MatInputModule } from '@angular/material/input';
 import { ErrorInterceptor } from './auth/guards/ErrorInterceptor';
 
-
 export function tokenGetter() {
   return sessionStorage.getItem("access_token");
 }

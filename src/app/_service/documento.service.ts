@@ -180,7 +180,7 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('clase', documento.clase);
     formData.append('nroOrden', documento.nroOrden);
     formData.append('indicativo', documento.indicativo);
-    formData.append('prioridad', documento.prioridad);
+    // formData.append('prioridad', documento.prioridad);
     formData.append('asunto', documento.asunto);
     formData.append('destinos', documento.destinos);
     formData.append('copiasInformativas', documento.copiasInformativas);
@@ -192,7 +192,6 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('nameArchivoFirmado', nameDocuentoFirmado);
     formData.append('isFirmado', isFirmado);
     formData.append('codigoDocumentoPadre', documentoPadre);
-
 
     return this.http.post(`${environment.HOST}documentos/crearDocumento`, formData);
   }
@@ -273,6 +272,7 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('organizacionOrigen', documento.organizacionOrigen);
     formData.append('organizacionRemitente', organizacionRemitente);
     formData.append('word', word);
+    // formData.append('prioridad', documento.prioridad);
     return this.http.post(`${environment.HOST}documentos/remitirDocumentoForFirma`, formData);
   }
 

@@ -16,6 +16,9 @@ export class ErrorInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(catchError(err => {
+            if ([204].includes(err.status)){
+              this.error = 'SIN DATA';
+            }
             if ([401, 403,404].includes(err.status)) {
               if(err.status==403){
                 this.error = 'NO CUENTA CON LAS CREDENCIALES CORRESPONDENTES';

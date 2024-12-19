@@ -23,7 +23,7 @@ import { Router } from '@angular/router';
 export class EntregarCorrespondenciaComponent implements OnInit {
 
   displayedColumns: string[] = ['select', 'Nro', 'Asunto','Documento', 'Origen', 'Destino', 'Fecha Registro', 'Folio'];
-  dataSource: MatTableDataSource<Correspondencia>;
+  dataSource: MatTableDataSource<Correspondencia> = new MatTableDataSource<any>();
   cargando: boolean;
   remitentes:Organizacion[] = [];
   form:FormGroup;
@@ -57,18 +57,27 @@ export class EntregarCorrespondenciaComponent implements OnInit {
   buscarCorrespondencia(idOrganizacion: any){
     this.cargando = true;
     this.dataSource = new MatTableDataSource<Correspondencia>;
-    this.correspondenciaService.listEntregarByOP(idOrganizacion).subscribe((response:any)=> {
-      this.destino = idOrganizacion;
-      if (response != null){
-        this.cargando = false;
-        this.createTable(response.data);
-      } else {
-        this.cargando = false;
-        Swal.fire('SIN RESULTADOS', 'UNIDAD SIN CORRESPONDENCIA REGISTRADA', 'info');
+    this.correspondenciaService.listEntregarByOP(idOrganizacion).subscribe(
+      {
+        next : (response: any)=> {
+          debugger
+          if (response != null){
+            this.destino = idOrganizacion;
+            this.cargando = false;
+            this.createTable(response.data);
+          } else {
+            this.cargando = false;
+            Swal.fire('SIN RESULTADOS', 'UNIDAD SIN CORRESPONDENCIA REGISTRADA', 'info');
+          }
+        },
+        error: (err: any)=>{
+          debugger
+          this.cargando = false;
+          Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
+        }
       }
-    }, error => {
-      Swal.fire('Lo sentimos', 'Se presento un inconveniente en la busqueda', 'info');
-    });
+    )
+
   }
 
   isAllSelected() {

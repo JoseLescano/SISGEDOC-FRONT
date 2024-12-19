@@ -58,8 +58,10 @@ export class AllUnidadesComponent implements OnInit {
       this.organizacionService.getWithCodigoCopere().subscribe(
         {
           next: (response: any)=> {
-            debugger
             this.createTable(response.data);
+          },
+          error : (err: any)=> {
+            console.log('error => ' + err)
           }
         }
       )
