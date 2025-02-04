@@ -67,6 +67,7 @@ export class ViewRemitidosComponent implements OnInit {
     this.documentoService.findRemitidos(sessionStorage.getItem(environment.codigoOrganizacion), fi, ff).subscribe( {
       next : (data: any) => {
         this.createTable(data);
+        Swal.fire('AVISO', 'DOCUMENTOS ENCONTRADOS DE LOS ULTIMOS 30 DÍAS', 'info')
         this.cargando = false;
       }, error: (err : any)=> {
        this.cargando = false;

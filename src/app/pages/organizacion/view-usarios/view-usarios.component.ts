@@ -82,10 +82,6 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
   }
 
   createTable(Perfil: Perfil[]){
@@ -101,7 +97,7 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
   registrarPerfil(){
     if (this.validar()){
       this.perfilService.registrarPerfil(this.organizacionSeleccionada.codigoInterno, this.persona.usuario_CHASQUI,
-        this.puesto, this.rolSeleccionado).subscribe((response:any)=> {
+        this.puesto, this.rolSeleccionado.codigo).subscribe((response:any)=> {
           if (response.data==0){
             Swal.fire('OPERACION REALIZADA', response.message, 'success');
             this.perfilService.findByOrganizacion(this.organizacionSeleccionada.codigoInterno).subscribe((response:any)=>{

@@ -30,8 +30,9 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
   displayedBusqueda: string[] = ['Nro',  'Asunto', 'Documento', 'Origen', 'Destino', 'FechaDoc.', 'Acciones'];
 
   dataSource: MatTableDataSource<Documento> = new MatTableDataSource<Documento>();
-  dataSourceBusqueda: MatTableDataSource<any> = new MatTableDataSource<any>();
+  dataSourceBusqueda = new MatTableDataSource([]);
   campoIngresado: any;
+  organizacionArchivar: any;
 
   busquedaDocumentoByAdm: any;
 
@@ -52,8 +53,8 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
   CIPIngresado: any;
   observacionArchivado: any = '';
 
-  @ViewChild(MatPaginator, { static: false }) paginatorBusqueda!: MatPaginator;
-  @ViewChild(MatSort) sortBusqueda!: MatSort;
+  @ViewChild('paginatorBusqueda') paginatorBusqueda!: MatPaginator;
+  @ViewChild('sortBusqueda') sortBusqueda!: MatSort;
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -90,6 +91,17 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     //this.verNucleo();
+  }
+
+  getOrganizacion(event?: any){
+    this.organizacionService.findByCodigoInterno(this.campoIngresado).subscribe(
+      {
+        next: (response: any)=> {
+          debugger;
+          this.organizacionArchivar = response.data.nombreLargo;
+        }
+      }
+    );
   }
 
   buscarPersona(campo:any){
@@ -133,33 +145,33 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  cargarDocumentos(){
-    this.cargando = true;
-    this.documentoService.findByOrganizacionDestinoForSuperAdm(
-      this.campoIngresado,
-      environment.convertDateToStr(this.range.value['start']),
-      environment.convertDateToStr(this.range.value['end'])
-    )
-      .subscribe(
-        {
-          next : (data: Documento[]) => {
-            this.createTable(data);
-            this.cargando = false;
-
-          }, error: err => {
-            this.cargando = false;
-            Swal.fire('Lo sentimos', err, 'warning');
-          }
-        });
+  cargarDocumentos() {
+    if (this.range.value['start']!= null && this.range.value['end']!=null){
+      this.cargando = true;
+      this.documentoService.findByOrganizacionDestinoForSuperAdm(
+        this.campoIngresado,
+        environment.convertDateToStr(this.range.value['start']),
+        environment.convertDateToStr(this.range.value['end'])
+      ).subscribe(
+        (data: Documento[]) => {
+          this.createTable(data);
+          this.cargando = false;
+        },
+        (err) => {
+          this.cargando = false;
+          Swal.fire('Error', 'No se pudieron cargar los documentos', 'error');
+        }
+      );
+    } else {
+      Swal.fire('AVISO', 'DEBE DE INGRESAR RANGO DE FECHAS PARA LA BUSQUEDA', 'info');
+    }
   }
 
   ngAfterViewInit() {
-    setTimeout(() => {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-      this.dataSourceBusqueda.paginator = this.paginatorBusqueda;
-      this.dataSourceBusqueda.sort = this.sortBusqueda;
-    });
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.dataSourceBusqueda.paginator = this.paginatorBusqueda;
+    this.dataSourceBusqueda.sort = this.sortBusqueda;
   }
 
   applyFilter(event: Event) {
@@ -178,10 +190,8 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
 
   createTableBusqueda(documento: any[]) {
     this.dataSourceBusqueda.data = documento;
-    setTimeout(() => {
       this.dataSourceBusqueda.paginator = this.paginatorBusqueda;
       this.dataSourceBusqueda.sort = this.sortBusqueda;
-    });
   }
 
   guardarAchivoForSuperADM(){

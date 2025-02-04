@@ -21,18 +21,12 @@ const $ = go.GraphObject.make;
   templateUrl: './esquema.component.html',
   styleUrls: ['./esquema.component.css']
 })
-export class EsquemaComponent implements OnInit, AfterViewInit {
+export class EsquemaComponent implements OnInit {
 
   private diagram: go.Diagram | null = null;
   organizaciones:OrganizacionDiagram[];
-
-  displayedColumns: string[] = [ 'Acronimo', 'Nombre completo', 'Cargo', 'Acciones'];
-  dataSource: MatTableDataSource<OrganizacionDiagram>;
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-
   cargando: boolean;
+
 
   constructor(
     private organizacionService:OrganizacionService,
@@ -67,26 +61,7 @@ export class EsquemaComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
-    setTimeout(() => {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
-  }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-  }
-
-  createTable(organizacion: OrganizacionDiagram[]){
-    this.dataSource = new MatTableDataSource(organizacion);
-    setTimeout(() => {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
-  }
 
   eliminar(organizacion:any){
 
@@ -122,7 +97,7 @@ export class EsquemaComponent implements OnInit, AfterViewInit {
     this.organizacionService.findForDiagrama(sessionStorage.getItem(environment.codigoOrganizacion))
     .subscribe( {
       next: (resp:any) => {
-        this.createTable(resp);
+        // this.createTable(resp);
         _this.organizaciones = resp;
         this._window().createDiagramaOrganizacion(resp,
             function(stringOrganizationPadre:String, dataRespuesta:any,incallbackOut:any){

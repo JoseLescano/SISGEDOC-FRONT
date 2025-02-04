@@ -43,6 +43,7 @@ import { AllUnidadesComponent } from './organizacion/all-unidades/all-unidades.c
 import { AdmDocumentoComponent } from './documento/adm-documento/adm-documento.component';
 import { PersonaExternaComponent } from './persona-externa/persona-externa.component';
 import { ListPendientesComponent } from './facilita/list-pendientes/list-pendientes.component';
+import { SearchComponent } from './organizacion/search/search.component';
 
 const routes: Routes = [
 
@@ -90,6 +91,8 @@ const routes: Routes = [
   { path: 'persExterno', component: PersonaExternaComponent  },
   { path: 'update-devueltos/:codigoDocumento/:idDecreto', component: UpdateDevolverComponent  },
   { path: 'list-facilita', component: ListPendientesComponent  },
+
+  { path: 'viewPersonal', component: SearchComponent  },
 ];
 
 

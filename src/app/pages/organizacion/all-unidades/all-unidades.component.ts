@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { OrganizacionDiagram } from 'src/app/_DTO/OrganizacionDiagram';
 import { OrganizacionService } from 'src/app/_service/organizacion.service';
+import { PerfilService } from 'src/app/_service/perfil.service';
 
 @Component({
   selector: 'app-all-unidades',
@@ -14,7 +15,7 @@ import { OrganizacionService } from 'src/app/_service/organizacion.service';
 export class AllUnidadesComponent implements OnInit {
 
   tipoBusqueda:any = [
-    {'id': 1, 'text':'TODOS'},
+    {'id': 1, 'text':'CODIGO'},
     {'id': 2, 'text':'INTERNAS'},
     {'id': 3, 'text':'EXTERNAS'},
     {'id': 4, 'text':'CORREO OLAYA'},
@@ -29,7 +30,8 @@ export class AllUnidadesComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private organizacionService: OrganizacionService
+    private organizacionService: OrganizacionService,
+     private perfilService:PerfilService,
   ) { }
 
   ngOnInit(): void {
@@ -66,6 +68,16 @@ export class AllUnidadesComponent implements OnInit {
         }
       )
     }
+  }
+
+  viewPersonal(codigoOrganizacion: any){
+    this.perfilService.findByOrganizacion(codigoOrganizacion).subscribe(
+      {
+        next: (response:any)=> {
+          console.log(response)
+        }
+      }
+    )
   }
 
 

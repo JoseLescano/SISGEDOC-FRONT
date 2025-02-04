@@ -1,0 +1,67 @@
+<mat-card class="m-2" *ngIf="!cargando">
+  <mat-card-header class="title-form  d-flex justify-content-between" >
+    <mat-card-title >LISTA DE ORGANIZACION REGISTRADAS</mat-card-title>
+    <button mat-flat-button color="primary"  style="margin-right: 5px;" (click)="imprimirListaPersonal(0,true)"  >
+      <i class="fas fa-print"></i> IMPRIMIR
+    </button>
+  </mat-card-header>
+  <mat-card-content>
+    <table mat-table [dataSource]="dataSource" matSort >
+
+      <!-- <ng-container matColumnDef="CodigoInterno">
+        <th mat-header-cell mat-sort-header  *matHeaderCellDef> CodigoInterno </th>
+        <td mat-cell *matCellDef="let row"> {{row.codigoInterno}} </td>
+      </ng-container> -->
+
+      <ng-container matColumnDef="Acronimo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Asunto">Acronimo</th>
+        <td mat-cell *matCellDef="let row"> {{row.acronimo}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Nombre completo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre completo</th>
+        <td mat-cell *matCellDef="let row"> {{row.nombreLargo }} </td>
+      </ng-container>
+
+      <!-- <ng-container matColumnDef="Nivel">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Origen">Nivel</th>
+        <td mat-cell *matCellDef="let row"> {{row.nivel}} </td>
+      </ng-container> -->
+
+      <ng-container matColumnDef="Cargo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Cargo</th>
+        <td mat-cell *matCellDef="let row"> {{row.cargo}} </td>
+      </ng-container>
+
+      <!-- <ng-container matColumnDef="Indicativo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Indicativo</th>
+        <td mat-cell *matCellDef="let row"> {{row.indicativo}} </td>
+      </ng-container> -->
+
+      <ng-container matColumnDef="Acciones">
+        <th mat-header-cell *matHeaderCellDef > Acciones </th>
+        <td mat-cell *matCellDef="let row">
+          <div class="d-grid gap-2 mx-auto">
+              <!-- <button mat-flat-button  color="primary" class="mt-2"  (click)="openDialog(row.codigoInterno)" >
+                <i class="far fa-file-pdf" ></i> EDITAR
+              </button> -->
+              <button mat-flat-button  color="accent" class="m-2" (click)="imprimirListaPersonal(row.codigoInterno,false)">
+                <i class="fas fa-info-circle"></i> VER USUARIOS
+              </button>
+              <!-- <button mat-flat-button  color="warn" class="mb-2" (click)="eliminar(row)" >
+                <i class="fas fa-trash"></i> ELIMINAR
+             </button> -->
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">Sin datos obtenidos...</td>
+      </tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[10, 15, 25, 100]"  aria-label="Select page of users"></mat-paginator>
+  </mat-card-content>
+</mat-card>

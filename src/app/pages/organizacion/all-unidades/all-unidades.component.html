@@ -59,7 +59,10 @@
             <div class="example-button-row">
               <div class="example-flex-container">
                 <div class="example-button-container">
-                  <button mat-mini-fab color="primary" >
+                  <button mat-mini-fab color="primary" (click)="viewPersonal(row.codigoInterno)" >
+                    <i class="fas fa-users"></i>
+                  </button>
+                  <button mat-mini-fab color="accent" >
                     <i class="fas fa-exchange-alt"></i>
                   </button>
                   <button mat-mini-fab color="warn" >

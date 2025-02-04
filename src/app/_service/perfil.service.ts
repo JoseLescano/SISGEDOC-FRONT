@@ -59,12 +59,15 @@ export class PerfilService extends GenericService<Perfil> {
     return this.http.delete(`${environment.HOST}perfiles/eliminar/${codigo}`);
   }
 
-  // loginActiveDirectory(usuario: any, password: any){
-  //   let formData : FormData = new FormData();
-  //   formData.append('usuario', usuario);
-  //   formData.append('password', password);
-  //   return this.http.post(`${environment.HOST}usuarios`,  formData );
-  // }
+
+  listPersonal(codigoOrganizacion:any, todo:any){
+    let formData: FormData = new FormData();
+    formData.append('codigoOrganizacion', codigoOrganizacion);
+    formData.append('todo', todo);
+    return this.http.post(`${environment.HOST}perfiles/listPersonal`, formData, { responseType: 'blob' } );
+  }
+
+
 
 
 }

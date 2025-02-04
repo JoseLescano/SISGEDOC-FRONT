@@ -7,6 +7,20 @@
 }
 
 
+.mat-column-Nro{
+  width: 10px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.mat-column-Asunto {
+  padding-left: 16px;
+  padding-right: 16px;
+  font-size: 14px;
+  width: 40%;
+}
+
+
 .wrapper .form{
   border-radius: 5px;
   display: flex;

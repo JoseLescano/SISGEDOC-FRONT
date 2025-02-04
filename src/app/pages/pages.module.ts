@@ -61,6 +61,7 @@ import { AdmDocumentoComponent } from './documento/adm-documento/adm-documento.c
 import { PersonaExternaComponent } from './persona-externa/persona-externa.component';
 import { ListPendientesComponent } from './facilita/list-pendientes/list-pendientes.component';
 import { SafeUrlPipe } from './safe-url.pipe';
+import { SearchComponent } from './organizacion/search/search.component';
 
 @NgModule({
   imports: [
@@ -128,7 +129,8 @@ import { SafeUrlPipe } from './safe-url.pipe';
     AllUnidadesComponent,
     AdmDocumentoComponent,
     PersonaExternaComponent,
-    ListPendientesComponent
+    ListPendientesComponent,
+    SearchComponent
   ],
    exports:[
 

@@ -51,7 +51,9 @@ export class DocumentoService  extends GenericService<Documento> {
 
   viewPDF(vidDocumento: any, isAntiguo?:any){
     return this.http.get(`${environment.HOST}documentos/viewPDF/${vidDocumento}`,
-      {params: {respuestaAntigua: isAntiguo, codigoOrganizacion: sessionStorage.getItem(environment.codigoOrganizacion) }});
+      {
+        params: {respuestaAntigua: isAntiguo, codigoOrganizacion: sessionStorage.getItem(environment.codigoOrganizacion) }
+      });
   }
 
   verDocumentoRespuesta(codigoDocumentoPadre: any){

@@ -3,6 +3,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { switchMap } from 'rxjs';
 import { Perfil } from 'src/app/_model/perfil';
 import { Persona } from 'src/app/_model/persona';
 import { PerfilService } from 'src/app/_service/perfil.service';
@@ -107,13 +108,24 @@ export class DobleAutentificacionComponent implements OnInit, AfterViewInit {
   }
 
   eliminarPerfil(codigo:any){
-    this.cargando=true;
-    this.perfilService.eliminar(codigo).subscribe(data=> {
-      this.buscarPerfiles();
-      Swal.fire('SE ELIMINO PERFIL', `Se elimino perfil del usuario con éxito`, 'info');
-    });
-
-    this.cargando=false;
+    Swal.fire({
+          title: '¿Está seguro?',
+          text: "No podrás revertir esto!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sí, bórralo.'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.perfilService.eliminarPerfil(codigo).pipe(switchMap((response:any)=> {
+              return this.perfilService.findByOrganizacion(this.buscarPerfiles());
+            })).subscribe((responsePerfil:any)=> {
+              Swal.fire('ELIMINACIÓN CORRECTA', 'SE HA ELIIMINADO PERFIL DEL USUARIO CORRECTAMENTE', 'info');
+              this.createTable(responsePerfil);
+            });
+          }
+        })
   }
 
 
