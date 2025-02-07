@@ -53,7 +53,7 @@ export class CorrespondenciaService extends GenericService<Correspondencia> {
     })
 
     return this.http.post(`${environment.HOST}correspondencias/entregaCorrespondencia`,
-      formData, { responseType: 'blob' });
+    formData, { responseType: 'blob' });
   }
 
   searchByFechas(fechaInicio?: any, fechaFin?: any){

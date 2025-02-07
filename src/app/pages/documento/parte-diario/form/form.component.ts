@@ -25,7 +25,7 @@ export class FormComponent implements OnInit {
   errorPDF : boolean = false;
   errorPDFReferencia : boolean = false;
   anexos:Anexo[]=[]; // de respuesta o documento remitido
-  anexosReferencia: Anexo[] = [];
+  anexosRespuesta: Anexo[] = [];
   selectedFiles: any;
   selectedRespuesta: any;
   url_pdf : any;
@@ -75,7 +75,14 @@ export class FormComponent implements OnInit {
         }
         this.documentoService.viewPDF(this.idDocumento).pipe(switchMap((viewDocumento:any)=> {
           this.crearDocumento(viewDocumento.data, 'documentoReferencia');
+          this.anexoService.findByDocumento(this.documentoRespuesta.codigo).subscribe((response:any)=> {
+            debugger;
+            this.anexosRespuesta = response.data;
+          }, error => {
+            Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR ANEXOS!`, 'warning');
+          });
           return this.documentoService.viewPDF(this.documentoRespuesta.codigo, this.documentoRespuesta.tipoOrganizacion =='R'? '1': '0');
+
         })).subscribe((responseRespuesta:any)=> {
           this.crearDocumento(responseRespuesta.data, 'documentoRespuesta');
         }, (error:any) => {
