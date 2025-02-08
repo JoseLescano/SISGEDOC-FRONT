@@ -57,11 +57,9 @@ export class SearchComponent implements OnInit {
     }
 
     imprimirListaPersonal(codigo:any, todo:any){
-      debugger
       this.perfilService.listPersonal(todo?sessionStorage.getItem(environment.codigoOrganizacion):codigo,todo).subscribe(
         {
           next: (data:any)=> {
-            debugger;
             const blob = new Blob([data], { type: 'application/pdf' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');

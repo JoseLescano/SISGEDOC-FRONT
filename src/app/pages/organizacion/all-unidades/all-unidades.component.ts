@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { OrganizacionDiagram } from 'src/app/_DTO/OrganizacionDiagram';
 import { OrganizacionService } from 'src/app/_service/organizacion.service';
 import { PerfilService } from 'src/app/_service/perfil.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-all-unidades',
@@ -70,15 +71,24 @@ export class AllUnidadesComponent implements OnInit {
     }
   }
 
-  viewPersonal(codigoOrganizacion: any){
-    this.perfilService.findByOrganizacion(codigoOrganizacion).subscribe(
-      {
-        next: (response:any)=> {
-          console.log(response)
-        }
-      }
-    )
-  }
+  imprimirListaPersonal(codigo:any, todo:any){
+        this.perfilService.listPersonal(todo?sessionStorage.getItem(environment.codigoOrganizacion):codigo,todo).subscribe(
+          {
+            next: (data:any)=> {
+              const blob = new Blob([data], { type: 'application/pdf' });
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'ListaPersona.pdf';
+              a.click();
+              window.URL.revokeObjectURL(url);
+            },
+            error:(err:any)=> {
+
+            }
+          }
+        );
+    }
 
 
 }

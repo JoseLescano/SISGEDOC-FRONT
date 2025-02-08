@@ -298,6 +298,7 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('nameArchivoFirmado', nameDocuentoFirmado);
     formData.append('isFirmado', isFirmado);
     formData.append('codigoDecreto', codigoDecreto);
+    debugger;
     return this.http.post(`${environment.HOST}documentos/remitirRespuestaForFirma`, formData);
   }
 

@@ -41,6 +41,7 @@
                     </div>
                     <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab" style=" height: 100%;">
                       <mat-selection-list #shoes [multiple]="false" *ngIf="anexos?.length>0">
+                        <h2>Anexos adjuntados en la referencia</h2>
                         <mat-list-option *ngFor="let item of anexos" (click)="descargarAnexo(item)">
                           <mat-icon mat-list-icon>folder</mat-icon>
                           <div mat-line>{{item.url}}</div>
@@ -49,7 +50,20 @@
                       </mat-selection-list>
 
                       <div class="col-md-12 mt-2 alert alert-info" *ngIf="anexos?.length == 0 || anexos == null">
-                        No hay registros en la base de datos!
+                        Sin anexos de referencia!
+                      </div>
+
+                      <mat-selection-list #shoes [multiple]="false" *ngIf="anexosRespuesta?.length>0">
+                        <h2>Anexos adjuntados en la respuesta</h2>
+                        <mat-list-option *ngFor="let item of anexosRespuesta" (click)="descargarAnexo(item)">
+                          <mat-icon mat-list-icon>folder</mat-icon>
+                          <div mat-line>{{item.url}}</div>
+                          <div mat-line> {{item.fechaCreacion| date}} </div>
+                        </mat-list-option>
+                      </mat-selection-list>
+
+                      <div class="col-md-12 mt-2 alert alert-warning" *ngIf="anexosRespuesta?.length == 0 || anexosRespuesta == null">
+                        Sin anexos de respuesta!
                       </div>
                     </div>
                   </div>
