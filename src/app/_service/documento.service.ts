@@ -56,8 +56,11 @@ export class DocumentoService  extends GenericService<Documento> {
       });
   }
 
-  verDocumentoRespuesta(codigoDocumentoPadre: any){
-    return this.http.get(`${environment.HOST}documentos/verDocumentoRespuesta/${codigoDocumentoPadre}`);
+  verDocumentoRespuesta(codigoDocumentoPadre: any, codigoDecreto:any){
+    let formData: FormData= new FormData();
+    formData.append('codigoDocumentoPadre', codigoDocumentoPadre);
+    formData.append('aux', codigoDecreto);
+    return this.http.post(`${environment.HOST}documentos/verDocumentoRespuesta`, formData);
   }
 
   getDocumentoSeguimiento(vidDocumento: any){
@@ -65,6 +68,7 @@ export class DocumentoService  extends GenericService<Documento> {
   }
 
   findRespuestaByVidParent(codigoDocumentoPadre: any, codigoDecreto?:any){
+    debugger;
     let formData:FormData = new FormData();
     formData.append('codigoDocumentoPadre', codigoDocumentoPadre);
     formData.append('codigoDecreto', codigoDecreto);

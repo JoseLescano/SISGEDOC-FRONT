@@ -122,9 +122,9 @@ export class ViewRemitidosComponent implements OnInit {
     });
   }
 
-  VerRespuesta(codigoPadre?:any): void {
+  VerRespuesta(codigoPadre:any, aux: any): void {
     let documento : Documento = new Documento();
-    this.documentoService.findRespuestaByVidParent(codigoPadre,0).subscribe(
+    this.documentoService.verDocumentoRespuesta(codigoPadre,aux).subscribe(
       {
         next : (response: any)=> {
           documento = {...response}
