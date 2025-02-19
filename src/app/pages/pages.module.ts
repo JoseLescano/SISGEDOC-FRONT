@@ -63,6 +63,8 @@ import { ListPendientesComponent } from './facilita/list-pendientes/list-pendien
 import { SafeUrlPipe } from './safe-url.pipe';
 import { SearchComponent } from './organizacion/search/search.component';
 import { ViewAccionesComponent } from './acciones/view-acciones/view-acciones.component';
+import { ViewClasesComponent } from './periodos/view-clases/view-clases.component';
+import { ViewPeriodosComponent } from './periodos/view-periodos/view-periodos.component';
 
 @NgModule({
   imports: [
@@ -132,7 +134,9 @@ import { ViewAccionesComponent } from './acciones/view-acciones/view-acciones.co
     PersonaExternaComponent,
     ListPendientesComponent,
     SearchComponent,
-    ViewAccionesComponent
+    ViewAccionesComponent,
+    ViewClasesComponent,
+    ViewPeriodosComponent
   ],
    exports:[
 
