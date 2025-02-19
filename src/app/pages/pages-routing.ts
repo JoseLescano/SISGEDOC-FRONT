@@ -46,6 +46,7 @@ import { ListPendientesComponent } from './facilita/list-pendientes/list-pendien
 import { SearchComponent } from './organizacion/search/search.component';
 import { ViewAccionesComponent } from './acciones/view-acciones/view-acciones.component';
 import { ViewPeriodosComponent } from './periodos/view-periodos/view-periodos.component';
+import { ViewClasesComponent } from './periodos/view-clases/view-clases.component';
 
 const routes: Routes = [
 
@@ -95,6 +96,7 @@ const routes: Routes = [
   { path: 'list-facilita', component: ListPendientesComponent  },
   { path: 'acciones', component: ViewAccionesComponent },
   { path: 'periodos', component: ViewPeriodosComponent },
+  { path: 'clases', component: ViewClasesComponent },
   { path: 'viewPersonal', component: SearchComponent  },
 ];
 

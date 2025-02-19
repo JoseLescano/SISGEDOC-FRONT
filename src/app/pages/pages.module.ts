@@ -64,6 +64,7 @@ import { SafeUrlPipe } from './safe-url.pipe';
 import { SearchComponent } from './organizacion/search/search.component';
 import { ViewAccionesComponent } from './acciones/view-acciones/view-acciones.component';
 import { ViewPeriodosComponent } from './periodos/view-periodos/view-periodos.component';
+import { ViewClasesComponent } from './periodos/view-clases/view-clases.component';
 
 @NgModule({
   imports: [
@@ -134,7 +135,8 @@ import { ViewPeriodosComponent } from './periodos/view-periodos/view-periodos.co
     ListPendientesComponent,
     SearchComponent,
     ViewAccionesComponent,
-    ViewPeriodosComponent
+    ViewPeriodosComponent,
+    ViewClasesComponent
   ],
    exports:[
 
