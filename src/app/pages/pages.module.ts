@@ -62,6 +62,8 @@ import { PersonaExternaComponent } from './persona-externa/persona-externa.compo
 import { ListPendientesComponent } from './facilita/list-pendientes/list-pendientes.component';
 import { SafeUrlPipe } from './safe-url.pipe';
 import { SearchComponent } from './organizacion/search/search.component';
+import { ViewAccionesComponent } from './acciones/view-acciones/view-acciones.component';
+import { ViewPeriodosComponent } from './periodos/view-periodos/view-periodos.component';
 
 @NgModule({
   imports: [
@@ -130,7 +132,9 @@ import { SearchComponent } from './organizacion/search/search.component';
     AdmDocumentoComponent,
     PersonaExternaComponent,
     ListPendientesComponent,
-    SearchComponent
+    SearchComponent,
+    ViewAccionesComponent,
+    ViewPeriodosComponent
   ],
    exports:[
 

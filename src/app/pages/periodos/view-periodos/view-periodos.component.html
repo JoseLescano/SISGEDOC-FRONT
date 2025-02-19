@@ -1,0 +1,52 @@
+
+<div class="col-12">
+    <mat-card class="m-2" >
+      <mat-card-header class="title-form">
+        <mat-card-title >LISTA DE DOCUMENTOS REMITIDOS</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+          <mat-form-field appearance="fill" class="example-full-width">
+            <mat-label>Filtro</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Ingrese valor" #input>
+          </mat-form-field>
+
+          <div class="mat-elevation-z8">
+            <table mat-table [dataSource]="dataSource" matSort id="mytable">
+              <ng-container matColumnDef="Codigo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Nro">Codigo</th>
+                <td mat-cell *matCellDef="let row"><strong>{{row.codigo }}</strong></td>
+              </ng-container>
+
+              <ng-container matColumnDef="Descripcion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 600px; margin: 5px;">Descripcion</th>
+                <td mat-cell *matCellDef="let row" style="padding: 10px;"> {{row.definicion }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Cabecera">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 600px; margin: 5px;">Cabecera</th>
+                <td mat-cell *matCellDef="let row" style="padding: 10px;"> {{row.cabecera }} </td>
+              </ng-container>
+
+             
+              <ng-container matColumnDef="Acciones">
+                <th mat-header-cell *matHeaderCellDef > Acciones </th>
+                <td mat-cell *matCellDef="let row">
+                  <div class="d-grid gap-2 mx-auto">
+                   
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" colspan="4">Sin resultado...</td>
+              </tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[10, 15, 25, 100]"  aria-label="Select page of users"></mat-paginator>
+          </div>
+      </mat-card-content>
+      <mat-card-actions align="start">
+      </mat-card-actions>
+    </mat-card>
+  </div>

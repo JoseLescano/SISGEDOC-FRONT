@@ -44,6 +44,8 @@ import { AdmDocumentoComponent } from './documento/adm-documento/adm-documento.c
 import { PersonaExternaComponent } from './persona-externa/persona-externa.component';
 import { ListPendientesComponent } from './facilita/list-pendientes/list-pendientes.component';
 import { SearchComponent } from './organizacion/search/search.component';
+import { ViewAccionesComponent } from './acciones/view-acciones/view-acciones.component';
+import { ViewPeriodosComponent } from './periodos/view-periodos/view-periodos.component';
 
 const routes: Routes = [
 
@@ -91,7 +93,8 @@ const routes: Routes = [
   { path: 'persExterno', component: PersonaExternaComponent  },
   { path: 'update-devueltos/:codigoDocumento/:idDecreto', component: UpdateDevolverComponent  },
   { path: 'list-facilita', component: ListPendientesComponent  },
-
+  { path: 'acciones', component: ViewAccionesComponent },
+  { path: 'periodos', component: ViewPeriodosComponent },
   { path: 'viewPersonal', component: SearchComponent  },
 ];
 
