@@ -45,7 +45,8 @@ import { PersonaExternaComponent } from './persona-externa/persona-externa.compo
 import { ListPendientesComponent } from './facilita/list-pendientes/list-pendientes.component';
 import { SearchComponent } from './organizacion/search/search.component';
 import { ViewAccionesComponent } from './acciones/view-acciones/view-acciones.component';
-
+import { ViewPeriodosComponent } from './periodos/view-periodos/view-periodos.component';
+import { ViewClasesComponent } from './periodos/view-clases/view-clases.component';
 const routes: Routes = [
 
    { path: '', redirectTo: 'dashboard', pathMatch:'full' },
@@ -92,7 +93,10 @@ const routes: Routes = [
   { path: 'persExterno', component: PersonaExternaComponent  },
   { path: 'update-devueltos/:codigoDocumento/:idDecreto', component: UpdateDevolverComponent  },
   { path: 'list-facilita', component: ListPendientesComponent  },
-  { path: 'acciones', component: ViewAccionesComponent  },
+
+  { path: 'acciones', component: ViewAccionesComponent },
+  { path: 'periodos', component: ViewPeriodosComponent },
+  { path: 'clases', component: ViewClasesComponent },
   { path: 'viewPersonal', component: SearchComponent  },
 ];
 
