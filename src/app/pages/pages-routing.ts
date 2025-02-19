@@ -46,7 +46,9 @@ import { ListPendientesComponent } from './facilita/list-pendientes/list-pendien
 import { SearchComponent } from './organizacion/search/search.component';
 import { ViewAccionesComponent } from './acciones/view-acciones/view-acciones.component';
 import { ViewPeriodosComponent } from './periodos/view-periodos/view-periodos.component';
-import { ViewClasesComponent } from './periodos/view-clases/view-clases.component';
+import { ViewClasesComponent } from './clases/view-clases/view-clases.component';
+import { ViewMenuComponent } from './menu/view-menu/view-menu.component';
+import { ViewRolesComponent } from './roles/view-roles/view-roles.component';
 const routes: Routes = [
 
    { path: '', redirectTo: 'dashboard', pathMatch:'full' },
@@ -97,6 +99,8 @@ const routes: Routes = [
   { path: 'acciones', component: ViewAccionesComponent },
   { path: 'periodos', component: ViewPeriodosComponent },
   { path: 'clases', component: ViewClasesComponent },
+  { path: 'menu', component: ViewMenuComponent },
+  { path: 'roles', component: ViewRolesComponent },
   { path: 'viewPersonal', component: SearchComponent  },
 ];
 
