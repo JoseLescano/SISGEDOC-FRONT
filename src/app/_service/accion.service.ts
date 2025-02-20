@@ -16,6 +16,15 @@ export class AccionService extends GenericService<Accion> {
     super(http, `${environment.HOST}acciones`)
   }
 
-  
+
+  setAccionCambio(data : Accion[]){
+      this.accionCambio.next(data);
+  }
+
+  getAccionCambio(){
+    return this.accionCambio.asObservable();
+  }
+
+
 
 }

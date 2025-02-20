@@ -3,7 +3,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Accion } from 'src/app/_model/accion';
 import { AccionService } from 'src/app/_service/accion.service';
+import { MantoAccionesComponent } from '../manto-acciones/manto-acciones.component';
+import { MatDialog } from '@angular/material/dialog';
+import Swal from 'sweetalert2';
+import { switchMap } from 'rxjs';
 @Component({
   selector: 'app-view-acciones',
   templateUrl: './view-acciones.component.html',
@@ -20,12 +25,19 @@ export class ViewAccionesComponent implements OnInit {
 
 
   constructor(
-    private accionesServices: AccionService
+    private accionesServices: AccionService,
+    public dialog: MatDialog
   ) { }
 
 
-ngOnInit(): void {
-this.cargarAcciones();
+  ngOnInit(): void {
+    this.accionesServices.getAccionCambio().subscribe((response: any )=> {
+      this.createTable(response)
+    });
+
+    this.accionesServices.listar().subscribe((response: any) => {
+    this.createTable(response.data)
+    });
   }
 
   cargarAcciones(){
@@ -47,8 +59,6 @@ this.cargarAcciones();
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-
-
     });
 
   }
@@ -57,6 +67,60 @@ this.cargarAcciones();
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
+  }
+
+
+  openDialog(accion?: Accion){
+    this.dialog.open(MantoAccionesComponent, {
+      width: '50%',
+      data: accion,
+    });
+  }
+
+  eliminar(codigo: any){
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: "No podrás revertir esto!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, bórralo.'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.accionesServices.eliminar(codigo)
+        .pipe(
+          switchMap((response: any)=>
+            {
+              debugger;
+              return this.accionesServices.listar();
+            }
+          )
+        )
+        .subscribe(
+          {
+            next : (respuestaLista: any)=> {
+              debugger
+              this.accionesServices.setAccionCambio(respuestaLista.data);
+              Swal.fire(
+                'Borrado!',
+                'Accion ha sido eliminado.',
+                'success'
+              );
+            },
+            error: (err: any)=> {
+              debugger
+              console.log(err)
+              Swal.fire(
+                'LO SENTIMOS',
+                err,
+                'warning'
+              )
+            }
+          }
+        );
+      }
+    })
   }
 
 }

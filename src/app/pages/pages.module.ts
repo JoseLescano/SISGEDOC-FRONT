@@ -67,6 +67,7 @@ import { ViewMenuComponent } from './menu/view-menu/view-menu.component';
 import { ViewRolesComponent } from './roles/view-roles/view-roles.component';
 import { ViewPeriodosComponent } from './periodos/view-periodos/view-periodos.component';
 import { ViewClasesComponent } from './clases/view-clases/view-clases.component';
+import { MantoAccionesComponent } from './acciones/manto-acciones/manto-acciones.component';
 
 @NgModule({
   imports: [
@@ -140,7 +141,8 @@ import { ViewClasesComponent } from './clases/view-clases/view-clases.component'
     ViewClasesComponent,
     ViewPeriodosComponent,
     ViewMenuComponent,
-    ViewRolesComponent
+    ViewRolesComponent,
+    MantoAccionesComponent
   ],
    exports:[
 

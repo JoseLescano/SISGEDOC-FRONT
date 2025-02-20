@@ -24,7 +24,8 @@ export class ErrorInterceptor implements HttpInterceptor {
                 this.error = 'NO CUENTA CON LAS CREDENCIALES CORRESPONDENTES';
                 this.loginService.logout();
               }  if(err.status==404){
-                this.error = err.error.message;
+                debugger
+                this.error = err.error.message || err.error.title;
               }else {
                 this.error = err.error.message;
                 this.loginService.logout();
