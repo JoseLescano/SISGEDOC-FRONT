@@ -63,11 +63,18 @@ import { ListPendientesComponent } from './facilita/list-pendientes/list-pendien
 import { SafeUrlPipe } from './safe-url.pipe';
 import { SearchComponent } from './organizacion/search/search.component';
 import { ViewAccionesComponent } from './acciones/view-acciones/view-acciones.component';
-import { ViewMenuComponent } from './menu/view-menu/view-menu.component';
+
 import { ViewRolesComponent } from './roles/view-roles/view-roles.component';
 import { ViewPeriodosComponent } from './periodos/view-periodos/view-periodos.component';
-import { ViewClasesComponent } from './clases/view-clases/view-clases.component';
+import { ViewClasesComponent } from './clases/view-clases.component';
 import { MantoAccionesComponent } from './acciones/manto-acciones/manto-acciones.component';
+import { MantoPeriodosComponent } from './periodos/manto-periodos/manto-periodos.component';
+import { MantoClasesComponent } from './clases/manto-clases/manto-clases.component';
+import { ViewMenuComponent } from './menu/view-menu.component';
+import { MantoMenuComponent } from './menu/manto-menu/manto-menu.component';
+import { MantoRolComponent } from './roles/manto-roles/manto-roles.component';
+
+
 
 @NgModule({
   imports: [
@@ -142,7 +149,12 @@ import { MantoAccionesComponent } from './acciones/manto-acciones/manto-acciones
     ViewPeriodosComponent,
     ViewMenuComponent,
     ViewRolesComponent,
-    MantoAccionesComponent
+    MantoAccionesComponent,
+    MantoPeriodosComponent,
+    MantoClasesComponent,
+    MantoMenuComponent,
+    MantoRolComponent,
+    
   ],
    exports:[
 

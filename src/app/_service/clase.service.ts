@@ -16,7 +16,7 @@ export class ClaseService extends GenericService<Clase> {
     super(http, `${environment.HOST}clases`)
   }
 
-  setClaseCambio(data : Clase[]){
+  setClaseCambio(data:Clase[]){
     this.claseCambio.next(data);
   }
 

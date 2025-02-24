@@ -20,4 +20,12 @@ export class RoleService extends GenericService<Rol> {
     return this.http.get<Rol[]>(`${environment.HOST}roles/findForUsuario`);
   }
 
+    getRoleChange(){
+      return this.rolCambio.asObservable();
+    }
+  
+    setRoleChange(rol: Rol[]){
+      this.rolCambio.next(rol);
+    }
+
 }
