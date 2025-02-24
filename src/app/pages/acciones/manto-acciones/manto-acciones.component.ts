@@ -36,13 +36,13 @@ export class MantoAccionesComponent implements OnInit {
     if (this.accion.codigo == ''){
       this.form = new FormGroup({
         'codigo': new FormControl('', [Validators.required, Validators.maxLength(4), Validators.minLength(4)]),
-        'nombre': new FormControl('', [Validators.required]),
+        'nombre': new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(25)]),
       })
     }else {
       this.titulo = 'ACTUALIZAR ACCION';
       this.form = new FormGroup({
         'codigo': new FormControl(this.accion.codigo, [Validators.required,  Validators.maxLength(4), Validators.minLength(4)]),
-        'nombre': new FormControl(this.accion.nombre, [Validators.required,  Validators.minLength(5)]),
+        'nombre': new FormControl(this.accion.nombre, [Validators.required,  Validators.maxLength(25), Validators.minLength(5)]),
       })
     }
   }

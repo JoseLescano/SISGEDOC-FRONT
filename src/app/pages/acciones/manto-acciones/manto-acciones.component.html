@@ -6,10 +6,20 @@
       <mat-form-field appearance="fill" class="example-full-width mt-2">
         <mat-label>CODIGO</mat-label>
         <input matInput  required formControlName="codigo" >
+        <div *ngIf="form.get('codigo').errors && form.get('codigo').dirty" >
+          <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('codigo').hasError('required')">** Field is required</small>
+          <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('codigo').hasError('minlength')">** Min of 4 characters</small>
+          <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('codigo').hasError('maxlength')">** Max of 4 characters</small>
+        </div>
     </mat-form-field>
     <mat-form-field appearance="fill" class="example-full-width">
         <mat-label>DENOMINACION</mat-label>
         <input matInput type="text" formControlName="nombre"  >
+        <div *ngIf="form.get('nombre').errors && form.get('nombre').dirty" >
+          <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('nombre').hasError('required')">** Field is required</small>
+          <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('nombre').hasError('minlength')">** Min of 5 characters</small>
+          <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('nombre').hasError('maxlength')">** Max of 25 characters</small>
+        </div>
     </mat-form-field>
     <mat-card-actions>
       <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">GUARDAR</button>

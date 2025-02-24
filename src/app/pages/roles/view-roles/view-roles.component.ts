@@ -13,7 +13,7 @@ export class ViewRolesComponent implements OnInit {
   displayedColumns: string[] = ['Codigo', 'Nombre','Acciones'];
       dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
       cargando: boolean= false;
-    
+
       @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
       @ViewChild(MatSort) sort!: MatSort;
 
@@ -32,7 +32,7 @@ export class ViewRolesComponent implements OnInit {
           this.createTable(response);
         },
         error:(er:any)=>{
-
+          console.log(er)
         }
       }
     );
