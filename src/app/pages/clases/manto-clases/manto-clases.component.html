@@ -1,0 +1,27 @@
+<mat-card class="example-card">
+    <mat-card-title>{{titulo}}</mat-card-title>
+    <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
+    <mat-card-content >
+      <form [formGroup]="form" (ngSubmit)="operate()" novalidate>
+        <mat-form-field appearance="fill" class="example-full-width mt-2">
+          <mat-label>CODIGO</mat-label>
+          <input matInput  required formControlName="codigo" >
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="example-full-width">
+          <mat-label>DENOMINACION</mat-label>
+          <input matInput type="text" formControlName="nombre"  >
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="example-full-width">
+        <mat-label>ACRONIMO</mat-label>
+        <input matInput type="text" formControlName="acronimo"  >
+    </mat-form-field>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">GUARDAR</button>
+        <button mat-raised-button color="warn" (click)="close()" type="button" >CANCELAR</button>
+      </mat-card-actions>
+      </form>
+    </mat-card-content>
+  
+    <div>{{form.value | json}}</div>
+  </mat-card>
+  

@@ -2,47 +2,45 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Rol } from 'src/app/_model/rol';
-import { RoleService } from 'src/app/_service/role.service';
+import { Menu } from 'src/app/_model/menu';
+import { MenuService } from 'src/app/_service/menu.service';
 import { MatDialog } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { switchMap } from 'rxjs';
-import { MantoRolComponent } from '../manto-roles/manto-roles.component';
-
-
+import { MantoMenuComponent } from './manto-menu/manto-menu.component';
 @Component({
-  selector: 'app-view-roles',
-  templateUrl: './view-roles.component.html',
-  styleUrls: ['./view-roles.component.css']
+  selector: 'app-view-menu',
+  templateUrl: './view-menu.component.html',
+  styleUrls: ['./view-menu.component.css']
 })
-export class ViewRolesComponent implements OnInit {
+export class ViewMenuComponent implements OnInit {
 
-  displayedColumns: string[] = ['Codigo', 'Nombre','Acciones'];
-      dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
-      cargando: boolean= false;
-    
-      @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-      @ViewChild(MatSort) sort!: MatSort;
+   displayedColumns: string[] = ['Codigo', 'Nombre', 'URL' ,'Acciones'];
+    dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
+    cargando: boolean= false;
+  
+    @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+    @ViewChild(MatSort) sort!: MatSort;
 
-
+  
   constructor(
-    private roleServices: RoleService,
+    private menuServices: MenuService,
     public dialog: MatDialog
   ) { }
 
 
   ngOnInit(): void {
-    this.roleServices.getRoleChange().subscribe((response: any )=> {
+    this.menuServices.getMenuChange().subscribe((response: any )=> {
       this.createTable(response)
     });
 
-    this.roleServices.listar().subscribe((response: any) => {
+    this.menuServices.listar().subscribe((response: any) => {
     this.createTable(response)
     });
   }
 
-  cargaRole(){
-    this.roleServices.listar().subscribe(
+  cargarMenu(){
+    this.menuServices.listar().subscribe(
       {
         next:(response:any)=>{
           debugger;
@@ -60,6 +58,7 @@ export class ViewRolesComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
 
+
     });
 
 }
@@ -67,14 +66,13 @@ applyFilter(event: Event) {
   const filterValue = (event.target as HTMLInputElement).value;
   this.dataSource.filter = filterValue.trim().toLowerCase();
 
-
 }
 
 
-openDialog(rol?: Rol){
-    this.dialog.open(MantoRolComponent, {
+openDialog(menu?: Menu){
+    this.dialog.open(MantoMenuComponent, {
       width: '50%',
-      data: rol,
+      data: menu,
     });
   }
 
@@ -89,12 +87,12 @@ openDialog(rol?: Rol){
       confirmButtonText: 'Sí, bórralo.'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.roleServices.eliminar(codigo)
+        this.menuServices.eliminar(codigo)
         .pipe(
           switchMap((response: any)=>
             {
               debugger;
-              return this.roleServices.listar();
+              return this.menuServices.listar();
             }
           )
         )
@@ -102,10 +100,10 @@ openDialog(rol?: Rol){
           {
             next : (respuestaLista: any)=> {
               debugger
-              this.roleServices.setRoleChange(respuestaLista);
+              this.menuServices.setMenuChange(respuestaLista);
               Swal.fire(
                 'Borrado!',
-                'Rol ha sido eliminado.',
+                'Menu ha sido eliminado.',
                 'success'
               );
             },
@@ -125,5 +123,4 @@ openDialog(rol?: Rol){
   }
 
 }
-
 

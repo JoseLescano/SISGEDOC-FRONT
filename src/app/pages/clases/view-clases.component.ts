@@ -2,51 +2,49 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Rol } from 'src/app/_model/rol';
-import { RoleService } from 'src/app/_service/role.service';
+import { Clase } from 'src/app/_model/clase';
+import { ClaseService } from 'src/app/_service/clase.service';
 import { MatDialog } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { switchMap } from 'rxjs';
-import { MantoRolComponent } from '../manto-roles/manto-roles.component';
-
-
+import { MantoClasesComponent } from './manto-clases/manto-clases.component';
 @Component({
-  selector: 'app-view-roles',
-  templateUrl: './view-roles.component.html',
-  styleUrls: ['./view-roles.component.css']
+  selector: 'app-view-clases',
+  templateUrl: './view-clases.component.html',
+  styleUrls: ['./view-clases.component.css']
 })
-export class ViewRolesComponent implements OnInit {
+export class ViewClasesComponent implements OnInit {
 
-  displayedColumns: string[] = ['Codigo', 'Nombre','Acciones'];
-      dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
-      cargando: boolean= false;
-    
-      @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-      @ViewChild(MatSort) sort!: MatSort;
+  displayedColumns: string[] = ['Codigo', 'Nombre', 'Acronimo' ,'Acciones'];
+  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
+  cargando: boolean= false;
+
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
 
   constructor(
-    private roleServices: RoleService,
+    private claseServices: ClaseService,
     public dialog: MatDialog
   ) { }
 
 
   ngOnInit(): void {
-    this.roleServices.getRoleChange().subscribe((response: any )=> {
+    this.claseServices.getClaseCambio().subscribe((response: any )=> {
       this.createTable(response)
     });
 
-    this.roleServices.listar().subscribe((response: any) => {
-    this.createTable(response)
+    this.claseServices.listar().subscribe((response: any) => {
+    this.createTable(response.data)
     });
   }
 
-  cargaRole(){
-    this.roleServices.listar().subscribe(
+  cargarClase(){
+    this.claseServices.listar().subscribe(
       {
         next:(response:any)=>{
           debugger;
-          this.createTable(response);
+          this.createTable(response.data);
         },
         error:(er:any)=>{
 
@@ -60,6 +58,7 @@ export class ViewRolesComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
 
+
     });
 
 }
@@ -67,14 +66,13 @@ applyFilter(event: Event) {
   const filterValue = (event.target as HTMLInputElement).value;
   this.dataSource.filter = filterValue.trim().toLowerCase();
 
-
 }
 
 
-openDialog(rol?: Rol){
-    this.dialog.open(MantoRolComponent, {
+openDialog(clase?: Clase){
+    this.dialog.open(MantoClasesComponent, {
       width: '50%',
-      data: rol,
+      data: clase,
     });
   }
 
@@ -89,12 +87,12 @@ openDialog(rol?: Rol){
       confirmButtonText: 'Sí, bórralo.'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.roleServices.eliminar(codigo)
+        this.claseServices.eliminar(codigo)
         .pipe(
           switchMap((response: any)=>
             {
               debugger;
-              return this.roleServices.listar();
+              return this.claseServices.listar();
             }
           )
         )
@@ -102,10 +100,10 @@ openDialog(rol?: Rol){
           {
             next : (respuestaLista: any)=> {
               debugger
-              this.roleServices.setRoleChange(respuestaLista);
+              this.claseServices.setClaseCambio(respuestaLista.data);
               Swal.fire(
                 'Borrado!',
-                'Rol ha sido eliminado.',
+                'Clase ha sido eliminado.',
                 'success'
               );
             },
@@ -125,5 +123,3 @@ openDialog(rol?: Rol){
   }
 
 }
-
-
