@@ -33,6 +33,7 @@ export class HeaderComponent implements OnInit {
   canShowSearchAsOverlay=false;
 
   imagen: any;
+  cargando = true;
 
   constructor(
     private personaService: PersonaService,
@@ -43,13 +44,22 @@ export class HeaderComponent implements OnInit {
     this.checkCanShowSearchAsOverlay(window.innerWidth);
     this.cargo = sessionStorage.getItem(environment.cargoSeleccionado);
     this.personaService.verFoto().subscribe(
-      { 
-        next: (responseFoto: any)=>  {
-        const objectUrl = URL.createObjectURL(responseFoto);
-        this.imagen = this.sanitizer.bypassSecurityTrustUrl(objectUrl);
-      }, error: (err: any) => {
-          console.error('Error al cargar la imagen', err);
-      }});
+      {
+        next:(response: any)=> {
+          const reader = new FileReader();
+          reader.readAsDataURL(response);
+          reader.onloadend = () => {
+            this.imagen = reader.result as string;
+            this.cargando = false;
+          }
+        },
+        error: (err: any) => {
+            console.error('Error al cargar la imagen', err);
+            this.cargando = false;
+            this.imagen = "../../../assets/person.jpeg";
+        }
+      }
+    );
 
   }
 
@@ -71,7 +81,7 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  
+
 
 
 }
