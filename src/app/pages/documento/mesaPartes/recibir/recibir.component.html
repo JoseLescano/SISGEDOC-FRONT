@@ -50,6 +50,19 @@
                         <button mat-flat-button  color="primary" class="m-2" (click)="verDocumento(row)">
                           <i class="far fa-file-pdf"></i> VER DOCUMENTO
                         </button>
+                        <div class="btn-group">
+                          <button type="button" class="btn btn-success" (click)="viewSeguimiento(row.codigo)">
+                            <i class="fas fa-info-circle"></i>
+                            SEGUIMIENTO
+                          </button>
+                          <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="visually-hidden">Toggle Dropdown</span>
+                          </button>
+                          <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item"  (click)="viewSeguimiento(row.codigo)">REPORTE</a></li>
+                            <li><a class="dropdown-item" (click)="viewTimeline(row.codigo)">GRAFICA</a></li>
+                          </ul>
+                        </div>
                       </div>
                     </div>
                   </div>

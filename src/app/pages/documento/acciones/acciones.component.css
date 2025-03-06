@@ -1,27 +1,13 @@
-/* .example-button-row {
-  display: table-cell;
-  width: 490px;
-}
-
-.example-button-row .mat-button-base {
-  margin: 8px 8px 8px 0;
-}
-
-.example-flex-container {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
-.example-button-container {
-  display: flex;
-  justify-content: center;
-  width: 120px;
-} */
 
 /*
  CSS for the main interaction
 */
+body {
+  font: 16px/1.5em "Overpass", "Open Sans", Helvetica, sans-serif;
+  color: #333;
+  font-weight: 300;
+}
+
 .tabset > input[type="radio"] {
   position: absolute;
   left: -200vw;
@@ -31,6 +17,14 @@
   display: none;
 }
 
+.tab-panels, .tabset{
+  min-height: 100%;
+}
+.tab-panel {
+  padding: 20px 0;
+  border-top: 1px solid #ccc;
+  height: 700px;
+}
 .tabset > input:first-child:checked ~ .tab-panels > .tab-panel:first-child,
 .tabset > input:nth-child(3):checked ~ .tab-panels > .tab-panel:nth-child(2),
 .tabset > input:nth-child(5):checked ~ .tab-panels > .tab-panel:nth-child(3),
@@ -43,11 +37,7 @@
 /*
  Styling
 */
-body {
-  font: 16px/1.5em "Overpass", "Open Sans", Helvetica, sans-serif;
-  color: #333;
-  font-weight: 300;
-}
+
 
 .tabset > label {
   position: relative;
@@ -92,26 +82,5 @@ input:focus-visible + label {
   margin-bottom: -1px;
 }
 
-.tab-panel {
-  padding: 20px 0;
-  border-top: 1px solid #ccc;
-  height: 700px;
-}
 
-/*
- Demo purposes only
-*/
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-}
 
-body {
-  padding: 30px;
-}
-
-.tabset {
-  max-width: 100%;
-
-}

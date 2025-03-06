@@ -56,8 +56,11 @@ export class DocumentoService  extends GenericService<Documento> {
       });
   }
 
-  verDocumentoRespuesta(codigoDocumentoPadre: any){
-    return this.http.get(`${environment.HOST}documentos/verDocumentoRespuesta/${codigoDocumentoPadre}`);
+  verDocumentoRespuesta(codigoDocumentoPadre: any, codigoDecreto:any){
+    let formData: FormData= new FormData();
+    formData.append('codigoDocumentoPadre', codigoDocumentoPadre);
+    formData.append('aux', codigoDecreto);
+    return this.http.post(`${environment.HOST}documentos/verDocumentoRespuesta`, formData);
   }
 
   getDocumentoSeguimiento(vidDocumento: any){
@@ -65,6 +68,7 @@ export class DocumentoService  extends GenericService<Documento> {
   }
 
   findRespuestaByVidParent(codigoDocumentoPadre: any, codigoDecreto?:any){
+    debugger;
     let formData:FormData = new FormData();
     formData.append('codigoDocumentoPadre', codigoDocumentoPadre);
     formData.append('codigoDecreto', codigoDecreto);
@@ -208,11 +212,10 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/archivarDocumento`, formData);
   }
 
-  archivarDocumentoForSuperAdm(codigoInterno:any, observaciones:any, fi: any, ff:any, usuario:any){
+  archivarDocumentoForSuperAdm(codigoInterno:any, listaDecretos: any, usuario:any, observaciones:any){
     let formData:FormData = new FormData();
     formData.append('codigoInterno', codigoInterno);
-    formData.append('fi', fi);
-    formData.append('ff', ff);
+    formData.append('listaDecretos', listaDecretos);
     formData.append('usuarioSolicitante', usuario);
     formData.append('observacion', observaciones);
     return this.http.post(`${environment.HOST}documentos/archivarDocumentoForSuperAdm`, formData);
@@ -242,6 +245,14 @@ export class DocumentoService  extends GenericService<Documento> {
 
   findParaParte(codigoInterno:any){
     return this.http.get(`${environment.HOST}documentos/findParaParte/${codigoInterno}`);
+  }
+
+  findParaParteBySuperADM(codigoInterno:any, fi: any, ff: any){
+    let formData:FormData = new FormData();
+    formData.append('codigoInterno', codigoInterno);
+    formData.append('fi', fi);
+    formData.append('ff', ff);
+    return this.http.post(`${environment.HOST}documentos/findParaParteBySuperADM`, formData);
   }
 
   convertFileToPDF (file: any) {

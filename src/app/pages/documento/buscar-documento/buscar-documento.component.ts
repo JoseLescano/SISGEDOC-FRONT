@@ -154,8 +154,8 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  verRespuesta(documentoSeleccionado?:any): void {
-    this.documentoService.verDocumentoRespuesta(documentoSeleccionado).subscribe(
+  verRespuesta(documentoSeleccionado:any, aux?:any): void {
+    this.documentoService.verDocumentoRespuesta(documentoSeleccionado, aux).subscribe(
       {
         next : (response: any)=> {
           const dialogRef = this.dialog.open(ViewDocumentoComponent, {

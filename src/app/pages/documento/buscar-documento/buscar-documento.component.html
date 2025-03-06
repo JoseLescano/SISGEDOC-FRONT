@@ -169,7 +169,7 @@
                     </ul>
                   </div>
 
-                  <button mat-flat-button  color="accent" class="mb-2" (click)="verRespuesta(row.codigo)" *ngIf="row.tieneRespuesta>0" >
+                  <button mat-flat-button  color="accent" class="mb-2" (click)="verRespuesta(row.codigo, row.observacion)" *ngIf="row.tieneRespuesta>0" >
                     <i class="far fa-file-pdf" ></i> VER RESPUESTA/FIRMA
                   </button>
               </div>

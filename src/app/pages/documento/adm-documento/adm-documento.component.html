@@ -1,439 +1,192 @@
-<div class="tabset">
-  <!-- Tab 1 -->
-  <input type="radio" name="tabset" id="tab1" aria-controls="marzen" checked />
-  <label for="tab1">ARCHIVAR</label>
-  <!-- Tab 2 -->
-  <input type="radio" name="tabset" id="tab2" aria-controls="rauchbier" />
-  <label for="tab2">BUSCAR</label>
+<form [formGroup]="formArchivar" (ngSubmit)="guardarAchivoForSuperADM()" novalidate>
+  <mat-card class="m-2">
+    <mat-card-header class="title-form">
+      <mat-card-title >ARCHIVO MASIVO DE DOCUMENTOS</mat-card-title>
+    </mat-card-header>
+      <mat-card-content>
+          <div class="row">
+            <div class="col-7">
+              <mat-card>
+                  <mat-card-header>
+                      <mat-card-title>Unidad a buscar</mat-card-title>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <div class="row">
+                      <div class="col-3">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>INGRESE CODIGO UNIDAD</mat-label>
+                          <input matInput placeholder="INGRESE CODIGO DE UNIDAD"  formControlName="codigoUnidad"
+                            (keypress)="validarNumero($event)" (keydown.enter)="getOrganizacion()"/>
+                          <mat-hint align="start" *ngIf="campoIngresado?.length >= 2"
+                            style="color: #06d76c; margin-bottom: 5px"><strong>Presione la tecla Enter</strong>
+                          </mat-hint>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-4">
+                        <mat-form-field appearance="fill" class="example-full-width" style="margin-left: 5px">
+                          <mat-label>Ingrese rango de fechas</mat-label>
+                          <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                            <input matStartDate formControlName="start" placeholder="Start date" />
+                            <input matEndDate formControlName="end" placeholder="End date" />
+                          </mat-date-range-input>
+                          <mat-hint>DD-MM-YYYY – DD-MM-YYYY</mat-hint>
+                          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                          <mat-date-range-picker #picker></mat-date-range-picker>
 
-  <input type="radio" name="tabset" id="tab3" aria-controls="grafica" />
-  <label for="tab3" (click)="verNucleo()">GRAFICA</label>
-
-  <div class="tab-panels">
-    <section id="marzen" class="tab-panel">
-      <div class="row">
-        <div class="col-2">
-          <mat-form-field appearance="fill" class="example-full-width">
-            <mat-label>INGRESE CODIGO UNIDAD</mat-label>
-            <input matInput placeholder="INGRESE CODIGO DE UNIDAD" [(ngModel)]="campoIngresado"
-              (keypress)="validarNumero($event)" (keydown.enter)="getOrganizacion($event)"/>
-            <mat-hint align="start" *ngIf="campoIngresado?.length >= 2"
-              style="color: #06d76c; margin-bottom: 5px"><strong>Presione la tecla Enter</strong>
-            </mat-hint>
-          </mat-form-field>
-        </div>
-        <div class="col-4">
-          <mat-form-field appearance="fill" class="example-full-width">
-            <mat-label>UNIDAD OBTENIDA</mat-label>
-            <input matInput placeholder="UNIDAD OBTENIDA" disabled value="{{organizacionArchivar}}" />
-          </mat-form-field>
-        </div>
-        <div class="col-2">
-          <mat-form-field appearance="fill" class="example-full-width" style="margin-left: 5px">
-            <mat-label>Ingrese rango de fechas</mat-label>
-            <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
-              <input matStartDate formControlName="start" placeholder="Start date" />
-              <input matEndDate formControlName="end" placeholder="End date" />
-            </mat-date-range-input>
-            <mat-hint>DD-MM-YYYY – DD-MM-YYYY</mat-hint>
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-date-range-picker #picker></mat-date-range-picker>
-
-            <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
-            <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
-          </mat-form-field>
-        </div>
-        <div class="col-4 align-content-center justify-content-evenly">
-          <button mat-flat-button color="primary" style="margin-left: 10px" (click)="cargarDocumentos()">
-            <i class="fas fa-search"></i> PENDIENTES
-          </button>
-          <button mat-flat-button color="accent" style="margin-left: 10px" (click)="cargarDocumentos()">
-            <i class="fas fa-search"></i> POR FIRMAR
-          </button>
-
-          <!-- <button mat-flat-button style="background: rgba(25, 135, 84); color: #fff" *ngIf="dataSource != null"
-            (click)="downloadExcel()">
-            <i class="fas fa-file-excel"></i> EXPORTAR A EXCEL
-          </button> -->
-        </div>
-
-      </div>
-      <mat-divider class="m-2"></mat-divider>
-      <div>
-        <!-- <mat-form-field appearance="fill" class="example-full-width mt-2">
-          <mat-label>Filtro</mat-label>
-          <input
-            matInput
-            (keyup)="applyFilter($event)"
-            placeholder="Ingrese valor"
-            #input
-          />
-        </mat-form-field> -->
-        <mat-card-content>
-          <div class="mat-elevation-z8">
-            <table mat-table [dataSource]="dataSource" matSort>
-              <ng-container matColumnDef="Acciones">
-                <th mat-header-cell *matHeaderCellDef>Acciones</th>
-                <td mat-cell *matCellDef="let row"></td>
-              </ng-container>
-
-              <ng-container matColumnDef="Nro">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef mat-sort-header
-                  sortActionDescription="Sort by codigo">
-                  Nro. Registro
-                </th>
-                <td mat-cell *matCellDef="let row">{{ row.codigo }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="Asunto">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by asunto">
-                  Asunto
-                </th>
-                <td mat-cell *matCellDef="let row">{{ row.asunto }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="Prioridad">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header mat-sort-header>
-                  Prioridad
-                </th>
-                <td mat-cell *matCellDef="let row">
-                  <span class="badge text-bg-success" *ngIf="row.prioridad == 'NORMAL'">NORMAL</span>
-                  <span class="badge text-bg-warning" *ngIf="row.prioridad == 'URGENTE'">URGENTE</span>
-                  <span class="badge text-bg-danger" *ngIf="row.prioridad == 'MUY URGENTE'">MUY URGENTE</span>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="Documento">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                  Documento
-                </th>
-                <td mat-cell *matCellDef="let row">
-                  {{ row.clase + " Nro. " + row.nroOrden }}
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="Origen">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Origen">
-                  Origen
-                </th>
-                <td mat-cell *matCellDef="let row">{{ row.remitente }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="Destino">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Origen">
-                  Destino
-                </th>
-                <td mat-cell *matCellDef="let row">{{ row.destinatario }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="FechaDoc.">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                  FechaDoc.
-                </th>
-                <td mat-cell *matCellDef="let row">
-                  {{ row.fechaDocumento | date : "dd-MM-yyyy" }}
-                </td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-
-              <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" colspan="4">Sin datos obtenidos...</td>
-              </tr>
-            </table>
-
-            <mat-paginator [pageSizeOptions]="[10, 15, 25, 100]" aria-label="Select page of users"></mat-paginator>
-          </div>
-        </mat-card-content>
-      </div>
-      <mat-divider class="m-2"></mat-divider>
-      <div class="row mt-2">
-        <div class="col-4">
-          <mat-form-field appearance="fill" class="example-full-width">
-            <mat-label>INGRESE NUMERO DE CIP DEL SOLICITANTE</mat-label>
-            <input matInput placeholder="INGRESE NUMERO DE CIP" [(ngModel)]="CIPIngresado" required
-              (keypress)="validarNumero($event)" (keydown.enter)="buscarPersona($event)" />
-            <mat-hint align="start" *ngIf="CIPIngresado?.length >= 5"
-              style="color: #06d76c; margin-bottom: 5px"><strong>Presione la tecla Enter</strong>
-            </mat-hint>
-          </mat-form-field>
-        </div>
-        <div class="col-8">
-          <mat-form-field appearance="fill" class="example-full-width">
-            <mat-label>Nombre completo</mat-label>
-            <input matInput placeholder="NOMBRE COMPLETO DEL SOLICITANTE" [(ngModel)]="nombreCompleado" disabled />
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <mat-form-field appearance="fill" class="example-full-width">
-            <mat-label>MOTIVO DE LA SOLICITUD</mat-label>
-            <textarea matInput rows="5" [(ngModel)]="observacionArchivado"></textarea>
-          </mat-form-field>
-        </div>
-      </div>
-      <!-- <div class="row">
-            <div class="col-12">
-              <div class="wrapper"  >
-                <mat-label>DOCUMENTO JUSTIFICATORIO</mat-label>
-                <div class="form">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <p>Examinar para cargar archivo</p>
-                </div>
-              </div>
-            </div>
-          </div> -->
-      <button mat-flat-button color="primary" style="margin-left: 5px" (click)="guardarAchivoForSuperADM()">
-        <i class="fas fa-archive"></i> ARCHIVAR TODO
-      </button>
-      <button mat-flat-button color="accent" style="margin-left: 5px">
-        <i class="fas fa-mail-bulk"></i> ENVIAR A OTRO ORG.
-      </button>
-      <button mat-flat-button color="warn" style="margin-left: 5px">
-        <i class="fas fa-ban"></i> CANCELAR
-      </button>
-      <!-- </mat-card-actions>
-        <mat-card-footer>
-          <mat-progress-bar mode="indeterminate" *ngIf="cargandoArchivado" ></mat-progress-bar>
-        </mat-card-footer>
-      </mat-card> -->
-    </section>
-    <section id="rauchbier" class="tab-panel">
-      <mat-card>
-        <mat-card-content>
-          <div class="d-flex align-items-center">
-            <div class="col-8">
-              <mat-form-field appearance="fill" class="example-full-width">
-                <input matInput placeholder="INGRESE NRO ó ASUNTO DEL DOCUMENTO" [(ngModel)]="busquedaDocumentoByAdm" />
-              </mat-form-field>
-            </div>
-            <div class="col-4">
-              <button mat-flat-button color="primary" style="margin-left: 10px" (click)="busquedaDocumentoBySuperADM()" >
-                <i class="fas fa-search"></i> BUSCAR
-              </button>
-            </div>
-            <mat-divider class="col-12 m-2"></mat-divider>
-          </div>
-        </mat-card-content>
-      </mat-card>
-      <mat-card class="mt-2">
-        <mat-card-content>
-          <div class="mat-elevation-z8">
-            <table mat-table [dataSource]="dataSourceBusqueda" matSort #sortBusqueda="matSort">
-
-              <ng-container matColumnDef="Nro">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef mat-sort-header>
-                  Nro
-                </th>
-                <td mat-cell *matCellDef="let row">{{ row.codigo }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="Asunto">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by asunto" style="width: 250px; margin: 5px;">
-                  Asunto
-                </th>
-                <td mat-cell *matCellDef="let row">{{ row.asunto }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="Prioridad">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                  Prioridad
-                </th>
-                <td mat-cell *matCellDef="let row">
-                  <span class="badge text-bg-success" *ngIf="row.prioridad == 'NORMAL'">NORMAL</span>
-                  <span class="badge text-bg-warning" *ngIf="row.prioridad == 'URGENTE'">URGENTE</span>
-                  <span class="badge text-bg-danger" *ngIf="row.prioridad == 'MUY URGENTE'">MUY URGENTE</span>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="Documento">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                  Documento
-                </th>
-                <td mat-cell *matCellDef="let row">
-                  {{ row.clase + " Nro. " + row.nroOrden }}
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="Origen">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Origen">
-                  Origen
-                </th>
-                <td mat-cell *matCellDef="let row">{{ row.remitente }}</td>
-              </ng-container>
-              <ng-container matColumnDef="Destino">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Origen">
-                  Destino
-                </th>
-                <td mat-cell *matCellDef="let row">{{ row.destinatario }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="FechaDoc.">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                  FechaDoc.
-                </th>
-                <td mat-cell *matCellDef="let row">
-                  {{ row.fechaDocumento | date : "dd-MM-yyyy" }}
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="Acciones">
-                <th mat-header-cell *matHeaderCellDef >Acciones</th>
-                <td mat-cell *matCellDef="let row">
-                  <div class="d-grid gap-2 ">
-                    <button mat-flat-button  color="primary" type="button" class="mt-2"  (click)="openDialog(row)" >
-                      <i class="far fa-file-pdf" ></i> VER DOCUMENTO
-                    </button>
-                    <div class="btn-group mb-2">
-                      <button type="button" class="btn btn-success" (click)="viewSeguimiento(row.codigo)">
-                        <i class="fas fa-info-circle"></i> SEGUIMIENTO
-                      </button>
-                      <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="visually-hidden">Toggle Dropdown</span>
-                      </button>
-                      <ul class="dropdown-menu dropdown-menu-dark">
-                        <li><a class="dropdown-item"  (click)="viewSeguimiento(row.codigo)">REPORTE</a></li>
-                      </ul>
+                          <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                          <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                        </mat-form-field>
+                      </div>
+                      <div class="col align-content-center justify-content-evenly">
+                        <button mat-flat-button color="primary" style="margin-left: 10px"
+                        (click)="cargarDocumentos()" type="button">
+                          <i class="fas fa-search"></i> PENDIENTES
+                        </button>
+                        <button mat-flat-button color="accent" style="margin-left: 10px" (click)="findParaParte()"  type="button">
+                          <i class="fas fa-search"></i> POR FIRMAR
+                        </button>
+                      </div>
+                      <div class="col-12">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>UNIDAD OBTENIDA</mat-label>
+                          <input matInput placeholder="UNIDAD OBTENIDA" disabled value="{{organizacionArchivar}}" />
+                        </mat-form-field>
+                      </div>
                     </div>
+
+                    <div class="col-12 mat-elevation-z8">
+                      <table mat-table [dataSource]="dataSource" matSort>
+                        <ng-container matColumnDef="Acciones">
+                          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                          <td mat-cell *matCellDef="let row"></td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Nro">
+                          <th mat-header-cell mat-sort-header *matHeaderCellDef mat-sort-header
+                            sortActionDescription="Sort by codigo">
+                            Nro. Registro
+                          </th>
+                          <td mat-cell *matCellDef="let row">{{ row.codigo }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Asunto">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by asunto">
+                            Asunto
+                          </th>
+                          <td mat-cell *matCellDef="let row">{{ row.asunto }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Prioridad">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header mat-sort-header>
+                            Prioridad
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            <span class="badge text-bg-success" *ngIf="row.prioridad == 'NORMAL'">NORMAL</span>
+                            <span class="badge text-bg-warning" *ngIf="row.prioridad == 'URGENTE'">URGENTE</span>
+                            <span class="badge text-bg-danger" *ngIf="row.prioridad == 'MUY URGENTE'">MUY URGENTE</span>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Documento">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Documento
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            {{ row.clase + " Nro. " + row.nroOrden }}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Origen">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Origen">
+                            Origen
+                          </th>
+                          <td mat-cell *matCellDef="let row">{{ row.remitente }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Destino">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Origen">
+                            Destino
+                          </th>
+                          <td mat-cell *matCellDef="let row">{{ row.destinatario }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="FechaDoc.">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            FechaDoc.
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            {{ row.fechaDocumento | date : "dd-MM-yyyy" }}
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+                        <tr class="mat-row" *matNoDataRow>
+                          <td class="mat-cell" colspan="4">Sin datos obtenidos...</td>
+                        </tr>
+                      </table>
+
+                      <mat-paginator [pageSizeOptions]="[10, 15, 25, 100]" aria-label="Select page of users"></mat-paginator>
+                    </div>
+                  </mat-card-content>
+                  <mat-card-actions align="start">
+
+                  </mat-card-actions>
+              </mat-card>
+
+            </div>
+            <div class="col-5">
+              <mat-card>
+                <mat-card-header>
+                  <mat-card-title >Datos del solicitante</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="col">
+                    <mat-form-field appearance="fill" class="example-full-width">
+                      <mat-label>INGRESE NUMERO DE CIP DEL SOLICITANTE</mat-label>
+                      <input matInput placeholder="INGRESE NUMERO DE CIP"
+                        (keypress)="validarNumero($event)" (keydown.enter)="buscarPersona()" formControlName="cipSolicitante" />
+                      <mat-hint align="start" *ngIf="CIPIngresado?.length >= 5"
+                        style="color: #06d76c; margin-bottom: 5px"><strong>Presione la tecla Enter</strong>
+                      </mat-hint>
+                    </mat-form-field>
                   </div>
-                </td>
-              </ng-container>
+                  <div class="col">
+                    <mat-form-field appearance="fill" class="example-full-width">
+                      <mat-label>Nombre completo</mat-label>
+                      <input matInput placeholder="NOMBRE COMPLETO DEL SOLICITANTE" value="{{nombreCompleado}}" disabled/>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="fill" class="example-full-width">
+                      <mat-label>MOTIVO DE LA SOLICITUD</mat-label>
+                      <textarea matInput rows="5" formControlName="observacion"></textarea>
+                    </mat-form-field>
+                  </div>
+                </mat-card-content>
+                <mat-card-actions align="end">
+                  <button mat-flat-button color="primary" class="btn-opcion"
+                  type="submit" [disabled]="formArchivar.invalid" (click)="guardarAchivoForSuperADM()">
+                    <i class="fas fa-archive"></i> ARCHIVAR TODO
+                  </button>
+                  <button mat-flat-button color="warn" class="btn-opcion" type="button">
+                    <i class="fas fa-ban"></i> CANCELAR
+                  </button>
+                </mat-card-actions>
+              </mat-card>
 
-              <tr mat-header-row *matHeaderRowDef="displayedBusqueda"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedBusqueda"></tr>
-
-              <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" colspan="4">Sin datos obtenidos...</td>
-              </tr>
-            </table>
-
-            <mat-paginator #paginatorBusqueda [pageSizeOptions]="[10, 15, 25, 100]" aria-label="Select page of users"></mat-paginator>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </section>
-    <section id="grafica" class="tab-panel" >
-      <div class="container loader" *ngIf="cargandoNucleo"></div>
-      <div class="row">
-        <mat-card class="m-2 col-9" style="border-radius: 10px;">
-          <mat-card-content>
-            <div  *ngIf="!cargandoNucleo">
-              <canvas id="canvas" style="height: 150px;"></canvas>
-            </div>
-          </mat-card-content>
-        </mat-card>
-        <div class="col-2" *ngIf="!cargandoNucleo">
-
-          <div class="card">
-            <div class="item item--1">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                <path fill="rgba(149,149,255,1)"
-                d="M464 64H48C21.5 64 0 85.5 0 112v288c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zm0 48v40.8c-22.4 18.3-58.2 46.7-134.6 106.5-16.8 13.2-50.2 45.1-73.4 44.7-23.2 .4-56.6-31.5-73.4-44.7C106.2 199.5 70.4 171.1 48 152.8V112h416zM48 400V214.4c22.9 18.3 55.4 43.9 104.9 82.6 21.9 17.2 60.1 55.2 103.1 55 42.7 .2 80.5-37.2 103.1-54.9 49.5-38.8 82-64.4 104.9-82.7V400H48z"/></svg>
-
-              <span class="quantity"> {{countPendientes}} </span>
-              <span class="text text--1"> Pendientes </span>
-            </div>
-            <div class="item item--2">
-              <svg
-                height="24"
-                width="24"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M0 0L24 0 24 24 0 24z" fill="none"></path>
-                <path
-                  fill="rgba(252,161,71,1)"
-                  d="M16 16c1.657 0 3 1.343 3 3s-1.343 3-3 3-3-1.343-3-3 1.343-3 3-3zM6 12c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4zm10 6c-.552 0-1 .448-1 1s.448 1 1 1 1-.448 1-1-.448-1-1-1zM6 14c-1.105 0-2 .895-2 2s.895 2 2 2 2-.895 2-2-.895-2-2-2zm8.5-12C17.538 2 20 4.462 20 7.5S17.538 13 14.5 13 9 10.538 9 7.5 11.462 2 14.5 2zm0 2C12.567 4 11 5.567 11 7.5s1.567 3.5 3.5 3.5S18 9.433 18 7.5 16.433 4 14.5 4z"
-                ></path>
-              </svg>
-              <span class="quantity"> {{countFirmar}} </span>
-              <span class="text text--2"> Por Firmar </span>
-            </div>
-            <div class="item item--3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                width="24"
-                height="24"
-              >
-                <path fill="none" d="M0 0h24v24H0z"></path>
-                <path
-                  d="M20.083 15.2l1.202.721a.5.5 0 0 1 0 .858l-8.77 5.262a1 1 0 0 1-1.03 0l-8.77-5.262a.5.5 0 0 1 0-.858l1.202-.721L12 20.05l8.083-4.85zm0-4.7l1.202.721a.5.5 0 0 1 0 .858L12 17.65l-9.285-5.571a.5.5 0 0 1 0-.858l1.202-.721L12 15.35l8.083-4.85zm-7.569-9.191l8.771 5.262a.5.5 0 0 1 0 .858L12 13 2.715 7.429a.5.5 0 0 1 0-.858l8.77-5.262a1 1 0 0 1 1.03 0zM12 3.332L5.887 7 12 10.668 18.113 7 12 3.332z"
-                  fill="rgba(66,193,110,1)"
-                ></path>
-              </svg>
-              <span class="quantity"> {{countArchivados}} </span>
-              <span class="text text--3"> Archivados </span>
-            </div>
-            <div class="item item--4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                width="24"
-                height="24"
-              >
-                <path fill="none" d="M0 0h24v24H0z"></path>
-                <path
-                  d="M12 20h8v2h-8C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10a9.956 9.956 0 0 1-2 6h-2.708A8 8 0 1 0 12 20zm0-10a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm-4 4a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm8 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm-4 4a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"
-                  fill="rgba(220,91,183,1)"
-                ></path>
-              </svg>
-              <span class="quantity"> {{countRemitidos}} </span>
-              <span class="text text--4"> Remitidos </span>
             </div>
           </div>
+          <div>
+          </div>
+          <!-- <div class="row">
+            <div class="bg-success p-2 text-dark bg-opacity-10 mw-100">{{formArchivar.value | json}}</div>
+          </div> -->
+      </mat-card-content>
+      <mat-card-footer>
+        <mat-progress-bar mode="indeterminate" *ngIf="cargandoArchivado" ></mat-progress-bar>
+      </mat-card-footer>
+  </mat-card>
 
-
-        </div>
-      </div>
-      <mat-divider class="m-2"></mat-divider>
-      <div class="row">
-        <mat-card class="m-2 col-3" style="border-radius: 10px;">
-          <mat-card-content>
-            <div class="row">
-              <ng-select placeholder="LISTA DE NUCLEOS" [virtualScroll]=true [(ngModel)]="nucleoSeleccionado"
-              (change)="getChildren()"
-                 style="font-size: 14px;" class="example-full-width">
-                 <mat-option>SELECCIONE</mat-option>
-                 <ng-option *ngFor="let c of nucleos" [value]="c" >{{c.acronimo}}</ng-option>
-             </ng-select>
-
-             <ng-select placeholder="LISTA DE BRIGADAS" [virtualScroll]=true
-                 style="font-size: 14px;" class="example-full-width" [(ngModel)]="brigadaSeleccionada"
-                 (change)="getUnidad()">
-                 <mat-option>SELECCIONE</mat-option>
-                 <ng-option *ngFor="let c of brigadas" [value]="c" >{{c.acronimo}}</ng-option>
-             </ng-select>
-
-             <ng-select placeholder="LISTA DE UNIDADES" [virtualScroll]=true
-                 style="font-size: 14px;" class="example-full-width" [(ngModel)]="unidadSeleccionada"
-                 (change)="mostrarDetalle()">
-                 <mat-option>SELECCIONE</mat-option>
-                 <ng-option *ngFor="let c of unidades" [value]="c" >{{c.acronimo}}</ng-option>
-             </ng-select>
-             <button mat-flat-button color="primary" class="example-full-width" (click)="mostrarDetalle()" >
-               <i class="fas fa-search"></i> BUSCAR
-              </button>
-              <button mat-flat-button
-                  style="background: rgba(25, 135, 84); color: #fff; margin-top: 5px; height: 100%;"
-                  class="example-full-width" (click)="exportSuperAdm()" >
-                <i class="fas fa-file-excel"></i> EXPORTAR A EXCEL
-              </button>
-            </div>
-          </mat-card-content>
-        </mat-card>
-        <mat-card class="m-2 col-8" style="border-radius: 10px;" *ngIf="mostrarDetalleGrafica">
-          <mat-card-content>
-            <div *ngIf="!documentoBandejaBySuperAdm">
-              <canvas id="canvasHorizontal"></canvas>
-            </div>
-          </mat-card-content>
-        </mat-card>
-      </div>
-
-
-    </section>
-  </div>
-</div>
+</form>

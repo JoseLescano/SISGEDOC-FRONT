@@ -44,7 +44,13 @@ import { AdmDocumentoComponent } from './documento/adm-documento/adm-documento.c
 import { PersonaExternaComponent } from './persona-externa/persona-externa.component';
 import { ListPendientesComponent } from './facilita/list-pendientes/list-pendientes.component';
 import { SearchComponent } from './organizacion/search/search.component';
+import { ViewAccionesComponent } from './acciones/view-acciones/view-acciones.component';
+import { ViewPeriodosComponent } from './periodos/view-periodos/view-periodos.component';
 
+
+import { ViewRolesComponent } from './roles/view-roles/view-roles.component';
+import { ViewClasesComponent } from './clases/view-clases.component';
+import { ViewMenuComponent } from './menu/view-menu.component';
 const routes: Routes = [
 
    { path: '', redirectTo: 'dashboard', pathMatch:'full' },
@@ -92,6 +98,11 @@ const routes: Routes = [
   { path: 'update-devueltos/:codigoDocumento/:idDecreto', component: UpdateDevolverComponent  },
   { path: 'list-facilita', component: ListPendientesComponent  },
 
+  { path: 'acciones', component: ViewAccionesComponent },
+  { path: 'periodos', component: ViewPeriodosComponent },
+  { path: 'clases', component: ViewClasesComponent },
+  { path: 'menu', component: ViewMenuComponent },
+  { path: 'roles', component: ViewRolesComponent },
   { path: 'viewPersonal', component: SearchComponent  },
 ];
 

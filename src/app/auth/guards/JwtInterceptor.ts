@@ -11,6 +11,7 @@ export class JwtInterceptor implements HttpInterceptor {
     constructor(private loginService: LoginService) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
       const helper = new JwtHelperService();
       let token = sessionStorage.getItem(environment.TOKEN_NAME);
       if (token==null){

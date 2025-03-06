@@ -10,6 +10,8 @@ import { RegistrarMPComponent } from '../registrar/registrarMP.component';
 import { environment } from 'src/environments/environment';
 import { ViewDocumentoComponent } from '../../view-documento/view-documento.component';
 import { ExcelService } from 'src/app/_service/excel.service';
+import { TimelineComponent } from 'src/app/pages/report/timeline/timeline.component';
+import { SeguimientoComponent } from 'src/app/pages/report/seguimiento/seguimiento.component';
 
 @Component({
   selector: 'app-recibir',
@@ -40,6 +42,22 @@ export class RecibirComponent implements OnInit, AfterViewInit {
       Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
     });
   }
+
+  viewTimeline(vidDocumento: any){
+      const dialogRef = this.dialog.open(TimelineComponent, {
+        width: '60%',
+        height: '95%',
+        data: vidDocumento,
+      });
+  }
+
+  viewSeguimiento(documentoSeleccionado?:any): void {
+      const dialogRef = this.dialog.open(SeguimientoComponent, {
+        width: '60%',
+        height: '95%',
+        data: documentoSeleccionado,
+      });
+    }
 
   exportTable() {
     this.excelService.exportTableToExcel('mytable', 'LISTA DE DOCUMENTOS RECIBIDOS');

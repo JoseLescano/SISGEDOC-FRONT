@@ -16,6 +16,7 @@ export class ErrorInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(catchError(err => {
+            debugger
             if ([204].includes(err.status)){
               this.error = 'SIN DATA';
             }
@@ -24,19 +25,25 @@ export class ErrorInterceptor implements HttpInterceptor {
                 this.error = 'NO CUENTA CON LAS CREDENCIALES CORRESPONDENTES';
                 this.loginService.logout();
               }  if(err.status==404){
-                this.error = err.error.message;
+                debugger
+                this.error = err.error.message || err.error.title;
               }else {
                 this.error = err.error.message;
                 this.loginService.logout();
               }
-            }else {
-              if ([500,400].includes(err.status)){
+            }
+
+            if ([500,400].includes(err.status)){
                 if(err.status==500)
                   this.error ='ERROR INTERNO DE SERVIDOR';
                 else if(err.status==400)
                   this.error ='ERROR EN LA LOGICA DE NEGOCIO';
-              } else this.error = err.error.message;
             }
+            if ([0].includes(err.status)){
+              this.error ='SIN CONEXION AL SERVIDOR';
+              this.loginService.logout();
+            } else this.error = err.error.message;
+
             // const error = err.error.message || err.statusText;
             return throwError(this.error);
         }))
