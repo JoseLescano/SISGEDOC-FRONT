@@ -1,7 +1,7 @@
 <mat-card class="m-2">
   <mat-card-title>Mantenimiento de unidades</mat-card-title>
   <mat-card-content>
-    <div class="d-flex align-items-cente">
+    <!-- <div class="d-flex align-items-cente">
       <div class="col-4">
         <mat-form-field appearance="fill" class="example-full-width" >
           <mat-label>SELECCIONE TIPO</mat-label>
@@ -18,6 +18,18 @@
           <input matInput placeholder="INGRESE CODIGO DE UNIDAD O NOMBRE ACRONIMO/COMPLETO">
         </mat-form-field>
       </div>
+    </div> -->
+    <mat-chip-list aria-label="Fish selection" class="mt-2">
+      <mat-chip [(ngModel)]="!mostrarInput" selected>Codigo</mat-chip>
+      <mat-chip color="primary" selected >Internas</mat-chip>
+      <mat-chip color="accent" selected>Externas</mat-chip>
+      <mat-chip color="warn" selected (click)="searchOrganizacion(4)" >Olaya</mat-chip>
+    </mat-chip-list>
+    <div class="col-12 mt-2" *ngIf="mostrarInput">
+      <mat-form-field appearance="fill" class="example-full-width" style="margin-left: 5px;">
+        <mat-label>INGRESE CODIGO DE UNIDAD O NOMBRE ACRONIMO/COMPLETO</mat-label>
+        <input matInput placeholder="INGRESE CODIGO DE UNIDAD O NOMBRE ACRONIMO/COMPLETO">
+    </mat-form-field>
     </div>
   </mat-card-content>
 </mat-card>

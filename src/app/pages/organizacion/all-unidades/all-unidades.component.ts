@@ -23,6 +23,7 @@ export class AllUnidadesComponent implements OnInit {
   ];
 
   itemSeleccionado: number= 0;
+  mostrarInput:boolean;
 
   displayedColumns: string[] = ['#', 'COD.INTERNO', 'ACRONIMO', 'NOMBRE-COMPLETO', 'ACCIONES'];
   dataSource: MatTableDataSource<OrganizacionDiagram>;
@@ -55,9 +56,9 @@ export class AllUnidadesComponent implements OnInit {
       this.dataSource.sort = this.sort;
   }
 
-  searchOrganizacion(){
+  searchOrganizacion(codigo:any){
     this.dataSource = null;
-    if(this.itemSeleccionado ===4){
+    if(codigo === 4){
       this.organizacionService.getWithCodigoCopere().subscribe(
         {
           next: (response: any)=> {
