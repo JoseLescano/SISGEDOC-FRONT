@@ -57,7 +57,9 @@ export class FormComponent implements OnInit {
     const id = +this.route.snapshot.paramMap.get('codigoDocumento');
     this.idDecreto = +this.route.snapshot.paramMap.get('idDecreto');
     this.idDocumento = id;
+
     this.documentoService.findById(this.idDocumento).pipe(switchMap((response:any)=> {
+
       this.documento = response;
       this.organizacionLogueada = sessionStorage.getItem(environment.codigoOrganizacion);
       this.documentoService.existByDocumento(this.idDocumento).subscribe((response: any )=> {
@@ -66,7 +68,9 @@ export class FormComponent implements OnInit {
       this.findAnexosByDocumento();
       return this.documentoService.findRespuestaByVidParent(this.idDocumento, this.idDecreto);
       })).subscribe((responseDocumentoPadre: any)=>{
+
       if (responseDocumentoPadre!=null){
+
         this.documentoRespuesta = new Documento();
         this.documentoRespuesta = {...responseDocumentoPadre};
         this.mostrarRespuesta = true;
@@ -76,7 +80,7 @@ export class FormComponent implements OnInit {
         this.documentoService.viewPDF(this.idDocumento).pipe(switchMap((viewDocumento:any)=> {
           this.crearDocumento(viewDocumento.data, 'documentoReferencia');
           this.anexoService.findByDocumento(this.documentoRespuesta.codigo).subscribe((response:any)=> {
-            debugger;
+
             this.anexosRespuesta = response.data;
           }, error => {
             Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR ANEXOS!`, 'warning');
@@ -91,11 +95,13 @@ export class FormComponent implements OnInit {
           Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR PDF!`, 'warning');
         });
       } else {
+
         if (this.documento.organizacionOrigen.codigoInterno==this.organizacionLogueada){
           this.mostrarDistribuir = true;
           this.mostrarRespuesta = true;
         }
         this.documentoService.viewPDF(this.documento.codigo).subscribe((response:any)=> {
+
           this.crearDocumento(response.data, 'documentoRespuesta');
         }, (error:any) => {
           this.errorPDF = true;
@@ -267,7 +273,7 @@ export class FormComponent implements OnInit {
             this.documento.codigo,
             sessionStorage.getItem(environment.codigoOrganizacion),
             this.idDecreto,
-            this.cambioPDF?this.nameDocumentoFirmado:'')
+            this.cambioPDF?this.nameDocumentoFirmado:'',0)
           .subscribe((response:any)=> {
             if (response.httpStatus=='CREATED'){
               Swal.fire('DOCUMENTO ELEVADO', response.message, 'info');
@@ -418,23 +424,22 @@ export class FormComponent implements OnInit {
   // }
 
   firmarDocumento(){
-    this.cargando = true;
-    this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response: any) => {
-      var nameFile = response[1];
-      this.firmaPeruService.iniciarFirma(response[1]).then(() => {
-        this.cargando = false;
-        Swal.fire('FIRMA COMPLETADA', 'SE FIRMO DOCUMENTO CORRECTAMENTE, SE ACTUALIZARÁ DOCUMENTO', 'info');
-        this.updateIframeWithKeyDigitalGeneral(nameFile);
-      }).catch((error) => {
-        this.cargando = false;
-        Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
-        console.error('Error durante la firma:', error);
-      });
-    }, error => {
-      this.cargando = false;
-      Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
-    });
-
+     this.cargando = true;
+     this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response: any) => {
+       var nameFile = response[1];
+       this.firmaPeruService.iniciarFirma(response[1]).then(() => {
+         this.cargando = false;
+         Swal.fire('FIRMA COMPLETADA', 'SE FIRMO DOCUMENTO CORRECTAMENTE, SE ACTUALIZARÁ DOCUMENTO', 'info');
+         this.updateIframeWithKeyDigitalGeneral(nameFile);
+       }).catch((error) => {
+         this.cargando = false;
+         Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
+         console.error('Error durante la firma:', error);
+       });
+     }, error => {
+       this.cargando = false;
+       Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
+     });
   }
 
   updateIframeWithKeyDigitalGeneral(inNameFile: any) {

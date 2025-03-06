@@ -93,7 +93,7 @@
                         <li><a class="dropdown-item" (click)="viewTimeline(row.codigo)">GRAFICA</a></li>
                       </ul>
                     </div>
-                    <button mat-flat-button  color="accent" class="mb-2" (click)="VerRespuesta(row.codigo, row.observacionDecreto)" *ngIf="row.tieneRespuesta==1" >
+                    <button mat-flat-button  color="accent" class="mb-2" (click)="VerRespuesta(row.codigo, row.codigoDecreto)" *ngIf="row.tieneRespuesta==1" >
                       <i class="far fa-file-pdf" ></i> VER RESPUESTA
                     </button>
                   </div>

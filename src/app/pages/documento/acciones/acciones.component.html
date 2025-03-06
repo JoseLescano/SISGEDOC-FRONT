@@ -9,18 +9,22 @@
 
   <div class="tab-panels" >
     <section id="marzen" class="tab-panel">
-      <div class="row" style="height: 600px;">
-        <div  class="col-xs-12 col-sm-12 col-md-12 col-lg-9"  >
-          <iframe id="embeddedPage" style="width: 100%; height: 100%; border: 1px solid black; border-radius: 5px;" *ngIf="!errorPDF" ></iframe>
-          <div  style="width: 100%; height: 100%; border: 1px solid black;
-                  border-radius: 5px; align-items: center; align-content: center;
-                  text-align: center; " *ngIf="errorPDF">
-            <i class="fas fa-exclamation-triangle" style="color: red;" ></i>
-            <strong style="font-size: 12px;"> Error en PDF!</strong>
+      <div class="row" style="min-height: 100%;">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-9" style="min-height: 200%; " >
+          <iframe id="embeddedPage"
+                  style="width: 100%; min-height: 100%;  border: 1px solid black; border-radius: 5px;"
+                  *ngIf="!errorPDF">
+          </iframe>
+          <div *ngIf="errorPDF"
+               style="width: 100%; height: 100%; border: 1px solid black;
+                      border-radius: 5px; display: flex;
+                      justify-content: center; align-items: center;">
+            <i class="fas fa-exclamation-triangle" style="color: red;"></i>
+            <strong style="font-size: 12px; margin-left: 10px;">¡Error en PDF!</strong>
           </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
-        <div class="card mb-3" style="width: 100%; height: 100%;background-color: #fdfdff;">
+          <div class="card mb-3" style="width: 100%; background-color: #fdfdff;">
           <div class="card-header">ACCIONES</div>
           <div class="card-body">
             <div class="d-grid gap-2 col-12 mx-auto">
