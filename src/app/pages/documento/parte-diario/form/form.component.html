@@ -41,9 +41,10 @@
                     </div>
                     <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab" style=" height: 100%;">
                       <mat-selection-list #shoes [multiple]="false" *ngIf="anexos?.length>0">
-                        <h2>Anexos adjuntados en la referencia</h2>
+                        <!-- <h2>Anexos adjuntados en la referencia</h2> -->
+                        <div mat-subheader>Anexos adjuntados en la referencia</div>
                         <mat-list-option *ngFor="let item of anexos" (click)="descargarAnexo(item)">
-                          <mat-icon mat-list-icon>folder</mat-icon>
+                          <i class="far fa-file-archive" style="size: 32px;"></i>
                           <div mat-line>{{item.url}}</div>
                           <div mat-line> {{item.fechaCreacion| date}} </div>
                         </mat-list-option>
@@ -54,9 +55,10 @@
                       </div>
 
                       <mat-selection-list #shoes [multiple]="false" *ngIf="anexosRespuesta?.length>0">
-                        <h2>Anexos adjuntados en la respuesta</h2>
+                        <!-- <h2>Anexos adjuntados en la respuesta</h2> -->
+                        <div mat-subheader>Anexos adjuntados en la respuesta</div>
                         <mat-list-option *ngFor="let item of anexosRespuesta" (click)="descargarAnexo(item)">
-                          <mat-icon mat-list-icon>folder</mat-icon>
+                          <i class="far fa-file-archive" style="size: 32px;"></i>
                           <div mat-line>{{item.url}}</div>
                           <div mat-line> {{item.fechaCreacion| date}} </div>
                         </mat-list-option>
