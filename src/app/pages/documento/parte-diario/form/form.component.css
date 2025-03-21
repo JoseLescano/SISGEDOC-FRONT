@@ -1,5 +1,16 @@
 .btn-war{
-    background: #ffc107; 
-    color: #000; 
+    background: #ffc107;
+    color: #000;
     border-color: #ffc107;
+}
+
+
+.files:hover {
+  cursor: pointer;
+  background: #130D84;
+  padding: 10px;
+  width: 100%;
+  border-radius: 12px;
+  font-weight: 500;
+  color: #ffffff;
 }

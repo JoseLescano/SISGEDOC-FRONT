@@ -17,15 +17,11 @@
           </mat-card-header>
             <mat-tab-group mat-align-tabs="start">
               <mat-tab label="DATOS DE CORRECION">
-                  <!-- <mat-form-field  appearance="fill" class="mt-2">
-                    <mat-label>CODIGO DE DOCUMENTO</mat-label>
-                    <input matInput disabled value="{{vidDocumento}}">
-                  </mat-form-field> -->
                   <div class="col-12" style="max-height: 200px; overflow-y: auto;">
                     <mat-list>
                       <div mat-subheader>Correciones registradas</div>
                       <mat-list-item *ngFor="let item of correciones" class="mb-2" >
-                        <mat-icon mat-list-icon>chat</mat-icon>
+                        <i class="far fa-file-archive" style="size: 64px; "></i>
                         <div mat-line style="white-space: normal; word-wrap: break-word;"><span>OBSERVACION:</span> {{ item.observacion}}</div>
                         <div mat-line>{{ 'RESPONSABLE: ' + item.usuarioRegistra }}</div>
                         <div mat-line> {{item.fechaCreacion }} </div>
