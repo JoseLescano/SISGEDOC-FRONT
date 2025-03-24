@@ -106,6 +106,7 @@ export class EnvioExternoComponent implements OnInit {
             }
           },
           error: (err: any) => {
+            debugger;
             this.cargando = false;
             if (err.error && err.error.message) {
                 Swal.fire('Lo sentimos', err.error.message, 'info');

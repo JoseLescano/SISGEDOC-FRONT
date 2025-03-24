@@ -15,6 +15,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     error: any = '';
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+      debugger;
         return next.handle(request).pipe(catchError(err => {
             debugger
             if ([204].includes(err.status)){
@@ -38,6 +39,10 @@ export class ErrorInterceptor implements HttpInterceptor {
                   this.error ='ERROR INTERNO DE SERVIDOR';
                 else if(err.status==400)
                   this.error ='ERROR EN LA LOGICA DE NEGOCIO';
+            }
+
+            if ([413].includes(err.status)){
+              this.error =err.error;
             }
             if ([0].includes(err.status)){
               this.error ='SIN CONEXION AL SERVIDOR';
