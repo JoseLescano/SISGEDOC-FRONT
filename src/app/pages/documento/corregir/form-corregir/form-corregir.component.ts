@@ -19,6 +19,7 @@ export class FormCorregirComponent implements OnInit {
 
   url_pdf: any;
   vidDocumento:any;
+  decretoId: any;
   observaciones : any = '';
   selectedFiles: any;
   errorPDF : boolean = false;
@@ -32,9 +33,7 @@ export class FormCorregirComponent implements OnInit {
     private elRef: ElementRef,
     private router: Router,
     private correcionService: CorrecionService,
-    private respuesta : DocumentoRespuestaService,
-    @Inject(MAT_DIALOG_DATA) private data:any,
-    private matDialog: MatDialogRef<FormCorregirComponent>,) {
+    private respuesta : DocumentoRespuestaService) {
 
     }
 
@@ -43,16 +42,18 @@ export class FormCorregirComponent implements OnInit {
   }
 
   getIdDocumento(): void {
-    this.vidDocumento = this.data.documento;
-    let decreto = this.data.decreto;
-    this.viewDocumento(decreto);
-    this.correcionService.findByDecreto(this.data.decreto).subscribe((response:any)=> {
+    debugger
+    const id = +this.route.snapshot.paramMap.get('codigoDocumento');
+    this.decretoId = +this.route.snapshot.paramMap.get('idDecreto');
+    this.vidDocumento = id;
+    this.viewDocumento(id);
+    this.correcionService.findByDecreto(this.decretoId).subscribe((response:any)=> {
       this.correciones = response;
     })
   }
 
   viewDocumento(decreto: any){
-    this.respuesta.viewPDFByDecreto(decreto).subscribe((response: any)=>{
+    this.documentoService.viewPDF(decreto).subscribe((response: any)=>{
       this.crearDocumento(response.data, 'embeddedPage');
       this.errorPDF = false;
     }, error => {
@@ -76,25 +77,25 @@ export class FormCorregirComponent implements OnInit {
 
   }
 
-  corregirDocumento(){
-    if ((this.observaciones != '' && this.observaciones != null) && this.selectedFiles !=null){
-      this.respuesta.corregirDocumento(this.data.decreto, this.selectedFiles[0],
-        this.observaciones).pipe(switchMap((response: any)=>{
-          if (response.httpStatus=='CREATED'){
-            Swal.fire('ACCION REALIZADA', response.message, 'info');
-          }else {
-            Swal.fire('LO SENTIMOS', response.message, 'info');
-          }
-          return this.documentoService.findForCorregir(sessionStorage.getItem(environment.codigoOrganizacion));
-      })).subscribe((data: any) => {
-        this.documentoService.setDocumentoCambio(data);
-        this.close();
-      });
-    }else {
-      Swal.fire('Lo sentimos!', `Debe de ingresar una observación y/o adjuntar documento para continuar con el registro`, 'info');
-    }
+  // corregirDocumento(){
+  //   if ((this.observaciones != '' && this.observaciones != null) && this.selectedFiles !=null){
+  //     this.respuesta.corregirDocumento(this.data.decreto, this.selectedFiles[0],
+  //       this.observaciones).pipe(switchMap((response: any)=>{
+  //         if (response.httpStatus=='CREATED'){
+  //           Swal.fire('ACCION REALIZADA', response.message, 'info');
+  //         }else {
+  //           Swal.fire('LO SENTIMOS', response.message, 'info');
+  //         }
+  //         return this.documentoService.findForCorregir(sessionStorage.getItem(environment.codigoOrganizacion));
+  //     })).subscribe((data: any) => {
+  //       this.documentoService.setDocumentoCambio(data);
+  //       this.close();
+  //     });
+  //   }else {
+  //     Swal.fire('Lo sentimos!', `Debe de ingresar una observación y/o adjuntar documento para continuar con el registro`, 'info');
+  //   }
 
-  }
+  // }
 
   seleccionarDocumento(event: any): void {
     this.cambioPDF = true;
@@ -169,8 +170,8 @@ export class FormCorregirComponent implements OnInit {
     };
   }
 
-  close(){
-    this.matDialog.close();
-  }
+  // close(){
+  //   this.matDialog.close();
+  // }
 
 }

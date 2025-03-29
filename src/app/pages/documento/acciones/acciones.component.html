@@ -8,9 +8,9 @@
   <label for="tab2">ANEXOS</label>
 
   <div class="tab-panels" >
-    <section id="marzen" class="tab-panel">
-      <div class="row" style="min-height: 100%;">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-9" style="min-height: 200%; " >
+    <section id="marzen" class="tab-panel" >
+      <div class="row" >
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-9" style="min-height: 650px; " >
           <iframe id="embeddedPage"
                   style="width: 100%; min-height: 100%;  border: 1px solid black; border-radius: 5px;"
                   *ngIf="!errorPDF">
@@ -61,8 +61,15 @@
               </button>
             </div>
           </div>
-        </div>
-
+          </div>
+          <div class="card mb-3" style="width: 100%; background-color: #fdfdff;">
+            <div class="card-header">
+              OBSERVACIONES Y/O INDICACIONES
+            </div>
+            <div class="card-body">
+              {{observaciones | uppercase}}
+            </div>
+          </div>
       </div>
     </div>
     </section>

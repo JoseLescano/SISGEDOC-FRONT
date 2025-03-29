@@ -1,5 +1,5 @@
 {
-    "workbench.iconTheme": "fira-code-material-icon-theme",
+    "workbench.iconTheme": "eq-material-theme-icons",
     "editor.fontFamily": "'Fira Code', Menlo, Monaco, 'Courier New', monospace",
     "editor.fontLigatures": true,
     // "editor.guides.bracketPairs": true,
@@ -13,6 +13,6 @@
     "editor.matchBrackets": "never",
     "breadcrumbs.enabled": false,
     "material-icon-theme.rootFolders.associations": {
-        
+
     }
 }

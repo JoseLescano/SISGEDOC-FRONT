@@ -60,7 +60,7 @@ export class FormComponent implements OnInit {
 
     this.documentoService.findById(this.idDocumento).pipe(switchMap((response:any)=> {
 
-      this.documento = response;
+      this.documento = response.data;
       this.organizacionLogueada = sessionStorage.getItem(environment.codigoOrganizacion);
       this.documentoService.existByDocumento(this.idDocumento).subscribe((response: any )=> {
         this.existeWord = response;
@@ -68,12 +68,13 @@ export class FormComponent implements OnInit {
       this.findAnexosByDocumento();
       return this.documentoService.findRespuestaByVidParent(this.idDocumento, this.idDecreto);
       })).subscribe((responseDocumentoPadre: any)=>{
-
+        debugger;
       if (responseDocumentoPadre!=null){
 
         this.documentoRespuesta = new Documento();
         this.documentoRespuesta = {...responseDocumentoPadre};
         this.mostrarRespuesta = true;
+        debugger;
         if (this.documentoRespuesta.organizacionOrigen.codigoInterno==this.organizacionLogueada){
           this.mostrarDistribuir = true;
         }
@@ -124,6 +125,7 @@ export class FormComponent implements OnInit {
   }
 
   findAnexosByDocumento(){
+
     this.anexoService.findByDocumento(this.documento.codigo).subscribe((response:any)=> {
       this.anexos = response.data;
     }, error => {

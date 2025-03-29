@@ -47,7 +47,7 @@ export class ViewRemitidosComponent implements OnInit {
   // =======================================================================================================
 
   ngOnInit(): void {
-    this.generarReporte();
+    this.generarReporte('DOCUMENTOS ENCONTRADOS DE LOS ULTIMOS 30 DÍAS');
   }
 
   viewTimeline(vidDocumento: any){
@@ -62,12 +62,12 @@ export class ViewRemitidosComponent implements OnInit {
     this.excelService.exportTableToExcel('mytable', 'LISTA DE DOCUMENTOS REMITIDOS');
   }
 
-  generarReporte(fi?:any, ff?:any): void {
+  generarReporte(aviso: any, fi?:any, ff?:any): void {
     this.cargando = true;
     this.documentoService.findRemitidos(sessionStorage.getItem(environment.codigoOrganizacion), fi, ff).subscribe( {
       next : (data: any) => {
         this.createTable(data);
-        Swal.fire('AVISO', 'DOCUMENTOS ENCONTRADOS DE LOS ULTIMOS 30 DÍAS', 'info')
+        Swal.fire('AVISO', aviso, 'info')
         this.cargando = false;
       }, error: (err : any)=> {
        this.cargando = false;
@@ -150,7 +150,9 @@ export class ViewRemitidosComponent implements OnInit {
 
   buscarFechas(){
     if (this.range.value['start']!= null && this.range.value['end']!=null){
-      this.generarReporte(environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end']));
+      this.generarReporte('SE ENCONTRO DOCUMENTOS',
+         environment.convertDateToStr(this.range.value['start']),
+         environment.convertDateToStr(this.range.value['end']));
     }else {
       Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
     }

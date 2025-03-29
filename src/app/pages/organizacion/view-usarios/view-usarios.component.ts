@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -29,9 +29,8 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
   roles: Rol[] = [];
   campoIngresado: any = '';
   persona: Persona = new Persona();
-  nombreCompleado: string;
-  puesto : string;
-  rolSeleccionado: Rol;
+  nombreCompleado: string = '';
+  form : FormGroup;
 
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -50,8 +49,10 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
+    this.initForm();
     this.organizacionService.findByCodigoInterno(this.data).pipe(switchMap((response:any)=> {
       this.organizacionSeleccionada = response.data;
+      this.form.get('codigoOrganizacion').setValue(this.organizacionSeleccionada.codigoInterno);
       this.rolService.findForUsuario().subscribe((responseRoles:any)=>{
         this.roles = responseRoles;
       });
@@ -59,13 +60,29 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
     })).subscribe((responsePerfil:any)=> {
       this.createTable(responsePerfil);
     });
+
   }
 
-  buscarPersona(campo:any){
+  initForm(){
+    this.form = new FormGroup({
+      'codigo': new FormControl(0),
+      'codigoOrganizacion': new FormControl('', [Validators.required]),
+      'nroDocumento': new FormControl(''),
+      'usuario': new FormControl('', [Validators.required]),
+      'codigoRol': new FormControl('', [Validators.required]),
+      'puesto': new FormControl('', [Validators.required]),
+    })
+  }
+
+  buscarPersona(){
+    debugger
     this.cargando = true;
-    this.personaService.findByCampo(this.campoIngresado).subscribe((data:any)=>{
+    let nroDcumento = this.form.value['nroDocumento'];
+    let usuario = this.form.value['usuario'];
+    this.personaService.findByCampo(nroDcumento==''? usuario:nroDcumento).subscribe((data:any)=>{
       this.persona = data;
       this.nombreCompleado = this.persona.grado_LARGA + ' '+ this.persona.arma_LARGA + ' '+  this.persona.apellidos+  ' ' + this.persona.nombres;
+      this.form.get('usuario').setValue(this.persona.usuario_CHASQUI);
       this.cargando=false;
     }, (error: any)=> {
       this.persona = null;
@@ -94,46 +111,39 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
     this.matDialog.close();
   }
 
-  registrarPerfil(){
-    if (this.validar()){
-      this.perfilService.registrarPerfil(this.organizacionSeleccionada.codigoInterno, this.persona.usuario_CHASQUI,
-        this.puesto, this.rolSeleccionado.codigo).subscribe((response:any)=> {
-          if (response.data==0){
-            Swal.fire('OPERACION REALIZADA', response.message, 'success');
-            this.perfilService.findByOrganizacion(this.organizacionSeleccionada.codigoInterno).subscribe((response:any)=>{
-              this.createTable(response);
-            });
+  operate(){
+    if (this.form.valid){
+      let codigoOrganizacion = this.form.value['codigoOrganizacion'];
+      let usuario = this.form.value['usuario'];
+      let rol = this.form.value['codigoRol'];
+      let puesto = this.form.value['puesto'];
+      let codigo = this.form.value['codigo'];
+      debugger
+      this.perfilService.registrarPerfil(codigoOrganizacion, usuario,
+        puesto, rol.codigo, codigo== '' ? 0:codigo).subscribe(
+          {
+            next: (response: any)=> {
+                Swal.fire('OPERACION REALIZADA', response.message, 'success');
+                this.perfilService.findByOrganizacion(codigoOrganizacion).subscribe((response:any)=>{
+                  this.createTable(response);
+                 });
+            }, error: (err: any)=> {
+              debugger
+              Swal.fire('AVISO', err.message, 'warning');
+            }
           }
-          else {
-            Swal.fire('LO SENTIMOS', response.message, 'info');
-          }
-        }, error => {
-          Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'warning');
-        });
-    }
-  }
-
-  validar():boolean{
-    var organizacion = this.organizacionSeleccionada != null && this.organizacionSeleccionada.codigoInterno != '';
-    var puesto = this.puesto != null && this.puesto != '';
-    var rol = this.rolSeleccionado != null && this.rolSeleccionado.codigo !='';
-    var usuario = this.persona.usuario_CHASQUI != null && this.persona.usuario_CHASQUI != '';
-    if (!organizacion || !puesto || !rol || !usuario){
-      Swal.fire('Datos incompletos', `Complete todos los campos`, 'error');
-      return false;
-    } else {
-      return true;
+      );
+    }else {
+      Swal.fire('AVISO', 'INGRESE LOS DATOS REQUERIDOS', 'info');
     }
   }
 
   seleccionarUsuario(perfilSeleccionado: any) {
-    this.puesto = perfilSeleccionado.nombre;
-    this.rolSeleccionado = this.roles.find(role => role.codigo === perfilSeleccionado.rol.codigo); // Buscar rol específico
-    this.persona.usuario_CHASQUI = perfilSeleccionado.usuario.usuario_CHASQUI;
-    this.organizacionSeleccionada.codigoInterno = perfilSeleccionado.organizacion.codigoInterno;
-
-    this.cdr.detectChanges(); // Forzar detección de cambios
-
+    this.form.get('codigo').setValue(perfilSeleccionado.codigo);
+    this.form.get('usuario').setValue(perfilSeleccionado.usuario.usuario_CHASQUI);
+    this.form.get('codigoRol').setValue(perfilSeleccionado.rol);
+    this.form.get('puesto').setValue(perfilSeleccionado.nombre);
+    this.buscarPersona();
     console.log(perfilSeleccionado);
   }
 

@@ -3,17 +3,18 @@
       <mat-card-title >MANTENIMIENTO DE USUARIOS</mat-card-title>
     </mat-card-header>
     <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="operate()" novalidate>
         <div class="row">
             <div class="col">
                 <mat-form-field class="example-full-width" appearance="fill">
                     <mat-label>NOMBRE LARGO</mat-label>
-                    <input matInput disabled="disabled" placeholder="Ingrese acronimo" [(ngModel)]="organizacionSeleccionada.nombreLargo" >
+                    <input matInput disabled="disabled" placeholder="Ingrese acronimo" [value]="organizacionSeleccionada.nombreLargo" >
                 </mat-form-field>
             </div>
             <div class="col">
                 <mat-form-field appearance="fill"class="example-full-width" >
                     <mat-label>Ingrese campo</mat-label>
-                    <input matInput placeholder="Ingrese número CIP ó DNI ó marbete" [(ngModel)]="campoIngresado" required (keydown.enter)="buscarPersona($event)">
+                    <input matInput placeholder="Ingrese número CIP ó DNI ó marbete" formControlName="nroDocumento" (keydown.enter)="buscarPersona()">
                     <mat-hint align="start" *ngIf="campoIngresado?.length>= 5" style="color: #06d76c; margin-bottom: 5px;"  ><strong>Presione la tecla Enter</strong> </mat-hint>
                     <!-- <mat-error >x</mat-error> -->
                 </mat-form-field>
@@ -21,7 +22,7 @@
             <div class="col">
                 <mat-form-field class="example-full-width" appearance="fill">
                     <mat-label>USUARIO CHASQUI</mat-label>
-                    <input matInput disabled="disabled" placeholder="Ingrese Usuario Chasqui" [(ngModel)]="persona.usuario_CHASQUI" >
+                    <input matInput disabled="disabled" placeholder="Ingrese Usuario Chasqui" [value]="form.value['usuario']" >
                 </mat-form-field>
             </div>
         </div>
@@ -29,7 +30,7 @@
             <div class="col-8">
                 <mat-form-field class="example-full-width" appearance="fill">
                     <mat-label>PERSONAL ENCONTRADO</mat-label>
-                    <input matInput disabled="disabled" [(ngModel)]="nombreCompleado" >
+                    <input matInput disabled="disabled" [value]="nombreCompleado"  >
                 </mat-form-field>
             </div>
             <div class="col-4">
@@ -39,7 +40,7 @@
               [virtualScroll]="true"
               class="example-full-width"
               required
-              [(ngModel)]="rolSeleccionado"
+              formControlName="codigoRol"
               [compareWith]="compareRoles">
 
               <option value="">SELECCIONE</option>
@@ -53,15 +54,18 @@
             <div class="col">
                 <mat-form-field class="example-full-width" appearance="fill">
                     <mat-label>PUESTO</mat-label>
-                    <input matInput placeholder="Ingrese descripcion del puesto" required="required" [(ngModel)]="puesto" >
+                    <input matInput placeholder="Ingrese descripcion del puesto" required="required" formControlName="puesto" >
                 </mat-form-field>
             </div>
         </div>
+        <mat-card-actions align="end">
+          <button mat-flat-button color="primary" class="btn-opcion"  type="submit" [disabled]="form.invalid" >GUARDAR</button>
+          <button mat-flat-button color="accent" type="button" class="btn-opcion">LIMPIAR</button>
+          <button mat-flat-button color="warn" type="button" (click)="close()" class="btn-opcion" >CANCELAR</button>
+      </mat-card-actions>
+      </form>
     </mat-card-content>
-    <mat-card-actions align="end">
-        <button mat-flat-button color="primary" type="submit" class="btn-opcion" (click)="registrarPerfil()" >GUARDAR</button>
-        <button mat-flat-button color="accent" type="button" class="btn-opcion">LIMPIAR</button>
-    </mat-card-actions>
+    <!-- <div class="bg-success p-2 text-dark bg-opacity-10 mw-100">{{form.value | json}}</div> -->
 </mat-card>
 <mat-card class="example-card mt-2" >
     <mat-card-header class="title-form">
@@ -111,7 +115,4 @@
           </table>
           <mat-paginator [pageSizeOptions]="[10, 15, 25, 100]"  aria-label="Select page of users"></mat-paginator>
     </mat-card-content>
-    <mat-card-actions align="end">
-        <button mat-flat-button color="accent" type="button" (click)="close()" class="btn-opcion" >CANCELAR</button>
-    </mat-card-actions>
 </mat-card>

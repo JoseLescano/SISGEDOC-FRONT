@@ -10,6 +10,7 @@ import { AnexoService } from 'src/app/_service/anexo.service';
 import { Anexo } from 'src/app/_model/anexo';
 import { environment } from 'src/environments/environment';
 import { RegistrarComponent } from '../archivar/registrar/registrar.component';
+import { DecretoService } from 'src/app/_service/decreto.service';
 
 @Component({
   selector: 'app-acciones',
@@ -23,6 +24,7 @@ export class AccionesComponent implements OnInit {
   codigoDecreto: any;
   errorPDF : boolean = false;
   anexos: Anexo[] = [];
+  observaciones: string="SIN OBSERVACIONES";
 
   constructor(
       // @Inject(MAT_DIALOG_DATA) public data: Documento,
@@ -30,7 +32,8 @@ export class AccionesComponent implements OnInit {
       private documentoService:DocumentoService,
       private route: ActivatedRoute,
       public dialog: MatDialog,
-      private anexoService: AnexoService
+      private anexoService: AnexoService,
+      private decretoService: DecretoService
   ) {}
 
   ngOnInit(): void {
@@ -42,6 +45,15 @@ export class AccionesComponent implements OnInit {
     this.codigoDecreto = +this.route.snapshot.paramMap.get('idDecreto');
     this.idDocumento = id;
     this.viewDocumento(id);
+    this.decretoService.listarPorId(this.codigoDecreto).subscribe(
+      {
+        next:(response: any)=> {
+          console.log(response);
+          if (response.observacion!= null)
+            this.observaciones = response.observacion;
+        }
+      }
+    );
   }
 
   viewSeguimiento(documentoSeleccionado?:any): void {
@@ -69,8 +81,9 @@ export class AccionesComponent implements OnInit {
 
       this.crearDocumento(response.data);
       this.documentoService.registrarVisualizacion(
-        vidDocumento, 
-        sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=> {
+        vidDocumento,
+        sessionStorage.getItem(environment.codigoOrganizacion))
+        .subscribe((response:any)=> {
 
         }, error => {
           Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR PDF!`, 'warning');
@@ -106,7 +119,7 @@ export class AccionesComponent implements OnInit {
     iframe.contentWindow.location.replace(fileURL);
   }
 
-  
+
   findAnexosByDocumento(){
     this.anexoService.findByDocumento(this.idDocumento).subscribe((response:any)=> {
       this.anexos = response.data;

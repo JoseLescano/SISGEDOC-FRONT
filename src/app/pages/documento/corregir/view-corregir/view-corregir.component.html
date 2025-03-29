@@ -53,10 +53,9 @@
                 </button>
 
                 <button mat-flat-button style="background: #ffca2c; border-color: black; border: 1px solid grey;"
-                  (click)="openCorregir(row.codigo, row.codigoDecreto)"
-                  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Visualizar documento" >
+                  [routerLink]="['../corregir', row.codigo, row.codigoDecreto]">
                   <i class="fas fa-edit"></i> CORREGIR
-              </button>
+                </button>
 
                 <div class="btn-group">
                   <button type="button" class="btn btn-success" (click)="viewSeguimiento(row.codigo)">

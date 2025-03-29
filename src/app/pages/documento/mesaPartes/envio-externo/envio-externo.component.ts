@@ -92,9 +92,11 @@ export class EnvioExternoComponent implements OnInit {
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
       this.documentoar.anexos = this.uploadedFiles;
       this.documentoService.envioExterno(this.documentoar).subscribe(
+
         {
 
           next : (response:any) => {
+            debugger;
             if (response.httpStatus=='CREATED'){
               this.cargando = false;
               this.initForm();
@@ -108,11 +110,11 @@ export class EnvioExternoComponent implements OnInit {
           error: (err: any) => {
             debugger;
             this.cargando = false;
-            if (err.error && err.error.message) {
-                Swal.fire('Lo sentimos', err.error.message, 'info');
-            } else {
-                Swal.fire('Lo sentimos', 'No se ha registrado documento', 'info');
-            }
+            // if (err.error && err.error.message) {
+            //     Swal.fire('Lo sentimos', err.error.message, 'info');
+            // } else {
+                Swal.fire('AVISO', err.message, 'warning');
+            // }
         }
         });
     } else {

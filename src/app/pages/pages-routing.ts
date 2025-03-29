@@ -62,7 +62,7 @@ const routes: Routes = [
   { path:'decretar/:codigoDocumento/:idDecreto', component:DecetarComponent},
   { path: 'acciones/:codigoDocumento/:idDecreto', component: AccionesComponent},
   { path: 'archivar/:codigoDocumento/:idDecreto', component: RegistrarComponent },
-  { path: 'corregir/:codigoDocumento', component: FormCorregirComponent },
+  { path: 'corregir/:codigoDocumento/:idDecreto', component: FormCorregirComponent },
   { path: 'devolver/:codigoDocumento/:idDecreto', component: RegistrarDevolverComponent },
   { path: 'derivar/:codigoDocumento/:idDecreto', component: RegistrarDerivacionComponent },
   // { path: 'enviar-corregir/:codigoDocumento/:idDecreto', component: RegistrarCorrecionComponent },

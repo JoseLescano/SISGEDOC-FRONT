@@ -15,42 +15,42 @@ export class ErrorInterceptor implements HttpInterceptor {
     error: any = '';
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-      debugger;
-        return next.handle(request).pipe(catchError(err => {
-            debugger
-            if ([204].includes(err.status)){
-              this.error = 'SIN DATA';
-            }
-            if ([401, 403,404].includes(err.status)) {
-              if(err.status==403){
-                this.error = 'NO CUENTA CON LAS CREDENCIALES CORRESPONDENTES';
-                this.loginService.logout();
-              }  if(err.status==404){
-                debugger
-                this.error = err.error.message || err.error.title;
-              }else {
-                this.error = err.error.message;
-                this.loginService.logout();
-              }
-            }
-
-            if ([500,400].includes(err.status)){
-                if(err.status==500)
-                  this.error ='ERROR INTERNO DE SERVIDOR';
-                else if(err.status==400)
-                  this.error ='ERROR EN LA LOGICA DE NEGOCIO';
-            }
-
-            if ([413].includes(err.status)){
-              this.error =err.error;
-            }
-            if ([0].includes(err.status)){
-              this.error ='SIN CONEXION AL SERVIDOR';
+      return next.handle(request).pipe(
+        catchError(err => {
+          let errorMessage = 'Ocurrió un error inesperado';
+          debugger;
+          switch (err.status) {
+            case 204:
+              errorMessage = 'SIN CONTENIDO';
+              break;
+            case 401:
+            case 403:
+              errorMessage = err.status === 403
+                ? 'NO CUENTA CON LAS CREDENCIALES CORRESPONDIENTES'
+                : err.error?.message || 'Error de autenticación';
               this.loginService.logout();
-            } else this.error = err.error.message;
+              break;
+            case 404:
+              errorMessage = err.error?.message || err.error?.title || 'RECURSO NO EXISTE';
+              break;
+            case 400:
+              errorMessage = err.error?.message || err.error?.title || 'ERROR EN LA LOGICA DE NEGOCIO';
+              break;
+            case 500:
+              errorMessage = 'ERROR INTERNO DE SERVIDOR';
+              break;
+            case 413:
+              errorMessage = err.error || 'EL ARCHIVO ES DEMASIADO GRANDE';
+              break;
+            case 0:
+              errorMessage = 'SIN CONEXIÓN AL SERVIDOR';
+              this.loginService.logout();
+              break;
+          }
 
-            // const error = err.error.message || err.statusText;
-            return throwError(this.error);
-        }))
+          return throwError(() => new Error(errorMessage));
+        })
+      );
     }
+
 }

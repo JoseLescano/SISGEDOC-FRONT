@@ -46,12 +46,14 @@ export class PerfilService extends GenericService<Perfil> {
     return this.http.get<Perfil[]>(`${environment.HOST}perfiles/findByOrganizacion/${codigoInterno}`);
   }
 
-  registrarPerfil(codigoOrganizacion:any, usuario:any, puesto:any, rol:any){
+  registrarPerfil(codigoOrganizacion:any, usuario:any, puesto:any, rol:any, perfilId: any){
     let formData: FormData = new FormData();
     formData.append('codigoOrganizacion', codigoOrganizacion);
     formData.append('usuario', usuario);
     formData.append('puesto', puesto);
     formData.append('rol', rol);
+    formData.append('perfilId', perfilId== null?0: perfilId);
+    debugger
     return this.http.post<Perfil>(`${environment.HOST}perfiles/registrarPerfil`, formData );
   }
 
