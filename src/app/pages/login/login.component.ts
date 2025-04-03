@@ -77,14 +77,13 @@ export class LoginComponent{
     this.loginService.login(jwtRequest).subscribe( {
       next : (response)=> {
         this.openModalMfaStatus0(this.username, response);
-      },  error : (err) => {
+      },  error : (err:any) => {
+        debugger
         if (err=='Unknown Error')
           Swal.fire('LO SENTIMOS', 'NO PODEMOS VALIDAR TUS CREDENCIALES', 'info');
         else if (err == 'USUARIO O CLAVE INCORRECTO')
           Swal.fire('VALIDACIÓN INCORRECTA', 'USUARIO O CLAVE INCORRECTO', 'info');
-        else if (err == 'ERROR EN CONEXION CON EL SERVIDOR')
-          Swal.fire('LO SENTIMOS', 'ERROR EN CONEXION CON EL SERVIDOR', 'info');
-        else Swal.fire('LO SENTIMOS', err, 'info');
+        else Swal.fire('LO SENTIMOS', "ERROR EN CONEXION CON EL SERVIDOR", 'info');
       }
     });
   }
@@ -99,13 +98,6 @@ export class LoginComponent{
     });
   }
 
-  onSwal() {
-    const helper = new JwtHelperService();
-    const token = sessionStorage.getItem(environment.TOKEN_NAME);
-    const decodedToken = helper.decodeToken(token);
-    this.username = decodedToken.sub;
-    Swal.fire('Bienvenido al SISGEDO','', 'success');
-  }
 
   resetForm() {
     this.recaptchaToken = '';

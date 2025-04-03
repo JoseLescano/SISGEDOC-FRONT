@@ -14,7 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class SearchSAComponent implements OnInit, AfterViewInit {
 
-  displayedBusqueda: string[] = ['Nro',  'Asunto', 'Documento', 'Origen', 'Destino', 'FechaDoc.', 'Acciones'];
+  displayedBusqueda: string[] = ['Nro',  'Documento', 'Origen', 'Destino', 'Asunto','FechaDoc.', 'Acciones'];
   dataSourceBusqueda = new MatTableDataSource([]);
   busquedaDocumentoByAdm: any;
   documentoBandejaBySuperAdm: boolean;

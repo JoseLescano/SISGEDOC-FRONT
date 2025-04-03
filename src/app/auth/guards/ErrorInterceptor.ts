@@ -18,7 +18,6 @@ export class ErrorInterceptor implements HttpInterceptor {
       return next.handle(request).pipe(
         catchError(err => {
           let errorMessage = 'Ocurrió un error inesperado';
-          debugger;
           switch (err.status) {
             case 204:
               errorMessage = 'SIN CONTENIDO';

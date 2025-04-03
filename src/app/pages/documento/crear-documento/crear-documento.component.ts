@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { DocumentoArchivoAnexo } from 'src/app/_DTO/DocumentoArchivoAnexo';
 import { Clase } from 'src/app/_model/clase';
@@ -67,7 +67,7 @@ export class CrearDocumentoComponent implements OnInit {
     this.form = new FormGroup({
       'firmante': new FormControl('', [Validators.required]),
       'tipoDocumento': new FormControl('', [Validators.required]),
-      'nroCorrelativo': new FormControl(null, [Validators.required]),
+      'nroCorrelativo': new FormControl({value: 0, disabled:true}, [ Validators.required]),
       'indicativo': new FormControl('', [Validators.required]),
       'destinatarios': new FormControl(new Array<String>,[Validators.required]),
       'copiaInformativa': new FormControl(new Array<String>),
