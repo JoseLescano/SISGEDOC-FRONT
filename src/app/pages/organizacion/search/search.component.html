@@ -6,6 +6,10 @@
     </button>
   </mat-card-header>
   <mat-card-content>
+    <mat-form-field appearance="fill" class="example-full-width mt-2">
+      <mat-label>Filtro</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ingrese valor" #input>
+    </mat-form-field>
     <table mat-table [dataSource]="dataSource" matSort >
 
       <!-- <ng-container matColumnDef="CodigoInterno">

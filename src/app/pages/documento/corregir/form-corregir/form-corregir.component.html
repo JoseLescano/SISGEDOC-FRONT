@@ -17,10 +17,6 @@
         </mat-card-header>
           <mat-tab-group mat-align-tabs="start">
             <mat-tab label="DATOS DE CORRECION">
-                <!-- <mat-form-field  appearance="fill" class="mt-2">
-                  <mat-label>CODIGO DE DOCUMENTO</mat-label>
-                  <input matInput disabled value="{{vidDocumento}}">
-                </mat-form-field> -->
                 <div class="col-12" style="max-height: 200px; overflow-y: auto;">
                   <mat-list>
                     <div mat-subheader>Correciones registradas</div>
@@ -51,7 +47,7 @@
           </mat-tab-group>
           <div class="col-md-12 mt-2" style="text-align: right;">
             <button mat-raised-button color="primary" style="margin-right: 5px;" type="submit" (click)="corregirDocumento()" [disabled]="observaciones==''" >GUARDAR</button>
-            <button mat-raised-button color="warn" type="button" >CANCELAR</button>
+            <button mat-raised-button color="warn" type="button" routerLink="/principal/documentos-corregir" >CANCELAR</button>
         </div>
       </div>
     </div>

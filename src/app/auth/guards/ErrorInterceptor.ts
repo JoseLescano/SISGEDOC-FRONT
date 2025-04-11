@@ -15,18 +15,22 @@ export class ErrorInterceptor implements HttpInterceptor {
     error: any = '';
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+      debugger
       return next.handle(request).pipe(
         catchError(err => {
+          debugger
           let errorMessage = 'Ocurrió un error inesperado';
           switch (err.status) {
             case 204:
               errorMessage = 'SIN CONTENIDO';
               break;
             case 401:
+              errorMessage = err.error?.message;
+              break;
             case 403:
               errorMessage = err.status === 403
                 ? 'NO CUENTA CON LAS CREDENCIALES CORRESPONDIENTES'
-                : err.error?.message || 'Error de autenticación';
+                :  'Error de autenticación';
               this.loginService.logout();
               break;
             case 404:

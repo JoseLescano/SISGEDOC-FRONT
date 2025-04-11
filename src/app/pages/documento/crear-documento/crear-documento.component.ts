@@ -71,11 +71,10 @@ export class CrearDocumentoComponent implements OnInit {
       'indicativo': new FormControl('', [Validators.required]),
       'destinatarios': new FormControl(new Array<String>,[Validators.required]),
       'copiaInformativa': new FormControl(new Array<String>),
-      'asunto': new FormControl('', [Validators.required, Validators.minLength(10)]),
-      // 'prioridad': new FormControl('', [Validators.required])
+      'asunto': new FormControl('', [Validators.required, Validators.minLength(10)])
     });
 
-    this.form.controls['nroCorrelativo'].disable();
+    // this.form.controls['nroCorrelativo'].disable();
 
     this.organizacionService.findFirmantes(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>  {
       this.firmantes = response.data

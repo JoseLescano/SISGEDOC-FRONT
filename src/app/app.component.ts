@@ -9,10 +9,5 @@ import * as go from 'gojs';
 export class AppComponent {
   title = 'new-front-sisgedo';
 
-  public model: go.TreeModel = new go.TreeModel(
-    [
-      { 'key': 1, 'name': 'wrojas flores', 'title': 'CEO'}
-    ]
-  );
 
 }

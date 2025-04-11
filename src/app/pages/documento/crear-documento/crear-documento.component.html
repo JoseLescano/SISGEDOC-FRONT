@@ -68,9 +68,9 @@
                                 {{c.nombreLargo}}
                               </ng-option>
                             </ng-select>
-                            <div *ngIf="form.get('firmante').errors && form.get('firmante').dirty" class="mt-1" >
+                            <!-- <div *ngIf="form.get('firmante').errors && form.get('firmante').dirty" class="mt-1" >
                               <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('firmante').hasError('required')">*Campo requerido</small>
-                            </div>
+                            </div> -->
                           </div>
                           <div class="col-6">
                             <mat-form-field appearance="fill" class="example-full-width">
@@ -180,7 +180,7 @@
               </div>
 
             </div>
-        </form>
+          </form>
     </mat-card-content>
     <mat-card-footer>
       <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>

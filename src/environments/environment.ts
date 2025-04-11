@@ -2,7 +2,7 @@ import * as moment from "moment";
 
 export const environment = {
   production: false,
-  //  HOST: 'http://localhost:8080/',
+  // HOST: 'http://localhost:8080/',
   HOST: 'https://sisgedo.ejercito.mil.pe/back-sisgedo/',
   codigoOrganizacion: '3302010102',
   TOKEN_AUTH_USERNAME: '', // almacena usuario del token

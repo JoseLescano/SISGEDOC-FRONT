@@ -44,7 +44,7 @@ export class UpdateDevolverComponent implements OnInit {
     this.form = new FormGroup({
       'idDocumento': new FormControl(this.vidDocumento, [Validators.required]),
       'idDecreto': new FormControl(this.codigoDecreto, [Validators.required]),
-       'destino': new FormControl('', [Validators.required]),
+       'destino': new FormControl([], [Validators.required]),
       'descripcion': new FormControl('', [Validators.minLength(10)])
     })
   }

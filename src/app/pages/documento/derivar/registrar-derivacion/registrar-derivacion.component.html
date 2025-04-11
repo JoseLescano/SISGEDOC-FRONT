@@ -24,7 +24,7 @@
                     </mat-form-field>
 
                     <ng-select placeholder="ORGANIZACION DESTINO" [virtualScroll]=true formControlName="destino"
-                        class="example-full-width">
+                        class="example-full-width" [multiple]="true">
                         <mat-option>SELECCIONE</mat-option>
                         <ng-option *ngFor="let c of destinos" [value]="c.codigoInterno" >{{c.acronimo}}</ng-option>
                     </ng-select>

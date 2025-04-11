@@ -23,7 +23,7 @@ export class AllUnidadesComponent implements OnInit {
   ];
 
   itemSeleccionado: number= 0;
-  mostrarInput:boolean;
+  mostrarInput:boolean = true;
 
   displayedColumns: string[] = ['#', 'COD.INTERNO', 'ACRONIMO', 'NOMBRE-COMPLETO', 'ACCIONES'];
   dataSource: MatTableDataSource<OrganizacionDiagram>;

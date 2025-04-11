@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { DobleAutentificacionComponent } from './doble-autentificacion/doble-autentificacion.component';
 import { AccionesComponent } from './documento/acciones/acciones.component';
@@ -15,7 +14,6 @@ import { ParteDiarioComponent } from './documento/parte-diario/parte-diario.comp
 import { PendienteComponent } from './documento/pendiente/pendiente.component';
 import { ViewRemitidosComponent } from './documento/view-remitidos/view-remitidos.component';
 import { EsquemaComponent } from './organizacion/esquema/esquema.component';
-import { environment } from 'src/environments/environment';
 import { EnvioExternoComponent } from './documento/mesaPartes/envio-externo/envio-externo.component';
 import { ReporteDocumentoComponent } from './documento/mesaPartes/reporte-documento/reporte-documento.component';
 import { ReporteRecojoOPComponent } from './documento/mesaPartes/reporte-recojo-op/reporte-recojo-op.component';
@@ -25,7 +23,6 @@ import { EntregarCorrespondenciaComponent } from './documento/mesaPartes/entrega
 import { ViewDecretadoComponent } from './documento/view-decretado/view-decretado.component';
 import { RegistrarDevolverComponent } from './documento/devolver/registrar-devolver/registrar-devolver.component';
 import { RegistrarDerivacionComponent } from './documento/derivar/registrar-derivacion/registrar-derivacion.component';
-import { PerfilesComponent } from './perfiles/perfiles.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { CreateEditarComponent } from './organizacion/create-editar/create-editar.component';
 import { IsLoggedInGuard } from '../auth/guards/is-logged-in.guard';
@@ -36,7 +33,6 @@ import { ViewElevadosComponent } from './documento/view-elevados/view-elevados.c
 import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
 import { ViewCorregirComponent } from './documento/corregir/view-corregir/view-corregir.component';
 import { FormCorregirComponent } from './documento/corregir/form-corregir/form-corregir.component';
-import { RegistrarCorrecionComponent } from './documento/corregir/registrar-correcion/registrar-correcion.component';
 import { ListDevolverComponent } from './documento/devolver/list-devolver/list-devolver.component';
 import { UpdateDevolverComponent } from './documento/devolver/update-devolver/update-devolver.component';
 import { AllUnidadesComponent } from './organizacion/all-unidades/all-unidades.component';
@@ -46,71 +42,189 @@ import { ListPendientesComponent } from './facilita/list-pendientes/list-pendien
 import { SearchComponent } from './organizacion/search/search.component';
 import { ViewAccionesComponent } from './acciones/view-acciones/view-acciones.component';
 import { ViewPeriodosComponent } from './periodos/view-periodos/view-periodos.component';
-
-
 import { ViewRolesComponent } from './roles/view-roles/view-roles.component';
 import { ViewClasesComponent } from './clases/view-clases.component';
 import { ViewMenuComponent } from './menu/view-menu.component';
 import { SearchSAComponent } from './documento/search-sa/search-sa.component';
+
 const routes: Routes = [
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: 'dashboard', component: DashboardComponent },
+  {
+    path: 'pendientes',
+    component: PendienteComponent,
+    canActivate: [IsLoggedInGuard],
+  },
 
-   { path: '', redirectTo: 'dashboard', pathMatch:'full' },
-  // { path:'', redirectTo: environment.rol=='002' || environment.rol=='000'? 'pendientes': 'recibir-documento', pathMatch:'full' },
-  { path:'pendientes', component:PendienteComponent, canActivate: [IsLoggedInGuard]},
-  { path:'dashboard', component:DashboardComponent},
-
-  { path:'decretar/:codigoDocumento/:idDecreto', component:DecetarComponent},
-  { path: 'acciones/:codigoDocumento/:idDecreto', component: AccionesComponent},
-  { path: 'archivar/:codigoDocumento/:idDecreto', component: RegistrarComponent },
-  { path: 'corregir/:codigoDocumento/:idDecreto', component: FormCorregirComponent },
-  { path: 'devolver/:codigoDocumento/:idDecreto', component: RegistrarDevolverComponent },
-  { path: 'derivar/:codigoDocumento/:idDecreto', component: RegistrarDerivacionComponent },
-  // { path: 'enviar-corregir/:codigoDocumento/:idDecreto', component: RegistrarCorrecionComponent },
-  { path: 'crear-documento', component: CrearDocumentoComponent, canActivate: [IsLoggedInGuard] },
-  { path: 'admUser', component: DobleAutentificacionComponent, canActivate: [IsLoggedInGuard] },
-  { path: 'allUnidades', component: AllUnidadesComponent, canActivate: [IsLoggedInGuard] },
-  { path: 'admDocumento', component: AdmDocumentoComponent, canActivate: [IsLoggedInGuard] },
+  { path: 'decretar/:codigoDocumento/:idDecreto', component: DecetarComponent },
+  {
+    path: 'acciones/:codigoDocumento/:idDecreto',
+    component: AccionesComponent,
+  },
+  {
+    path: 'archivar/:codigoDocumento/:idDecreto',
+    component: RegistrarComponent,
+  },
+  {
+    path: 'corregir/:codigoDocumento/:idDecreto',
+    component: FormCorregirComponent,
+  },
+  {
+    path: 'devolver/:codigoDocumento/:idDecreto',
+    component: RegistrarDevolverComponent,
+  },
+  {
+    path: 'derivar/:codigoDocumento/:idDecreto',
+    component: RegistrarDerivacionComponent,
+  },
+  {
+    path: 'crear-documento',
+    component: CrearDocumentoComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'admUser',
+    component: DobleAutentificacionComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'allUnidades',
+    component: AllUnidadesComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'admDocumento',
+    component: AdmDocumentoComponent,
+    canActivate: [IsLoggedInGuard],
+  },
   { path: 'buscar-documento', component: BuscarDocumentoComponent },
-  { path: 'recibir-documento', component: RecibirComponent, canActivate: [IsLoggedInGuard] },
+  {
+    path: 'recibir-documento',
+    component: RecibirComponent,
+    canActivate: [IsLoggedInGuard],
+  },
   { path: 'registrar-documento', component: RegistrarMPComponent },
   { path: 'envio-externo', component: EnvioExternoComponent },
-  { path: 'organizacion', component: EsquemaComponent, canActivate: [IsLoggedInGuard], children:[
-    { path: 'nuevo', component: CreateEditarComponent },
-    { path: 'edit/:codigoInterno', component: CreateEditarComponent }
-  ] },
-  { path: 'list-archivados', component: ViewComponent, canActivate: [IsLoggedInGuard] },
-  { path: 'list-remitidos', component: ViewRemitidosComponent, canActivate: [IsLoggedInGuard] },
-  { path: 'list-decretados', component: ViewDecretadoComponent, canActivate: [IsLoggedInGuard] },
-  { path: 'list-elevados', component: ViewElevadosComponent, canActivate: [IsLoggedInGuard] },
-  { path: 'report-documento', component: ReporteDocumentoComponent, canActivate: [IsLoggedInGuard] },
-  { path: 'recojo-op', component: ReporteRecojoOPComponent, canActivate: [IsLoggedInGuard] },
-  { path: 'registroCorrespondencia', component: RegistroCorrespondenciaComponent, canActivate: [IsLoggedInGuard] },
+
+  {
+    path: 'organizacion',
+    component: EsquemaComponent,
+    canActivate: [IsLoggedInGuard],
+    children: [
+      { path: 'nuevo', component: CreateEditarComponent },
+      { path: 'edit/:codigoInterno', component: CreateEditarComponent },
+    ],
+  },
+  {
+    path: 'list-archivados',
+    component: ViewComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'list-remitidos',
+    component: ViewRemitidosComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'list-decretados',
+    component: ViewDecretadoComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'list-elevados',
+    component: ViewElevadosComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'report-documento',
+    component: ReporteDocumentoComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'recojo-op',
+    component: ReporteRecojoOPComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'registroCorrespondencia',
+    component: RegistroCorrespondenciaComponent,
+    canActivate: [IsLoggedInGuard],
+  },
   { path: 'list-correspondencia', component: ListCorrespondenciaComponent },
-  { path: 'entregarCorrespondencia', component: EntregarCorrespondenciaComponent, canActivate: [IsLoggedInGuard] },
-  { path: 'parte-diario', component: ParteDiarioComponent, canActivate: [IsLoggedInGuard] },
-  { path: 'form/:codigoDocumento/:idDecreto', component: FormComponent  },
-  { path: 'formRespuesta/:codigoDocumento/:idDecreto', component: RespuestaComponent  },
-  { path: 'my-profile', component: MiPerfilComponent  },
-  { path: 'pages/not-403', component: Not403Component  },
-  { path: 'pages/not-404', component: PageNotFoundComponent  },
-  { path: 'documentos-corregir', component: ViewCorregirComponent  },
-  { path: 'documentos-devueltos', component: ListDevolverComponent  },
-  { path: 'persExterno', component: PersonaExternaComponent  },
-  { path: 'update-devueltos/:codigoDocumento/:idDecreto', component: UpdateDevolverComponent  },
-  { path: 'list-facilita', component: ListPendientesComponent  },
+  {
+    path: 'entregarCorrespondencia',
+    component: EntregarCorrespondenciaComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'parte-diario',
+    component: ParteDiarioComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  { path: 'form/:codigoDocumento/:idDecreto', component: FormComponent },
+  {
+    path: 'formRespuesta/:codigoDocumento/:idDecreto',
+    component: RespuestaComponent,
+  },
+  { path: 'my-profile', component: MiPerfilComponent },
+  { path: 'pages/not-403', component: Not403Component },
+  { path: 'pages/not-404', component: PageNotFoundComponent },
+  { path: 'documentos-corregir', component: ViewCorregirComponent },
+  { path: 'documentos-devueltos', component: ListDevolverComponent },
+  {
+    path: 'persExterno',
+    component: PersonaExternaComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'update-devueltos/:codigoDocumento/:idDecreto',
+    component: UpdateDevolverComponent,
+  },
+  {
+    path: 'list-facilita',
+    component: ListPendientesComponent,
+    canActivate: [IsLoggedInGuard],
+  },
 
-  { path: 'acciones', component: ViewAccionesComponent },
-  { path: 'periodos', component: ViewPeriodosComponent },
-  { path: 'clases', component: ViewClasesComponent },
-  { path: 'menu', component: ViewMenuComponent },
-  { path: 'roles', component: ViewRolesComponent },
-  { path: 'viewPersonal', component: SearchComponent  },
-  { path: 'searchDocumento', component: SearchSAComponent  },
+  {
+    path: 'acciones',
+    component: ViewAccionesComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'periodos',
+    component: ViewPeriodosComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'clases',
+    component: ViewClasesComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'menu',
+    component: ViewMenuComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'roles',
+    component: ViewRolesComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'viewPersonal',
+    component: SearchComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'searchDocumento',
+    component: SearchSAComponent,
+    canActivate: [IsLoggedInGuard],
+  },
 ];
-
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class PagesRoutingModule { }
+export class PagesRoutingModule {}
