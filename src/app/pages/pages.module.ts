@@ -73,6 +73,7 @@ import { ViewPeriodosComponent } from './periodos/view-periodos/view-periodos.co
 import { MantoRolComponent } from './roles/manto-roles/manto-roles.component';
 import { ViewRolesComponent } from './roles/view-roles/view-roles.component';
 import { SearchSAComponent } from './documento/search-sa/search-sa.component';
+import { EstadisticaSAComponent } from './documento/estadistica-sa/estadistica-sa.component';
 
 
 @NgModule({
@@ -154,6 +155,7 @@ import { SearchSAComponent } from './documento/search-sa/search-sa.component';
     MantoMenuComponent,
     MantoRolComponent,
     SearchSAComponent,
+    EstadisticaSAComponent,
 
   ],
    exports:[

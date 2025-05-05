@@ -26,6 +26,7 @@ export class ErrorInterceptor implements HttpInterceptor {
               break;
             case 401:
               errorMessage = err.error?.message;
+              this.loginService.logout();
               break;
             case 403:
               errorMessage = err.status === 403

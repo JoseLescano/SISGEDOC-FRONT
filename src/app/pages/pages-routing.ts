@@ -46,6 +46,7 @@ import { ViewRolesComponent } from './roles/view-roles/view-roles.component';
 import { ViewClasesComponent } from './clases/view-clases.component';
 import { ViewMenuComponent } from './menu/view-menu.component';
 import { SearchSAComponent } from './documento/search-sa/search-sa.component';
+import { EstadisticaSAComponent } from './documento/estadistica-sa/estadistica-sa.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -219,6 +220,11 @@ const routes: Routes = [
   {
     path: 'searchDocumento',
     component: SearchSAComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'estadisticaSA',
+    component: EstadisticaSAComponent,
     canActivate: [IsLoggedInGuard],
   },
 ];
