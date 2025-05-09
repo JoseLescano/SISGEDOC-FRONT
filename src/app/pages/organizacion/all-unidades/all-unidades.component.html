@@ -1,27 +1,26 @@
 <mat-card class="m-2">
   <mat-card-title>Mantenimiento de unidades</mat-card-title>
   <mat-card-content>
-    <div class="example-button-row">
-      <!-- <button mat-raised-button>Basic</button> -->
-      <button mat-raised-button color="primary">Codigo</button>
-      <button mat-raised-button color="accent">Internas</button>
-      <button mat-raised-button >Externas</button>
-      <button mat-raised-button color="warn">Dependencias/Unidades</button>
-      <!-- <a mat-raised-button href="https://www.google.com/" target="_blank">Link</a> -->
+    <div class="row">
+      <div class="col-4">
+        <mat-form-field appearance="fill" class="example-full-width" >
+          <mat-label>Tipo busqueda</mat-label>
+          <mat-select (selectionChange)="searchOrganizacion();" [(ngModel)]="itemSeleccionado">
+            <mat-option *ngFor="let item of tipoBusqueda" [value]="item.id" >
+              {{item.text}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-8">
+        <mat-form-field appearance="fill" class="example-full-width" style="margin-left: 2px;">
+          <mat-label>INGRESE CODIGO DE UNIDAD O NOMBRE ACRONIMO/COMPLETO</mat-label>
+          <input matInput placeholder="INGRESE CODIGO DE UNIDAD O NOMBRE ACRONIMO/COMPLETO">
+        </mat-form-field>
+      </div>
     </div>
 
-    <!-- <mat-chip-list aria-label="Fish selection" class="mt-2">
-      <mat-chip ngif="!mostrarInput" selected>Codigo</mat-chip>
-      <mat-chip color="primary" selected >Internas</mat-chip>
-      <mat-chip color="accent" selected>Externas</mat-chip>
-      <mat-chip color="warn" selected (click)="searchOrganizacion(4)" >Dependencias/Unidades</mat-chip>
-    </mat-chip-list> -->
-    <div class="col-12 mt-2" *ngIf="mostrarInput">
-      <mat-form-field appearance="fill" class="example-full-width" style="margin-left: 5px;">
-        <mat-label>INGRESE CODIGO DE UNIDAD O NOMBRE ACRONIMO/COMPLETO</mat-label>
-        <input matInput placeholder="INGRESE CODIGO DE UNIDAD O NOMBRE ACRONIMO/COMPLETO">
-    </mat-form-field>
-    </div>
+    <!--  (click)="searchOrganizacion(4)" -->
   </mat-card-content>
 </mat-card>
 <mat-card class="m-2">
@@ -36,22 +35,22 @@
       <table mat-table [dataSource]="dataSource" matSort >
 
         <ng-container matColumnDef="#">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header > # </th>
+          <th mat-header-cell *matHeaderCellDef  > # </th>
           <td mat-cell *matCellDef="let row"> {{row.vid}} </td>
         </ng-container>
 
         <ng-container matColumnDef="COD.INTERNO">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>COD. INTERNO</th>
+          <th mat-header-cell *matHeaderCellDef >COD. INTERNO</th>
           <td mat-cell *matCellDef="let row"> {{row.codigoInterno}} </td>
         </ng-container>
 
         <ng-container matColumnDef="ACRONIMO">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>ACRONIMO</th>
+          <th mat-header-cell *matHeaderCellDef >ACRONIMO</th>
           <td mat-cell *matCellDef="let row"> {{row.acronimo }} </td>
         </ng-container>
 
         <ng-container matColumnDef="NOMBRE-COMPLETO">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>NOMBRE COMPLETO</th>
+          <th mat-header-cell *matHeaderCellDef >NOMBRE COMPLETO</th>
           <td mat-cell *matCellDef="let row"> {{row.nombreLargo }} </td>
         </ng-container>
 
@@ -62,7 +61,7 @@
             <div class="example-button-row">
               <div class="example-flex-container">
                 <div class="example-button-container">
-                  <button mat-mini-fab color="primary" (click)="imprimirListaPersonal(row.codigoInterno, false)" >
+                  <button mat-mini-fab color="primary" (click)="imprimirListaPersonal(row.codigoInterno, false, row.acronimo)" >
                     <i class="fas fa-users"></i>
                   </button>
                   <button mat-mini-fab color="accent" >

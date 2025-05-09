@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -13,13 +13,13 @@ import { environment } from 'src/environments/environment';
   templateUrl: './all-unidades.component.html',
   styleUrls: ['./all-unidades.component.css']
 })
-export class AllUnidadesComponent implements OnInit {
+export class AllUnidadesComponent implements OnInit, AfterViewInit {
 
   tipoBusqueda:any = [
     {'id': 1, 'text':'CODIGO'},
     {'id': 2, 'text':'INTERNAS'},
     {'id': 3, 'text':'EXTERNAS'},
-    {'id': 4, 'text':'CORREO OLAYA'},
+    {'id': 4, 'text':'DEPENDENCIAS'},
   ];
 
   itemSeleccionado: number= 0;
@@ -41,8 +41,8 @@ export class AllUnidadesComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    // this.dataSource.paginator = this.paginator;
+    // this.dataSource.sort = this.sort;
   }
 
   applyFilter(event: Event) {
@@ -56,9 +56,35 @@ export class AllUnidadesComponent implements OnInit {
       this.dataSource.sort = this.sort;
   }
 
-  searchOrganizacion(codigo:any){
+  searchOrganizacion(){
+    debugger
     this.dataSource = null;
-    if(codigo === 4){
+    if (this.itemSeleccionado ===1 )this.mostrarInput = true;
+    if (this.itemSeleccionado===2){
+      this.organizacionService.getInternos().subscribe(
+        {
+          next: (response: any)=> {
+            this.createTable(response.data);
+          },
+          error : (err: any)=> {
+            console.log('error => ' + err)
+          }
+        }
+      )
+    }
+    if (this.itemSeleccionado===3){
+      this.organizacionService.getAllExternas().subscribe(
+        {
+          next: (response: any)=> {
+            this.createTable(response.data);
+          },
+          error : (err: any)=> {
+            console.log('error => ' + err)
+          }
+        }
+      )
+    }
+    if(this.itemSeleccionado === 4){
       this.organizacionService.getWithCodigoCopere().subscribe(
         {
           next: (response: any)=> {
@@ -72,24 +98,25 @@ export class AllUnidadesComponent implements OnInit {
     }
   }
 
-  imprimirListaPersonal(codigo:any, todo:any){
-        this.perfilService.listPersonal(todo?sessionStorage.getItem(environment.codigoOrganizacion):codigo,todo).subscribe(
-          {
-            next: (data:any)=> {
-              const blob = new Blob([data], { type: 'application/pdf' });
-              const url = window.URL.createObjectURL(blob);
-              const a = document.createElement('a');
-              a.href = url;
-              a.download = 'ListaPersona.pdf';
-              a.click();
-              window.URL.revokeObjectURL(url);
-            },
-            error:(err:any)=> {
+  imprimirListaPersonal(codigo:any, todo:any, acronimo:any){
+    this.perfilService.listPersonal(todo?sessionStorage.getItem(environment.codigoOrganizacion):codigo,todo)
+    .subscribe(
+      {
+        next: (data:any)=> {
+          const blob = new Blob([data], { type: 'application/pdf' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'ListaPersona ' + acronimo + '.pdf';
+          a.click();
+          window.URL.revokeObjectURL(url);
+        },
+        error:(err:any)=> {
 
-            }
-          }
-        );
-    }
+        }
+      }
+    );
+  }
 
 
 }

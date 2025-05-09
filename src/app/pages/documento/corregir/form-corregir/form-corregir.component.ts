@@ -83,6 +83,7 @@ export class FormCorregirComponent implements OnInit {
         this.observaciones).pipe(switchMap((response: any)=>{
           if (response.httpStatus=='CREATED'){
             Swal.fire('ACCION REALIZADA', response.message, 'info');
+            this.router.navigate(['/principal/documentos-corregir']);
           }else {
             Swal.fire('LO SENTIMOS', response.message, 'info');
           }
@@ -169,6 +170,6 @@ export class FormCorregirComponent implements OnInit {
     };
   }
 
- 
+
 
 }

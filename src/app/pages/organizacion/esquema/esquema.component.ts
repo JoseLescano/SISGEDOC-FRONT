@@ -79,12 +79,13 @@ export class EsquemaComponent implements OnInit {
           return this.organizacionService.findByCodigoInterno(sessionStorage.getItem(environment.codigoOrganizacion));
         })).subscribe({
           next : (response: any)=> {
+            debugger;
             this.router.navigate(['/principal/organizacion']).then(() => {
              location.reload();
             });
             Swal.fire('OPERACION REALIZADA', 'SE ELIMINO ORGANIZACION', 'info');
-          }, error: (err: any) => {
-            Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'warning');
+          }, error: (err: Error) => {
+            Swal.fire('AVISO', err.message, 'warning');
           }
         });
       }
@@ -126,7 +127,8 @@ export class EsquemaComponent implements OnInit {
             organizacion.cointerna_CODIGO=bq.CODIGO;
           },
         );
-      }, error: (err: any)=> {
+      }, error: (err: Error)=> {
+        debugger;
         // if (err==='Access Denied'){
         //   Swal.fire('ACCESO DENEGADO', 'NO TIENE LAS CREDENCIALES NECESARIAS PARA ESTA OPCION', 'info');
         //   this.router.navigate(['/principal/dashboard']);

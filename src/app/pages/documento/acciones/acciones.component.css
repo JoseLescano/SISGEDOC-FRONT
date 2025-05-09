@@ -8,9 +8,7 @@ body {
   font-weight: 300;
 }
 
-.tabset {
-  min-height: 1200px;
-}
+
 
 .tabset > input[type="radio"] {
   position: absolute;
