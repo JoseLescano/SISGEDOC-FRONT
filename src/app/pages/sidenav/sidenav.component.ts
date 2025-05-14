@@ -57,7 +57,7 @@ export class SidenavComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    
+
     this.screenWidth = window.innerWidth;
     if(this.screenWidth <= 768 ) {
       this.collapsed = false;
@@ -71,6 +71,7 @@ export class SidenavComponent implements OnInit {
       .subscribe(
       {
         next: (response:any)=> {
+          debugger
           this.menus = response.data as Menu[];
         },
         error: (err: any)=> {

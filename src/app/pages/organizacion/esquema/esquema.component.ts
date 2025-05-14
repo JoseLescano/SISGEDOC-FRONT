@@ -137,4 +137,22 @@ export class EsquemaComponent implements OnInit {
     })
   }
 
+  exportarDiagramaPNG(): void {
+    if (!this.diagram) {
+      console.error('Diagrama no inicializado.');
+      return;
+    }
+
+    const imageDataUrl: string = this.diagram.makeImageData({
+      background: "white",
+      scale: 1,
+      type: "image/png"
+    }) as string; // <-- Aseguramos que sea string
+
+    const link = document.createElement('a');
+    link.href = imageDataUrl;
+    link.download = 'diagrama-organizacional.png';
+    link.click();
+  }
+
 }

@@ -49,15 +49,38 @@ import { SearchSAComponent } from './documento/search-sa/search-sa.component';
 import { EstadisticaSAComponent } from './documento/estadistica-sa/estadistica-sa.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: DashboardComponent },
+
+  // COMUNES
+  {
+    path: '',
+    redirectTo: 'dashboard',
+    pathMatch: 'full'
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent
+  },
+  {
+    path: 'pages/not-403',
+    component: Not403Component
+  },
+  {
+    path: 'pages/not-404',
+     component: PageNotFoundComponent
+    },
+
+  // =========================================================================================================================
+  // JEFE NATIVO O JEFE ACCIDENTAL
   {
     path: 'pendientes',
     component: PendienteComponent,
     canActivate: [IsLoggedInGuard],
   },
 
-  { path: 'decretar/:codigoDocumento/:idDecreto', component: DecetarComponent },
+  {
+    path: 'decretar/:codigoDocumento/:idDecreto',
+    component: DecetarComponent
+  },
   {
     path: 'acciones/:codigoDocumento/:idDecreto',
     component: AccionesComponent,
@@ -84,38 +107,8 @@ const routes: Routes = [
     canActivate: [IsLoggedInGuard],
   },
   {
-    path: 'admUser',
-    component: DobleAutentificacionComponent,
-    canActivate: [IsLoggedInGuard],
-  },
-  {
-    path: 'allUnidades',
-    component: AllUnidadesComponent,
-    canActivate: [IsLoggedInGuard],
-  },
-  {
-    path: 'admDocumento',
-    component: AdmDocumentoComponent,
-    canActivate: [IsLoggedInGuard],
-  },
-  { path: 'buscar-documento', component: BuscarDocumentoComponent },
-  {
-    path: 'recibir-documento',
-    component: RecibirComponent,
-    canActivate: [IsLoggedInGuard],
-  },
-  { path: 'registrar-documento', component: RegistrarMPComponent },
-  { path: 'envio-externo', component: EnvioExternoComponent },
-
-  {
-    path: 'organizacion',
-    component: EsquemaComponent,
-    canActivate: [IsLoggedInGuard],
-    children: [
-      { path: 'nuevo', component: CreateEditarComponent },
-      { path: 'edit/:codigoInterno', component: CreateEditarComponent },
-    ],
-  },
+    path: 'buscar-documento',
+    component: BuscarDocumentoComponent },
   {
     path: 'list-archivados',
     component: ViewComponent,
@@ -137,56 +130,57 @@ const routes: Routes = [
     canActivate: [IsLoggedInGuard],
   },
   {
-    path: 'report-documento',
-    component: ReporteDocumentoComponent,
-    canActivate: [IsLoggedInGuard],
-  },
-  {
-    path: 'recojo-op',
-    component: ReporteRecojoOPComponent,
-    canActivate: [IsLoggedInGuard],
-  },
-  {
-    path: 'registroCorrespondencia',
-    component: RegistroCorrespondenciaComponent,
-    canActivate: [IsLoggedInGuard],
-  },
-  { path: 'list-correspondencia', component: ListCorrespondenciaComponent },
-  {
-    path: 'entregarCorrespondencia',
-    component: EntregarCorrespondenciaComponent,
-    canActivate: [IsLoggedInGuard],
-  },
-  {
     path: 'parte-diario',
     component: ParteDiarioComponent,
     canActivate: [IsLoggedInGuard],
   },
-  { path: 'form/:codigoDocumento/:idDecreto', component: FormComponent },
+  {
+    path: 'form/:codigoDocumento/:idDecreto',
+    component: FormComponent },
   {
     path: 'formRespuesta/:codigoDocumento/:idDecreto',
     component: RespuestaComponent,
   },
-  { path: 'my-profile', component: MiPerfilComponent },
-  { path: 'pages/not-403', component: Not403Component },
-  { path: 'pages/not-404', component: PageNotFoundComponent },
-  { path: 'documentos-corregir', component: ViewCorregirComponent },
-  { path: 'documentos-devueltos', component: ListDevolverComponent },
   {
-    path: 'persExterno',
-    component: PersonaExternaComponent,
-    canActivate: [IsLoggedInGuard],
+    path: 'my-profile',
+    component: MiPerfilComponent
+  },
+
+  {
+    path: 'documentos-corregir',
+     component: ViewCorregirComponent
+  },
+  {
+    path: 'documentos-devueltos',
+     component: ListDevolverComponent
   },
   {
     path: 'update-devueltos/:codigoDocumento/:idDecreto',
     component: UpdateDevolverComponent,
   },
+
+  // =========================================================================================================================
+  // SUPER ADM
   {
-    path: 'list-facilita',
-    component: ListPendientesComponent,
+    path: 'admUser',
+    component: DobleAutentificacionComponent,
     canActivate: [IsLoggedInGuard],
   },
-
+  {
+    path: 'allUnidades',
+    component: AllUnidadesComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'admDocumento',
+    component: AdmDocumentoComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'persExterno',
+    component: PersonaExternaComponent,
+    canActivate: [IsLoggedInGuard],
+  },
   {
     path: 'acciones',
     component: ViewAccionesComponent,
@@ -213,11 +207,6 @@ const routes: Routes = [
     canActivate: [IsLoggedInGuard],
   },
   {
-    path: 'viewPersonal',
-    component: SearchComponent,
-    canActivate: [IsLoggedInGuard],
-  },
-  {
     path: 'searchDocumento',
     component: SearchSAComponent,
     canActivate: [IsLoggedInGuard],
@@ -227,6 +216,71 @@ const routes: Routes = [
     component: EstadisticaSAComponent,
     canActivate: [IsLoggedInGuard],
   },
+
+   // =========================================================================================================================
+  // MESA DE PARTES
+  {
+    path: 'recibir-documento',
+    component: RecibirComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'registrar-documento',
+    component: RegistrarMPComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'envio-externo',
+    component: EnvioExternoComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'report-documento',
+    component: ReporteDocumentoComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'recojo-op',
+    component: ReporteRecojoOPComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'registroCorrespondencia',
+    component: RegistroCorrespondenciaComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'list-correspondencia',
+    component: ListCorrespondenciaComponent,
+  },
+  {
+    path: 'entregarCorrespondencia',
+    component: EntregarCorrespondenciaComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'list-facilita',
+    component: ListPendientesComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+
+ // =========================================================================================================================
+ // ADMINISTRADOR
+  {
+    path: 'organizacion',
+    component: EsquemaComponent,
+    canActivate: [IsLoggedInGuard],
+    children: [
+      { path: 'nuevo', component: CreateEditarComponent },
+      { path: 'edit/:codigoInterno', component: CreateEditarComponent },
+    ],
+  },
+  {
+    path: 'viewPersonal',
+    component: SearchComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+
 ];
 
 @NgModule({

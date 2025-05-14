@@ -57,7 +57,6 @@ export class AllUnidadesComponent implements OnInit, AfterViewInit {
   }
 
   searchOrganizacion(){
-    debugger
     this.dataSource = null;
     if (this.itemSeleccionado ===1 )this.mostrarInput = true;
     if (this.itemSeleccionado===2){

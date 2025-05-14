@@ -107,10 +107,10 @@
             </div>
           </mat-card-content>
         </mat-card>
-        <mat-card class="m-2 col-8" style="border-radius: 10px;" *ngIf="mostrarDetalleGrafica">
+        <mat-card class="m-2 col-8 vh-90" style="border-radius: 10px;" *ngIf="mostrarDetalleGrafica">
           <mat-card-content>
             <div *ngIf="!documentoBandejaBySuperAdm">
-              <canvas id="canvasHorizontal"></canvas>
+              <canvas id="canvasHorizontal" class="w-100 vh-90"></canvas>
             </div>
           </mat-card-content>
         </mat-card>
