@@ -5,11 +5,17 @@
     <mat-card-content>
 
         <div class="row">
-          <div class="col">
+          <div class="col-6">
               <mat-form-field class="example-full-width" appearance="fill">
                   <mat-label>Codigo Interno</mat-label>
                   <input matInput disabled [(ngModel)]="organizacionSeleccionada.codigoInterno">
               </mat-form-field>
+          </div>
+          <div class="col-6 d-flex align-items-center justify-content-center">
+            <mat-checkbox color="primary"
+            [(ngModel)]="activa"
+            (change)="organizacionSeleccionada.emu = activa ? 'S' : 'N'"
+            >¿ES DEPENDENCIA?</mat-checkbox>
           </div>
           <!-- <div class="col" *ngIf="codigoPadre!= null && codigoPadre!=''">
             <mat-form-field class="example-full-width" appearance="fill">
@@ -45,6 +51,14 @@
                 <mat-form-field class="example-full-width" appearance="fill">
                     <mat-label>Cargo</mat-label>
                     <input matInput placeholder="Ingrese cargo" [(ngModel)]="organizacionSeleccionada.cargo">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Guarnición</mat-label>
+                    <input matInput placeholder="Ingrese cargo" [(ngModel)]="organizacionSeleccionada.ubigeo">
                 </mat-form-field>
             </div>
         </div>

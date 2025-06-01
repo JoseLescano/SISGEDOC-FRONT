@@ -15,10 +15,8 @@ export class ErrorInterceptor implements HttpInterceptor {
     error: any = '';
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-      debugger
       return next.handle(request).pipe(
         catchError(err => {
-          debugger
           let errorMessage = 'Ocurrió un error inesperado';
           switch (err.status) {
             case 204:

@@ -22,7 +22,7 @@ import { ReporteDocumentoDecretoComponent } from '../../report/reporte-documento
 export class ViewDecretadoComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['Prioridad', 'Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'Decretado a.', 'Acciones'];
-  dataSource: MatTableDataSource<Documento>;
+  dataSource: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -178,11 +178,25 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  createTable(documento: Documento[]){
+  createTable(documento: any[]){
     this.dataSource = new MatTableDataSource(documento);
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+
+      this.dataSource.sortingDataAccessor = (item, property) => {
+        switch(property) {
+          case 'Nro': return item.codigo;
+          case 'Asunto': return item.asunto.toLowerCase();
+          case 'FechaDoc': return item.fechaDocumento;
+          case 'Documento': return item.clase + ' Nro. ' + item.nroOrden;
+          case 'Origen': return item.remitente.toLowerCase();
+          case 'Destino': return item.destinatario.toLowerCase();
+          case 'Prioridad': return item.prioridad.toLowerCase();
+          // Añade más casos según tus columnas
+          default: return item[property];
+        }
+      };
     });
   }
   openDialog(documentoSeleccionado?:any): void {

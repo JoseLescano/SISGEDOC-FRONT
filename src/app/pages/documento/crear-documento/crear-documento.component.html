@@ -31,7 +31,7 @@
                               <input matInput type="number" formControlName="nroCorrelativo"   >
                             </mat-form-field>
                       </div>
-                      <!-- <div class="row">
+                      <div class="row">
                         <ng-select  [virtualScroll]=true formControlName="prioridad" placeholder="PRIORIDAD DEL DOC."
                           notFoundText="Sin elementos encontrados" >
                           <ng-option *ngFor="let item of prioridades" [value]="item.codigo" >
@@ -41,11 +41,11 @@
                         <div *ngIf="form.get('prioridad').errors && form.get('prioridad').dirty" class="mt-1" >
                           <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('prioridad').hasError('required')">*Campo requerido</small>
                         </div>
-                      </div> -->
+                      </div>
                       <div class="row">
                         <div class="col">
                           <button mat-flat-button color="primary" style="width: 100%; height: 50px; border-radius: 10px;"
-                          (click)="generarPlantilla()" type="button" >
+                          (click)="generarPlantilla()" type="button" [disabled]="!pasoUnoValido" >
                               <!-- <i class="far fa-file-word" style="font-size: 30px;"></i>  -->
                               GENERAR WORD
                           </button>
@@ -62,21 +62,25 @@
                       <mat-card-content>
                         <div class="row mt-3">
                           <div class="col-6">
-                            <ng-select  [virtualScroll]=true placeholder="SELECCIONE FIRMANTE" formControlName="firmante"
-                              (change)="getIndicativo(); findDestinatarios();" notFoundText="Sin elementos encontrados" >
+
+                            <ng-select [virtualScroll]=true placeholder="SELECCIONE FIRMANTE" formControlName="firmante"
+                              (change)=" findDestinatarios();" notFoundText="Sin elementos encontrados" >
                               <ng-option *ngFor="let c of firmantes" [value]="c" >
                                 {{c.nombreLargo}}
                               </ng-option>
                             </ng-select>
-                            <!-- <div *ngIf="form.get('firmante').errors && form.get('firmante').dirty" class="mt-1" >
-                              <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('firmante').hasError('required')">*Campo requerido</small>
-                            </div> -->
+                            <div *ngIf="form.get('firmante').errors && form.get('firmante').dirty" >
+                              <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('firmante').hasError('required')">* Campo requerido</small>
+                            </div>
                           </div>
                           <div class="col-6">
                             <mat-form-field appearance="fill" class="example-full-width">
                                 <mat-label>INDICATIVO</mat-label>
                                 <input matInput type="text" formControlName="indicativo">
-                                <mat-error ></mat-error>
+                                <div *ngIf="form.get('indicativo').errors && form.get('indicativo').dirty" >
+                                  <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('indicativo').hasError('required')">* Se require campo</small>
+                                  <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('indicativo').hasError('minlength')">* 3 Caracteres como minimo</small>
+                                </div>
                               </mat-form-field>
                           </div>
                         </div>
@@ -141,7 +145,7 @@
 
                         <div class="row d-flex flex-row bd-highlight mt-3">
                           <div class="col">
-                            <button mat-flat-button type="submit" class="btn-opcion" color="primary" [disabled]="form.invalid && selectedFiles=== null">GUARDAR DOCUMENTO</button>
+                            <button mat-flat-button type="submit" class="btn-opcion" color="primary" [disabled]="!pasoDosValido">GUARDAR DOCUMENTO</button>
                             <button mat-flat-button color="warn" type="button" class="btn-opcion" (click)="limpiar()" >CANCELAR</button>
                           </div>
                         </div>

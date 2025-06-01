@@ -67,6 +67,10 @@ export class OrganizacionService extends GenericService<Organizacion> {
     return this.http.get<Organizacion[]>(`${environment.HOST}organizaciones/getWithCodigoCopere`);
   }
 
+  getEntregarCopere(){
+    return this.http.get<Organizacion[]>(`${environment.HOST}organizaciones/getEntregarCopere`);
+  }
+
   findForDerivacion(codigoInterno: any){
     return this.http.get<Organizacion[]>(`${environment.HOST}organizaciones/findForDerivacion/${codigoInterno}`);
   }
@@ -87,12 +91,14 @@ export class OrganizacionService extends GenericService<Organizacion> {
     return this.http.post(`${environment.HOST}organizaciones/newChildren/${codigoPadre}`, body, {'headers':headers});
   }
 
-  updateOrganizacion(codigoInterno:any, acronimo:any, nombreLargo:any, indicativo:any, cargo:any){
+  updateOrganizacion(codigoInterno:any, acronimo:any, nombreLargo:any, indicativo:any, cargo:any, ubigeo:any, emu:any){
     let formData: FormData = new FormData();
     formData.append("acronimo", acronimo);
     formData.append("nombreLargo", nombreLargo);
     formData.append("indicativo", indicativo);
     formData.append("cargo", cargo);
+    formData.append("ubigeo", ubigeo);
+    formData.append("emu", emu);
     return this.http.put(`${environment.HOST}organizaciones/updateOrganizacion/${codigoInterno}`, formData);
   }
 

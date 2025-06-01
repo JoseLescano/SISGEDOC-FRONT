@@ -22,7 +22,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import { MatPaginator } from '@angular/material/paginator';
+import {MatRadioModule} from '@angular/material/radio';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { MatSortModule } from '@angular/material/sort';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -73,7 +73,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
    // MatPaginator,
    MatProgressBarModule,
    MatCheckboxModule,
-   MatChipsModule,
+   MatChipsModule,MatRadioModule
 
   ],
   providers: [

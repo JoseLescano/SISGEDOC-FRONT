@@ -47,6 +47,7 @@ import { ViewClasesComponent } from './clases/view-clases.component';
 import { ViewMenuComponent } from './menu/view-menu.component';
 import { SearchSAComponent } from './documento/search-sa/search-sa.component';
 import { EstadisticaSAComponent } from './documento/estadistica-sa/estadistica-sa.component';
+import { EnviarDocumentoFacilitaComponent } from './facilita/enviar-documento-facilita/enviar-documento-facilita.component';
 
 const routes: Routes = [
 
@@ -222,32 +223,26 @@ const routes: Routes = [
   {
     path: 'recibir-documento',
     component: RecibirComponent,
-    canActivate: [IsLoggedInGuard],
   },
   {
     path: 'registrar-documento',
     component: RegistrarMPComponent,
-    canActivate: [IsLoggedInGuard],
   },
   {
     path: 'envio-externo',
     component: EnvioExternoComponent,
-    canActivate: [IsLoggedInGuard],
   },
   {
     path: 'report-documento',
     component: ReporteDocumentoComponent,
-    canActivate: [IsLoggedInGuard],
   },
   {
     path: 'recojo-op',
     component: ReporteRecojoOPComponent,
-    canActivate: [IsLoggedInGuard],
   },
   {
     path: 'registroCorrespondencia',
     component: RegistroCorrespondenciaComponent,
-    canActivate: [IsLoggedInGuard],
   },
   {
     path: 'list-correspondencia',
@@ -256,12 +251,15 @@ const routes: Routes = [
   {
     path: 'entregarCorrespondencia',
     component: EntregarCorrespondenciaComponent,
-    canActivate: [IsLoggedInGuard],
   },
   {
     path: 'list-facilita',
     component: ListPendientesComponent,
     canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'formFacilita/:codigoDocumento',
+    component: EnviarDocumentoFacilitaComponent,
   },
 
  // =========================================================================================================================

@@ -242,3 +242,8 @@ text-align: center;
   0%, 20%, 100% { opacity: 0; } /* Oculto al inicio y al final */
   25%, 75% { opacity: 1; } /* Visible en el intervalo central */
 }
+
+
+.example-tooltip-red {
+  background: #b71c1c;
+}

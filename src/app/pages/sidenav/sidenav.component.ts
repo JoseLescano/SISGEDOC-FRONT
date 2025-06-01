@@ -71,7 +71,6 @@ export class SidenavComponent implements OnInit {
       .subscribe(
       {
         next: (response:any)=> {
-          debugger
           this.menus = response.data as Menu[];
         },
         error: (err: any)=> {

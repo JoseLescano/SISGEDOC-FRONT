@@ -42,6 +42,9 @@ export class FormComponent implements OnInit {
   isFirmado: boolean = false;
   nameDocumentoFirmado : string = "";
 
+  displayedColumns: string[] = ['icono', 'info', 'acciones'];
+
+
   constructor(
     private documentoService:DocumentoService,
     private route: ActivatedRoute,
@@ -125,7 +128,6 @@ export class FormComponent implements OnInit {
   }
 
   findAnexosByDocumento(){
-
     this.anexoService.findByDocumento(this.documento.codigo).subscribe((response:any)=> {
       this.anexos = response.data;
     }, error => {
@@ -412,19 +414,6 @@ export class FormComponent implements OnInit {
     return window;
   }
 
-  // firmarDocumento(){
-  //   var _this:any=this;
-  //     this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response:any)=>{
-  //       var nameFile=response[1];
-  //       this._window().iniciarFirma((response[1]),
-  //       function(){_this.updateIframeWithKeyDigitalGeneral(nameFile);}
-  //     );
-  //     }, error => {
-  //       Swal.fire("LO SENTIMOS", "HUBO UN INCONVENIENTE EN LA FIRMA DEL DOCUMENTO", "info");
-  //     });
-
-  // }
-
   firmarDocumento(){
      this.cargando = true;
      this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response: any) => {
@@ -540,6 +529,32 @@ export class FormComponent implements OnInit {
       width: '60%',
       data: data,
     });
+  }
+
+
+  esPDF(url: string): boolean {
+    return url?.toLowerCase().endsWith('.pdf');
+  }
+
+  getIconClass(url: string): string {
+    const extension = url?.split('.').pop()?.toLowerCase();
+    switch (extension) {
+      case 'pdf': return 'fas fa-file-pdf text-danger';
+      case 'doc':
+      case 'docx': return 'fas fa-file-word text-primary';
+      case 'xlsx':
+      case 'xls': return 'fas fa-file-excel text-success';
+      case 'ppt':
+      case 'pptx': return 'fas fa-file-powerpoint text-warning';
+      case 'rar':
+      case 'zip': return 'fas fa-file-archive text-secondary';
+      default: return 'fas fa-file';
+    }
+  }
+
+  firmarAnexo(anexo: Anexo): void {
+    // Aquí va la lógica para firmar
+    console.log('Firmar documento:', anexo.url);
   }
 
 

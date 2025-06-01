@@ -85,10 +85,8 @@ export class ValidarRecojoComponent implements OnInit {
                 a.click();
                 window.URL.revokeObjectURL(url);
                 this.cargando = false;
-                this.router.navigate(['/principal/entregarCorrespondencia']).then(() => {
-                  // Do something
-                  location.reload();
-                });
+                this.dialogRef.close();
+                this.router.navigate(['/principal/recibir-documento']);
               },
               error: (error: any) => {
                 this.cargando = false;
@@ -96,6 +94,7 @@ export class ValidarRecojoComponent implements OnInit {
               }
           }
         );
+
       }
     }
 

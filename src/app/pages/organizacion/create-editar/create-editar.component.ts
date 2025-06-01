@@ -24,6 +24,8 @@ export class CreateEditarComponent implements OnInit {
   titulo : string = "EDITAR ORGANIZACION";
   operacion : string = "GUARDAR";
 
+  activa: boolean = false;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: any,
     private matDialog: MatDialogRef<CreateEditarComponent>,
@@ -35,6 +37,7 @@ export class CreateEditarComponent implements OnInit {
       this.codigoInterno = this.data.editar;
       this.organizacionService.findByCodigoInterno(this.codigoInterno).subscribe((response:any)=> {
         this.organizacionSeleccionada = response.data;
+        this.activa = this.organizacionSeleccionada.emu === 'S';
       });
     }else {
       this.codigoPadre = this.data.padre;
@@ -42,18 +45,31 @@ export class CreateEditarComponent implements OnInit {
     }
   }
 
+  onCheckboxChange(event: boolean) {
+    // Convertimos booleano a 'S' o 'N'
+    this.organizacionSeleccionada.emu = event ? 'S' : 'N';
+
+    // Aquí podrías llamar a un método para actualizarlo en el backend
+    // this.miServicio.actualizarOrganizacion(this.organizacion).subscribe();
+  }
+
   operate(){
     if (this.data.padre != null ){
+      debugger;
       let dto : Organizacion = new Organizacion();
       dto.acronimo = this.organizacionSeleccionada.acronimo;
       dto.nombreLargo = this.organizacionSeleccionada.nombreLargo;
       dto.indicativo = this.organizacionSeleccionada.indicativo;
       dto.cargo = this.organizacionSeleccionada.cargo;
-      this.organizacionService.saveOrganizacion(dto, this.codigoPadre).pipe(switchMap(()=>{
+      dto.ubigeo = this.organizacionSeleccionada.ubigeo;
+      dto.emu = this.organizacionSeleccionada.emu;
+      this.organizacionService.saveOrganizacion(dto, this.codigoPadre)
+      .pipe(
+        switchMap(()=>{
           return this.organizacionService.findByCodigoInterno(sessionStorage.getItem(environment.codigoOrganizacion));
-      })).subscribe((response:any)=> {
+      }))
+      .subscribe((response:any)=> {
         this.organizacionService.setOrganizacionCambio(response.data);
-
           Swal.fire('OPERACION REALIZADA', 'SE REGISTRO ORGANIZACION CON EXITO', 'info');
           this.close();
           this.router.navigate(['/principal/organizacion']).then(() => {
@@ -71,7 +87,7 @@ export class CreateEditarComponent implements OnInit {
           this.organizacionService.updateOrganizacion(
             this.codigoInterno, this.organizacionSeleccionada.acronimo,
             this.organizacionSeleccionada.nombreLargo, this.organizacionSeleccionada.indicativo,
-            this.organizacionSeleccionada.cargo).pipe(switchMap(()=>{
+            this.organizacionSeleccionada.cargo, this.organizacionSeleccionada.ubigeo, this.organizacionSeleccionada.emu).pipe(switchMap(()=>{
               return this.organizacionService.findByCodigoInterno(this.codigoInterno);
             })).subscribe((response:any)=> {
               this.organizacionService.setOrganizacionCambio(response.data);

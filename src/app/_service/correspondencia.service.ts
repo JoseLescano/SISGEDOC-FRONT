@@ -21,8 +21,8 @@ export class CorrespondenciaService extends GenericService<Correspondencia> {
     return this.http.get<Correspondencia[]>(`${environment.HOST}correspondencias/findByOrganizacionDestino/${orgDestino}`);
   }
 
-  listEntregarByOP(orgDestino: any){
-    return this.http.get<Correspondencia[]>(`${environment.HOST}correspondencias/listEntregarByOP/${orgDestino}`);
+  listEntregarByOP(orgDestino: any, orgOrigen: any){
+    return this.http.get<Correspondencia[]>(`${environment.HOST}correspondencias/listEntregarByOP/${orgDestino}/${orgOrigen}`);
   }
 
   correspondenciaOP(correspondencia: CorrespondenciaOP){
@@ -56,8 +56,9 @@ export class CorrespondenciaService extends GenericService<Correspondencia> {
     formData, { responseType: 'blob' });
   }
 
-  searchByFechas(fechaInicio?: any, fechaFin?: any){
+  searchByFechas(codigoOrganizacion:any, fechaInicio?: any, fechaFin?: any){
     let formData:FormData = new FormData();
+    formData.append('orgOrigen', codigoOrganizacion);
     formData.append('fechaInicio', fechaInicio);
     formData.append('fechaFin',fechaFin);
     return this.http.post(`${environment.HOST}correspondencias/searchByFechas`, formData);

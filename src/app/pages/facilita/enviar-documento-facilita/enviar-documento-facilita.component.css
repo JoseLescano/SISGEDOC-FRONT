@@ -1,0 +1,23 @@
+.archivo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 0;
+}
+
+.archivo-info {
+  flex: 1;
+  margin-left: 10px;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+/* En tu componente o en styles.css */
+.bordered-table {
+  border: 2px solid #1976d2; /* azul Material Design */
+  border-radius: 8px;
+  overflow: hidden;
+}

@@ -52,7 +52,7 @@
                 <div class="col-12">
                 <ng-select placeholder="ORGANIZACION DESTINO" [virtualScroll]=true formControlName="destino"   >
                     <mat-option>SELECCIONE</mat-option>
-                    <ng-option *ngFor="let c of remitentes" [value]="c.codigoInterno" >{{c.acronimo}}</ng-option>
+                    <ng-option *ngFor="let c of destinos" [value]="c.codigoInterno" >{{c.acronimo}}</ng-option>
                     </ng-select>
                     <!-- <div *ngIf="firstFormGroup.get('organizacionRemitente').errors && firstFormGroup.get('organizacionRemitente').dirty" >
                     <mat-error *ngIf="firstFormGroup.get('organizacionRemitente').hasError('required')">* Campo requerido</mat-error>

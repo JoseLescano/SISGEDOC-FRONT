@@ -34,7 +34,7 @@
                       <div class="row">
                         <div class="col">
                           <button mat-flat-button color="primary" style="width: 100%; height: 50px; border-radius: 10px;"
-                          (click)="generarPlantilla()" type="button" >
+                          (click)="generarPlantilla()" type="button" [disabled]="!pasoUnoValido">
                               <!-- <i class="far fa-file-word" style="font-size: 30px;"></i>  -->
                               GENERAR WORD
                           </button>
@@ -66,13 +66,13 @@
               </div>
               <div class="col-sm-12  col-lg-10">
                 <mat-tab-group>
-                  <mat-tab label="DATOS PRINCIPALES"> 
+                  <mat-tab label="DATOS PRINCIPALES">
                     <mat-card >
                       <mat-card-content>
                         <div class="row mt-3">
                           <div class="col-6">
                             <ng-select  [virtualScroll]=true placeholder="SELECCIONE FIRMANTE" formControlName="firmante"
-                              (change)="getIndicativo(); findDestinatarios();" notFoundText="Sin elementos encontrados" >
+                              (change)="findDestinatarios();" notFoundText="Sin elementos encontrados" >
                               <ng-option *ngFor="let c of firmantes" [value]="c" >
                                 {{c.nombreLargo}}
                               </ng-option>
@@ -123,7 +123,7 @@
                           </div>
                         </div>
                         <div class="row">
-    
+
                           <div class="col"  >
                             <div class="wrapper" >
                               <mat-label>DOCUMENTO PRINCIPAL
@@ -137,7 +137,7 @@
                                   <input type="file" (change)="selectArchivoPrincipal($event)"
                                     id="documentoPrincipal"
                                     accept="application/msword, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
-    
+
                               </div>
                               <button  mat-flat-button type="button" color="primary" (click)="firmarDocumento()"
                                 data-bs-toggle="modal" data-bs-target="#panelFirmaPeru"
@@ -145,11 +145,11 @@
                             </div>
                           </div>
                         </div>
-                        
+
                         <div class="row d-flex flex-row bd-highlight mt-3">
                           <div class="col">
                             <!-- <button class="btn btn-lg btn-outline-success mr-2" type="submit" [disabled]="form.invalid">GUARDAR DOCUMENTO</button> -->
-                            <button mat-flat-button type="submit" style="margin-right: 2px;" color="primary" [disabled]="form.invalid || selectedFiles== null">GUARDAR DOCUMENTO</button>
+                            <button mat-flat-button type="submit" style="margin-right: 2px;" color="primary" [disabled]="!pasoDosValido">GUARDAR DOCUMENTO</button>
                             <button mat-flat-button color="warn" type="button" routerLink="/principal/pendientes" >CANCELAR</button>
                           </div>
                         </div>
@@ -193,5 +193,5 @@
     <mat-card-footer>
       <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
     </mat-card-footer>
-    <!-- <div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{form.value | json}}</div> -->
+    <div class="bg-warning p-2 text-dark bg-opacity-10 mw-100">{{form.value | json}}</div>
 </mat-card>

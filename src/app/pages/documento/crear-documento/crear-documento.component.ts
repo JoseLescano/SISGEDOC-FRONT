@@ -68,20 +68,24 @@ export class CrearDocumentoComponent implements OnInit {
       'firmante': new FormControl('', [Validators.required]),
       'tipoDocumento': new FormControl('', [Validators.required]),
       'nroCorrelativo': new FormControl({value: 0, disabled:true}, [ Validators.required]),
-      'indicativo': new FormControl('', [Validators.required]),
+      'indicativo': new FormControl('', [Validators.required, Validators.minLength(3)]),
       'destinatarios': new FormControl(new Array<String>,[Validators.required]),
       'copiaInformativa': new FormControl(new Array<String>),
-      'asunto': new FormControl('', [Validators.required, Validators.minLength(10)])
+      'asunto': new FormControl('', [Validators.required, Validators.minLength(10)]),
+      'prioridad': new FormControl('', [Validators.required])
     });
 
-    // this.form.controls['nroCorrelativo'].disable();
-
     this.organizacionService.findFirmantes(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>  {
-      this.firmantes = response.data
+      this.firmantes = response.data;
+      this.indicativo = this.firmantes[0].indicativo;
+      this.form.get('indicativo').setValue(this.indicativo);
     });
 
     this.claseService.findForCrearDocumento().subscribe((response:any)=> this.clases = response.data );
     this.prioridadService.listar().subscribe((response: any)=> this.prioridades = response);
+
+    this.selectedFiles = null;
+    this.uploadedFiles = [];
     this.cargando = false;
   }
 
@@ -89,13 +93,14 @@ export class CrearDocumentoComponent implements OnInit {
     let firmante = this.form.get('firmante').value;
     let tipoDocumento = this.form.get('tipoDocumento').value;
 
-    if (firmante!='' && tipoDocumento !=''){
-      this.cargando = true;
       this.form.controls['destinatarios'].setValue('');
       this.form.controls['copiaInformativa'].setValue('');
       this.organizacionesDestino = [];
       this.copiasInformativas = [];
 
+    if ((firmante!='' && tipoDocumento !='') && (firmante!=null && tipoDocumento !=null)){
+
+      this.cargando = true;
       this.organizacionService.destinatariosExternoByCodigo(firmante.codigoInterno, tipoDocumento).subscribe((response:any)=> {
         this.organizacionesDestino = response.data;
         this.copiasInformativas = response.data;
@@ -116,7 +121,6 @@ export class CrearDocumentoComponent implements OnInit {
 
   operate(){
 
-    let nroCorrelativo = this.form.get('nroCorrelativo').value;
     if(this.form.valid && this.selectedFiles != null){
       this.cargando = true;
       // Obtén el archivo principal
@@ -140,7 +144,7 @@ export class CrearDocumentoComponent implements OnInit {
       this.documentoar.organizacionOrigen = this.form.value['firmante'].codigoInterno;
 
       this.documentoar.clase = this.form.value['tipoDocumento'];
-      this.documentoar.nroOrden =  this.form.get('nroCorrelativo').value;
+      this.documentoar.nroOrden =  this.form.get('nroCorrelativo').value;;
       this.documentoar.indicativo =  this.form.value['indicativo'];
       this.documentoar.destinos = this.form.value['destinatarios'];
       this.documentoar.copiasInformativas = this.form.value['copiaInformativa'];
@@ -202,19 +206,21 @@ export class CrearDocumentoComponent implements OnInit {
       }else {
         this.documentoService.crearDocumentoParaFirmar(
           this.documentoar,
-          sessionStorage.getItem(environment.codigoOrganizacion), this.documentoWordTempl).subscribe((response:any)=>{
-          if (response.httpStatus=='CREATED'){
-            this.cargando = false;
-            this.initForm();
-            Swal.fire(`ACCION REALIZADA CORRECTAMENTE`, response.message, 'info');
-          } else {
-            this.cargando = false;
-            Swal.fire(`LO SENTIMOS`, response.message, 'info');
-          }
-        }, error => {
-          this.cargando = false;
-          Swal.fire('LO SENTIMOS', `No se ha registrado documento`, 'info');
-        });
+          sessionStorage.getItem(environment.codigoOrganizacion), this.documentoWordTempl)
+          .subscribe(
+            {
+              next:(response:any)=> {
+                this.cargando = false;
+                this.initForm();
+                Swal.fire(`ACCION REALIZADA CORRECTAMENTE`, response.message, 'info');
+              },
+              error:(err:any)=> {
+                debugger
+                this.cargando = false;
+                 Swal.fire(`AVISO`, err.message, 'info');
+              }
+            }
+          );
       }
      } else {
       this.cargando = false;
@@ -238,6 +244,26 @@ export class CrearDocumentoComponent implements OnInit {
     }
 
   }
+
+  get pasoUnoValido(): boolean {
+    return (
+      this.form.get('tipoDocumento')?.valid &&
+      this.form.get('firmante')?.valid &&
+      this.form.get('indicativo')?.valid &&
+      this.form.get('destinatarios')?.value?.length > 0 &&
+      this.form.get('asunto')?.valid &&
+      this.form.get('prioridad')?.valid
+    );
+  }
+
+  get pasoDosValido(): boolean {
+    return (
+      this.form.get('nroCorrelativo')?.value &&
+      this.selectedFiles !== null &&
+      this.form.valid
+    );
+  }
+
 
   generarPlantilla() {
     if (this.validarPlantilla()) {

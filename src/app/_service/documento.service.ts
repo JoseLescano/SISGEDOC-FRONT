@@ -270,6 +270,7 @@ export class DocumentoService  extends GenericService<Documento> {
   }
 
   crearDocumentoParaFirmar(documento: any, organizacionRemitente:any, word?:any){
+    debugger
     let formData:FormData = new FormData();
     formData.append('clase', documento.clase);
     formData.append('nroOrden', documento.nroOrden);

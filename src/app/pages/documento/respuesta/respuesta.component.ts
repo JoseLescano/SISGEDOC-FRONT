@@ -58,11 +58,8 @@ export class RespuestaComponent implements OnInit {
     this.cargando = true;
     this.getIdDocumento();
     this.initForm();
-    this.organizacionService.findFirmantes(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>  {
-      this.firmantes = response.data
-    });
     // this.firmanteFilter$ = this.firmanteControl.valueChanges.pipe(map(val => this.filterfirmantes(val)));
-    this.claseService.findForCrearDocumento().subscribe((response:any)=> this.clases = response.data );
+
     this.cargando = false;
   }
 
@@ -89,14 +86,39 @@ export class RespuestaComponent implements OnInit {
       'documentoReferencia': new FormControl(this.vidDocumento, [Validators.required]),
       'firmante': new FormControl('', [Validators.required]),
       'tipoDocumento': new FormControl('', [Validators.required]),
-      'nroCorrelativo': new FormControl(null, [Validators.required, Validators.min(1)]),
+      'nroCorrelativo': new FormControl({value: 0, disabled:true}, [ Validators.required]),
       'indicativo': new FormControl('', [Validators.required]),
       'destinatarios': new FormControl(new Array<String>,[Validators.required]),
       'copiaInformativa': new FormControl(new Array<String>),
       'asunto': new FormControl('', [Validators.required, Validators.minLength(10)])
     });
-    this.form.controls['documentoReferencia'].disable();
-    this.form.controls['nroCorrelativo'].disable();
+    // this.form.get('documentoReferencia').setValue(this.vidDocumento);
+    this.organizacionService.findFirmantes(
+      sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>  {
+      this.firmantes = response.data;
+      this.indicativo = this.firmantes[0].indicativo;
+      this.form.get('indicativo').setValue(this.indicativo);
+    });
+    this.claseService.findForCrearDocumento().subscribe((response:any)=> this.clases = response.data );
+  }
+
+  get pasoUnoValido(): boolean {
+    return (
+      this.form.get('documentoReferencia')?.valid &&
+      this.form.get('firmante')?.valid &&
+      this.form.get('tipoDocumento')?.valid &&
+      this.form.get('indicativo')?.valid &&
+      this.form.get('destinatarios')?.value?.length > 0 &&
+      this.form.get('asunto')?.valid
+    );
+  }
+
+  get pasoDosValido(): boolean {
+    return (
+      this.form.get('nroCorrelativo')?.value &&
+      this.selectedFiles !== null &&
+      this.form.valid
+    );
   }
 
   findDestinatarios(){
@@ -180,7 +202,8 @@ export class RespuestaComponent implements OnInit {
         this.documentoService.crearRespuestaParaFirmar(
           this.documentoar,
           sessionStorage.getItem(environment.codigoOrganizacion),
-          this.vidDocumento, this.nameDocuentoFirmado, this.firmado, this.codigoDecreto, this.uploadedFiles).subscribe((response:any)=>{
+          this.vidDocumento, this.nameDocuentoFirmado, this.firmado,
+           this.codigoDecreto, this.uploadedFiles).subscribe((response:any)=>{
           if (response.httpStatus=='CREATED'){
             this.cargando = false;
             this.initForm();

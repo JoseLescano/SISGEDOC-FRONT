@@ -1,11 +1,17 @@
-<mat-stepper [linear]="true" #stepper orientation="vertical" style="border-radius: 15px; margin: 5px;">
+<!-- <mat-stepper [linear]="true" #stepper orientation="vertical" style="border-radius: 15px; margin: 5px;">
   <mat-step [stepControl]="listaFormGroup">
     <form [formGroup]="listaFormGroup">
-      <ng-template matStepLabel>Lista de Documentos</ng-template>
+      <ng-template matStepLabel>Lista de Documentos</ng-template> -->
+      <div class="container loader" *ngIf="cargando"></div>
+      <mat-card class="m-2" style="border-radius: 10px; " *ngIf="!cargando" >
+        <mat-card-header class="title-form">
+          <mat-card-title >DOCUMENTO PENDIENTES - FACILITA</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
           <table mat-table [dataSource]="dataSource" matSort >
 
             <ng-container matColumnDef="Id">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header > ID </th>
+              <th mat-header-cell *matHeaderCellDef  mat-sort-header > ID </th>
               <td mat-cell *matCellDef="let row"> {{row.id}} </td>
             </ng-container>
 
@@ -45,7 +51,9 @@
               <div class="example-button-row">
                   <div class="example-flex-container">
                   <div class="example-button-container">
-                      <button mat-flat-button color="primary" class="m-2" (click)="seleccionarDocumento(row)" >
+                      <button mat-flat-button color="primary" class="m-2"
+                      [routerLink]="['./../formFacilita', row.id]"
+                      >
                         <i class="far fa-newspaper"  ></i> VER DOC.
                       </button>
                   </div>
@@ -61,9 +69,10 @@
               <td class="mat-cell" colspan="4">Sin datos obtenidos...</td>
             </tr>
           </table>
-
           <mat-paginator [pageSizeOptions]="[ 10, 15, 25, 100]"></mat-paginator>
-        <div class="mt-2">
+        </mat-card-content>
+      </mat-card>
+        <!-- <div class="mt-2">
           <button mat-flat-button color="primary"  matStepperNext [disabled]="!listaFormGroup.valid">Siguiente</button>
         </div>
     </form>
@@ -126,4 +135,4 @@
 
 
 <div class="bg-success p-2 text-dark bg-opacity-10 mw-100">{{listaFormGroup.value | json}}</div>
-<div class="bg-success p-2 text-dark bg-opacity-10 mw-100" *ngIf="files.length>0">{{secondFormGroup.value | json}}</div>
+<div class="bg-success p-2 text-dark bg-opacity-10 mw-100" *ngIf="files.length>0">{{secondFormGroup.value | json}}</div> -->

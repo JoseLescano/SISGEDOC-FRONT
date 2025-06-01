@@ -21,6 +21,7 @@ export class ListCorrespondenciaComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['Estado', 'Nro', 'Asunto','Documento', 'Origen', 'Destino', 'Fecha Registro', 'Folio',  'Acciones'];
   dataSource: MatTableDataSource<Correspondencia> = new MatTableDataSource<Correspondencia>();
   cargando: boolean;
+  codigoOrganizacion : any = sessionStorage.getItem(environment.codigoOrganizacion);
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -38,7 +39,7 @@ export class ListCorrespondenciaComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.cargando = true;
-    this.correspondenciaService.searchByFechas().subscribe((response:any) => {
+    this.correspondenciaService.searchByFechas(this.codigoOrganizacion).subscribe((response:any) => {
       if (response!= null)
         this.createTable(response.data);
       this.cargando = false;
@@ -52,7 +53,7 @@ export class ListCorrespondenciaComponent implements OnInit, AfterViewInit {
   buscarFechas(){
     if (this.range.value['start']!= null && this.range.value['end']!=null){
       this.cargando = true;
-      this.correspondenciaService.searchByFechas(
+      this.correspondenciaService.searchByFechas(this.codigoOrganizacion,
         environment.convertDateToStr(this.range.value['start']),
          environment.convertDateToStr(this.range.value['end'])).subscribe((response: any) => {
         if (response!= null)

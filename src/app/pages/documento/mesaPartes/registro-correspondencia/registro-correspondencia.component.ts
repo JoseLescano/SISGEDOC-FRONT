@@ -19,6 +19,7 @@ import Swal from 'sweetalert2';
 export class RegistroCorrespondenciaComponent implements OnInit {
 
   remitentes:Organizacion[] = [];
+  destinos:Organizacion[] = [];
   clases:Clase[];
   cargando : boolean = false;
   mostrarTipoIdentidad : boolean = false;
@@ -44,9 +45,34 @@ export class RegistroCorrespondenciaComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (this.codigoOrganizacion == '120210' ||  this.codigoOrganizacion == '12021001' || this.codigoOrganizacion == '12021002'){
+    if (this.codigoOrganizacion == '120210' ||  this.codigoOrganizacion == '12021001' || this.codigoOrganizacion == '12021002' || this.codigoOrganizacion == '02'){
       this.cargando= true;
-      this.organizacionService.getWithCodigoCopere().subscribe((response:any)=>{
+      debugger
+      if (this.codigoOrganizacion == '02'){
+        this.organizacionService.getEntregarCopere()
+          .subscribe(
+            {
+              next:(response:any)=> {
+                debugger
+                this.destinos = response.data;
+              }
+            }
+          );
+      }else {
+        this.organizacionService.getWithCodigoCopere()
+        .subscribe(
+          {
+            next:(response:any)=> {
+              debugger
+              this.destinos = response.data;
+            }
+          }
+        );
+      }
+
+
+      this.organizacionService.getWithCodigoCopere()
+      .subscribe((response:any)=>{
         this.remitentes = response.data;
       });
       this.claseService.listar().subscribe((response:any)=> this.clases = response.data );
@@ -114,7 +140,7 @@ export class RegistroCorrespondenciaComponent implements OnInit {
           Swal.fire('Lo sentimos', 'Se presento un inconveniente', 'warning');
       }
     });
-     
+
   }
 
   cancelar(){

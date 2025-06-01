@@ -26,6 +26,7 @@ export class EntregarCorrespondenciaComponent implements OnInit {
   dataSource: MatTableDataSource<Correspondencia> = new MatTableDataSource<any>();
   cargando: boolean;
   remitentes:Organizacion[] = [];
+
   form:FormGroup;
   lista:any;
 
@@ -42,11 +43,29 @@ export class EntregarCorrespondenciaComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (this.codigoOrganizacion == '120210' ||  this.codigoOrganizacion == '12021001' || this.codigoOrganizacion == '12021002'){
+    if (this.codigoOrganizacion == '120210' ||  this.codigoOrganizacion == '12021001' || this.codigoOrganizacion == '12021002'|| this.codigoOrganizacion == '02'){
       this.cargando = true;
-      this.organizacionService.getWithCodigoCopere().subscribe((response:any)=>{
-        this.remitentes = response.data as Organizacion[];
-      });
+      if (this.codigoOrganizacion == '02'){
+        this.organizacionService.getEntregarCopere()
+          .subscribe(
+            {
+              next:(response:any)=> {
+                debugger
+                this.remitentes = response.data;
+              }
+            }
+          );
+      }else {
+        this.organizacionService.getWithCodigoCopere()
+        .subscribe(
+          {
+            next:(response:any)=> {
+              debugger
+              this.remitentes = response.data;
+            }
+          }
+        );
+      }
       this.cargando = false;
     } else {
       this.router.navigate(['/principal/dashboard']);
@@ -57,7 +76,8 @@ export class EntregarCorrespondenciaComponent implements OnInit {
   buscarCorrespondencia(idOrganizacion: any){
     this.cargando = true;
     this.dataSource = new MatTableDataSource<Correspondencia>;
-    this.correspondenciaService.listEntregarByOP(idOrganizacion).subscribe(
+    debugger
+    this.correspondenciaService.listEntregarByOP(idOrganizacion, this.codigoOrganizacion).subscribe(
       {
         next : (response: any)=> {
           debugger

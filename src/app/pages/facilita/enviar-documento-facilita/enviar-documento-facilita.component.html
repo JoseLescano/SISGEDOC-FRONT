@@ -1,0 +1,121 @@
+<mat-card class="m-2">
+  <mat-card-title>Enviar documento - Facilita</mat-card-title>
+  <form [formGroup]="form">
+  <mat-card-content>
+
+      <div class="row mt-2">
+        <div class="col-6">
+          <mat-form-field appearance="fill" class="example-full-width">
+            <mat-label>TIPO DOCUMENTO</mat-label>
+            <mat-select matInput formControlName="tipoDocumento"  >
+              <mat-option>SELECCIONE</mat-option>
+              <mat-option  *ngFor="let c of tipoDocumentos"  [value]="c.codigo">
+                {{c.nombre}}
+              </mat-option>
+            </mat-select>
+            <mat-error>*Campo requerido</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="fill" class="example-full-width">
+            <mat-label>PRIORIDAD</mat-label>
+            <mat-select matInput formControlName="prioridad"  >
+              <mat-option>SELECCIONE</mat-option>
+              <mat-option  *ngFor="let c of prioridades"  [value]="c.codigo">
+                {{c.nombre}}
+              </mat-option>
+            </mat-select>
+            <mat-error>*Campo requerido</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <ng-select [multiple]=true placeholder="SELECCIONE DESTINARIO(S)"
+            [virtualScroll]=true formControlName="destino" notFoundText="Sin elementos encontrados" >
+            <mat-option>SELECCIONE</mat-option>
+            <ng-option *ngFor="let c of destinos" [value]="c.codigoInterno" >
+              {{c.acronimo}}
+            </ng-option>
+          </ng-select>
+        </div>
+        <div class="col-6" *ngIf="this.form.value['destino'].length>0">
+          <ng-select [multiple]=true placeholder="SELECCIONE COPIA(S) INFORMATIVAS (OPCIONAL)"
+            [virtualScroll]=true formControlName="copiasInformativas" notFoundText="Sin elementos encontrados" >
+            <mat-option>SELECCIONE</mat-option>
+            <ng-option *ngFor="let c of destinos" [value]="c.codigoInterno" >
+              {{c.acronimo}}
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+
+      <h3>Archivos</h3>
+
+      <!-- <div *ngFor="let archivo of archivos" class="archivo-item">
+        <i class="fas fa-file-pdf"></i>
+        <div class="archivo-info">
+          <strong>{{ archivo.name }}</strong><br />
+        </div>
+
+        <button mat-icon-button color="primary" (click)="verArchivo(archivo.url)">
+          <i class="far fa-eye"></i>
+        </button>
+
+        <mat-radio-button
+          *ngIf="archivos.length > 1"
+          [value]="archivo.id"
+          name="archivoPrincipal"
+          (change)="form.get('archivoId')?.setValue(archivo.id)"
+          [checked]="form.get('archivoId')?.value === archivo.id">
+        </mat-radio-button>
+      </div> -->
+
+      <table mat-table [dataSource]="archivos" class="mat-elevation-z2 bordered-table" *ngIf="archivos.length > 0">
+
+        <!-- Nombre del archivo -->
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef> Nombre </th>
+          <td mat-cell *matCellDef="let archivo"> {{ archivo.name }} </td>
+        </ng-container>
+
+        <!-- Botón Visualizar -->
+        <ng-container matColumnDef="ver">
+          <th mat-header-cell *matHeaderCellDef> Ver </th>
+          <td mat-cell *matCellDef="let archivo">
+            <!-- <button mat-icon-button color="primary" (click)="verArchivo(archivo.url)">
+              <mat-icon>visibility</mat-icon>
+            </button> -->
+            <!-- <button mat-icon-button color="primary" (click)="verArchivo(archivo.url)">
+              <i class="far fa-eye"></i>
+            </button> -->
+            <button mat-mini-fab color="primary" (click)="verArchivo(archivo.url)">
+               <i class="far fa-eye"></i>
+            </button>
+          </td>
+        </ng-container>
+
+        <!-- Checkbox o radio para seleccionar como principal -->
+        <ng-container matColumnDef="principal">
+          <th mat-header-cell *matHeaderCellDef> Principal </th>
+          <td mat-cell *matCellDef="let archivo">
+            <mat-checkbox
+              [checked]="form.get('archivoId')?.value === archivo.id"
+              (change)="seleccionarPrincipal(archivo)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Header y row -->
+        <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+      </table>
+
+  </mat-card-content>
+  <mat-card-actions align="end">
+    <button mat-raised-button color="warn" class="btn-opcion" type="button" routerLink="/principal/list-facilita">REGRESAR</button>
+    <button mat-raised-button color="primary" [disabled]="form.invalid" class="btn-opcion">ENVIAR DOCUMENTO</button>
+  </mat-card-actions>
+</form>
+</mat-card>
+<div>{{form.value | json}}</div>
