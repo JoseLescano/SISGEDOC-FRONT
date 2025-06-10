@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalMfaComponent } from './modal-mfa/modal-mfa.component';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -35,6 +36,7 @@ export class LoginComponent{
     private recaptchaV3Service: ReCaptchaV3Service,
     public dialog: MatDialog,
     private loginService: LoginService,
+     private router: Router,
   ) {
     this._formulario = new FormGroup({
       username: new FormControl("", Validators.required),
@@ -76,7 +78,27 @@ export class LoginComponent{
     };
     this.loginService.login(jwtRequest).subscribe( {
       next : (response)=> {
-        this.openModalMfaStatus0(this.username, response);
+        // this.openModalMfaStatus0(this.username, response);
+        if (response && response.access_token) {
+          debugger
+          sessionStorage.setItem(environment.TOKEN_NAME, response.access_token);
+          let token = sessionStorage.getItem(environment.TOKEN_NAME);
+          const helper = new JwtHelperService();
+          const decodedToken = helper.decodeToken(token);
+          const username = decodedToken.sub;
+          const perfil = decodedToken.perfil;
+          sessionStorage.setItem(environment.rol, perfil.rol.codigo );
+          sessionStorage.setItem(environment.codigoOrganizacion, perfil.organizacion.codigoInterno);
+          sessionStorage.setItem(environment.cargoSeleccionado, perfil.nombre + " - " +  perfil.organizacion.acronimo);
+          sessionStorage.setItem(environment.nombreOrganizacion, perfil.organizacion.acronimo);
+          this.router.navigate(['/principal/dashboard'])
+          // .then(() => {
+          //   location.reload();
+          // });
+          Swal.fire('Bienvenido al SISGEDO','', 'success');
+        } else {
+          console.error('No access_token in response');
+        }
       },  error : (err:any) => {
         Swal.fire('AVISO', err.message, 'info');
       }

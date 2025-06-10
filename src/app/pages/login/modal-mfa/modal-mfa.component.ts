@@ -102,6 +102,7 @@ export class ModalMfaComponent implements OnInit, OnDestroy {
 
     this.loginService.verifyCode(verifyRequest).subscribe({
       next: (response) => {
+        debugger;
         this.cerrarDialogo.emit();
         if (response && response.access_token) {
           sessionStorage.setItem(environment.TOKEN_NAME, response.access_token);
