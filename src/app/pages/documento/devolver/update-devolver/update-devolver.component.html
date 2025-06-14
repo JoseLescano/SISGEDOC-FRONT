@@ -1,10 +1,10 @@
 
 <form class="example-form m-2" [formGroup]="form" (ngSubmit)="actualizarDocumento()" novalidate >
-  <mat-card style="height: 600px;">
+  <mat-card class="min-vh-100">
     <mat-card-content style="height: 100%;">
         <div class="row " style="height: 100%;">
           <div class="col-sm-12 col-lg-7 "  >
-            <iframe id="embeddedPage" style="width: 100%; height: 100%" *ngIf="!errorPDF"></iframe>
+            <iframe id="embeddedPage" style="width: 100%; height: 100%" class="min-vh-100" *ngIf="!errorPDF"></iframe>
             <div  style="width: 100%; height: 100%; border: 1px solid black;
                   border-radius: 5px; align-items: center; align-content: center;
                   text-align: center; " *ngIf="errorPDF">

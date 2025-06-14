@@ -68,7 +68,6 @@ export class DocumentoService  extends GenericService<Documento> {
   }
 
   findRespuestaByVidParent(codigoDocumentoPadre: any, codigoDecreto?:any){
-    debugger;
     let formData:FormData = new FormData();
     formData.append('codigoDocumentoPadre', codigoDocumentoPadre);
     formData.append('codigoDecreto', codigoDecreto);
@@ -115,6 +114,14 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('fi', fechaInicio);
     formData.append('ff', fechaFin);
     return this.http.post(`${environment.HOST}documentos/findRemitidos`, formData);
+  }
+
+  findDevueltosForOrganizacion(codigoInterno:any, fechaInicio?:any, fechaFin?:any ){
+    let formData:FormData = new FormData();
+    formData.append('codigoInterno', codigoInterno);
+    formData.append('fi', fechaInicio);
+    formData.append('ff', fechaFin);
+    return this.http.post(`${environment.HOST}documentos/findDevueltosForOrganizacion`, formData);
   }
 
   searchByOrganizacion(codigoInterno:any, contexto:any, fechaInicio?:any, fechaFin?:any){
@@ -365,6 +372,12 @@ export class DocumentoService  extends GenericService<Documento> {
     let formData:FormData = new FormData();
     formData.append('codigoOrganizacion', codigoOrganizacion);
     return this.http.post(`${environment.HOST}documentos/findDecretadoForBarChart`, formData);
+  }
+
+  getDecretados7dias(codigoOrganizacion:any){
+    let formData:FormData = new FormData();
+    formData.append('codigoOrganizacion', codigoOrganizacion);
+    return this.http.post(`${environment.HOST}documentos/getDecretados7dias`, formData);
   }
 
   getDocumentoBandejaNucleo(){

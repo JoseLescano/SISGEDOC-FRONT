@@ -13,7 +13,6 @@ import Swal from 'sweetalert2';
 export class MiPerfilComponent implements OnInit {
 
   barChart: any;
-  type : any = 'bar';
   codigoRol : any = sessionStorage.getItem(environment.rol);
 
   constructor(
@@ -21,68 +20,91 @@ export class MiPerfilComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (this.codigoRol== '000' || this.codigoRol== '002')
-      this.createChart();
+    if (this.codigoRol== '000' || this.codigoRol== '002'){
+      this.getDocumentosEnBandeja();
+      this.getDocumentoDecretados7dias();
+    }
   }
 
-  createChart() {
+  getDocumentosEnBandeja() {
     let codigoOrganizacion = sessionStorage.getItem(environment.codigoOrganizacion);
     this.documentoService.findDecretadoForBarChart(codigoOrganizacion).subscribe({
       next: (response: any) => {
-        let etiquetas = response.map(x => x.etiqueta);
-        let valores = response.map(x => x.valor);
-        this.barChart = new Chart('canvas', {
-          type: 'bar',
-          data: {
-            labels: etiquetas,
-            datasets: [{
-              label: 'DOCUMENTOS EN BANDEJA DE MIS UU',
-              data: valores,
-              backgroundColor: [
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(201, 203, 207, 0.2)',
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 205, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-              ],
-              borderColor: [
-                'rgb(54, 162, 235)',
-                'rgb(153, 102, 255)',
-                'rgb(201, 203, 207)',
-                'rgb(255, 99, 132)',
-                'rgb(255, 159, 64)',
-                'rgb(255, 205, 86)',
-                'rgb(75, 192, 192)',
-              ],
-              borderWidth: 1
-            }],
-          },
-          options: {
-            aspectRatio: 2.5,
-            responsive: true,
-            plugins: {
-              datalabels: {
-                anchor: 'end',
-                align: 'end',
-                formatter: function(value) {
-                  return 'Total: ' + value;
-                },
-                font: {
-                  weight: 'bold'
-                },
-                offset: -5,
-
-              }
-            }
-          },
-          plugins: [ChartDataLabels]
-        });
+        this.createGrafigo('DOCUMENTOS EN BANDEJA DE MIS UU', 'canvas',
+          response.map(x => x.etiqueta), response.map(x => x.valor),'bar','x');
       },
       error: (err: any) => {
         Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
       }
+    });
+  }
+
+
+
+  getDocumentoDecretados7dias(){
+    let codigoOrganizacion = sessionStorage.getItem(environment.codigoOrganizacion);
+    this.documentoService.getDecretados7dias(codigoOrganizacion).subscribe({
+      next: (response: any) => {
+        debugger
+        this.createGrafigo('DECRETOS REALIZADOS - ÚLTIMOS 7 DÍAS', 'canvasDecretos',
+          response.map(x => x.etiqueta), response.map(x => x.valor),'line', 'x');
+      },
+      error: (err: any) => {
+        Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
+      }
+    });
+  }
+
+  createGrafigo(titulo:any, contenedor:any, etiquetas:any, valores:any, tipoGrafico:any, indexAxis:any){
+    this.barChart = new Chart(contenedor, {
+      type: tipoGrafico,
+      data: {
+        labels: etiquetas,
+        datasets: [{
+          indexAxis: indexAxis,
+          label: titulo,
+          data: valores,
+          backgroundColor: [
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(201, 203, 207, 0.2)',
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 205, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+          ],
+          borderColor: [
+            'rgb(54, 162, 235)',
+            'rgb(153, 102, 255)',
+            'rgb(201, 203, 207)',
+            'rgb(255, 99, 132)',
+            'rgb(255, 159, 64)',
+            'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)',
+          ],
+          borderWidth: 1
+        }],
+      },
+      options: {
+        aspectRatio: 2.5,
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          datalabels: {
+            anchor: 'end',
+            align: 'end',
+            formatter: function(value) {
+              return 'Total: ' + value;
+            },
+            font: {
+              weight: 'bold'
+            },
+            offset: -5,
+
+          }
+        }
+      },
+      plugins: [ChartDataLabels]
     });
   }
 

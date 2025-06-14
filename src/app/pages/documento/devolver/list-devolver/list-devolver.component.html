@@ -1,5 +1,4 @@
 
-
 <!-- <div class="container mt-2"> -->
   <div class="container loader" *ngIf="cargando"></div>
   <mat-card class="m-2" *ngIf="!cargando">
@@ -7,10 +6,16 @@
       <mat-card-header class="title-form">
         <mat-card-title >LISTA DE DOCUMENTOS DEVUELTOS</mat-card-title>
       </mat-card-header>
-      <button mat-flat-button style="background: rgba(25, 135, 84); color: #fff; "
-       *ngIf="dataSource!=null" (click)="downloadExcel()" >
-        <i class="fas fa-file-excel"></i> EXPORTAR A EXCEL
-      </button>
+      <div>
+         <button mat-flat-button color="primary" routerLink="/principal/documentos-rechazados" >
+          <i class="fas fa-search"></i>
+        </button>
+        <button mat-flat-button style="background: rgba(25, 135, 84); color: #fff; margin-left: 5px;"
+         *ngIf="dataSource!=null" (click)="downloadExcel()" >
+          <i class="fas fa-file-excel"></i> EXPORTAR A EXCEL
+        </button>
+
+      </div>
     </div>
     <mat-form-field appearance="fill" class="example-full-width mt-2">
       <mat-label>Filtro</mat-label>
