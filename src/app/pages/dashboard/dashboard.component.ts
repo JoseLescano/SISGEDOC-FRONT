@@ -13,6 +13,7 @@ export class DashboardComponent implements OnInit {
   pendientes: any = '000';
   parte: any = '000';
   devueltos : any = '000';
+  corregir: any = '000';
   codigoRol : any = sessionStorage.getItem(environment.rol);
 
   //==============================================================================
@@ -43,6 +44,9 @@ export class DashboardComponent implements OnInit {
       this.devueltos = response[2] < 10 ? '000'+ response[2]:
                   (response[2] < 99 && response[2] >9) ? '00'+ response[2]:
                   response[2];
+      this.corregir = response[3] < 10 ? '000'+ response[3]:
+                  (response[3] < 99 && response[3] >9) ? '00'+ response[3]:
+                  response[3];
     });
 
     }
@@ -55,6 +59,10 @@ export class DashboardComponent implements OnInit {
   }
   viewDevueltos(){
     this.router.navigate(['/principal/documentos-devueltos']);
+  }
+
+  viewCorregir(){
+    this.router.navigate(['/principal/documentos-corregir']);
   }
 
 }

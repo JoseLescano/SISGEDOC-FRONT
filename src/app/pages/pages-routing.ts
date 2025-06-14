@@ -48,6 +48,7 @@ import { ViewMenuComponent } from './menu/view-menu.component';
 import { SearchSAComponent } from './documento/search-sa/search-sa.component';
 import { EstadisticaSAComponent } from './documento/estadistica-sa/estadistica-sa.component';
 import { EnviarDocumentoFacilitaComponent } from './facilita/enviar-documento-facilita/enviar-documento-facilita.component';
+import { ListRechazadosComponent } from './documento/devolver/list-rechazados/list-rechazados.component';
 
 const routes: Routes = [
 
@@ -154,6 +155,10 @@ const routes: Routes = [
   {
     path: 'documentos-devueltos',
      component: ListDevolverComponent
+  },
+  {
+    path: 'documentos-rechazados',
+     component: ListRechazadosComponent
   },
   {
     path: 'update-devueltos/:codigoDocumento/:idDecreto',

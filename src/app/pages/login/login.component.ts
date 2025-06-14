@@ -78,27 +78,7 @@ export class LoginComponent{
     };
     this.loginService.login(jwtRequest).subscribe( {
       next : (response)=> {
-        // this.openModalMfaStatus0(this.username, response);
-        if (response && response.access_token) {
-          debugger
-          sessionStorage.setItem(environment.TOKEN_NAME, response.access_token);
-          let token = sessionStorage.getItem(environment.TOKEN_NAME);
-          const helper = new JwtHelperService();
-          const decodedToken = helper.decodeToken(token);
-          const username = decodedToken.sub;
-          const perfil = decodedToken.perfil;
-          sessionStorage.setItem(environment.rol, perfil.rol.codigo );
-          sessionStorage.setItem(environment.codigoOrganizacion, perfil.organizacion.codigoInterno);
-          sessionStorage.setItem(environment.cargoSeleccionado, perfil.nombre + " - " +  perfil.organizacion.acronimo);
-          sessionStorage.setItem(environment.nombreOrganizacion, perfil.organizacion.acronimo);
-          this.router.navigate(['/principal/dashboard'])
-          // .then(() => {
-          //   location.reload();
-          // });
-          Swal.fire('Bienvenido al SISGEDO','', 'success');
-        } else {
-          console.error('No access_token in response');
-        }
+        this.openModalMfaStatus0(this.username, response);
       },  error : (err:any) => {
         Swal.fire('AVISO', err.message, 'info');
       }

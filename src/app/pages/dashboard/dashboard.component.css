@@ -18,10 +18,10 @@ h1{
       align-items: center;
       padding: 20px;
       &.green {
-        background-color: #186dde;
+        background-color: #0acc95;
       }
       &.yellow {
-        background-color: #0acc95;
+        background-color: #CA7842;
       }
       &.red {
         background-color: #ef5350;
