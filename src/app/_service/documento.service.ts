@@ -182,7 +182,7 @@ export class DocumentoService  extends GenericService<Documento> {
       formData.append('anexo', file);
     });
     formData.append('organizacionRemitente', documento.organizacionOrigen);
-    return this.http.post(`${environment.HOST}documentos/envioExterno`, formData);
+    return this.http.post(`${environment.HOST}core/envioExterno`, formData);
   }
 
   crearDocumento(documento: any,  nameDocuentoFirmado : any,

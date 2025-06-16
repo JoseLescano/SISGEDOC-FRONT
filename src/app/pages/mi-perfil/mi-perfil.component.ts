@@ -46,7 +46,7 @@ export class MiPerfilComponent implements OnInit {
     this.documentoService.getDecretados7dias(codigoOrganizacion).subscribe({
       next: (response: any) => {
         debugger
-        this.createGrafigo('DECRETOS REALIZADOS - ÚLTIMOS 7 DÍAS', 'canvasDecretos',
+        this.createGrafigo('DECRETOS REALIZADOS - ÚLTIMOS 15 DÍAS', 'canvasDecretos',
           response.map(x => x.etiqueta), response.map(x => x.valor),'line', 'x');
       },
       error: (err: any) => {

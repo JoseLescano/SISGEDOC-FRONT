@@ -19,8 +19,6 @@
         </mat-form-field>
       </div>
     </div>
-
-    <!--  (click)="searchOrganizacion(4)" -->
   </mat-card-content>
 </mat-card>
 <mat-card class="m-2">
@@ -64,9 +62,26 @@
                   <button mat-mini-fab color="primary" (click)="imprimirListaPersonal(row.codigoInterno, false, row.acronimo)" >
                     <i class="fas fa-users"></i>
                   </button>
-                  <button mat-mini-fab color="accent" >
-                    <i class="fas fa-exchange-alt"></i>
+                  <button mat-mini-fab color="accent" *ngIf="itemSeleccionado<3" >
+                    <i class="fas fa-thumbs-up" ></i>                    
                   </button>
+                  <button mat-mini-fab color="accent" *ngIf="itemSeleccionado==4">
+                    <i class="fas fa-thumbs-down" ></i>                
+                  </button>
+                  <button mat-mini-fab style="background: rgba(25, 135, 84); color: #fff; " [matMenuTriggerFor]="menu">
+                    <i class="fas fa-user-secret"></i>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                  <button mat-menu-item>
+                    <span>ADMINISTRADOR</span>
+                  </button>
+                  <button mat-menu-item>
+                    <span>ACCIDENTAL</span>
+                  </button>
+                  <button mat-menu-item>
+                    <span>MESA DE PARTES</span>
+                  </button>
+                </mat-menu>
                   <button mat-mini-fab color="warn" >
                     <i class="fas fa-trash"></i>
                   </button>

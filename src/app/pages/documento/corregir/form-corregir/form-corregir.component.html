@@ -23,31 +23,62 @@
                     <mat-list-item *ngFor="let item of correciones" class="mb-2" >
                       <div mat-line style="white-space: normal; word-wrap: break-word;"><span class="font-bold">OBSERVACION:</span> {{ item.observacion}}</div>
                       <div mat-line>{{ 'RESPONSABLE: ' + item.usuarioRegistra }}</div>
-                      <!-- <div mat-line> {{item.fechaCreacion }} </div> -->
                     </mat-list-item>
                   </mat-list>
 
                 </div>
+                <div class="col-12">
+                  <mat-tab-group mat-align-tabs="start" class="mt-2">
+                    <mat-tab label="SUBSANACIÓN DOCUMENTO">
+                      <form [formGroup]="formCorregir" (ngSubmit)="corregirDocumento()">
+                        <mat-form-field class="example-full-width" appearance="fill">
+                          <mat-label>OBSERVACIONES</mat-label>
+                          <textarea matInput rows="7" formControlName="observaciones"></textarea>
+                          <mat-error *ngIf="formCorregir.get('observaciones')?.touched && formCorregir.get('observaciones')?.invalid">
+                            Observación requerida
+                          </mat-error>
+                        </mat-form-field>
+
+                        <div class="input-group">
+                          <label class="input-group-text" for="inputGroupFile01">Subir archivo</label>
+                          <input type="file"
+                                class="form-control"
+                                id="inputGroupFile01"
+                                (change)="seleccionarDocumento($event)"
+                                accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                        </div>
+                        <div *ngIf="formCorregir.get('archivo')?.touched && formCorregir.get('archivo')?.invalid" class="text-danger">
+                          Archivo requerido
+                        </div>
+
+                        <div class="col-md-12 mt-2" style="text-align: right;">
+                          <button mat-raised-button color="primary" type="submit" [disabled]="formCorregir.invalid">GUARDAR</button>
+                          <button mat-raised-button color="warn" type="button" routerLink="/principal/documentos-corregir">CANCELAR</button>
+                        </div>
+                      </form>
+                    </mat-tab>
+                  </mat-tab-group>
+                </div>
+            </mat-tab>
+            <mat-tab label="ENVIAR A CORREGIR" *ngIf="(decreto.vidReferencia != '' && decreto.vidReferencia != null) ">
+              <form [formGroup]="formEnviar" (ngSubmit)="enviarACorregir()">
+                <mat-form-field class="example-full-width mt-2" appearance="fill">
+                  <mat-label>OBSERVACIONES</mat-label>
+                  <textarea matInput rows="7" formControlName="observacionesEnviar"></textarea>
+                  <mat-error *ngIf="formEnviar.get('observacionesEnviar')?.touched && formEnviar.get('observacionesEnviar')?.invalid">
+                    Observación requerida
+                  </mat-error>
+                </mat-form-field>
+
+                <div class="mt-2" style="text-align: right;">
+                  <button mat-raised-button color="primary" type="submit" [disabled]="formEnviar.invalid">ENVIAR</button>
+                </div>
+              </form>
             </mat-tab>
           </mat-tab-group>
 
-          <mat-tab-group mat-align-tabs="start" class="mt-2">
-            <mat-tab label="RESPUESTA">
-              <mat-form-field class="example-full-width" appearance="fill">
-                <mat-label>OBSERVACIONES</mat-label>
-                <textarea matInput rows="7" [(ngModel)]="observaciones" ></textarea>
-            </mat-form-field>
-            <div class="input-group">
-              <label class="input-group-text" for="inputGroupFile01">Subir archivo</label>
-              <input type="file" class="form-control" id="inputGroupFile01" (change)="seleccionarDocumento($event)" accept="application/pdf">
-            </div>
-
-            </mat-tab>
-          </mat-tab-group>
-          <div class="col-md-12 mt-2" style="text-align: right;">
-            <button mat-raised-button color="primary" style="margin-right: 5px;" type="submit" (click)="corregirDocumento()" [disabled]="observaciones==''" >GUARDAR</button>
-            <button mat-raised-button color="warn" type="button" routerLink="/principal/documentos-corregir" >CANCELAR</button>
-        </div>
+          
+          
       </div>
     </div>
   </mat-card-content>
