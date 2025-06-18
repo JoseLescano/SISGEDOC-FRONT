@@ -7,6 +7,7 @@ import { OrganizacionDiagram } from 'src/app/_DTO/OrganizacionDiagram';
 import { OrganizacionService } from 'src/app/_service/organizacion.service';
 import { PerfilService } from 'src/app/_service/perfil.service';
 import { environment } from 'src/environments/environment';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-all-unidades',
@@ -112,6 +113,24 @@ export class AllUnidadesComponent implements OnInit, AfterViewInit {
         },
         error:(err:any)=> {
 
+        }
+      }
+    );
+  }
+
+  desactivarEMU(codigoInterno:any){
+    Swal.fire(
+      {
+        title: "¿ESTÁS SEGURO?",
+        text: "LA UNIDAD SERÁ DESACTIVADA COMO DEPENDENCIA, ¿DESEAS CONTINUAR?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "SÍ, DESEO CONTINUAR"
+      }
+    ).then((result) =>
+      {
+        if (result.isConfirmed) {
+          console.log('ACEPTO')
         }
       }
     );

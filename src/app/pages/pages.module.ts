@@ -76,6 +76,7 @@ import { SearchSAComponent } from './documento/search-sa/search-sa.component';
 import { EstadisticaSAComponent } from './documento/estadistica-sa/estadistica-sa.component';
 import { EnviarDocumentoFacilitaComponent } from './facilita/enviar-documento-facilita/enviar-documento-facilita.component';
 import { ListRechazadosComponent } from './documento/devolver/list-rechazados/list-rechazados.component';
+import { ConfigComponent } from './mi-perfil/config/config.component';
 
 
 @NgModule({
@@ -160,6 +161,7 @@ import { ListRechazadosComponent } from './documento/devolver/list-rechazados/li
     EstadisticaSAComponent,
     EnviarDocumentoFacilitaComponent,
     ListRechazadosComponent,
+    ConfigComponent,
 
   ],
    exports:[

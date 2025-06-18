@@ -78,6 +78,9 @@ export class OrganizacionService extends GenericService<Organizacion> {
   findForDiagrama(codigoInterno: any){
     return this.http.get<OrganizacionDiagram[]>(`${environment.HOST}organizaciones/findForDiagrama/${codigoInterno}`);
   }
+  getEmu(){
+    return this.http.get<OrganizacionDiagram[]>(`${environment.HOST}organizaciones/getEmu`);
+  }
 
   findByCodigoInterno(codigoInterno: any){
     return this.http.get<Organizacion>(`${environment.HOST}organizaciones/findByCodigoInterno/${codigoInterno}`);

@@ -1,0 +1,36 @@
+<mat-card class="m-2" style="border-radius: 10px; " >
+  <mat-card-header class="title-form">
+    <mat-card-title >CREAR GRUPO DE ENVIO</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form class="row g-3" [formGroup]="form" (ngSubmit)="operate()" novalidate >
+      <div class="row">
+        <div class="col">
+          <ng-select  [virtualScroll]=true formControlName="tipoDocumento" placeholder="SELECCIONE TIPO DOCUMENTO"
+            notFoundText="Sin elementos encontrados"  (change)="findDestinatarios()">
+            <ng-option *ngFor="let c of clases" [value]="c.codigo" >
+              {{c.nombre}}
+            </ng-option>
+          </ng-select>
+        </div>
+        <div class="col">
+          <ng-select [virtualScroll]=true placeholder="SELECCIONE FIRMANTE" formControlName="firmante"
+            notFoundText="Sin elementos encontrados"  (change)="findDestinatarios()">
+            <ng-option *ngFor="let c of firmantes" [value]="c" >
+              {{c.nombreLargo}}
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+
+
+      <ng-select [multiple]=true placeholder="SELECCIONE DESTINARIO(S)"
+        [virtualScroll]=true formControlName="destinatarios" notFoundText="Sin elementos encontrados" >
+        <mat-option>SELECCIONE</mat-option>
+        <ng-option *ngFor="let c of organizacionesDestino" [value]="c.codigoInterno" >
+          {{c.acronimo}}
+        </ng-option>
+      </ng-select>
+    </form>
+  </mat-card-content>
+</mat-card>

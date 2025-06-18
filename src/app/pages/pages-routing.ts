@@ -1,3 +1,4 @@
+import { ConfigComponent } from './mi-perfil/config/config.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DobleAutentificacionComponent } from './doble-autentificacion/doble-autentificacion.component';
@@ -163,6 +164,11 @@ const routes: Routes = [
   {
     path: 'update-devueltos/:codigoDocumento/:idDecreto',
     component: UpdateDevolverComponent,
+  },
+
+  {
+    path: 'groupEnvio',
+    component: ConfigComponent,
   },
 
   // =========================================================================================================================
