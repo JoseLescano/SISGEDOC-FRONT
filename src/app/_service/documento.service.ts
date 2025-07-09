@@ -1,7 +1,7 @@
 import { Documento } from './../_model/documento.model';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { GenericService } from './generic.service';
 import { DocumentoArchivoAnexo } from '../_DTO/DocumentoArchivoAnexo';
@@ -31,6 +31,15 @@ export class DocumentoService  extends GenericService<Documento> {
   findByOrganizacionDestino(codigo:any){
     return this.http.get<Documento[]>(`${environment.HOST}documentos/findByOrganizacionDestino/${codigo}`);
   }
+
+  // paginacionDocumento(codigo:any, size?:any,page?:any ){
+  //   return this.http.get<Documento[]>(`${environment.HOST}documentos/paginacionDocumento/${codigo}`);
+  // }
+
+  paginacionDocumento(codigo: string, p?: number, s?: number, sortField?: string, sortDir?: string) {
+    return this.http.get<any>(`${environment.HOST}documentos/paginacionDocumento/${codigo}?page=${p}&size=${s}&sort=${sortField},${sortDir}`);
+  }
+
 
   findByOrganizacionDestinoForSuperAdm(codigo:any, fi:any, ff:any){
     let formData: FormData= new FormData();
@@ -250,8 +259,8 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get(`${environment.HOST}documentos/findDecretoGraficaByDocumento/${codigoInterno}`);
   }
 
-  findParaParte(codigoInterno:any){
-    return this.http.get(`${environment.HOST}documentos/findParaParte/${codigoInterno}`);
+  findParaParte(codigoInterno:any, p?: number, s?: number, sortField?: string, sortDir?: string){
+    return this.http.get(`${environment.HOST}documentos/findParaParte/${codigoInterno}?page=${p}&size=${s}&sort=${sortField},${sortDir}`);
   }
 
   findParaParteBySuperADM(codigoInterno:any, fi: any, ff: any){
@@ -334,12 +343,15 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get(`${environment.HOST}documentos/contadoresDashboard/${codigoOrganizacion}`);
   }
 
-  findArchivados1ByOrganizacion(codigoInterno:any, fechaInicio?:any, fechaFin?:any){
+  findArchivados1ByOrganizacion(codigoInterno:any,
+    p?: number, s?: number, sortField?: string, sortDir?: string,
+    fechaInicio?:any, fechaFin?:any){
+    debugger
     let formData:FormData = new FormData();
     formData.append('codigoOrganizacion', codigoInterno);
     formData.append('fi', fechaInicio);
     formData.append('ff', fechaFin);
-    return this.http.post(`${environment.HOST}documentos/findArchivados1ByOrganizacion`, formData);
+    return this.http.post(`${environment.HOST}documentos/findArchivados1ByOrganizacion?page=${p}&size=${s}&sort=${sortField},${sortDir}`, formData);
   }
 
   findArchivadosByContexto(contexto:any){

@@ -4,12 +4,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Documento } from 'src/app/_model/documento.model';
 import { DocumentoService } from 'src/app/_service/documento.service';
 import { AccionesComponent } from '../acciones/acciones.component';
-import {MatPaginator} from '@angular/material/paginator';
 import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
 import { MatSort, Sort } from '@angular/material/sort';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { ExcelService } from 'src/app/_service/excel.service';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 
 
@@ -22,28 +21,43 @@ import { ExcelService } from 'src/app/_service/excel.service';
 export class PendienteComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['Acciones', 'Nro',  'Asunto', 'Documento', 'Origen', 'FechaDoc','Prioridad'];
-  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
+  dataSource: MatTableDataSource<any>;
 
-  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   cargando: boolean;
 
+  pageSize = 20;
+  pageIndex = 0;
+  totalElements: number = 0;
+
+
   constructor(private documentoService: DocumentoService,
               public dialog: MatDialog,
-            private excelService: ExcelService,
-            private _liveAnnouncer: LiveAnnouncer) {
-      this.dataSource = new MatTableDataSource<any>([]);
+            private excelService: ExcelService,) {
   }
 
   ngOnInit(): void {
     this.cargando = true;
-    this.documentoService.findByOrganizacionDestino(sessionStorage.getItem(environment.codigoOrganizacion))
+    this.loadTable(this.pageIndex, this.pageSize);
+  }
+
+  ngAfterViewInit() {
+    this.sort.sortChange.subscribe((sort: Sort) => {
+      this.pageIndex = 0; // Reinicia a la primera página si cambia el orden
+      this.loadTable(this.pageIndex, this.pageSize, sort.active, sort.direction);
+    });
+  }
+
+  loadTable(page:any, size:any, sortField: string = 'codigo', sortDirection: string = 'desc'){
+    this.documentoService.paginacionDocumento(
+      sessionStorage.getItem(environment.codigoOrganizacion),page, size, sortField, sortDirection )
       .subscribe(
         {
-          next : (data: Documento[]) => {
-            this.createTable(data);
+          next : (data: any) => {
+            this.totalElements = data.totalElements;
+            this.createTable(data.content);
             this.cargando = false;
-
           }, error: err => {
             this.cargando = false;
             Swal.fire('Lo sentimos', err, 'warning');
@@ -51,6 +65,15 @@ export class PendienteComponent implements OnInit, AfterViewInit {
         }
     );
   }
+
+   showMore(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    if (this.pageSize>20)
+      this.loadTable(0, this.pageSize, 'codigo','desc');
+    else this.loadTable(this.pageIndex, this.pageSize);
+  }
+
 
   downloadExcel(): void {
     this.excelService.downloadPendientes(
@@ -63,11 +86,6 @@ export class PendienteComponent implements OnInit, AfterViewInit {
       a.click();
       window.URL.revokeObjectURL(url);
     });
-  }
-
-  ngAfterViewInit() {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
   }
 
   applyFilter(event: Event) {
@@ -84,9 +102,9 @@ export class PendienteComponent implements OnInit, AfterViewInit {
   }
 
   createTable(documentos: any[]) {
+    this.dataSource = new MatTableDataSource<any>();
     this.dataSource.data = documentos;
     setTimeout(() => {
-      this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
 
       this.dataSource.sortingDataAccessor = (item, property) => {
@@ -103,17 +121,7 @@ export class PendienteComponent implements OnInit, AfterViewInit {
         }
       };
     });
+
   }
 
-  announceSortChange(sortState: Sort) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
-  }
 }

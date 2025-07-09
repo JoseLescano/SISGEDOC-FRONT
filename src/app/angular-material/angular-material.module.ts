@@ -45,13 +45,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   ],
   exports: [
     MatSortModule,
+    MatTableModule,
     MatFormFieldModule,
     MatSlideToggleModule,
     RecaptchaModule,
     RecaptchaFormsModule,
     RecaptchaModule,
     MatMenuModule,
-    MatTableModule,
     MatInputModule,
     MatPaginatorModule,
     MatButtonModule,
@@ -70,7 +70,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatButtonToggleModule,
     MatGridListModule,
     MatTooltipModule,
-   // MatPaginator,
    MatProgressBarModule,
    MatCheckboxModule,
    MatChipsModule,MatRadioModule

@@ -14,7 +14,7 @@
             <section id="marzen" class="tab-panel">
               -->
               <div class="row ">
-                <div class="col-6"> 
+                <div class="col-6">
                   <mat-form-field appearance="fill" class="example-full-width">
                     <mat-label>Ingrese rango de fechas</mat-label>
                     <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
@@ -38,7 +38,7 @@
                     <i class="fas fa-file-excel"></i> EXPORTAR A EXCEL</button>
                 </div>
               </div>
-              <!-- 
+              <!--
             </section>
             <section id="rauchbier" class="tab-panel">
               <div class="row ">
@@ -172,15 +172,16 @@
             </tr>
           </table>
 
-          <mat-paginator [pageSizeOptions]="[10, 15, 25, 100]" aria-label="Select page of users"></mat-paginator>
+          <mat-paginator [pageSizeOptions]="[20,50, 100]" [length]="totalElements" (page)="showMore($event)"
+            [pageSize]="pageSize" aria-label="Select page of users" showFirstLastButtons>
+          </mat-paginator>
         </div>
       </mat-card-content>
-      <mat-card-actions align="start">
-      </mat-card-actions>
-      <mat-card-footer>
-        <mat-progress-bar mode="indeterminate" *ngIf="cargando"></mat-progress-bar>
-      </mat-card-footer>
+    <mat-card-footer>
+      <mat-progress-bar mode="indeterminate" *ngIf="cargangoLineal" ></mat-progress-bar>
+    </mat-card-footer>
     </mat-card>
+
   </div>
 </div>
 <div class="container loader" *ngIf="cargando"></div>
