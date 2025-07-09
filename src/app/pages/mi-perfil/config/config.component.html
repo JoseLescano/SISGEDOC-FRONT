@@ -31,6 +31,10 @@
           {{c.acronimo}}
         </ng-option>
       </ng-select>
+      <div class="row d-flex flex-row bd-highlight mt-3">
+          <button mat-flat-button type="submit" class="btn-opcion" color="primary" [disabled]="!form">GUARDAR</button>
+          <button mat-flat-button color="warn" type="button" class="btn-opcion"  >CANCELAR</button>
+      </div>
     </form>
   </mat-card-content>
 </mat-card>
