@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Documento } from 'src/app/_model/documento.model';
@@ -22,11 +22,15 @@ import { TimelineComponent } from '../../report/timeline/timeline.component';
 export class ViewRemitidosComponent implements OnInit {
 
   displayedColumns: string[] = ['Nro', 'Asunto', 'Origen','Destino', 'FechaDoc', 'Documento',  'Acciones'];
-  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
-  cargando: boolean= false;
+  dataSource: MatTableDataSource<any>;
 
-  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort!: MatSort;
+  cargando: boolean;
+
+  pageSize = 20;
+  pageIndex = 0;
+  totalElements: number = 0;
 
   range = new FormGroup({
     start: new FormControl<Date | null>(null),
@@ -47,71 +51,94 @@ export class ViewRemitidosComponent implements OnInit {
   // =======================================================================================================
 
   ngOnInit(): void {
-    this.generarReporte('DOCUMENTOS ENCONTRADOS DE LOS ULTIMOS 30 DÍAS');
-  }
-
-  viewTimeline(vidDocumento: any){
-    const dialogRef = this.dialog.open(TimelineComponent, {
-      width: '60%',
-      height: '95%',
-      data: vidDocumento,
-    });
-  }
-
-  exportTable() {
-    this.excelService.exportTableToExcel('mytable', 'LISTA DE DOCUMENTOS REMITIDOS');
-  }
-
-  generarReporte(aviso: any, fi?:any, ff?:any): void {
     this.cargando = true;
-    this.documentoService.findRemitidos(sessionStorage.getItem(environment.codigoOrganizacion), fi, ff).subscribe( {
-      next : (data: any) => {
-        this.createTable(data);
-        Swal.fire('AVISO', aviso, 'info')
-        this.cargando = false;
-      }, error: (err : any)=> {
-       this.cargando = false;
-        Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
-      }
-    });
-
+    this.loadTable('DOCUMENTOS ENCONTRADOS DE LOS ULTIMOS 30 DÍAS', this.pageIndex, this.pageSize);
   }
 
-  createTable(documentos: any[]): void {
-    this.dataSource = new MatTableDataSource(documentos);
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.sort.sortChange.subscribe((sort: Sort) => {
+      this.pageIndex = 0; // Reinicia a la primera página si cambia el orden
+      this.loadTable(null,this.pageIndex, this.pageSize, sort.active, sort.direction);
+    });
+  }
+
+  // =======================================================================================================
+
+  loadTable(title:any, page:any, size:any, sortField: string = 'codigo', sortDirection: string = 'desc'){
+    this.documentoService.findRemitidos(
+      sessionStorage.getItem(environment.codigoOrganizacion),page, size, sortField, sortDirection )
+      .subscribe(
+      {
+        next : (data: any) => {
+        this.totalElements = data.totalElements;
+        this.createTable(data.content);
+        if (title != null)
+          Swal.fire('AVISO', title, 'success');
+        this.cargando = false;
+        }, error: err => {
+        this.cargando = false;
+        Swal.fire('Lo sentimos', err, 'warning');
+        }
+      }
+    );
+  }
+
+  buscarFechas(){
+    this.cargando = true;
+    if (this.range.value['start']!= null && this.range.value['end']!=null){
+      this.documentoService.findRemitidos(
+      sessionStorage.getItem(environment.codigoOrganizacion), 0, 20, 'codigo', 'desc',
+      environment.convertDateToStr(this.range.value['start']), 
+      environment.convertDateToStr(this.range.value['end']))
+      .subscribe(
+      {
+        next : (data: any) => {
+        this.totalElements = data.totalElements;
+        this.createTable(data.content);
+        Swal.fire('AVISO', 'DOCUMENTO ENCONTRADOS', 'success');
+        this.cargando = false;
+        }, error: err => {
+        this.cargando = false;
+        Swal.fire('Lo sentimos', err, 'warning');
+        }
+      });
+    }
+  }
+
+  createTable(documentos: any[]) {
+    this.dataSource = new MatTableDataSource<any>();
+    this.dataSource.data = documentos;
     setTimeout(() => {
-      this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
 
       this.dataSource.sortingDataAccessor = (item, property) => {
-        switch(property) {
-          case 'Nro': return item.codigo;
-          case 'Asunto': return item.asunto.toLowerCase();
-          case 'FechaDoc': return item.fechaDocumento;
-          case 'Documento': return item.clase + ' Nro. ' + item.nroOrden;
-          case 'Origen': return item.remitente.toLowerCase();
-          case 'Destino': return item.destinatario.toLowerCase();
-          case 'Prioridad': return item.prioridad.toLowerCase();
-          // Añade más casos según tus columnas
-          default: return item[property];
-        }
+      switch(property) {
+        case 'Nro': return item.codigo;
+        case 'Asunto': return item.asunto.toLowerCase();
+        case 'FechaDoc': return item.fechaDocumento;
+        case 'Documento': return item.clase + ' Nro. ' + item.nroOrden;
+        case 'Origen': return item.remitente.toLowerCase();
+        case 'Destino': return item.destinatario.toLowerCase();
+        case 'Prioridad': return item.prioridad.toLowerCase();
+        // Añade más casos según tus columnas
+        default: return item[property];
+      }
       };
     });
+  }
 
+  showMore(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    if (this.pageSize>20)
+      this.loadTable(null,this.pageIndex, this.pageSize, 'codigo','desc');
+    else this.loadTable(null,this.pageIndex, this.pageSize);
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
-  }
-
-  ngAfterViewInit() {
-    this.dataSource = null;
-    if (this.dataSource!= null){
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    }
   }
 
   verDocumento(documentoSeleccionado?:any): void {
@@ -146,16 +173,18 @@ export class ViewRemitidosComponent implements OnInit {
       height: '95%',
       data: documentoSeleccionado,
     });
+  } 
+
+  viewTimeline(vidDocumento: any){
+    const dialogRef = this.dialog.open(TimelineComponent, {
+      width: '60%',
+      height: '95%',
+      data: vidDocumento,
+    });
   }
 
-  buscarFechas(){
-    if (this.range.value['start']!= null && this.range.value['end']!=null){
-      this.generarReporte('SE ENCONTRO DOCUMENTOS',
-         environment.convertDateToStr(this.range.value['start']),
-         environment.convertDateToStr(this.range.value['end']));
-    }else {
-      Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
-    }
+  exportTable() {
+    this.excelService.exportTableToExcel('mytable', 'LISTA DE DOCUMENTOS REMITIDOS');
   }
 
 }

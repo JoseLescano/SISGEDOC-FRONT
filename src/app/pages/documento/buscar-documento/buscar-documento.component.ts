@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Documento } from 'src/app/_model/documento.model';
@@ -21,14 +21,16 @@ import { TimelineComponent } from '../../report/timeline/timeline.component';
 })
 export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['Prioridad', 'Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'Decretado a.', 'Acciones'];
-  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
-  cargando: boolean = false;
-
   textoIngresado : string = '';
-
-  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  displayedColumns: string[] = ['Prioridad', 'Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'Decretado a.', 'Acciones'];
+  dataSource: MatTableDataSource<any>;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  cargando: boolean;
+
+  pageSize = 20;
+  pageIndex = 0;
+  totalElements: number = 0;
 
   range = new FormGroup({
     start: new FormControl<Date | null>(null),
@@ -44,7 +46,62 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
             ) { }
 
   ngOnInit(): void {
-    this.generarReporte();
+    this.cargando = true;
+    this.loadTable(this.pageIndex, this.pageSize);
+  }
+
+  ngAfterViewInit() {
+    this.sort.sortChange.subscribe((sort: Sort) => {
+      this.pageIndex = 0; // Reinicia a la primera página si cambia el orden
+      this.loadTable(this.pageIndex, this.pageSize, sort.active, sort.direction);
+    });
+  }
+
+  loadTable(page:any, size:any, sortField: string = 'codigo', sortDirection: string = 'desc'){
+    this.documentoService.searchByOrganizacion(
+      sessionStorage.getItem(environment.codigoOrganizacion), '',page, size, sortField, sortDirection )
+      .subscribe(
+      {
+        next : (data: any) => {
+        this.totalElements = data.totalElements;
+        this.createTable(data.content);
+        this.cargando = false;
+        }, error: err => {
+        this.cargando = false;
+        Swal.fire('Lo sentimos', err, 'warning');
+        }
+      }
+    );
+  }
+
+  createTable(documentos: any[]) {
+    this.dataSource = new MatTableDataSource<any>();
+    this.dataSource.data = documentos;
+    setTimeout(() => {
+      this.dataSource.sort = this.sort;
+
+      this.dataSource.sortingDataAccessor = (item, property) => {
+      switch(property) {
+        case 'Nro': return item.codigo;
+        case 'Asunto': return item.asunto.toLowerCase();
+        case 'FechaDoc': return item.fechaDocumento;
+        case 'Documento': return item.clase + ' Nro. ' + item.nroOrden;
+        case 'Origen': return item.remitente.toLowerCase();
+        case 'Destino': return item.destinatario.toLowerCase();
+        case 'Prioridad': return item.prioridad.toLowerCase();
+        // Añade más casos según tus columnas
+        default: return item[property];
+      }
+      };
+    });
+  }
+
+  showMore(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    if (this.pageSize>20)
+      this.loadTable(this.pageIndex, this.pageSize, 'codigo','desc');
+    else this.loadTable(this.pageIndex, this.pageSize);
   }
 
   exportTable() {
@@ -54,9 +111,11 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
   byTexto(){
     if (this.textoIngresado.trim() != '' || this.textoIngresado != null){
       this.cargando = true;
-      this.documentoService.searchByOrganizacion(sessionStorage.getItem(environment.codigoOrganizacion), this.textoIngresado,
-      '', '').subscribe((data: any) => {
-        this.createTable(data);
+      this.documentoService.searchByOrganizacion(
+        sessionStorage.getItem(environment.codigoOrganizacion), 
+        this.textoIngresado,0,20,'codigo','desc','','').subscribe((data: any) => {
+        this.totalElements = data.totalElements;
+        this.createTable(data.content);
         this.cargando = false;
       }, (error: any)=> {
         this.cargando = false;
@@ -69,8 +128,10 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
   betweenFechas(){
     if (this.range.value['start']!= null && this.range.value['end']!=null){
       this.cargando = true;
-      this.documentoService.searchByOrganizacion(sessionStorage.getItem(environment.codigoOrganizacion),'',
-      environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end'])).subscribe((data: any) => {
+      this.documentoService.searchByOrganizacion(
+        sessionStorage.getItem(environment.codigoOrganizacion),'', 0,20,'codigo', 'desc',
+        environment.convertDateToStr(this.range.value['start']), 
+        environment.convertDateToStr(this.range.value['end'])).subscribe((data: any) => {
         this.createTable(data);
         this.cargando = false;
       }, (error: any)=> {
@@ -107,14 +168,6 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
 
   }
 
-  ngAfterViewInit() {
-    this.dataSource = null;
-    if (this.dataSource!= null){
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    }
-  }
-
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -124,28 +177,6 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
     }
   }
 
-  createTable(documentos: any[]): void {
-    this.dataSource = new MatTableDataSource(documentos);
-    setTimeout(() => {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-
-      this.dataSource.sortingDataAccessor = (item, property) => {
-        switch(property) {
-          case 'Nro': return item.codigo;
-          case 'Asunto': return item.asunto.toLowerCase();
-          case 'FechaDoc': return item.fechaDocumento;
-          case 'Documento': return item.clase + ' Nro. ' + item.nroOrden;
-          case 'Origen': return item.remitente.toLowerCase();
-          case 'Destino': return item.destinatario.toLowerCase();
-          case 'Prioridad': return item.prioridad.toLowerCase();
-          // Añade más casos según tus columnas
-          default: return item[property];
-        }
-      };
-    });
-
-  }
   openDialog(documentoSeleccionado?:any): void {
     const dialogRef = this.dialog.open(ViewDocumentoComponent, {
       width: '60%',

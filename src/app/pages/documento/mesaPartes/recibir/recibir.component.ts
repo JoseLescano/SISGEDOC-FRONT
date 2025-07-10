@@ -10,8 +10,8 @@ import { ViewDocumentoComponent } from '../../view-documento/view-documento.comp
 import { ExcelService } from 'src/app/_service/excel.service';
 import { TimelineComponent } from 'src/app/pages/report/timeline/timeline.component';
 import { SeguimientoComponent } from 'src/app/pages/report/seguimiento/seguimiento.component';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSort, Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-recibir',
@@ -22,10 +22,13 @@ export class RecibirComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['Nro', 'Asunto','Documento', 'Origen', 'FechaDoc',  'Acciones'];
   dataSource: MatTableDataSource<any>;
-  cargando: boolean;
-
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  cargando: boolean;
+
+  pageSize = 20;
+  pageIndex = 0;
+  totalElements: number = 0;
 
   constructor(private documentoService:DocumentoService,
     public dialog: MatDialog,
@@ -34,18 +37,61 @@ export class RecibirComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.cargando = true;
-    this.documentoService.findByOrganizacionDestino(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response: any)=> {
-      debugger
-      this.createTable(response.data);
-      this.cargando = false;
-    }, error=> {
-      this.cargando=false;
-      Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
-    });
+    this.loadTable(this.pageIndex, this.pageSize);
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+    this.sort.sortChange.subscribe((sort: Sort) => {
+      this.pageIndex = 0; // Reinicia a la primera página si cambia el orden
+      this.loadTable(this.pageIndex, this.pageSize, sort.active, sort.direction);
+    });
+  }
+
+  loadTable(page:any, size:any, sortField: string = 'codigo', sortDirection: string = 'desc'){
+    this.documentoService.paginacionDocumento(
+      sessionStorage.getItem(environment.codigoOrganizacion),page, size, sortField, sortDirection )
+      .subscribe(
+      {
+        next : (data: any) => {
+        this.totalElements = data.totalElements;
+        this.createTable(data.content);
+        this.cargando = false;
+        }, error: err => {
+        this.cargando = false;
+        Swal.fire('Lo sentimos', err, 'warning');
+        }
+      }
+    );
+  }
+
+  createTable(documentos: any[]) {
+    this.dataSource = new MatTableDataSource<any>();
+    this.dataSource.data = documentos;
+    setTimeout(() => {
+      this.dataSource.sort = this.sort;
+
+      this.dataSource.sortingDataAccessor = (item, property) => {
+      switch(property) {
+        case 'Nro': return item.codigo;
+        case 'Asunto': return item.asunto.toLowerCase();
+        case 'FechaDoc': return item.fechaDocumento;
+        case 'Documento': return item.clase + ' Nro. ' + item.nroOrden;
+        case 'Origen': return item.remitente.toLowerCase();
+        case 'Destino': return item.destinatario.toLowerCase();
+        case 'Prioridad': return item.prioridad.toLowerCase();
+        // Añade más casos según tus columnas
+        default: return item[property];
+      }
+      };
+    });
+  }
+
+  showMore(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    if (this.pageSize>20)
+      this.loadTable(this.pageIndex, this.pageSize, 'codigo','desc');
+    else this.loadTable(this.pageIndex, this.pageSize);
   }
 
   viewTimeline(vidDocumento: any){
@@ -67,32 +113,6 @@ export class RecibirComponent implements OnInit, AfterViewInit {
   exportTable() {
     this.excelService.exportTableToExcel('mytable', 'LISTA DE DOCUMENTOS RECIBIDOS');
   }
-
-  createTable(documentos: any[]) {
-    this.dataSource = new MatTableDataSource<any>();
-    this.dataSource.data = documentos;
-    setTimeout(() => {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-
-      this.dataSource.sortingDataAccessor = (item, property) => {
-        switch(property) {
-          case 'Nro': return item.codigo;
-          case 'Asunto': return item.asunto.toLowerCase();
-          case 'FechaDoc': return item.fechaDocumento;
-          case 'Documento': return item.clase + ' Nro. ' + item.nroOrden;
-          case 'Origen': return item.remitente.toLowerCase();
-          case 'Destino': return item.destinatario.toLowerCase();
-          case 'Prioridad': return item.prioridad.toLowerCase();
-          // Añade más casos según tus columnas
-          default: return item[property];
-        }
-      };
-    });
-
-  }
-
-
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

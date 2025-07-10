@@ -32,10 +32,6 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get<Documento[]>(`${environment.HOST}documentos/findByOrganizacionDestino/${codigo}`);
   }
 
-  // paginacionDocumento(codigo:any, size?:any,page?:any ){
-  //   return this.http.get<Documento[]>(`${environment.HOST}documentos/paginacionDocumento/${codigo}`);
-  // }
-
   paginacionDocumento(codigo: string, p?: number, s?: number, sortField?: string, sortDir?: string) {
     return this.http.get<any>(`${environment.HOST}documentos/paginacionDocumento/${codigo}?page=${p}&size=${s}&sort=${sortField},${sortDir}`);
   }
@@ -117,12 +113,12 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get<Documento[]>(`${environment.HOST}documentos/findDerivadosByOrganizacion/${codigoInterno}`);
   }
 
-  findRemitidos(codigoInterno:any, fechaInicio?:any, fechaFin?:any ){
+  findRemitidos(codigoInterno:any, p?: number, s?: number, sortField?: string, sortDir?: string, fechaInicio?:any, fechaFin?:any ){
     let formData:FormData = new FormData();
     formData.append('codigoInterno', codigoInterno);
     formData.append('fi', fechaInicio);
     formData.append('ff', fechaFin);
-    return this.http.post(`${environment.HOST}documentos/findRemitidos`, formData);
+    return this.http.post(`${environment.HOST}documentos/findRemitidos?page=${p}&size=${s}&sort=${sortField},${sortDir}`, formData);
   }
 
   findDevueltosForOrganizacion(codigoInterno:any, fechaInicio?:any, fechaFin?:any ){
@@ -133,13 +129,13 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/findDevueltosForOrganizacion`, formData);
   }
 
-  searchByOrganizacion(codigoInterno:any, contexto:any, fechaInicio?:any, fechaFin?:any){
+  searchByOrganizacion(codigoInterno:any, contexto:any, p?: number, s?: number, sortField?: string, sortDir?: string, fechaInicio?:any, fechaFin?:any){
     let formData:FormData = new FormData();
     formData.append('codigoInterno', codigoInterno);
     formData.append('contexto', contexto);
     formData.append('fi', fechaInicio);
     formData.append('ff', fechaFin);
-    return this.http.post(`${environment.HOST}documentos/searchByOrganizacion`, formData);
+    return this.http.post(`${environment.HOST}documentos/searchByOrganizacion?page=${p}&size=${s}&sort=${sortField},${sortDir}`, formData);
   }
 
   findEnviadosExternosMP(codigoInterno:any,

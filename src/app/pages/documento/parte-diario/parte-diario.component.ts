@@ -85,7 +85,7 @@ export class ParteDiarioComponent implements OnInit, AfterViewInit {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     if (this.pageSize>20)
-      this.loadTable(0, this.pageSize, 'codigo','desc');
+      this.loadTable(this.pageIndex, this.pageSize, 'codigo','desc');
     else this.loadTable(this.pageIndex, this.pageSize);
   }
 

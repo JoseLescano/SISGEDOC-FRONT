@@ -101,13 +101,6 @@
           <ng-container matColumnDef="Prioridad">
             <th mat-header-cell mat-sort-header  *matHeaderCellDef> Prioridad </th>
             <td mat-cell *matCellDef="let row" >
-              <!-- <span class="badge rounded-pill text-bg-primary " style="font-size: 12px;" *ngIf="row.estadoDocumento=='REMITIDO'" >REMITIDO</span>
-              <span class="badge rounded-pill text-bg-danger" style="font-size: 12px;" *ngIf="row.estadoDocumento=='FINALIZADO'" >FINALIZADO</span>
-              <span class="badge rounded-pill text-bg-success" style="font-size: 12px;" *ngIf="row.estadoDocumento=='DECRETADO' || row.estadoDocumento=='ENVIADO'" >{{row.estadoDocumento}}</span>
-              <span class="badge rounded-pill text-bg-dark" style="font-size: 12px;" *ngIf="row.estadoDocumento=='POR FIRMAR'">POR FIRMAR</span>
-              <span class="badge rounded-pill text-bg-warning" style="font-size: 12px;" *ngIf="row.estadoDocumento=='ARCHIVO'">ARCHIVADO</span>
-              <span class="badge rounded-pill text-bg-info" style="font-size: 12px;" *ngIf="row.estadoDocumento=='RECIBIDO'">RECIBIDO</span>
-              <span class="badge rounded-pill text-bg-secondary" style="font-size: 12px;" *ngIf="row.estadoDocumento=='POR REVISAR'">POR REVISAR</span> -->
               <span class="badge text-bg-success" *ngIf="row.prioridad=='NORMAL'">NORMAL</span>
               <span class="badge text-bg-warning" *ngIf="row.prioridad=='URGENTE'">URGENTE</span>
               <span class="badge text-bg-danger" *ngIf="row.prioridad=='MUY URGENTE'">MUY URGENTE</span>
@@ -184,7 +177,9 @@
           </tr>
         </table>
 
-        <mat-paginator [pageSizeOptions]="[10, 15, 25, 100]"  aria-label="Select page of users"></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[20,50, 100]" [length]="totalElements" (page)="showMore($event)"
+          [pageSize]="pageSize" aria-label="Select page of users" showFirstLastButtons>
+        </mat-paginator>
       </div>
     </mat-card-content>
     <mat-card-footer>

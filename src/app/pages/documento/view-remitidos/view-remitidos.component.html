@@ -106,7 +106,9 @@
                   <td class="mat-cell" colspan="4">Sin resultado...</td>
               </tr>
             </table>
-            <mat-paginator [pageSizeOptions]="[10, 15, 25, 100]"  aria-label="Select page of users"></mat-paginator>
+            <mat-paginator [pageSizeOptions]="[20,50, 100]" [length]="totalElements" (page)="showMore($event)"
+              [pageSize]="pageSize" aria-label="Select page of users" showFirstLastButtons>
+            </mat-paginator>
           </div>
       </mat-card-content>
       <mat-card-actions align="start">

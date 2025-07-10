@@ -80,19 +80,11 @@ export class ViewComponent implements OnInit, AfterViewInit {
   }
 
   showMore(event: PageEvent) {
-
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-
-    if (this.pageSize>20){
-      this.cargangoLineal = true;
-      this.loadTable(0, this.pageSize, 'codigo','desc');
-    }
-    else {
-      this.cargangoLineal = true;
-      this.loadTable(this.pageIndex, this.pageSize);
-    }
-    this.cargangoLineal = false;
+    if (this.pageSize>20)
+      this.loadTable(this.pageIndex, this.pageSize, 'codigo','desc');
+    else this.loadTable(this.pageIndex, this.pageSize);
   }
 
   exportTable() {
@@ -166,10 +158,13 @@ export class ViewComponent implements OnInit, AfterViewInit {
   buscarFechas(){
     if (this.range.value['start']!= null && this.range.value['end']!=null){
       this.cargando = true;
-      this.documentoService.findArchivados1ByOrganizacion(sessionStorage.getItem(environment.codigoOrganizacion),
-      this.pageIndex, this.pageSize,
-        environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end'])).subscribe((data: any) => {
-        this.createTable(data);
+      this.documentoService.findArchivados1ByOrganizacion(
+        sessionStorage.getItem(environment.codigoOrganizacion),
+        0, 20, 'codigo', 'desc',
+        environment.convertDateToStr(this.range.value['start']), 
+        environment.convertDateToStr(this.range.value['end']))
+        .subscribe((data: any) => {
+        this.createTable(data.content);
         this.cargando = false;
       }, (error: any)=> {
          this.cargando = false;
