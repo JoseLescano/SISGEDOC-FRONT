@@ -36,6 +36,13 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get<any>(`${environment.HOST}documentos/paginacionDocumento/${codigo}?page=${p}&size=${s}&sort=${sortField},${sortDir}`);
   }
 
+  viewDocumentoFueraTiempo(codigo: string, p?: number, s?: number, sortField?: string, sortDir?: string, fechaInicio?:any, fechaFin?:any) {
+    let formData:FormData = new FormData();
+    formData.append('fechaInicio', fechaInicio);
+    formData.append('fechaFin', fechaFin);
+    return this.http.get<any>(`${environment.HOST}core/control/${codigo}?page=${p}&size=${s}&sort=${sortField},${sortDir}`);
+  }
+
 
   findByOrganizacionDestinoForSuperAdm(codigo:any, fi:any, ff:any){
     let formData: FormData= new FormData();
