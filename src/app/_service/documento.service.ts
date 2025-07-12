@@ -97,19 +97,18 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/findForCorregir`, formData);
   }
 
-  findDecretados1(codigoInterno:any, fechaI?:any, fechaF?:any){
+  findDecretados1(codigoInterno:any, p?: number, s?: number, sortField?: string, sortDir?: string, fechaI?:any, fechaF?:any){
     let formData:FormData = new FormData();
-    formData.append('codigoInterno', codigoInterno);
     formData.append('fi', fechaI);
     formData.append('ff', fechaF);
-    return this.http.post(`${environment.HOST}documentos/findDecretados1`, formData);
+    return this.http.post(`${environment.HOST}documentos/findDecretados1/${codigoInterno}?page=${p}&size=${s}&sort=${sortField},${sortDir}`, formData);
   }
 
-  findDecretadosForDay(codigoInterno:any, fechaI:any){
+  findDecretadosForDay(codigoInterno:any, fechaI:any, p?: number, s?: number, sortField?: string, sortDir?: string){
     let formData:FormData = new FormData();
     formData.append('codigoInterno', codigoInterno);
     formData.append('fecha', fechaI);
-    return this.http.post(`${environment.HOST}documentos/findDecretadosForDay`, formData);
+    return this.http.post(`${environment.HOST}documentos/findDecretadosForDay?page=${p}&size=${s}&sort=${sortField},${sortDir}`, formData);
   }
 
   findArchivadosByOrganizacion(codigoInterno:any){

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Documento } from 'src/app/_model/documento.model';
@@ -24,10 +24,14 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['Prioridad', 'Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'Decretado a.', 'Acciones'];
   dataSource: MatTableDataSource<any>;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort!: MatSort;
   cargando: boolean;
+
+  pageSize = 20;
+  pageIndex = 0;
+  totalElements: number = 0;
+
   cargandoDescarga: boolean = false;
   range = new FormGroup({
     start: new FormControl<Date | null>(null),
@@ -43,14 +47,67 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.cargando = true;
-    this.documentoService.findDecretados1(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((data: any)=> {
-      this.createTable(data);
-      Swal.fire("LISTA DE DOCUMENTOS DECRETOS", "SE OBTUVO DOCUMENTOS DECRETOS DE LOS ULTIMOS 7 DÍAS", "info");
-      this.cargando = false;
-    }, error=> {
-      this.cargando=false;
-      Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
+    this.loadTable(this.pageIndex, this.pageSize);
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  loadTable(page:any, size:any, sortField: string = 'codigo', sortDirection: string = 'desc', fi?:any, ff?:any){
+    let codigoOrganizacion = sessionStorage.getItem(environment.codigoOrganizacion);
+    this.documentoService.findDecretados1(
+      codigoOrganizacion,page, size, sortField, sortDirection, fi, ff )
+      .subscribe(
+      {
+        next : (data: any) => {
+        this.totalElements = data.totalElements;
+        this.createTable(data.content);
+        this.cargando = false;
+        }, error: err => {
+        this.cargando = false;
+        Swal.fire('Lo sentimos', err, 'warning');
+        }
+      }
+    );
+  }
+
+  createTable(documentos: any[]) {
+    this.dataSource = new MatTableDataSource<any>();
+    this.dataSource.data = documentos;
+    setTimeout(() => {
+      this.dataSource.sort = this.sort;
+
+      this.dataSource.sortingDataAccessor = (item, property) => {
+      switch(property) {
+        case 'Nro': return item.codigo;
+        case 'Asunto': return item.asunto.toLowerCase();
+        case 'FechaDoc': return item.fechaDocumento;
+        case 'Documento': return item.clase + ' Nro. ' + item.nroOrden;
+        case 'Origen': return item.remitente.toLowerCase();
+        case 'Destino': return item.destinatario.toLowerCase();
+        case 'Prioridad': return item.prioridad.toLowerCase();
+        // Añade más casos según tus columnas
+        default: return item[property];
+      }
+      };
+    });
+  }
+
+  showMore(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    if (this.pageSize>20)
+      this.loadTable(this.pageIndex, this.pageSize, 'documento','desc');
+    else this.loadTable(this.pageIndex, this.pageSize);
   }
 
   viewTimeline(vidDocumento: any){
@@ -64,14 +121,8 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
   buscarFechas(){
     if (this.range.value['start']!= null && this.range.value['end']!=null){
       this.cargando = true;
-      this.documentoService.findDecretados1(sessionStorage.getItem(environment.codigoOrganizacion),
-        environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end'])).subscribe((data: any) => {
-        this.createTable(data);
-        this.cargando = false;
-      }, (error: any)=> {
-        this.cargando = false;
-        Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
-      });
+      this.loadTable(0,20,'codigo','desc',environment.convertDateToStr(this.range.value['start']),
+         environment.convertDateToStr(this.range.value['end']));
     }else {
       Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
     }
@@ -82,7 +133,7 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
       this.cargando = true;
       this.documentoService.findDecretadosForDay(
         sessionStorage.getItem(environment.codigoOrganizacion),
-        environment.convertDateToStr(this.fechaSeleccionada))
+        environment.convertDateToStr(this.fechaSeleccionada),0,20)
         .subscribe((data: any) => {
         this.createTable(data);
         this.cargando = false;
@@ -166,39 +217,6 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
     window.URL.revokeObjectURL(url);
   }
 
-  ngAfterViewInit() {
-    setTimeout(() => {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  createTable(documento: any[]){
-    this.dataSource = new MatTableDataSource(documento);
-    setTimeout(() => {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-
-      this.dataSource.sortingDataAccessor = (item, property) => {
-        switch(property) {
-          case 'Nro': return item.codigo;
-          case 'Asunto': return item.asunto.toLowerCase();
-          case 'FechaDoc': return item.fechaDocumento;
-          case 'Documento': return item.clase + ' Nro. ' + item.nroOrden;
-          case 'Origen': return item.remitente.toLowerCase();
-          case 'Destino': return item.destinatario.toLowerCase();
-          case 'Prioridad': return item.prioridad.toLowerCase();
-          // Añade más casos según tus columnas
-          default: return item[property];
-        }
-      };
-    });
-  }
   openDialog(documentoSeleccionado?:any): void {
     const dialogRef = this.dialog.open(ViewDocumentoComponent, {
       width: '60%',
