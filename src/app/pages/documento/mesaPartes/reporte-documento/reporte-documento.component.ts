@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Documento } from 'src/app/_model/documento.model';
 import { DocumentoService } from 'src/app/_service/documento.service';
@@ -22,15 +22,22 @@ import { ReporteDocumentoDecretoComponent } from 'src/app/pages/report/reporte-d
 export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['Prioridad', 'Nro', 'Asunto','Documento', 'Origen', 'Destino', 'FechaDoc',  'Acciones'];
-  dataSource: MatTableDataSource<Documento>;
+  dataSource: MatTableDataSource<any>;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   cargando: boolean;
+
+  pageSize = 20;
+  pageIndex = 0;
+  totalElements: number = 0;
+
+  modoBusqueda: 'rangoDecretados' | 'diaDecretados'|'rangoRegistrados'| 'diaRegistrados' |'randoEnviados' | 'diaEnviados' = 'rangoDecretados'; 
+
   cargandoDescarga : boolean = false;
   titulo: string = "";
   tipoReporte : number = 0;
   forDay: boolean = false;
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
   range = new FormGroup({
     start: new FormControl<Date | null>(null),
@@ -52,17 +59,84 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
     this.excelService.exportTableToExcel('mytable', 'LISTA DE DOCUMENTOS');
   }
 
-  createTable(documento: Documento[]){
-    this.dataSource = new MatTableDataSource(documento);
+  createTable(documentos: any[]) {
+    this.dataSource = new MatTableDataSource<any>();
+    this.dataSource.data = documentos;
     setTimeout(() => {
-      this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+
+      this.dataSource.sortingDataAccessor = (item, property) => {
+      switch(property) {
+        case 'Nro': return item.codigo;
+        case 'Asunto': return item.asunto.toLowerCase();
+        case 'FechaDoc': return item.fechaDocumento;
+        case 'Documento': return item.clase + ' Nro. ' + item.nroOrden;
+        case 'Origen': return item.remitente.toLowerCase();
+        case 'Destino': return item.destinatario.toLowerCase();
+        case 'Prioridad': return item.prioridad.toLowerCase();
+        // Añade más casos según tus columnas
+        default: return item[property];
+      }
+      };
     });
+  }  
+
+  showMore(event: PageEvent) {
+      this.pageIndex = event.pageIndex;
+      this.pageSize = event.pageSize;
+      if (this.pageSize>20)
+        this.loadTable(this.pageIndex, this.pageSize, 'codigo','desc');
+      else this.loadTable(this.pageIndex, this.pageSize);
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.sort.sortChange.subscribe((sort: Sort) => {
+      this.pageIndex = 0; // Reinicia a la primera página si cambia el orden
+      this.loadTable(this.pageIndex, this.pageSize, sort.active, sort.direction);
+    });
+  }
+
+  loadTable(page:any, size:any, sortField: string = 'codigo', sortDirection: string = 'desc'){
+    let fi='';
+    let ff='';
+    if (this.range.value['start']!= null && this.range.value['end']!=null){
+      fi = environment.convertDateToStr(this.range.value['start']);
+      ff = environment.convertDateToStr(this.range.value['end']);
+    }
+
+    let codigoOrganizacion = sessionStorage.getItem(environment.codigoOrganizacion);
+    if (this.modoBusqueda === 'rangoDecretados') {
+      this.documentoService.findDecretados1(
+        codigoOrganizacion, page, size, sortField, sortDirection, fi, ff)
+        .subscribe(
+        {
+          next : (data: any) => {
+          this.totalElements = data.totalElements;
+          this.createTable(data.content);
+          this.cargando = false;
+          }, error: err => {
+            this.cargando = false;
+            this.dataSource.data = null;
+            Swal.fire('Lo sentimos', err, 'warning');
+          }
+        }
+      );
+    }else if( this.modoBusqueda === 'diaDecretados'){
+      this.documentoService.findDecretadosForDay(
+        codigoOrganizacion, environment.convertDateToStr(this.fechaSeleccionada), page, size, sortField, sortDirection
+      ).subscribe({
+        next: (data: any) => {
+          this.totalElements = data.totalElements;
+          this.createTable(data.content);
+          this.cargando = false;
+        },
+        error: err => {
+          this.cargando = false;
+          this.dataSource.data = null;
+          Swal.fire('LO SENTIMOS', 'Se presentó un inconveniente en la consulta', 'warning');
+        }
+      });
+    }
   }
 
   applyFilter(event: Event) {
@@ -88,18 +162,7 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
       this.tipoReporte = 0;
       this.forDay = false;
       this.titulo = "LISTA DE DOCUMENTOS DECRETOS"
-      this.documentoService.findDecretados(sessionStorage.getItem(environment.codigoOrganizacion),
-        environment.convertDateToStr(this.range.value['start']), environment.convertDateToStr(this.range.value['end'])
-      ).subscribe(
-        {
-          next: (response:any)=> {
-            this.createTable(response);
-            this.cargando = false;
-          }, error : (err: any) => {
-            this.cargando = false;
-            Swal.fire(`LO SENTIMOS`, 'SE PRESENTO UN INCONVENIENTE CON EL REPORTE DE DOCUMENTOS', 'info');
-          }
-      });
+      this.loadTable(0,20);
     } else {
       Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
     }
@@ -225,18 +288,10 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
     if (this.fechaSeleccionada!=null){
       this.cargando = true;
       this.tipoReporte = 0;
+      this.modoBusqueda = 'diaDecretados';
       this.forDay = true;
       this.titulo = "LISTA DE DOCUMENTOS DECRETADOS"
-      this.documentoService.findDecretadosForDay(
-        sessionStorage.getItem(environment.codigoOrganizacion),
-        environment.convertDateToStr(this.fechaSeleccionada))
-        .subscribe((data: any) => {
-        this.createTable(data);
-        this.cargando = false;
-      }, (error: any)=> {
-        this.cargando = false;
-        Swal.fire('LO SENTIMOS', `Se presento un inconveniente en la consulta`, 'warning');
-      });
+      this.loadTable(0,20);
     }else {
       Swal.fire('LO SENTIMOS', 'INGRESE FECHA', 'info');
     }
@@ -321,23 +376,6 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
           });
       }
     }
-
-    // if (this.range.value['start']!= null && this.range.value['end']!=null){
-    //   this.cargandoDescarga = true;
-    //   this.excelService.downloadDecretadosByFechas(
-    //     sessionStorage.getItem(environment.codigoOrganizacion),
-    //     environment.convertDateToStr(this.range.value['start']),
-    //     environment.convertDateToStr(this.range.value['end']),
-    // ).subscribe((blob: Blob) => {
-    //     this.descargarExporExcel(blob, "REPORTE DE DOCUMENTO DECRETADOS ENTRE FECHAS " );
-    //     this.cargandoDescarga = false;
-    //   }, error => {
-    //     this.cargandoDescarga = false;
-    //     Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE CON LA DESCARGA DEL EXCEL", "info")
-    //   });
-    // }else {
-    //   Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
-    // }
   }
 
   descargarExporExcel(blob:any, nombreDescarga:any){

@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Documento } from 'src/app/_model/documento.model';
 import { DocumentoService } from 'src/app/_service/documento.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
@@ -21,7 +20,10 @@ import { ReporteDocumentoDecretoComponent } from '../../report/reporte-documento
 })
 export class ViewDecretadoComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['Prioridad', 'Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'Decretado a.', 'Acciones'];
+  columnasDefault: string[] = ['Prioridad', 'Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'Decretado a.', 'Acciones'];
+  columnasFueraTiempo: string[] = ['Prioridad', 'Nro', 'Asunto', 'Documento', 'Origen', 'Decretado a.', 'Fecha Decreto', 'Limite', 'Fecha Respuesta', 'Estado Plazo', 'Días Excedidos', 'Acciones'];
+
+  displayedColumns: string[] = [];
   dataSource: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -32,8 +34,15 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
   pageIndex = 0;
   totalElements: number = 0;
 
+  modoBusqueda: 'rango' | 'dia'|'fueraTiempo' = 'rango'; // por defecto 'rango'
+
   cargandoDescarga: boolean = false;
   range = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
+
+  rangeFueraTiempo = new FormGroup({
     start: new FormControl<Date | null>(null),
     end: new FormControl<Date | null>(null),
   });
@@ -47,6 +56,7 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.cargando = true;
+    this.displayedColumns = this.columnasDefault;
     this.loadTable(this.pageIndex, this.pageSize);
   }
 
@@ -62,22 +72,62 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  loadTable(page:any, size:any, sortField: string = 'codigo', sortDirection: string = 'desc', fi?:any, ff?:any){
+  loadTable(page: number, size: number, sortField: string = 'codigo', sortDirection: string = 'desc') {
+    let fi='';
+    let ff='';  
     let codigoOrganizacion = sessionStorage.getItem(environment.codigoOrganizacion);
-    this.documentoService.findDecretados1(
-      codigoOrganizacion,page, size, sortField, sortDirection, fi, ff )
-      .subscribe(
-      {
-        next : (data: any) => {
-        this.totalElements = data.totalElements;
-        this.createTable(data.content);
-        this.cargando = false;
-        }, error: err => {
-        this.cargando = false;
-        Swal.fire('Lo sentimos', err, 'warning');
+    if (this.modoBusqueda === 'rango') {
+      if (this.range.value['start']!= null && this.range.value['end']!=null){
+        fi = environment.convertDateToStr(this.range.value['start']);
+        ff = environment.convertDateToStr(this.range.value['end']);
+      } 
+      this.documentoService.findDecretados1(
+        codigoOrganizacion, page, size, sortField, sortDirection, fi, ff
+      ).subscribe({
+        next: (data: any) => {
+          this.totalElements = data.totalElements;
+          this.createTable(data.content);
+          this.cargando = false;
+        },
+        error: err => {
+          this.cargando = false;
+          this.dataSource.data = null;
+          Swal.fire('Lo sentimos', err, 'warning');
         }
-      }
-    );
+      });
+    } else if (this.modoBusqueda === 'dia') {
+      this.documentoService.findDecretadosForDay(
+        codigoOrganizacion, environment.convertDateToStr(this.fechaSeleccionada), page, size, sortField, sortDirection
+      ).subscribe({
+        next: (data: any) => {
+          this.totalElements = data.totalElements;
+          this.createTable(data.content);
+          this.cargando = false;
+        },
+        error: err => {
+          this.cargando = false;
+          this.dataSource.data = null;
+          Swal.fire('LO SENTIMOS', 'Se presentó un inconveniente en la consulta', 'warning');
+        }
+      });
+    }else {
+      fi = environment.convertDateToStr(this.rangeFueraTiempo.value['start']);
+      ff = environment.convertDateToStr(this.range.value['end']);
+      this.documentoService.viewDocumentoFueraTiempo(
+        codigoOrganizacion, page, size, sortField, sortDirection, fi, ff
+      ).subscribe({
+        next: (data: any) => {
+          this.totalElements = data.totalElements;
+          this.createTable(data.content);
+          this.cargando = false;
+        },
+        error: err => {
+          this.cargando = false;
+          this.dataSource.data = null;
+          Swal.fire('LO SENTIMOS', 'Se presentó un inconveniente en la consulta', 'warning');
+        }
+      });
+    }
   }
 
   createTable(documentos: any[]) {
@@ -118,31 +168,42 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  buscarFechas(){
+  buscarFechas() {
+    this.modoBusqueda = 'rango';
+    this.displayedColumns = this.columnasDefault;
+    this.pageIndex = 0;
+    this.pageSize = 20; 
     if (this.range.value['start']!= null && this.range.value['end']!=null){
       this.cargando = true;
-      this.loadTable(0,20,'codigo','desc',environment.convertDateToStr(this.range.value['start']),
-         environment.convertDateToStr(this.range.value['end']));
-    }else {
-      Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
+      this.loadTable(this.pageIndex, this.pageSize);
+    } else {
+      Swal.fire('AVISO', 'INGRESE FECHA', 'warning');
     }
   }
 
-  buscarForDay(){
-    if (this.fechaSeleccionada!=null){
+  fueraTiempo() {
+    this.modoBusqueda = 'fueraTiempo';
+    this.displayedColumns = this.columnasFueraTiempo;
+    this.pageIndex = 0;
+    this.pageSize = 20; 
+    if (this.rangeFueraTiempo.value['start']!= null && this.rangeFueraTiempo.value['end']!=null){
       this.cargando = true;
-      this.documentoService.findDecretadosForDay(
-        sessionStorage.getItem(environment.codigoOrganizacion),
-        environment.convertDateToStr(this.fechaSeleccionada),0,20)
-        .subscribe((data: any) => {
-        this.createTable(data);
-        this.cargando = false;
-      }, (error: any)=> {
-        this.cargando = false;
-        Swal.fire('LO SENTIMOS', `Se presento un inconveniente en la consulta`, 'warning');
-      });
-    }else {
-      Swal.fire('LO SENTIMOS', 'INGRESE FECHA', 'info');
+      this.loadTable(this.pageIndex, this.pageSize);
+    } else {
+      Swal.fire('AVISO', 'INGRESE FECHA', 'warning');
+    }
+  }
+
+  buscarForDay() {
+    this.modoBusqueda = 'dia';
+    this.pageIndex = 0;
+    this.pageSize = 20; 
+    this.displayedColumns = this.columnasDefault;
+    if (this.fechaSeleccionada) {
+      this.cargando = true;
+      this.loadTable(this.pageIndex, this.pageSize);
+    } else {
+      Swal.fire('AVISO', 'INGRESE FECHA', 'warning');
     }
   }
 

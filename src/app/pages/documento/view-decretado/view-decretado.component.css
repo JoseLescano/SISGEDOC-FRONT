@@ -5,11 +5,16 @@
   }
 
   .mat-column-Asunto {
-    padding-left: 16px;
-    padding-right: 16px;
     font-size: 14px;
-    width: 40%;
   }
 
 
 
+
+::ng-deep .mat-cell {
+  padding: 10px !important;
+}
+
+::ng-deep .mat-header-cell {
+  padding: 10px !important;
+}

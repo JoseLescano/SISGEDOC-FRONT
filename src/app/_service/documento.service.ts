@@ -85,12 +85,7 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('codigoDecreto', codigoDecreto);
     return this.http.post(`${environment.HOST}documentos/findRespuestaByVidParent`, formData);
   }
-
-  findDecretados(codigoOrganizacion:any, fechaI?:any, fechaF?:any){
-    return this.http.get<Documento[]>(`${environment.HOST}documentos/findDecretados`,
-      { params: { codigoInterno: codigoOrganizacion, fi:fechaI, ff:fechaF }});
-  }
-
+  
   findForCorregir(codigoOrganizacion:any){
     let formData:FormData = new FormData();
     formData.append('codigoInterno', codigoOrganizacion);
@@ -108,6 +103,7 @@ export class DocumentoService  extends GenericService<Documento> {
     let formData:FormData = new FormData();
     formData.append('codigoInterno', codigoInterno);
     formData.append('fecha', fechaI);
+    debugger
     return this.http.post(`${environment.HOST}documentos/findDecretadosForDay?page=${p}&size=${s}&sort=${sortField},${sortDir}`, formData);
   }
 
