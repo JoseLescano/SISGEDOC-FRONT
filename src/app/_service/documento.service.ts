@@ -37,10 +37,11 @@ export class DocumentoService  extends GenericService<Documento> {
   }
 
   viewDocumentoFueraTiempo(codigo: string, p?: number, s?: number, sortField?: string, sortDir?: string, fechaInicio?:any, fechaFin?:any) {
+    debugger
     let formData:FormData = new FormData();
     formData.append('fechaInicio', fechaInicio);
     formData.append('fechaFin', fechaFin);
-    return this.http.get<any>(`${environment.HOST}core/control/${codigo}?page=${p}&size=${s}&sort=${sortField},${sortDir}`);
+    return this.http.post<any>(`${environment.HOST}core/control/${codigo}?page=${p}&size=${s}&sort=${sortField},${sortDir}`, formData);
   }
 
 
@@ -85,7 +86,7 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('codigoDecreto', codigoDecreto);
     return this.http.post(`${environment.HOST}documentos/findRespuestaByVidParent`, formData);
   }
-  
+
   findForCorregir(codigoOrganizacion:any){
     let formData:FormData = new FormData();
     formData.append('codigoInterno', codigoOrganizacion);

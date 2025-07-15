@@ -74,13 +74,13 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
 
   loadTable(page: number, size: number, sortField: string = 'codigo', sortDirection: string = 'desc') {
     let fi='';
-    let ff='';  
+    let ff='';
     let codigoOrganizacion = sessionStorage.getItem(environment.codigoOrganizacion);
     if (this.modoBusqueda === 'rango') {
       if (this.range.value['start']!= null && this.range.value['end']!=null){
         fi = environment.convertDateToStr(this.range.value['start']);
         ff = environment.convertDateToStr(this.range.value['end']);
-      } 
+      }
       this.documentoService.findDecretados1(
         codigoOrganizacion, page, size, sortField, sortDirection, fi, ff
       ).subscribe({
@@ -111,8 +111,10 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
         }
       });
     }else {
-      fi = environment.convertDateToStr(this.rangeFueraTiempo.value['start']);
-      ff = environment.convertDateToStr(this.range.value['end']);
+      if (this.rangeFueraTiempo.value['start']!= null && this.rangeFueraTiempo.value['end']!=null){
+        fi = environment.convertDateToStr(this.rangeFueraTiempo.value['start']);
+        ff = environment.convertDateToStr(this.rangeFueraTiempo.value['end']);
+      }
       this.documentoService.viewDocumentoFueraTiempo(
         codigoOrganizacion, page, size, sortField, sortDirection, fi, ff
       ).subscribe({
@@ -172,7 +174,7 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
     this.modoBusqueda = 'rango';
     this.displayedColumns = this.columnasDefault;
     this.pageIndex = 0;
-    this.pageSize = 20; 
+    this.pageSize = 20;
     if (this.range.value['start']!= null && this.range.value['end']!=null){
       this.cargando = true;
       this.loadTable(this.pageIndex, this.pageSize);
@@ -185,7 +187,7 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
     this.modoBusqueda = 'fueraTiempo';
     this.displayedColumns = this.columnasFueraTiempo;
     this.pageIndex = 0;
-    this.pageSize = 20; 
+    this.pageSize = 20;
     if (this.rangeFueraTiempo.value['start']!= null && this.rangeFueraTiempo.value['end']!=null){
       this.cargando = true;
       this.loadTable(this.pageIndex, this.pageSize);
@@ -197,7 +199,7 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
   buscarForDay() {
     this.modoBusqueda = 'dia';
     this.pageIndex = 0;
-    this.pageSize = 20; 
+    this.pageSize = 20;
     this.displayedColumns = this.columnasDefault;
     if (this.fechaSeleccionada) {
       this.cargando = true;
