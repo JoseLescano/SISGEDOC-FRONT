@@ -141,13 +141,12 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/searchByOrganizacion?page=${p}&size=${s}&sort=${sortField},${sortDir}`, formData);
   }
 
-  findEnviadosExternosMP(codigoInterno:any,
-    fechaI?:any, fechaF?:any){
+  findEnviadosExternosMP(codigoInterno:any, p?: number, s?: number, sortField?: string, sortDir?: string, fechaI?:any, fechaF?:any){
     let formData : FormData = new FormData();
     formData.append('codigoInterno', codigoInterno);
     formData.append('fi', fechaI);
     formData.append('ff', fechaF);
-    return this.http.post(`${environment.HOST}documentos/findEnviadosExternosMP`, formData);
+    return this.http.post(`${environment.HOST}documentos/findEnviadosExternosMP?page=${p}&size=${s}&sort=${sortField},${sortDir}`, formData);
   }
 
   recibirDocumentoMP(documento: any){

@@ -21,7 +21,7 @@ import { ReporteDocumentoDecretoComponent } from '../../report/reporte-documento
 export class ViewDecretadoComponent implements OnInit, AfterViewInit {
 
   columnasDefault: string[] = ['Prioridad', 'Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'Decretado a.', 'Acciones'];
-  columnasFueraTiempo: string[] = ['Prioridad', 'Nro', 'Asunto', 'Documento', 'Origen', 'Decretado a.', 'Fecha Decreto', 'Limite', 'Fecha Respuesta', 'Estado Plazo', 'Días Excedidos', 'Acciones'];
+  columnasFueraTiempo: string[] = ['Prioridad', 'Nro', 'Asunto', 'Documento', 'Origen', 'Decretado a.', 'Fecha Decreto', 'Limite', 'Progreso', 'Fecha Respuesta', 'Estado Plazo',  'Acciones'];
 
   displayedColumns: string[] = [];
   dataSource: MatTableDataSource<any>;
@@ -207,6 +207,45 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
     } else {
       Swal.fire('AVISO', 'INGRESE FECHA', 'warning');
     }
+  }
+
+  calcularProgreso(row: any): number {
+    if (!row.limite) return 100;
+
+    const fechaLimite = this.parseFecha(row.limite);
+    const fechaDecreto = row.decretado ? this.parseFecha(row.decretado) : new Date();
+
+    const totalDias = Math.max(1, this.diasEntreFechas(fechaDecreto, fechaLimite));
+    const diasTranscurridos = Math.max(0, this.diasEntreFechas(fechaDecreto, new Date()));
+
+    const porcentaje = (diasTranscurridos / totalDias) * 100;
+    return Math.min(Math.max(porcentaje, 0), 100);
+  }
+
+  calcularColorClase(row: any): string {
+    if (!row.limite) return 'green';
+
+    const fechaLimite = this.parseFecha(row.limite);
+    const hoy = new Date();
+    const diasRestantes = this.diasEntreFechas(hoy, fechaLimite);
+
+    if (diasRestantes <= 0) {
+      return 'red';
+    } else if (diasRestantes <= 2) {
+      return 'orange';
+    } else {
+      return 'green';
+    }
+  }
+
+  private diasEntreFechas(fecha1: Date, fecha2: Date): number {
+    const diff = fecha2.getTime() - fecha1.getTime();
+    return Math.floor(diff / (1000 * 60 * 60 * 24));
+  }
+
+  private parseFecha(fechaStr: string): Date {
+    const [dia, mes, anio] = fechaStr.split('-').map(Number);
+    return new Date(2000 + anio, mes - 1, dia); // Ajustar si viene con yy
   }
 
   imprimir(){

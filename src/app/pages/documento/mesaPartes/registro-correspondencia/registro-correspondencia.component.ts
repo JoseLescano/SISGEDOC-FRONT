@@ -47,7 +47,6 @@ export class RegistroCorrespondenciaComponent implements OnInit {
   ngOnInit(): void {
     if (this.codigoOrganizacion == '120210' ||  this.codigoOrganizacion == '12021001' || this.codigoOrganizacion == '12021002' || this.codigoOrganizacion == '02'){
       this.cargando= true;
-      debugger
       if (this.codigoOrganizacion == '02'){
         this.organizacionService.getEntregarCopere()
           .subscribe(
@@ -63,7 +62,6 @@ export class RegistroCorrespondenciaComponent implements OnInit {
         .subscribe(
           {
             next:(response:any)=> {
-              debugger
               this.destinos = response.data;
             }
           }
@@ -86,6 +84,7 @@ export class RegistroCorrespondenciaComponent implements OnInit {
 
   initForm(){
     this.form = new FormGroup({
+      'id': new FormControl(0),
       'origen': new FormControl('', [Validators.required]),
       'tipoIdentidad': new FormControl(''),
       'nombreCortoEntidad': new FormControl('', [Validators.minLength(5)]),

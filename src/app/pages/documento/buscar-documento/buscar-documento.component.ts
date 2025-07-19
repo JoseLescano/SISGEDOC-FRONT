@@ -112,7 +112,7 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
     if (this.textoIngresado.trim() != '' || this.textoIngresado != null){
       this.cargando = true;
       this.documentoService.searchByOrganizacion(
-        sessionStorage.getItem(environment.codigoOrganizacion), 
+        sessionStorage.getItem(environment.codigoOrganizacion),
         this.textoIngresado,0,20,'codigo','desc','','').subscribe((data: any) => {
         this.totalElements = data.totalElements;
         this.createTable(data.content);
@@ -130,9 +130,10 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
       this.cargando = true;
       this.documentoService.searchByOrganizacion(
         sessionStorage.getItem(environment.codigoOrganizacion),'', 0,20,'codigo', 'desc',
-        environment.convertDateToStr(this.range.value['start']), 
+        environment.convertDateToStr(this.range.value['start']),
         environment.convertDateToStr(this.range.value['end'])).subscribe((data: any) => {
-        this.createTable(data);
+        this.totalElements = data.totalElements;
+        this.createTable(data.content);
         this.cargando = false;
       }, (error: any)=> {
         this.cargando = false;

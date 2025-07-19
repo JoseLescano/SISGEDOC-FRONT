@@ -32,7 +32,7 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
   pageIndex = 0;
   totalElements: number = 0;
 
-  modoBusqueda: 'rangoDecretados' | 'diaDecretados'|'rangoRegistrados'| 'diaRegistrados' |'randoEnviados' | 'diaEnviados' = 'rangoDecretados'; 
+  modoBusqueda: 'rangoDecretados' | 'diaDecretados'|'rangoRegistrados'| 'diaRegistrados' |'rangoEnviados' | 'diaEnviados' = 'rangoDecretados';
 
   cargandoDescarga : boolean = false;
   titulo: string = "";
@@ -79,7 +79,7 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
       }
       };
     });
-  }  
+  }
 
   showMore(event: PageEvent) {
       this.pageIndex = event.pageIndex;
@@ -136,6 +136,29 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
           Swal.fire('LO SENTIMOS', 'Se presentó un inconveniente en la consulta', 'warning');
         }
       });
+    }else if (this.modoBusqueda === 'diaEnviados'){
+      this.documentoService.findEnviadosExternosMP(
+        sessionStorage.getItem(environment.codigoOrganizacion),page, size, sortField, sortDirection,
+        environment.convertDateToStr(this.fechaSeleccionada)).subscribe((data:any)=>{
+        this.totalElements = data.totalElements;
+        this.createTable(data.content);
+        this.cargando = false;
+      }, error => {
+        this.cargando = false;
+        Swal.fire(`LO SENTIMOS`, 'SE PRESENTO UN INCONVENIENTE CON EL REPORTE DE DOCUMENTOS', 'info');
+      });
+    }else if (this.modoBusqueda === 'rangoEnviados'){
+      this.documentoService.findEnviadosExternosMP(
+        sessionStorage.getItem(environment.codigoOrganizacion), page, size, sortField, sortDirection,
+        environment.convertDateToStr(this.range.value['start']),
+        environment.convertDateToStr(this.range.value['end'])).subscribe((data:any)=>{
+        this.totalElements = data.totalElements;
+        this.createTable(data.content);
+        this.cargando = false;
+      }, error => {
+        this.cargando = false;
+        Swal.fire(`LO SENTIMOS`, 'SE PRESENTO UN INCONVENIENTE CON EL REPORTE DE DOCUMENTOS', 'info');
+      });
     }
   }
 
@@ -173,17 +196,9 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
       this.cargando = true;
       this.tipoReporte = 2;
       this.forDay = false;
+      this.modoBusqueda = 'rangoEnviados';
       this.titulo = "LISTA DE DOCUMENTOS ENVIADOS"
-      this.documentoService.findEnviadosExternosMP(
-        sessionStorage.getItem(environment.codigoOrganizacion),
-        environment.convertDateToStr(this.range.value['start']),
-        environment.convertDateToStr(this.range.value['end'])).subscribe((response:any)=>{
-        this.createTable(response);
-        this.cargando = false;
-      }, error => {
-        this.cargando = false;
-        Swal.fire(`LO SENTIMOS`, 'SE PRESENTO UN INCONVENIENTE CON EL REPORTE DE DOCUMENTOS', 'info');
-      });
+      this.loadTable(0,20);
     } else {
       Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
     }
@@ -194,16 +209,9 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
       this.cargando = true;
       this.tipoReporte = 2;
       this.forDay = true;
+      this.modoBusqueda = 'diaEnviados';
       this.titulo = "LISTA DE DOCUMENTOS ENVIADOS"
-      this.documentoService.findEnviadosExternosMP(
-        sessionStorage.getItem(environment.codigoOrganizacion),
-        environment.convertDateToStr(this.fechaSeleccionada)).subscribe((response:any)=>{
-        this.createTable(response);
-        this.cargando = false;
-      }, error => {
-        this.cargando = false;
-        Swal.fire(`LO SENTIMOS`, 'SE PRESENTO UN INCONVENIENTE CON EL REPORTE DE DOCUMENTOS', 'info');
-      });
+      this.loadTable(0,20);
     } else {
       Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
     }
