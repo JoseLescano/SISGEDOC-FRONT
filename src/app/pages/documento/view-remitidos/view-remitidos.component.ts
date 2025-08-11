@@ -89,7 +89,7 @@ export class ViewRemitidosComponent implements OnInit {
     if (this.range.value['start']!= null && this.range.value['end']!=null){
       this.documentoService.findRemitidos(
       sessionStorage.getItem(environment.codigoOrganizacion), 0, 20, 'codigo', 'desc',
-      environment.convertDateToStr(this.range.value['start']), 
+      environment.convertDateToStr(this.range.value['start']),
       environment.convertDateToStr(this.range.value['end']))
       .subscribe(
       {
@@ -173,7 +173,7 @@ export class ViewRemitidosComponent implements OnInit {
       height: '95%',
       data: documentoSeleccionado,
     });
-  } 
+  }
 
   viewTimeline(vidDocumento: any){
     const dialogRef = this.dialog.open(TimelineComponent, {
