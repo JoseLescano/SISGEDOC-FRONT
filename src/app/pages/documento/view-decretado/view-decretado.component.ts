@@ -12,6 +12,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ExcelService } from 'src/app/_service/excel.service';
 import { TimelineComponent } from '../../report/timeline/timeline.component';
 import { ReporteDocumentoDecretoComponent } from '../../report/reporte-documento-decretado/reporte-documento-decretado.component';
+import { Chart, ChartConfiguration, registerables } from 'chart.js';
 
 @Component({
   selector: 'app-view-decretado',
@@ -35,6 +36,7 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
   totalElements: number = 0;
 
   modoBusqueda: 'rango' | 'dia'|'fueraTiempo' = 'rango'; // por defecto 'rango'
+  verGrafica:boolean = false;
 
   cargandoDescarga: boolean = false;
   range = new FormGroup({
@@ -77,6 +79,7 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
     let ff='';
     let codigoOrganizacion = sessionStorage.getItem(environment.codigoOrganizacion);
     if (this.modoBusqueda === 'rango') {
+      this.verGrafica = false;
       if (this.range.value['start']!= null && this.range.value['end']!=null){
         fi = environment.convertDateToStr(this.range.value['start']);
         ff = environment.convertDateToStr(this.range.value['end']);
@@ -96,6 +99,7 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
         }
       });
     } else if (this.modoBusqueda === 'dia') {
+      this.verGrafica = false;
       this.documentoService.findDecretadosForDay(
         codigoOrganizacion, environment.convertDateToStr(this.fechaSeleccionada), page, size, sortField, sortDirection
       ).subscribe({
@@ -111,6 +115,7 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
         }
       });
     }else {
+      this.verGrafica = false;
       if (this.rangeFueraTiempo.value['start']!= null && this.rangeFueraTiempo.value['end']!=null){
         fi = environment.convertDateToStr(this.rangeFueraTiempo.value['start']);
         ff = environment.convertDateToStr(this.rangeFueraTiempo.value['end']);
@@ -139,6 +144,7 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
       this.dataSource.sort = this.sort;
 
       this.dataSource.sortingDataAccessor = (item, property) => {
+      debugger
       switch(property) {
         case 'Nro': return item.codigo;
         case 'Asunto': return item.asunto.toLowerCase();
@@ -158,7 +164,7 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     if (this.pageSize>20)
-      this.loadTable(this.pageIndex, this.pageSize, 'documento','desc');
+      this.loadTable(this.pageIndex, this.pageSize, 'codigo','desc');
     else this.loadTable(this.pageIndex, this.pageSize);
   }
 
@@ -208,6 +214,73 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
       Swal.fire('AVISO', 'INGRESE FECHA', 'warning');
     }
   }
+
+  chart: Chart;
+
+  cargarDatos() {
+    this.verGrafica = true;
+    let fi = '';
+    let ff = '';
+    let data;
+    let codigoOrganizacion = sessionStorage.getItem(environment.codigoOrganizacion);
+    if (this.rangeFueraTiempo.value['start']!= null && this.rangeFueraTiempo.value['end']!=null){
+        fi = environment.convertDateToStr(this.rangeFueraTiempo.value['start']);
+        ff = environment.convertDateToStr(this.rangeFueraTiempo.value['end']);
+    }
+    this.documentoService.documentoFueraTiempo(codigoOrganizacion, fi,ff)
+    .subscribe(
+      {
+        next:(response: any)=> {
+          data = response;
+          const estados = {
+            'FUERA DE PLAZO SIN RESPUESTA': 0,
+            'FUERA DE PLAZO CON RESPUESTA': 0,
+            'DENTRO DE PLAZO CON RESPUESTA': 0
+          };
+
+          data.forEach((doc: any) => {
+            estados[doc.estadoPlazo] = (estados[doc.estadoPlazo] || 0) + 1;
+          });
+
+          this.generarGrafico(estados);
+        }, error : (err:any)=> {
+          console.log(err)
+        }
+      }
+    );
+  }
+
+  generarGrafico(estados: any): void {
+    const ctx = document.getElementById('controlChart') as HTMLCanvasElement;
+
+    if (this.chart) {
+      this.chart.destroy();
+    }
+    debugger
+
+
+    const config: ChartConfiguration = {
+      type: 'bar',
+      data: {
+        labels: Object.keys(estados),
+        datasets: [{
+          label: 'Cantidad de documentos',
+          data: Object.values(estados),
+          backgroundColor: ['#e74c3c', '#f1c40f', '#2ecc71'],
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: true },
+        }
+      }
+    };
+
+    this.chart = new Chart(ctx, config);
+  }
+
 
   calcularProgreso(row: any): number {
     if (!row.limite) return 100;

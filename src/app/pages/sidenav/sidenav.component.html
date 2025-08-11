@@ -16,6 +16,7 @@
         <li class="sidenav-nav-item" *ngFor="let data of menus">
             <a class="sidenav-nav-link" [routerLink]="[data.url]"
                 routerLinkActive="active"
+                [matTooltip]="!collapsed ? data.nombre : ''"  matTooltipClass="custom-tooltip"
                 [routerLinkActiveOptions]="{exact: true}">
                 <i class="sidenav-link-icon" [class]="data.icon"
                   ></i>
