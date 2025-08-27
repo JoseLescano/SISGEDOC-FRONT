@@ -32,11 +32,6 @@
                   <button mat-flat-button color="primary" (click)="verDecretos()" >DOC. DECRETADOS</button>
                   <button mat-flat-button color="accent" (click)="verDocumentoRegistrados()" >DOC. REGISTRADOS</button>
                   <button mat-flat-button color="warn" (click)="verEnviadosExterno()">DOC. ENVIADOS</button>
-                  <!-- <button mat-flat-button style="background: rgba(25, 135, 84); color: #fff; " >
-                    <i class="fas fa-file-excel"></i> EXPORTAR A EXCEL</button> -->
-
-                  <!-- <button mat-flat-button color="accent" style="margin-left: 5px;"  (click)="imprimir()" >
-                    <i class="fas fa-print"></i> IMPRIMIR </button> -->
                 </div>
               </div>
             </section>
@@ -60,8 +55,6 @@
                   <button mat-flat-button color="primary" (click)="buscarDecratadosForDay()" >DOC. DECRETADOS</button>
                   <button mat-flat-button color="accent" (click)="verDocumentoRegistradosForDay()" >DOC. REGISTRADOS</button>
                   <button mat-flat-button color="warn" (click)="verEnviadosExternoForDay()">DOC. ENVIADOS</button>
-                  <!-- <button mat-flat-button style="background: rgba(25, 135, 84); color: #fff; " >
-                    <i class="fas fa-file-excel"></i> EXPORTAR A EXCEL</button> -->
                 </div>
               </div>
             </section>
@@ -164,23 +157,13 @@
                         <td class="mat-cell" colspan="4">Sin datos obtenidos...</td>
                     </tr>
                     </table>
-                    <mat-paginator [pageSizeOptions]="[10, 15, 25, 100]"
-                        showFirstLastButtons aria-label="Seleccione pagina de documentos" >
+                    <mat-paginator [pageSizeOptions]="[20,50, 100]" [length]="totalElements" (page)="showMore($event)"
+                      [pageSize]="pageSize" aria-label="Select page of users" showFirstLastButtons>
                     </mat-paginator>
+
                 </div>
             </mat-card-content>
-            <!-- <mat-card-footer>
-                <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
-            </mat-card-footer> -->
         </mat-card>
     </div>
 </div>
-<!-- <mat-card class="m-2">
-    <mat-card-header class="title-form">
-        <mat-card-title >REPORTE DE DOCUMENTOS - MESA DE PARTES</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-
-    </mat-card-content>
-</mat-card> -->
 

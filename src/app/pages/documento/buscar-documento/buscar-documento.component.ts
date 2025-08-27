@@ -132,6 +132,7 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
         sessionStorage.getItem(environment.codigoOrganizacion),'', 0,20,'codigo', 'desc',
         environment.convertDateToStr(this.range.value['start']),
         environment.convertDateToStr(this.range.value['end'])).subscribe((data: any) => {
+        this.totalElements = data.totalElements;
         this.createTable(data.content);
         this.cargando = false;
       }, (error: any)=> {

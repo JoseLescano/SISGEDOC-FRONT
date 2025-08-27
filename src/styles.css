@@ -54,6 +54,11 @@ table th {
   margin-left: -5px;
 }
 
+.title-form > span{
+  font-size: 14px;
+  font-weight: bold;
+}
+
 
 .loader ,.loader::before,.loader::after {
   border-width: 2px;

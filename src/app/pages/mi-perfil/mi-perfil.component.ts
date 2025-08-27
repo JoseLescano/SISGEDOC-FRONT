@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { DocumentoService } from 'src/app/_service/documento.service';
@@ -39,13 +42,10 @@ export class MiPerfilComponent implements OnInit {
     });
   }
 
-
-
   getDocumentoDecretados7dias(){
     let codigoOrganizacion = sessionStorage.getItem(environment.codigoOrganizacion);
     this.documentoService.getDecretados7dias(codigoOrganizacion).subscribe({
       next: (response: any) => {
-        debugger
         this.createGrafigo('DECRETOS REALIZADOS - ÚLTIMOS 15 DÍAS', 'canvasDecretos',
           response.map(x => x.etiqueta), response.map(x => x.valor),'line', 'x');
       },

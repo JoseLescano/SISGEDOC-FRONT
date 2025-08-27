@@ -56,12 +56,12 @@ export class CorrespondenciaService extends GenericService<Correspondencia> {
     formData, { responseType: 'blob' });
   }
 
-  searchByFechas(codigoOrganizacion:any, fechaInicio?: any, fechaFin?: any){
+  searchByFechas(codigoOrganizacion:any, p?: number, s?: number, sortField?: string, sortDir?: string, fechaInicio?: any, fechaFin?: any){
     let formData:FormData = new FormData();
     formData.append('orgOrigen', codigoOrganizacion);
     formData.append('fechaInicio', fechaInicio);
     formData.append('fechaFin',fechaFin);
-    return this.http.post(`${environment.HOST}correspondencias/searchByFechas`, formData);
+    return this.http.post(`${environment.HOST}correspondencias/searchByFechas?page=${p}&size=${s}&sort=${sortField},${sortDir}`, formData);
   }
 
   reportCorrespondencia(codigo: any){

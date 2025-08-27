@@ -1,23 +1,20 @@
-<div class="row" style="height: 70vh;">
-  <div class="col-12 m-2 full-height-70">
-    <mat-card *ngIf="codigoRol=='000' || codigoRol == '002'" class="mat-card-70">
-      <mat-card-header class="title-form">
-        <mat-card-title>GRAFICA DE DOCUMENTO EN BANDEJA</mat-card-title>
-      </mat-card-header>
-      <mat-card-content style="height: 100%;">
-        <canvas id="canvas" style="width: 100%; height: 100%;"></canvas>
-      </mat-card-content>
-    </mat-card>
-  </div>
-  <div class="col-12 m-2 full-height-70">
-    <mat-card *ngIf="codigoRol=='000' || codigoRol == '002'" class="mat-card-70">
-      <mat-card-header class="title-form">
-        <mat-card-title>DECRETOS REALIZADOS - ÚLTIMOS 15 DÍAS</mat-card-title>
-      </mat-card-header>
-      <mat-card-content style="flex: 1;">
-        <canvas id="canvasDecretos" style="width: 100%; height: 100%;">{{ barChart }}</canvas>
-      </mat-card-content>
-    </mat-card>
-  </div>
+<div class="col-12 m-2 full-height-70">
+  <mat-card *ngIf="codigoRol=='000' || codigoRol == '002'" class="mat-card-70">
+    <mat-card-header class="title-form">
+      <mat-card-title>GRAFICA DE DOCUMENTO EN BANDEJA</mat-card-title>
+    </mat-card-header>
+    <mat-card-content style="height: 100%;">
+      <canvas id="canvas" style="width: 100%; height: 100%;"></canvas>
+    </mat-card-content>
+  </mat-card>
 </div>
-
+<div class="col-12 m-2 full-height-70">
+  <mat-card *ngIf="codigoRol=='000' || codigoRol == '002'" class="mat-card-70">
+    <mat-card-header class="title-form">
+      <mat-card-title>DECRETOS REALIZADOS - ÚLTIMOS 15 DÍAS</mat-card-title>
+    </mat-card-header>
+    <mat-card-content style="flex: 1;">
+      <canvas id="canvasDecretos" style="width: 100%; height: 100%;">{{ barChart }}</canvas>
+    </mat-card-content>
+  </mat-card>
+</div>

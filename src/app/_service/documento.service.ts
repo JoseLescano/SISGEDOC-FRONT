@@ -36,6 +36,14 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get<any>(`${environment.HOST}documentos/paginacionDocumento/${codigo}?page=${p}&size=${s}&sort=${sortField},${sortDir}`);
   }
 
+  viewDocumentoFueraTiempo(codigo: string, p?: number, s?: number, sortField?: string, sortDir?: string, fechaInicio?:any, fechaFin?:any) {
+    debugger
+    let formData:FormData = new FormData();
+    formData.append('fechaInicio', fechaInicio);
+    formData.append('fechaFin', fechaFin);
+    return this.http.post<any>(`${environment.HOST}core/control/${codigo}?page=${p}&size=${s}&sort=${sortField},${sortDir}`, formData);
+  }
+
 
   findByOrganizacionDestinoForSuperAdm(codigo:any, fi:any, ff:any){
     let formData: FormData= new FormData();
@@ -79,30 +87,25 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/findRespuestaByVidParent`, formData);
   }
 
-  findDecretados(codigoOrganizacion:any, fechaI?:any, fechaF?:any){
-    return this.http.get<Documento[]>(`${environment.HOST}documentos/findDecretados`,
-      { params: { codigoInterno: codigoOrganizacion, fi:fechaI, ff:fechaF }});
-  }
-
   findForCorregir(codigoOrganizacion:any){
     let formData:FormData = new FormData();
     formData.append('codigoInterno', codigoOrganizacion);
     return this.http.post(`${environment.HOST}documentos/findForCorregir`, formData);
   }
 
-  findDecretados1(codigoInterno:any, fechaI?:any, fechaF?:any){
+  findDecretados1(codigoInterno:any, p?: number, s?: number, sortField?: string, sortDir?: string, fechaI?:any, fechaF?:any){
     let formData:FormData = new FormData();
-    formData.append('codigoInterno', codigoInterno);
     formData.append('fi', fechaI);
     formData.append('ff', fechaF);
-    return this.http.post(`${environment.HOST}documentos/findDecretados1`, formData);
+    return this.http.post(`${environment.HOST}documentos/findDecretados1/${codigoInterno}?page=${p}&size=${s}&sort=${sortField},${sortDir}`, formData);
   }
 
-  findDecretadosForDay(codigoInterno:any, fechaI:any){
+  findDecretadosForDay(codigoInterno:any, fechaI:any, p?: number, s?: number, sortField?: string, sortDir?: string){
     let formData:FormData = new FormData();
     formData.append('codigoInterno', codigoInterno);
     formData.append('fecha', fechaI);
-    return this.http.post(`${environment.HOST}documentos/findDecretadosForDay`, formData);
+    debugger
+    return this.http.post(`${environment.HOST}documentos/findDecretadosForDay?page=${p}&size=${s}&sort=${sortField},${sortDir}`, formData);
   }
 
   findArchivadosByOrganizacion(codigoInterno:any){
@@ -138,13 +141,12 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/searchByOrganizacion?page=${p}&size=${s}&sort=${sortField},${sortDir}`, formData);
   }
 
-  findEnviadosExternosMP(codigoInterno:any,
-    fechaI?:any, fechaF?:any){
+  findEnviadosExternosMP(codigoInterno:any, p?: number, s?: number, sortField?: string, sortDir?: string, fechaI?:any, fechaF?:any){
     let formData : FormData = new FormData();
     formData.append('codigoInterno', codigoInterno);
     formData.append('fi', fechaI);
     formData.append('ff', fechaF);
-    return this.http.post(`${environment.HOST}documentos/findEnviadosExternosMP`, formData);
+    return this.http.post(`${environment.HOST}documentos/findEnviadosExternosMP?page=${p}&size=${s}&sort=${sortField},${sortDir}`, formData);
   }
 
   recibirDocumentoMP(documento: any){
@@ -273,11 +275,10 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/convertFileToPDF`, formData);
   }
 
-  firmarDocumento(file: any){
+  firmarDocumento(file: any) {
     let formData: FormData = new FormData();
     formData.append('files', file);
-    // formData.append('param_token', "1626476967");
-    // formData.append("document_extension","pdf")
+    formData.append('access_token', sessionStorage.getItem('access_token') || environment.TOKEN_NAME);  // Pass access_token
     return this.http.post(`${environment.HOST}documentos/firmarDocumentoPeru`, formData);
   }
 
