@@ -1,9 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { OrganizacionDiagram } from 'src/app/_DTO/OrganizacionDiagram';
 import { OrganizacionService } from 'src/app/_service/organizacion.service';
 import { PerfilService } from 'src/app/_service/perfil.service';
 import { environment } from 'src/environments/environment';
@@ -27,14 +25,20 @@ export class AllUnidadesComponent implements OnInit, AfterViewInit {
   mostrarInput:boolean = true;
 
   displayedColumns: string[] = ['#', 'COD.INTERNO', 'ACRONIMO', 'NOMBRE-COMPLETO', 'ACCIONES'];
-  dataSource: MatTableDataSource<OrganizacionDiagram>;
+  dataSource: MatTableDataSource<any>;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  cargando: boolean;
+
+  pageSize = 20;
+  pageIndex = 0;
+  totalElements: number = 0;
+
 
   constructor(
     private organizacionService: OrganizacionService,
-     private perfilService:PerfilService,
+    private perfilService:PerfilService,
   ) { }
 
   ngOnInit(): void {
@@ -42,8 +46,35 @@ export class AllUnidadesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // this.dataSource.paginator = this.paginator;
-    // this.dataSource.sort = this.sort;
+    this.sort.sortChange.subscribe((sort: Sort) => {
+      this.pageIndex = 0; // Reinicia a la primera página si cambia el orden
+      this.loadTable(this.pageIndex, this.pageSize, sort.active, sort.direction);
+    });
+  }
+
+  loadTable(page:any, size:any, sortField: string = 'codigoInterno', sortDirection: string = 'desc'){
+    if(this.itemSeleccionado === 4){
+      this.organizacionService.getEmu(page, size, sortField, sortDirection)
+      .subscribe(
+        {
+          next: (response: any)=> {
+            this.totalElements = response.totalElements;
+            this.createTable(response.content);
+          },
+          error : (err: any)=> {
+            console.log('error => ' + err)
+          }
+        }
+      )
+    }
+  }
+
+  showMore(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    if (this.pageSize>20)
+      this.loadTable(this.pageIndex, this.pageSize, 'codigoInterno','desc');
+    else this.loadTable(this.pageIndex, this.pageSize);
   }
 
   applyFilter(event: Event) {
@@ -51,10 +82,10 @@ export class AllUnidadesComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  createTable(organizacion: OrganizacionDiagram[]){
-    this.dataSource = new MatTableDataSource(organizacion);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+  createTable(organizaciones: any[]){
+    this.dataSource = new MatTableDataSource<any>();
+	  this.dataSource.data = organizaciones;
+    this.dataSource.sort = this.sort;
   }
 
   searchOrganizacion(){
@@ -74,18 +105,6 @@ export class AllUnidadesComponent implements OnInit, AfterViewInit {
     }
     if (this.itemSeleccionado===3){
       this.organizacionService.getAllExternas().subscribe(
-        {
-          next: (response: any)=> {
-            this.createTable(response.data);
-          },
-          error : (err: any)=> {
-            console.log('error => ' + err)
-          }
-        }
-      )
-    }
-    if(this.itemSeleccionado === 4){
-      this.organizacionService.getWithCodigoCopere().subscribe(
         {
           next: (response: any)=> {
             this.createTable(response.data);

@@ -227,6 +227,7 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
         sessionStorage.getItem(environment.codigoOrganizacion),
         environment.convertDateToStr(this.range.value['start']),
         environment.convertDateToStr(this.range.value['end'])).subscribe((data: any)=> {
+        this.totalElements = data.length;
         this.createTable(data);
         this.cargando = false;
       }, error=> {
@@ -247,6 +248,7 @@ export class ReporteDocumentoComponent implements OnInit, AfterViewInit {
       this.documentoService.searchRegistrados(
         sessionStorage.getItem(environment.codigoOrganizacion),
         environment.convertDateToStr(this.fechaSeleccionada)).subscribe((data: any)=> {
+        this.totalElements = data.length;
         this.createTable(data);
         this.cargando = false;
       }, error=> {

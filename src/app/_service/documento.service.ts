@@ -43,6 +43,13 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('fechaFin', fechaFin);
     return this.http.post<any>(`${environment.HOST}core/control/${codigo}?page=${p}&size=${s}&sort=${sortField},${sortDir}`, formData);
   }
+  
+  documentoFueraTiempo(codigo: string, fechaInicio:any, fechaFin:any) {
+    let formData:FormData = new FormData();
+    formData.append('fechaInicio', fechaInicio);
+    formData.append('fechaFin', fechaFin);
+    return this.http.post<any>(`${environment.HOST}core/controlChart/${codigo}`, formData);
+  }
 
 
   findByOrganizacionDestinoForSuperAdm(codigo:any, fi:any, ff:any){
@@ -423,10 +430,10 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/findDevueltosByOrganizacion`, formData);
   }
 
-  findBySuperAdm(campo:any){
+  findBySuperAdm(campo:any, p?: number, s?: number, sortField?: string, sortDir?: string){
     let formData:FormData = new FormData();
     formData.append('campo', campo);
-    return this.http.post(`${environment.HOST}documentos/findBySuperAdm`, formData);
+    return this.http.post(`${environment.HOST}documentos/findBySuperAdm?page=${p}&size=${s}&sort=${sortField},${sortDir}`, formData);
   }
 
   countStadisticForSuperADM(codigoInterno:any){

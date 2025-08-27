@@ -1,24 +1,34 @@
-<mat-card>
+<mat-card class="m-2" style="border-radius: 10px; " >
+  <mat-card-header class="title-form  d-flex justify-content-between" >
+    <mat-card-title >BUSQUEDA DE DOCUMENTOS POR SUPER ADMINISTRADOR</mat-card-title>
+    <!-- <button mat-flat-button color="primary"  style="margin-right: 5px;" (click)="imprimirListaPersonal(0,true)"  >
+      <i class="fas fa-print"></i> IMPRIMIR
+    </button> -->
+  </mat-card-header>
   <mat-card-content>
     <div class="d-flex align-items-center">
       <div class="col-8">
         <mat-form-field appearance="fill" class="example-full-width">
-          <input matInput placeholder="INGRESE NRO ó ASUNTO DEL DOCUMENTO" [(ngModel)]="busquedaDocumentoByAdm" />
+          <input matInput placeholder="INGRESE NRO ó ASUNTO DEL DOCUMENTO" 
+          [(ngModel)]="busquedaDocumentoByAdm"
+          (keydown.enter)="loadTable(0,20)" />
         </mat-form-field>
       </div>
       <div class="col-4">
-        <button mat-flat-button color="primary" style="margin-left: 10px" (click)="busquedaDocumentoBySuperADM()" >
+        <button mat-flat-button color="primary" style="margin-left: 10px" (click)="loadTable(0,20)" >
           <i class="fas fa-search"></i> BUSCAR
         </button>
       </div>
-      <mat-divider class="col-12 m-2"></mat-divider>
     </div>
   </mat-card-content>
 </mat-card>
-<mat-card class="mt-2">
+<mat-card class="m-2">
+  <mat-card-header class="title-form  d-flex justify-content-between" >
+    <mat-card-title >LISTA DE DOCUMENTOS ENCONTRADOS</mat-card-title>
+  </mat-card-header>
   <mat-card-content>
     <div class="mat-elevation-z8">
-      <table mat-table [dataSource]="dataSourceBusqueda" matSort #sortBusqueda="matSort">
+      <table mat-table [dataSource]="dataSource" matSort #sortBusqueda="matSort">
 
         <ng-container matColumnDef="Nro">
           <th mat-header-cell mat-sort-header *matHeaderCellDef mat-sort-header>
@@ -106,7 +116,9 @@
         </tr>
       </table>
 
-      <mat-paginator #paginatorBusqueda [pageSizeOptions]="[10, 15, 25, 100]" aria-label="Select page of users"></mat-paginator>
+      <mat-paginator [pageSizeOptions]="[20,50, 100]" [length]="totalElements" (page)="showMore($event)"
+        [pageSize]="pageSize" aria-label="Select page of users" showFirstLastButtons>
+      </mat-paginator>
     </div>
   </mat-card-content>
 </mat-card>

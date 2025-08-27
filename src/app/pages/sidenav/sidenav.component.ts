@@ -1,5 +1,5 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
-import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { Menu } from 'src/app/_model/menu';
@@ -14,6 +14,7 @@ interface SideNavToggle {
 
 @Component({
   selector: 'app-sidenav',
+  encapsulation: ViewEncapsulation.None,
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.css'],
   animations: [

@@ -105,17 +105,26 @@
   </div>
   <div class="col-12" *ngIf="!cargando">
     <mat-card class="m-2" >
-      <mat-card-header class="title-form">
-        <mat-card-title >LISTA DE DOCUMENTOS DECRETADOS
-        </mat-card-title>
-        <span  style="color: red; size: 10px;" *ngIf="modoBusqueda==='fueraTiempo'"> *CON ACCION DAR RESPUESTA*</span>
-      </mat-card-header>
-      <mat-form-field appearance="fill" class="example-full-width">
+      <div class="d-flex justify-content-between align-items-center">
+        <mat-card-header class="title-form">
+          <mat-card-title >LISTA DE DOCUMENTOS DECRETADOS </mat-card-title>
+          <span  style="color: red; size: 10px;" *ngIf="modoBusqueda==='fueraTiempo'"> *CON ACCION DAR RESPUESTA*</span>
+        </mat-card-header>
+        <button type="button" class="btn btn-success" (click)="cargarDatos()" *ngIf="modoBusqueda==='fueraTiempo' && !verGrafica">
+          <i class="far fa-chart-bar"></i>
+        </button>
+        <button type="button" class="btn btn-success" (click)="verGrafica = !verGrafica" *ngIf="modoBusqueda==='fueraTiempo' && verGrafica">
+          <i class="fas fa-table"></i>
+        </button>
+        
+      </div>
+      
+    <mat-card-content>
+      <mat-form-field appearance="fill" class="example-full-width" *ngIf="!verGrafica">
         <mat-label>Filtro</mat-label>
         <input matInput (keyup)="applyFilter($event)" placeholder="Ingrese valor" #input>
       </mat-form-field>
-    <mat-card-content>
-      <div class="mat-elevation-z8">
+      <div class="mat-elevation-z8" *ngIf="!verGrafica">
         <table mat-table [dataSource]="dataSource" matSort id="tbDecretados" >
 
           <ng-container matColumnDef="Nro">
@@ -236,15 +245,14 @@
           [pageSize]="pageSize" aria-label="Select page of users" showFirstLastButtons>
         </mat-paginator>
       </div>
+      <div style="width: 100%; max-width: 80%; margin: auto;" *ngIf="verGrafica">
+        <canvas id="controlChart"></canvas>
+      </div>
     </mat-card-content>
-    <!-- <mat-card-footer>
-      <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
-    </mat-card-footer> -->
   </mat-card>
 
   </div>
 </div>
+<div class="container loader" *ngIf="cargando"></div>
 
-<div class="container loader" *ngIf="cargando">
 
-</div>
