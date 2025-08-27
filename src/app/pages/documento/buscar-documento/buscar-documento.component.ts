@@ -58,7 +58,21 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
   }
 
   loadTable(page:any, size:any, sortField: string = 'codigo', sortDirection: string = 'desc'){
-    this.documentoService.searchByOrganizacion(
+    if (this.textoIngresado.trim() != '' || this.textoIngresado != null){
+      this.cargando = true;
+      this.documentoService.searchByOrganizacion(
+        sessionStorage.getItem(environment.codigoOrganizacion),'', page, size, sortField, sortDirection,
+        environment.convertDateToStr(this.range.value['start']),
+        environment.convertDateToStr(this.range.value['end'])).subscribe((data: any) => {
+        this.totalElements = data.totalElements;
+        this.createTable(data.content);
+        this.cargando = false;
+      }, (error: any)=> {
+        this.cargando = false;
+        Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
+      });
+    } else {
+      this.documentoService.searchByOrganizacion(
       sessionStorage.getItem(environment.codigoOrganizacion), '',page, size, sortField, sortDirection )
       .subscribe(
       {
@@ -71,7 +85,8 @@ export class BuscarDocumentoComponent implements OnInit, AfterViewInit {
         Swal.fire('Lo sentimos', err, 'warning');
         }
       }
-    );
+      );
+    }
   }
 
   createTable(documentos: any[]) {

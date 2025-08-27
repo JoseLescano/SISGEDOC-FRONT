@@ -56,17 +56,34 @@ export class ViewRemitidosComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
     this.sort.sortChange.subscribe((sort: Sort) => {
       this.pageIndex = 0; // Reinicia a la primera página si cambia el orden
-      this.loadTable(null,this.pageIndex, this.pageSize, sort.active, sort.direction);
+      this.loadTable(this.pageIndex, this.pageSize, sort.active, sort.direction);
     });
   }
 
   // =======================================================================================================
 
   loadTable(title:any, page:any, size:any, sortField: string = 'codigo', sortDirection: string = 'desc'){
-    this.documentoService.findRemitidos(
+    debugger
+    if (this.range.value['start']!= null && this.range.value['end']!=null){
+      this.documentoService.findRemitidos(
+      sessionStorage.getItem(environment.codigoOrganizacion), page, size, sortField, sortDirection,
+      environment.convertDateToStr(this.range.value['start']),
+      environment.convertDateToStr(this.range.value['end']))
+      .subscribe(
+      {
+        next : (data: any) => {
+        this.totalElements = data.totalElements;
+        this.createTable(data.content);
+        this.cargando = false;
+        }, error: err => {
+        this.cargando = false;
+        Swal.fire('Lo sentimos', err, 'warning');
+        }
+      });
+    }else {
+      this.documentoService.findRemitidos(
       sessionStorage.getItem(environment.codigoOrganizacion),page, size, sortField, sortDirection )
       .subscribe(
       {
@@ -82,6 +99,8 @@ export class ViewRemitidosComponent implements OnInit {
         }
       }
     );
+    }
+
   }
 
   buscarFechas(){
