@@ -37,7 +37,7 @@ export class RegistrarCorrecionComponent implements OnInit {
     this.form = new FormGroup({
       'codigoDocumento': new FormControl(this.vidDocumento, [Validators.required]),
       'idDecreto': new FormControl(this.codigoDecreto, [Validators.required]),
-      'observacion': new FormControl('', [Validators.required, Validators.minLength(10)])
+      'observacion': new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(850)])
     });
     this.cargando = false;
   }
@@ -68,6 +68,6 @@ export class RegistrarCorrecionComponent implements OnInit {
     this.matDialog.close();
   }
 
-  
+
 
 }

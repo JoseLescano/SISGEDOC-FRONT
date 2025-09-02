@@ -210,3 +210,12 @@ iframe {
   height: 100%;
   width: 100%;
 }
+
+
+.mat-form-field .mat-form-field-prefix {
+  order: -1 !important;   /* lo manda al inicio */
+}
+
+.mat-datepicker-toggle {
+  margin-right: 8px;      /* espacio entre ícono e input */
+}
