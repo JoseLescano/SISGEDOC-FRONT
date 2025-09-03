@@ -396,11 +396,13 @@ export class RespuestaComponent implements OnInit {
   firmarDocumento() {
     this.cargando = true;
     this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response: any) => {
-      var nameFile = response[1];
-      this.firmaPeruService.iniciarFirma(response[1]).then(() => {
-        this.nameDocuentoFirmado = response[1];
+      var nameFile = response[0];
+      this.firmaPeruService.iniciarFirma(response[0]).then(() => {
+        debugger;
+        this.nameDocuentoFirmado = response[0];
         this.firmado = true;
         this.cargando = false;
+        debugger;
         Swal.fire('FIRMA COMPLETADA', 'SE FIRMO DOCUMENTO CORRECTAMENTE', 'info');
       }).catch((error) => {
         this.cargando = false;

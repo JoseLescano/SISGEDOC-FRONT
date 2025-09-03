@@ -108,7 +108,7 @@
                         <div class="row">
                           <div class="col-md-12">
                               <mat-form-field appearance="fill" class="example-full-width">
-                                  <mat-label>ASUNTO</mat-label>
+                                  <mat-label>ASUNTO (MAXIMO 750 caracteres)</mat-label>
                                   <textarea matInput formControlName="asunto" rows="5"></textarea>
                                   <div *ngIf="form.get('asunto').errors && form.get('asunto').dirty" >
                                     <small class="fw-bold text-danger text-uppercase" *ngIf="form.get('asunto').hasError('required')">* Se require campo</small>

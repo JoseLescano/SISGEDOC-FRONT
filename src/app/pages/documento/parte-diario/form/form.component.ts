@@ -417,8 +417,8 @@ export class FormComponent implements OnInit {
   firmarDocumento(){
      this.cargando = true;
      this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response: any) => {
-       var nameFile = response[1];
-       this.firmaPeruService.iniciarFirma(response[1]).then(() => {
+       var nameFile = response[0];
+       this.firmaPeruService.iniciarFirma(response[0]).then(() => {
          this.cargando = false;
          Swal.fire('FIRMA COMPLETADA', 'SE FIRMO DOCUMENTO CORRECTAMENTE, SE ACTUALIZARÁ DOCUMENTO', 'info');
          this.updateIframeWithKeyDigitalGeneral(nameFile);

@@ -30,6 +30,9 @@
                         <mat-error *ngIf="form.controls['observacion'].hasError('minlength')">
                             Caracteres mínimo es <strong>10</strong>
                         </mat-error>
+                        <mat-error *ngIf="form.controls['observacion'].hasError('maxlength')">
+                            Caracteres maximo es <strong>850</strong>
+                        </mat-error>
                     </mat-form-field>
                 </div>
             </div>
