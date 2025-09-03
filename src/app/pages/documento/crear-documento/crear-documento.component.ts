@@ -476,7 +476,7 @@ export class CrearDocumentoComponent implements OnInit {
     this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response: any) => {
       debugger;
       this.cargando = true;
-      var nameFile = response[1];
+      var nameFile = response[0];
       this.firmaPeruService.iniciarFirma(response[1]).then(() => {
         debugger;
         this.cargando = false;
