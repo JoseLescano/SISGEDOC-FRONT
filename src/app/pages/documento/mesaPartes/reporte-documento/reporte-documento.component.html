@@ -8,7 +8,7 @@
           <input type="radio" name="tabset" id="tab1" aria-controls="marzen" checked>
           <label for="tab1">BUSQUEDA ENTRE FECHAS</label>
           <!-- Tab 2 -->
-          <input type="radio" name="tabset" id="tab2" aria-controls="rauchbier">
+          <input type="radio" name="tabset" id="tab2" aria-controls="busqueDia">
           <label for="tab2">BUSQUEDA POR DIA</label>
           <div class="tab-panels" >
             <section id="marzen" class="tab-panel">
@@ -35,11 +35,11 @@
                 </div>
               </div>
             </section>
-            <section id="rauchbier" class="tab-panel">
+            <section id="busqueDia" class="tab-panel">
               <div class="row ">
                 <div class="col-6">
                   <mat-form-field appearance="fill" class="example-full-width">
-                    <mat-label>Ingrese fecha</mat-label>
+                    <mat-label>Ingrese fechax</mat-label>
                     <input matInput [matDatepicker]="datepicker" [(ngModel)]="fechaSeleccionada">
                     <mat-hint>DD-MM-YYYY</mat-hint>
                     <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>

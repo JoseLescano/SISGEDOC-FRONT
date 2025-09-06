@@ -72,13 +72,13 @@
                     <i class="fas fa-user-secret"></i>
                   </button>
                   <mat-menu #menu="matMenu">
-                  <button mat-menu-item>
+                  <button mat-menu-item (click)="addPerfil(row.codigoInterno, '004')">
                     <span>ADMINISTRADOR</span>
                   </button>
-                  <button mat-menu-item>
+                  <button mat-menu-item (click)="addPerfil(row.codigoInterno, '002')">
                     <span>ACCIDENTAL</span>
                   </button>
-                  <button mat-menu-item>
+                  <button mat-menu-item (click)="addPerfil(row.codigoInterno, '001')">
                     <span>MESA DE PARTES</span>
                   </button>
                 </mat-menu>

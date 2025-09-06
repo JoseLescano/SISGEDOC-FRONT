@@ -43,7 +43,7 @@ export class ViewDocumentoComponent implements OnInit {
 
   viewDocumento(vidDocumento: any){
     this.documentoService.viewPDF(vidDocumento).subscribe((response: any)=>{
-      this.crearDocumento(response.data);      
+      this.crearDocumento(response.data);
       this.errorPDF = false;
     }, error => {
       this.close();

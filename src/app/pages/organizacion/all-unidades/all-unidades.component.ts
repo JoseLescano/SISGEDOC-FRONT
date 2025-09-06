@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { OrganizacionService } from 'src/app/_service/organizacion.service';
 import { PerfilService } from 'src/app/_service/perfil.service';
 import { environment } from 'src/environments/environment';
@@ -35,11 +36,25 @@ export class AllUnidadesComponent implements OnInit, AfterViewInit {
   pageIndex = 0;
   totalElements: number = 0;
 
+  // Nuevas propiedades para el filtrado
+  filterValue: string = '';
+  private filterSubject = new Subject<string>();
+
 
   constructor(
     private organizacionService: OrganizacionService,
     private perfilService:PerfilService,
-  ) { }
+  ) {
+    // Configurar debounce para el filtro (esperar 500ms después de que el usuario deje de escribir)
+    this.filterSubject.pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe(searchValue => {
+      this.filterValue = searchValue;
+      this.pageIndex = 0; // Resetear a la primera página cuando se filtre
+      this.loadTable(this.pageIndex, this.pageSize);
+    });
+   }
 
   ngOnInit(): void {
 
@@ -54,15 +69,18 @@ export class AllUnidadesComponent implements OnInit, AfterViewInit {
 
   loadTable(page:any, size:any, sortField: string = 'codigoInterno', sortDirection: string = 'desc'){
     if(this.itemSeleccionado === 4){
-      this.organizacionService.getEmu(page, size, sortField, sortDirection)
+      // Pasar el filtro al servicio
+      this.organizacionService.getEmu(page, size, sortField, sortDirection, this.filterValue)
       .subscribe(
         {
           next: (response: any)=> {
             this.totalElements = response.totalElements;
             this.createTable(response.content);
+            this.cargando = false;
           },
           error : (err: any)=> {
-            console.log('error => ' + err)
+            console.log('error => ' + err);
+            this.cargando = false;
           }
         }
       )
@@ -72,48 +90,36 @@ export class AllUnidadesComponent implements OnInit, AfterViewInit {
   showMore(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    if (this.pageSize>20)
-      this.loadTable(this.pageIndex, this.pageSize, 'codigoInterno','desc');
-    else this.loadTable(this.pageIndex, this.pageSize);
+    this.loadTable(this.pageIndex, this.pageSize);
   }
 
+  // Método modificado para filtrado del servidor
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    // Usar el Subject para implementar debounce
+    this.filterSubject.next(filterValue.trim());
   }
 
   createTable(organizaciones: any[]){
     this.dataSource = new MatTableDataSource<any>();
-	  this.dataSource.data = organizaciones;
-    this.dataSource.sort = this.sort;
+    this.dataSource.data = organizaciones;
   }
 
   searchOrganizacion(){
     this.dataSource = null;
-    if (this.itemSeleccionado ===1 )this.mostrarInput = true;
-    if (this.itemSeleccionado===2){
-      this.organizacionService.getInternos().subscribe(
-        {
-          next: (response: any)=> {
-            this.createTable(response.data);
-          },
-          error : (err: any)=> {
-            console.log('error => ' + err)
-          }
-        }
-      )
+    this.filterValue = ''; // Limpiar filtro cuando cambie el tipo de búsqueda
+
+    if (this.itemSeleccionado === 1) {
+      this.mostrarInput = true;
     }
-    if (this.itemSeleccionado===3){
-      this.organizacionService.getAllExternas().subscribe(
-        {
-          next: (response: any)=> {
-            this.createTable(response.data);
-          },
-          error : (err: any)=> {
-            console.log('error => ' + err)
-          }
-        }
-      )
+    if (this.itemSeleccionado === 2) {
+      this.loadTable(0, this.pageSize); // Usar loadTable en lugar de llamada directa
+    }
+    if (this.itemSeleccionado === 3) {
+      this.loadTable(0, this.pageSize); // Usar loadTable en lugar de llamada directa
+    }
+    if (this.itemSeleccionado === 4) {
+      this.loadTable(0, this.pageSize);
     }
   }
 
@@ -150,6 +156,18 @@ export class AllUnidadesComponent implements OnInit, AfterViewInit {
       {
         if (result.isConfirmed) {
           console.log('ACEPTO')
+        }
+      }
+    );
+  }
+
+  addPerfil(codigoOrganizacion:any, codigoRol:any){
+    this.perfilService.registrarPerfilSA(codigoOrganizacion,  codigoRol).subscribe(
+      {
+        next: (response: any)=> {
+          Swal.fire('OPERACION REALIZADA', response.message, 'success');
+        }, error: (err: any)=> {
+          Swal.fire('AVISO', err.message, 'warning');
         }
       }
     );

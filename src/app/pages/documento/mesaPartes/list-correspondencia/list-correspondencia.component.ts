@@ -10,6 +10,7 @@ import { ValidarRecojoComponent } from '../validar-recojo/validar-recojo.compone
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'src/environments/environment';
 import { ReportCorrespondenciaComponent } from 'src/app/pages/report/report-correspondencia/report-correspondencia.component';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-list-correspondencia',
@@ -29,6 +30,10 @@ export class ListCorrespondenciaComponent implements OnInit, AfterViewInit {
   pageIndex = 0;
   totalElements: number = 0;
 
+  // Nuevas propiedades para el filtrado
+  filterValue: string = '';
+  private filterSubject = new Subject<string>();
+
 
   range = new FormGroup({
     start: new FormControl<Date | null>(null),
@@ -38,12 +43,29 @@ export class ListCorrespondenciaComponent implements OnInit, AfterViewInit {
   constructor(
     private correspondenciaService: CorrespondenciaService,
     public dialog: MatDialog,
-  ) { }
+  ) {
+    // Configurar debounce para el filtro
+    this.filterSubject.pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe(searchValue => {
+      this.filterValue = searchValue;
+      this.pageIndex = 0; // Resetear a la primera página
+      this.loadTable(this.pageIndex, this.pageSize);
+    });
+  }
+
+  ngAfterViewInit() {
+      this.sort.sortChange.subscribe((sort: Sort) => {
+        this.pageIndex = 0;
+        this.loadTable(sort.active, sort.direction);
+      });
+    }
 
 
   ngOnInit(): void {
     this.cargando = true;
-    this.loadTable(0,20);
+    this.loadTable(this.pageIndex, this.pageSize);
 
   }
 
@@ -54,23 +76,23 @@ export class ListCorrespondenciaComponent implements OnInit, AfterViewInit {
     if (this.range.value['start']!= null && this.range.value['end']!=null){
       fi = environment.convertDateToStr(this.range.value['start']);
       ff = environment.convertDateToStr(this.range.value['end']);
-      this.correspondenciaService.searchByFechas(codigoOrganizacion,page, size, sortField, sortDirection,
-        environment.convertDateToStr(this.range.value['start']),
-         environment.convertDateToStr(this.range.value['end'])).subscribe(
-          {
-            next : (data: any) => {
-            this.totalElements = data.totalElements;
-            this.createTable(data.content);
-            this.cargando = false;
-            }, error: err => {
-            this.cargando = false;
-            Swal.fire('Lo sentimos', err, 'warning');
-            }
+      this.correspondenciaService.searchByFechas(
+      fi, ff, codigoOrganizacion,page, size, sortField, sortDirection, this.filterValue)
+      .subscribe(
+        {
+          next : (data: any) => {
+          this.totalElements = data.totalElements;
+          this.createTable(data.content);
+          this.cargando = false;
+          }, error: err => {
+          this.cargando = false;
+          Swal.fire('Lo sentimos', err, 'warning');
           }
+        }
          );
     } else {
-      this.correspondenciaService.searchByFechas(
-      codigoOrganizacion,page, size, sortField, sortDirection )
+      this.correspondenciaService.searchByFechas('', '',
+      codigoOrganizacion,page, size, sortField, sortDirection, this.filterValue )
       .subscribe(
         {
           next : (data: any) => {
@@ -88,56 +110,30 @@ export class ListCorrespondenciaComponent implements OnInit, AfterViewInit {
 
   }
 
-  buscarFechas(){
-    if (this.range.value['start']!= null && this.range.value['end']!=null){
-      this.cargando = true;
-      this.loadTable(0,20);
-    }else {
-      Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
-    }
+ // Método para búsqueda por fechas
+  buscarPorFechas() {
+    this.pageIndex = 0;
+    this.filterValue = ''; // Limpiar filtro de texto
+    this.loadTable(this.pageIndex, this.pageSize);
   }
 
-  createTable(correspondencia: Correspondencia[]){
+  createTable(correspondencias: any[]) {
     this.dataSource = new MatTableDataSource<any>();
-    this.dataSource.data = correspondencia;
-    setTimeout(() => {
-      this.dataSource.sort = this.sort;
-      this.dataSource.sortingDataAccessor = (item, property) => {
-        debugger
-      switch(property) {
-        case 'Nro': return item.id;
-        case 'Asunto': return item.asunto.toLowerCase();
-        case 'Fecha Registro': return item.fechaRegistro;
-        case 'Documento': return item.documento;
-        case 'Origen': return item.organizacionOrigen.toLowerCase();
-        case 'Destino': return item.organizacionDestino.toLowerCase();
-        case 'Estado': return item.estado.toLowerCase();
-        // Añade más casos según tus columnas
-        default: return item[property];
-      }
-      };
-    });
+    this.dataSource.data = correspondencias;
+    // No usar filtro local, ya que filtramos desde el servidor
   }
 
   showMore(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     if (this.pageSize>20)
-      this.loadTable(0, this.pageSize, 'id','desc');
+      this.loadTable(this.pageIndex, this.pageSize, 'id','desc');
     else this.loadTable(this.pageIndex, this.pageSize);
-}
-
-  ngAfterViewInit() {
-    this.sort.sortChange.subscribe((sort: Sort) => {
-      this.pageIndex = 0; // Reinicia a la primera página si cambia el orden
-      this.loadTable(this.pageIndex, this.pageSize, sort.active, sort.direction);
-    });
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
+    this.filterSubject.next(filterValue.trim());
   }
 
   _window(): any {

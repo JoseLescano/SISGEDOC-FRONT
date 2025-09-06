@@ -57,6 +57,13 @@ export class PerfilService extends GenericService<Perfil> {
     return this.http.post<Perfil>(`${environment.HOST}perfiles/registrarPerfil`, formData );
   }
 
+  registrarPerfilSA(codigoOrganizacion:any,  rol:any){
+    let formData: FormData = new FormData();
+    formData.append('codigoOrganizacion', codigoOrganizacion);
+    formData.append('rol', rol);
+    return this.http.post<Perfil>(`${environment.HOST}perfiles/registrarPerfilSA`, formData );
+  }
+
   eliminarPerfil(codigo:any){
     return this.http.delete(`${environment.HOST}perfiles/eliminar/${codigo}`);
   }

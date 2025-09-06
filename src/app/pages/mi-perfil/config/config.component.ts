@@ -50,10 +50,10 @@ export class ConfigComponent implements OnInit {
 
     if ((firmante!='' && tipoDocumento !='') && (firmante!=null && tipoDocumento !=null)){
 
-      this.organizacionService.getEmu().subscribe((response:any)=> {
-        debugger
-        this.organizacionesDestino = response.data;
-      });
+      // this.organizacionService.getEmu().subscribe((response:any)=> {
+      //   debugger
+      //   this.organizacionesDestino = response.data;
+      // });
     }
   }
 

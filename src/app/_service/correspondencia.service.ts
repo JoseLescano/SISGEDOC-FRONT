@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { GenericService } from './generic.service';
 import { Correspondencia } from '../_model/correspondencia';
-import { Subject } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { CorrespondenciaOP } from '../_DTO/CorrespondenciaOP';
 
@@ -56,12 +56,32 @@ export class CorrespondenciaService extends GenericService<Correspondencia> {
     formData, { responseType: 'blob' });
   }
 
-  searchByFechas(codigoOrganizacion:any, p?: number, s?: number, sortField?: string, sortDir?: string, fechaInicio?: any, fechaFin?: any){
-    let formData:FormData = new FormData();
-    formData.append('orgOrigen', codigoOrganizacion);
-    formData.append('fechaInicio', fechaInicio);
-    formData.append('fechaFin',fechaFin);
-    return this.http.post(`${environment.HOST}correspondencias/searchByFechas?page=${p}&size=${s}&sort=${sortField},${sortDir}`, formData);
+  searchByFechas(
+    fechaInicio: any,
+    fechaFin: any,
+    orgOrigen: string,
+    page: number = 0,
+    size: number = 20,
+    sortField: string = 'codigo',
+    sortDirection: string = 'desc',
+    search: string = ''
+  ): Observable<any> {
+
+    let params = new HttpParams()
+      .set('fechaInicio', fechaInicio)
+      .set('fechaFin', fechaFin)
+      .set('orgOrigen', orgOrigen)
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sortField', sortField)
+      .set('sortDirection', sortDirection);
+
+    // Agregar parámetro de búsqueda si existe
+    if (search && search.trim() !== '') {
+      params = params.set('search', search.trim());
+    }
+
+    return this.http.post<any>(`${environment.HOST}correspondencias/searchByFechas`, null, { params });
   }
 
   reportCorrespondencia(codigo: any){

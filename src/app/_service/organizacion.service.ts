@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Organizacion } from '../_model/organizacion';
 import { GenericService } from './generic.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { OrganizacionDiagram } from '../_DTO/OrganizacionDiagram';
 
 @Injectable({
@@ -78,8 +78,20 @@ export class OrganizacionService extends GenericService<Organizacion> {
   findForDiagrama(codigoInterno: any){
     return this.http.get<OrganizacionDiagram[]>(`${environment.HOST}organizaciones/findForDiagrama/${codigoInterno}`);
   }
-  getEmu(p?: number, s?: number, sortField?: string, sortDir?: string){
-    return this.http.get<OrganizacionDiagram[]>(`${environment.HOST}organizaciones/getDependencias?page=${p}&size=${s}&sort=${sortField},${sortDir}`);
+
+  getEmu(page: number, size: number, sortField: string = 'codigoInterno',
+       sortDirection: string = 'desc', filter: string = ''): Observable<any>{
+    let params = new HttpParams()
+    .set('page', page.toString())
+    .set('size', size.toString())
+    .set('sort', `${sortField},${sortDirection}`);
+
+    // Agregar parámetro de filtro si existe
+    if (filter && filter.trim() !== '') {
+      params = params.set('search', filter.trim());
+    }
+
+    return this.http.get<any>(`${environment.HOST}organizaciones/getDependencias`, { params });
   }
 
   findByCodigoInterno(codigoInterno: any){

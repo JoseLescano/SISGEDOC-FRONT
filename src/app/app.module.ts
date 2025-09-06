@@ -52,10 +52,10 @@ export function tokenGetter() {
     JwtModule.forRoot({
       config: {
       tokenGetter: tokenGetter,
-      // allowedDomains: ["localhost:8080"],
-      allowedDomains: ["sisgedo.ejercito.mil.pe",  "backend-balanceo-1.ejercito.mil.pe", "backend-balanceo-2.ejercito.mil.pe"],
-      //disallowedRoutes: ["http://localhost:8080/login/forget"]
-      disallowedRoutes: ["https://sisgedo.ejercito.mil.pe/login/forget"],
+      allowedDomains: ["localhost:8080"],
+      //allowedDomains: ["sisgedo.ejercito.mil.pe",  "backend-balanceo-1.ejercito.mil.pe", "backend-balanceo-2.ejercito.mil.pe"],
+      disallowedRoutes: ["http://localhost:8080/login/forget"]
+      //disallowedRoutes: ["https://sisgedo.ejercito.mil.pe/login/forget"],
       },
     }),
 

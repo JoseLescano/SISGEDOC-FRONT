@@ -16,93 +16,105 @@
             <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
             <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
         </mat-form-field>
-        <button style="margin-left: 5px;" mat-flat-button color="primary" (click)="buscarFechas()" >BUSCAR DOC. </button>
+        <button style="margin-left: 5px;" mat-flat-button color="primary" (click)="buscarPorFechas()" >BUSCAR DOC. </button>
       </div>
     </mat-card-content>
     <mat-card-footer>
         <mat-progress-bar mode="indeterminate" *ngIf="cargando" ></mat-progress-bar>
     </mat-card-footer>
 </mat-card>
-<div class="m-2 mat-elevation-z8" *ngIf="!cargando">
-  <mat-form-field appearance="fill" class="example-full-width mt-4">
-    <mat-label>Filtro</mat-label>
-    <input matInput placeholder="Ingrese valor" (keyup)="applyFilter($event)" #input>
-  </mat-form-field>
-  <table mat-table [dataSource]="dataSource" matSort >
-
-  <ng-container matColumnDef="Estado">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header >Estado</th>
-      <td mat-cell *matCellDef="let row">
-        <span class="badge text-bg-info" *ngIf="row.estado=='POR ENTREGAR'">POR ENTREGAR</span>
-        <span class="badge text-bg-success" *ngIf="row.estado=='ENTREGADO'">ENTREGADO</span>
-        <span class="badge text-bg-danger" *ngIf="row.estado=='ELIMINADO'">ELIMINADO</span>
-      </td>
-  </ng-container>
-
-  <ng-container matColumnDef="Nro">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Nro">Nro. registro</th>
-      <td mat-cell *matCellDef="let row"><strong>{{row.id }}</strong></td>
-  </ng-container>
-
-  <ng-container matColumnDef="Asunto">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 600px; margin: 5px;">Asunto</th>
-      <td mat-cell *matCellDef="let row" style="padding: 10px;"> {{row.asunto }} </td>
-  </ng-container>
-
-  <ng-container matColumnDef="Documento">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 250px; margin: 5px;">Documento</th>
-    <td mat-cell *matCellDef="let row" style="padding: 10px;"> {{row.documento  }} </td>
-  </ng-container>
-
-  <ng-container matColumnDef="Origen">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Origen</th>
-      <td mat-cell *matCellDef="let row"> {{row.organizacionOrigen }} </td>
-  </ng-container>
-
-  <ng-container matColumnDef="Destino">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Destino</th>
-      <td mat-cell *matCellDef="let row"> {{row.organizacionDestino }} </td>
-  </ng-container>
-
-  <ng-container matColumnDef="Fecha Registro">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Reg.</th>
-      <td mat-cell *matCellDef="let row"> {{row.fechaRegistro | date: 'dd/MM/YYYY' }} </td>
-  </ng-container>
-
-  <ng-container matColumnDef="Folio">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Folio</th>
-    <td mat-cell *matCellDef="let row"> {{row.folio }} </td>
-</ng-container>
-
-  <ng-container matColumnDef="Acciones">
-      <th mat-header-cell *matHeaderCellDef > Acciones </th>
-      <td mat-cell *matCellDef="let row">
-      <div class="example-button-row">
-          <div class="example-flex-container">
-          <div class="example-button-container">
-              <button mat-mini-fab color="primary" class="mr-2" (click)="viewSeguimiento(row.id)"  >
-                <i class="fas fa-eye"></i>
-              </button>
-              <button mat-mini-fab color="accent" class="mr-2" *ngIf="row.estado=='POR ENTREGAR'"  >
-                <i class="fas fa-edit"></i>
-              </button>
-              <button mat-mini-fab color="warn" *ngIf="row.estado=='POR ENTREGAR'"(click)="eliminar(row.id)" >
-                <i class="fas fa-trash-alt"></i>
-              </button>
-          </div>
-          </div>
+<mat-card class="m-2"  *ngIf="!cargando">
+  <mat-card-content>
+    <div class="row">
+      <div class="col-12">
+        <mat-form-field appearance="fill" class="example-full-width">
+        <mat-label>Buscar en correspondencias</mat-label>
+        <input matInput (keyup)="applyFilter($event)"
+               placeholder="Buscar por asunto, código, nro. sobre, destino u origen..."
+               [value]="filterValue">
+        </mat-form-field>
       </div>
-      </td>
-  </ng-container>
+      <div class="col-12">
+        <table mat-table [dataSource]="dataSource" matSort >
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" colspan="4">Sin datos obtenidos...</td>
-  </tr>
-  </table>
-  <mat-paginator [pageSizeOptions]="[20,50, 100]" [length]="totalElements" (page)="showMore($event)"
-    [pageSize]="pageSize" aria-label="Select page of users" showFirstLastButtons>
-  </mat-paginator>
-</div>
+        <ng-container matColumnDef="Estado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header >Estado</th>
+            <td mat-cell *matCellDef="let row">
+              <span class="badge text-bg-info" *ngIf="row.estado=='POR ENTREGAR'">POR ENTREGAR</span>
+              <span class="badge text-bg-success" *ngIf="row.estado=='ENTREGADO'">ENTREGADO</span>
+              <span class="badge text-bg-danger" *ngIf="row.estado=='ELIMINADO'">ELIMINADO</span>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Nro">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Nro">Nro. registro</th>
+            <td mat-cell *matCellDef="let row"><strong>{{row.id }}</strong></td>
+        </ng-container>
+
+        <ng-container matColumnDef="Asunto">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 600px; margin: 5px;">Asunto</th>
+            <td mat-cell *matCellDef="let row" style="padding: 10px;"> {{row.asunto }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Documento">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 250px; margin: 5px;">Documento</th>
+          <td mat-cell *matCellDef="let row" style="padding: 10px;"> {{row.documento  }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Origen">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Origen</th>
+            <td mat-cell *matCellDef="let row"> {{row.organizacionOrigen }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Destino">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Destino</th>
+            <td mat-cell *matCellDef="let row"> {{row.organizacionDestino }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Fecha Registro">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Reg.</th>
+            <td mat-cell *matCellDef="let row"> {{row.fechaRegistro | date: 'dd/MM/YYYY' }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Folio">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Folio</th>
+          <td mat-cell *matCellDef="let row"> {{row.folio }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Acciones">
+            <th mat-header-cell *matHeaderCellDef > Acciones </th>
+            <td mat-cell *matCellDef="let row">
+            <div class="example-button-row">
+                <div class="example-flex-container">
+                <div class="example-button-container">
+                    <button mat-mini-fab color="primary" class="mr-2" (click)="viewSeguimiento(row.id)"  >
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button mat-mini-fab color="accent" class="mr-2" *ngIf="row.estado=='POR ENTREGAR'"  >
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button mat-mini-fab color="warn" *ngIf="row.estado=='POR ENTREGAR'"(click)="eliminar(row.id)" >
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+                </div>
+            </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">Sin datos obtenidos...</td>
+        </tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[20,50, 100]" [length]="totalElements" (page)="showMore($event)"
+          [pageSize]="pageSize" aria-label="Select page of users" showFirstLastButtons>
+        </mat-paginator>
+
+      </div>
+
+    </div>
+  </mat-card-content>
+</mat-card>
 <div class="container loader" *ngIf="cargando"></div>
