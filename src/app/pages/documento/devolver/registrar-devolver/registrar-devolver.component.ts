@@ -145,7 +145,9 @@ export class RegistrarDevolverComponent implements OnInit {
   findByDevolver(){
     this.organizacionService.findByDevolver(this.codigoDecreto).subscribe({
       next: (response:any)=> {
-        this.destinos = response;
+        this.destinos = response.data;
+      }, error: (err:any)=> {
+        Swal.fire("AVISO", err.message, "warning");
       }
     })
   }

@@ -79,11 +79,10 @@ export class EsquemaComponent implements OnInit {
           return this.organizacionService.findByCodigoInterno(sessionStorage.getItem(environment.codigoOrganizacion));
         })).subscribe({
           next : (response: any)=> {
-            debugger;
             this.router.navigate(['/principal/organizacion']).then(() => {
              location.reload();
             });
-            Swal.fire('OPERACION REALIZADA', 'SE ELIMINO ORGANIZACION', 'info');
+            Swal.fire('OPERACION REALIZADA', response.message, 'info');
           }, error: (err: Error) => {
             Swal.fire('AVISO', err.message, 'warning');
           }
@@ -99,8 +98,8 @@ export class EsquemaComponent implements OnInit {
     .subscribe( {
       next: (resp:any) => {
         // this.createTable(resp);
-        _this.organizaciones = resp;
-        this._window().createDiagramaOrganizacion(resp,
+        _this.organizaciones = resp.data;
+        this._window().createDiagramaOrganizacion(resp.data,
             function(stringOrganizationPadre:String, dataRespuesta:any,incallbackOut:any){
               _this.openDialog(null, stringOrganizationPadre);
           },
