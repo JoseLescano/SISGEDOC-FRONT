@@ -32,8 +32,18 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.get<Documento[]>(`${environment.HOST}documentos/findByOrganizacionDestino/${codigo}`);
   }
 
-  paginacionDocumento(codigo: string, p?: number, s?: number, sortField?: string, sortDir?: string) {
-    return this.http.get<any>(`${environment.HOST}documentos/paginacionDocumento/${codigo}?page=${p}&size=${s}&sort=${sortField},${sortDir}`);
+  paginacionDocumento(codigo: string,page: number, size: number, sortField: string = 'codigo',
+       sortDirection: string = 'desc', filter: string = '') {
+    let params = new HttpParams()
+    .set('page', page.toString())
+    .set('size', size.toString())
+    .set('sort', `${sortField},${sortDirection}`);
+
+    // Agregar parámetro de filtro si existe
+    if (filter && filter.trim() !== '') {
+      params = params.set('search', filter.trim());
+    }
+    return this.http.get<any>(`${environment.HOST}documentos/paginacionDocumento/${codigo}`, { params });
   }
 
   viewDocumentoFueraTiempo(codigo: string, p?: number, s?: number, sortField?: string, sortDir?: string, fechaInicio?:any, fechaFin?:any) {
@@ -43,7 +53,7 @@ export class DocumentoService  extends GenericService<Documento> {
     formData.append('fechaFin', fechaFin);
     return this.http.post<any>(`${environment.HOST}core/control/${codigo}?page=${p}&size=${s}&sort=${sortField},${sortDir}`, formData);
   }
-  
+
   documentoFueraTiempo(codigo: string, fechaInicio:any, fechaFin:any) {
     let formData:FormData = new FormData();
     formData.append('fechaInicio', fechaInicio);

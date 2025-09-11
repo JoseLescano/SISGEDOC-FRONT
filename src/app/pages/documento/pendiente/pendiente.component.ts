@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 import { MatSort, Sort } from '@angular/material/sort';
 import { ExcelService } from 'src/app/_service/excel.service';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 
 
@@ -31,14 +32,27 @@ export class PendienteComponent implements OnInit, AfterViewInit {
   pageIndex = 0;
   totalElements: number = 0;
 
+  // Nuevas propiedades para el filtrado
+  filterValue: string = '';
+  private filterSubject = new Subject<string>();
 
   constructor(private documentoService: DocumentoService,
               public dialog: MatDialog,
             private excelService: ExcelService,) {
+    // Configurar debounce para el filtro (esperar 500ms después de que el usuario deje de escribir)
+    this.filterSubject.pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe(searchValue => {
+      this.filterValue = searchValue;
+      this.pageIndex = 0; // Resetear a la primera página cuando se filtre
+      this.loadTable(this.pageIndex, this.pageSize);
+    });
   }
 
   ngOnInit(): void {
     this.cargando = true;
+    this.pageIndex = 0; // Resetear a la primera página cuando se filtre
     this.loadTable(this.pageIndex, this.pageSize);
   }
 
@@ -51,7 +65,7 @@ export class PendienteComponent implements OnInit, AfterViewInit {
 
   loadTable(page:any, size:any, sortField: string = 'codigo', sortDirection: string = 'desc'){
     this.documentoService.paginacionDocumento(
-      sessionStorage.getItem(environment.codigoOrganizacion),page, size, sortField, sortDirection )
+      sessionStorage.getItem(environment.codigoOrganizacion),page, size, sortField, sortDirection, this.filterValue )
       .subscribe(
         {
           next : (data: any) => {
@@ -88,9 +102,11 @@ export class PendienteComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // Método modificado para filtrado del servidor
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    // Usar el Subject para implementar debounce
+    this.filterSubject.next(filterValue.trim());
   }
 
   openDialog(documentoSeleccionado: Documento) {
