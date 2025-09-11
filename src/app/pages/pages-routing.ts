@@ -256,6 +256,10 @@ const routes: Routes = [
     component: RegistroCorrespondenciaComponent,
   },
   {
+    path: 'registroCorrespondencia/:id', // Nueva ruta para edición
+    component: RegistroCorrespondenciaComponent,
+  },
+  {
     path: 'list-correspondencia',
     component: ListCorrespondenciaComponent,
   },
