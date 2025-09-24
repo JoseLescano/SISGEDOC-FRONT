@@ -1,8 +1,8 @@
 export class CorrespondenciaOP{
     codigo: number;
-    fechaRegistro: string;
-    origen: string;
-    destino: string;
+    fechaRegistro: any;
+    origen: any;
+    destino: any;
     nroSobre: string;
     asunto: string;
     dniRegistra: string;
@@ -13,7 +13,7 @@ export class CorrespondenciaOP{
     usuarioRegistra: string;
     usuarioEntrega: string;
     observaciones: string;
-    clase: string;
+    clase: any;
     folio: string;
     motivoEdicion: string;
     motivoElimina: string;

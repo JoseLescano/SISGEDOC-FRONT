@@ -1,6 +1,6 @@
 <mat-card class="m-2">
     <mat-card-header class="title-form">
-        <mat-card-title >REGISTRO DE CORRESPONDENCIA</mat-card-title>
+        <mat-card-title>{{ tituloFormulario }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
         <form [formGroup]="form" (ngSubmit)="operate()" novalidate >
@@ -106,7 +106,10 @@
                 </div>
             </div>
             <mat-card-actions >
-                <button mat-flat-button color="primary" type="submit" style="margin-right: 2px;" [disabled]="form.invalid" >REGISTRAR</button>
+                <button mat-flat-button color="primary" type="submit"
+                        [disabled]="form.invalid">
+                    {{ textoBoton }}
+                </button>
                 <button mat-flat-button color="accent"  type="button" style="margin-right: 2px;" (click)="cancelar()" >CANCELAR</button>
                 <button mat-flat-button color="warn"   type="button" routerLink="/principal/list-correspondencia" >VER LISTA</button>
                 <button mat-stroked-button color="primary" type="button" routerLink="/principal/entregarCorrespondencia">ENTREGAR DOCUMENTO</button>

@@ -3,7 +3,6 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Correspondencia } from 'src/app/_model/correspondencia';
 import { CorrespondenciaService } from 'src/app/_service/correspondencia.service';
 import Swal from 'sweetalert2';
 import { ValidarRecojoComponent } from '../validar-recojo/validar-recojo.component';
@@ -97,7 +96,6 @@ export class ListCorrespondenciaComponent implements OnInit, AfterViewInit {
         {
           next : (data: any) => {
           this.totalElements = data.totalElements;
-          debugger
           this.createTable(data.content);
           this.cargando = false;
           }, error: err => {

@@ -90,7 +90,7 @@
                     <button mat-mini-fab color="primary" class="mr-2" (click)="viewSeguimiento(row.id)"  >
                       <i class="fas fa-eye"></i>
                     </button>
-                    <button mat-mini-fab color="accent" class="mr-2" *ngIf="row.estado=='POR ENTREGAR'"  >
+                    <button mat-mini-fab color="accent" class="mr-2" *ngIf="row.estado=='POR ENTREGAR'" [routerLink]="['../registroCorrespondencia', row.id]"  >
                       <i class="fas fa-edit"></i>
                     </button>
                     <button mat-mini-fab color="warn" *ngIf="row.estado=='POR ENTREGAR'"(click)="eliminar(row.id)" >

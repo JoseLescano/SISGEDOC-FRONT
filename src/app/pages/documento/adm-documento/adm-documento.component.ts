@@ -6,18 +6,12 @@ import { Documento } from 'src/app/_model/documento.model';
 import { DocumentoService } from 'src/app/_service/documento.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
-import Chart from 'chart.js/auto';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { MatDialog } from '@angular/material/dialog';
-import { ExcelService } from 'src/app/_service/excel.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PersonaService } from 'src/app/_service/persona.service';
 import { Persona } from 'src/app/_model/persona';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Organizacion } from 'src/app/_model/organizacion';
 import { OrganizacionService } from 'src/app/_service/organizacion.service';
-import { ViewDocumentoComponent } from '../view-documento/view-documento.component';
-import { SeguimientoComponent } from '../../report/seguimiento/seguimiento.component';
 
 @Component({
   selector: 'app-adm-documento',
@@ -74,7 +68,8 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
   getOrganizacion(){
     this.cargandoArchivado = true;
     this.campoIngresado = this.formArchivar.value['codigoUnidad'];
-    this.organizacionService.findByCodigoInterno(this.campoIngresado).subscribe(
+    this.organizacionService.findByCodigoInterno(this.campoIngresado)
+    .subscribe(
       {
         next: (response: any)=> {
           this.cargandoArchivado = false;
@@ -90,7 +85,6 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
   }
 
   buscarPersona(){
-    debugger
     this.CIPIngresado = this.formArchivar.value['cipSolicitante'];
     this.personaService.findByCampo(this.CIPIngresado).subscribe(
       {
@@ -163,7 +157,7 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
           this.formArchivar.get('listaDecretos').setValue(this.dataSource.data.map(registro => `${registro.codigoDecreto}`).join(','));
         },
         error: (err: any) => {
-
+          Swal.fire('Error', err.message, 'error');
         }
       }
     );
@@ -190,10 +184,12 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
       this.cargandoArchivado = true;
       let usuario = this.persona.usuario_CHASQUI;
       this.documentoService.archivarDocumentoForSuperAdm(
-        this.campoIngresado, idsFormateados, usuario, observacion).subscribe(
+        this.campoIngresado, idsFormateados, usuario, observacion)
+        .subscribe(
         {
           next : (response:any) => {
             this.cargandoArchivado = false;
+            this.dataSource.data = null;
             Swal.fire('ACCION REALIZADA', response.message, 'success');
           }, error: (err: any)=> {
             Swal.fire('OPERACION NO REALIZADA', err, 'info');
@@ -205,10 +201,6 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
       this.cargandoArchivado = false;
       Swal.fire('AVISO', 'INGRESE LOS CAMPOS SOLICITADOS PARA REALIZAR LA SOLICITUD', 'info')
     }
-    // const idsFormateados = this.dataSource.data.map(registro => `${registro.codigoDecreto}`).join(',');
-    // console.log(idsFormateados);
-
-
 
   }
 
