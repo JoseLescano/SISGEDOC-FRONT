@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DocumentoService } from 'src/app/_service/documento.service';
 import { environment } from 'src/environments/environment';
@@ -13,6 +13,7 @@ import { ExcelService } from 'src/app/_service/excel.service';
 import { TimelineComponent } from '../../report/timeline/timeline.component';
 import { ReporteDocumentoDecretoComponent } from '../../report/reporte-documento-decretado/reporte-documento-decretado.component';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-view-decretado',
@@ -51,10 +52,24 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
 
   fechaSeleccionada: any;
 
+  // Nuevas propiedades para el filtrado
+  filterValue: string = '';
+  private filterSubject = new Subject<string>();
+
   constructor(
     private documentoService: DocumentoService,
     public dialog: MatDialog,
-    private excelService: ExcelService) {}
+    private excelService: ExcelService) {
+    // Configurar debounce para el filtro (esperar 500ms después de que el usuario deje de escribir)
+    this.filterSubject.pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe(searchValue => {
+      this.filterValue = searchValue;
+      this.pageIndex = 0; // Resetear a la primera página cuando se filtre
+      this.loadTable(this.pageIndex, this.pageSize);
+    });
+  }
 
   ngOnInit(): void {
     this.cargando = true;
@@ -63,15 +78,17 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    setTimeout(() => {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+    this.sort.sortChange.subscribe((sort: Sort) => {
+      this.pageIndex = 0; // Reinicia a la primera página si cambia el orden
+      this.loadTable(this.pageIndex, this.pageSize, sort.active, sort.direction);
     });
   }
 
+  // Método modificado para filtrado del servidor
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    // Usar el Subject para implementar debounce
+    this.filterSubject.next(filterValue.trim());
   }
 
   loadTable(page: number, size: number, sortField: string = 'codigo', sortDirection: string = 'desc') {
@@ -84,8 +101,9 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
         fi = environment.convertDateToStr(this.range.value['start']);
         ff = environment.convertDateToStr(this.range.value['end']);
       }
+
       this.documentoService.findDecretados1(
-        codigoOrganizacion, page, size, sortField, sortDirection, fi, ff
+        codigoOrganizacion, page, size, sortField, sortDirection, this.filterValue, fi, ff
       ).subscribe({
         next: (data: any) => {
           this.totalElements = data.totalElements;
@@ -161,6 +179,7 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
   }
 
   showMore(event: PageEvent) {
+    debugger
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     if (this.pageSize>20)

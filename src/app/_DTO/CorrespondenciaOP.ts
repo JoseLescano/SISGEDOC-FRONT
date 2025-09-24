@@ -1,6 +1,6 @@
 export class CorrespondenciaOP{
     codigo: number;
-    fechaRegistro: string;
+    fechaRegistro: any;
     origen: any;
     destino: any;
     nroSobre: string;

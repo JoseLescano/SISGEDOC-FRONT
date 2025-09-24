@@ -40,6 +40,22 @@ export class CorrespondenciaService extends GenericService<Correspondencia> {
     return this.http.post(`${environment.HOST}correspondencias/correspondenciaOP`, formData);
   }
 
+  updateCorrespondencia(correspondenciaId:any, correspondencia: CorrespondenciaOP){
+    // let formData:FormData = new FormData();
+    // formData.append('origen', correspondencia.origen);
+    // formData.append('destino', correspondencia.destino);
+    // formData.append('fechaDocumento', environment.convertDateToStr(correspondencia.fechaRegistro));
+    // formData.append('clase', correspondencia.clase);
+    // formData.append('nroSobre', correspondencia.nroSobre);
+    // formData.append('folio', correspondencia.folio);
+    // formData.append('asunto', correspondencia.asunto);
+    // formData.append('observaciones', correspondencia.observaciones);
+    // formData.append('orgRegistra', correspondencia.organizacionRegistra);
+    debugger
+
+    return this.http.post(`${environment.HOST}correspondencias/updateCorrespondencia/${correspondenciaId}`, correspondencia );
+  }
+
   entregaCorrespondencia(origen:any, usuarioRecibe:any,
     contrasena:any, correspondencias:Correspondencia[], dniExterno?:any){
 

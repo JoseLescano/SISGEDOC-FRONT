@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { CorrespondenciaOP } from 'src/app/_DTO/CorrespondenciaOP';
 import { Clase } from 'src/app/_model/clase';
-import { Correspondencia } from 'src/app/_model/correspondencia';
 import { Organizacion } from 'src/app/_model/organizacion';
 import { ClaseService } from 'src/app/_service/clase.service';
 import { CorrespondenciaService } from 'src/app/_service/correspondencia.service';
@@ -218,7 +217,7 @@ export class RegistroCorrespondenciaComponent implements OnInit {
 
     this.corresp.origen = this.form.value['origen'];
     this.corresp.destino = this.form.value['destino'];
-    this.corresp.fechaRegistro = this.form.value['fechaDocumento'];
+    this.corresp.fechaRegistro = this.form.value['fechaDocumento']; // FECHA DEL DOCUMENTO, NO ES FECHA DE REGISTRO EN EL SISTEMA
     this.corresp.clase = this.form.value['clase'];
     this.corresp.nroSobre = this.form.value['indicativo'];
     this.corresp.folio = this.form.value['folio'];
@@ -228,20 +227,18 @@ export class RegistroCorrespondenciaComponent implements OnInit {
 
     if (this.correspondenciaId > 0) {
       // Modo edición
-      // this.correspondenciaService.actualizar(this.corresp).subscribe({
-      //   next: (response: any) => {
-      //     if (response.httpStatus == 'OK' || response.httpStatus == 'CREATED') {
-      //       Swal.fire('Actualización exitosa', response.message || 'Correspondencia actualizada correctamente', 'success');
-      //       this.router.navigate(['/principal/list-correspondencia']);
-      //     } else {
-      //       Swal.fire('Lo sentimos', response.message || 'Error al actualizar', 'warning');
-      //     }
-      //   },
-      //   error: (err: any) => {
-      //     console.error('Error actualizando:', err);
-      //     Swal.fire('Lo sentimos', 'Se presentó un inconveniente al actualizar', 'warning');
-      //   }
-      // });
+      debugger
+      this.corresp.fechaRegistro = environment.convertDateToStr(this.form.value['fechaDocumento']);
+      this.correspondenciaService.updateCorrespondencia(this.correspondenciaId, this.corresp).subscribe({
+        next: (response: any) => {
+          Swal.fire('Actualización exitosa', response.message || 'Correspondencia actualizada correctamente', 'success');
+          this.router.navigate(['/principal/list-correspondencia']);
+        },
+        error: (err: any) => {
+          console.error('Error actualizando:', err);
+          Swal.fire('Lo sentimos', 'Se presentó un inconveniente al actualizar', 'warning');
+        }
+      });
     } else {
       // Modo creación
       this.correspondenciaService.correspondenciaOP(this.corresp).subscribe({

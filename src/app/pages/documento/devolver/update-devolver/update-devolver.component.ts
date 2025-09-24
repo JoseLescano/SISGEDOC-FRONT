@@ -87,6 +87,7 @@ export class UpdateDevolverComponent implements OnInit {
   findByDevolver(){
     this.organizacionService.destinatariosExternoByDecreto(sessionStorage.getItem(environment.codigoOrganizacion), this.codigoDecreto).subscribe({
       next: (response:any)=> {
+        debugger
         this.destinos = response.data;
       }
     })

@@ -99,8 +99,8 @@ export class EsquemaComponent implements OnInit {
     .subscribe( {
       next: (resp:any) => {
         // this.createTable(resp);
-        _this.organizaciones = resp;
-        this._window().createDiagramaOrganizacion(resp,
+        _this.organizaciones = resp.data;
+        this._window().createDiagramaOrganizacion(resp.data,
             function(stringOrganizationPadre:String, dataRespuesta:any,incallbackOut:any){
               _this.openDialog(null, stringOrganizationPadre);
           },
