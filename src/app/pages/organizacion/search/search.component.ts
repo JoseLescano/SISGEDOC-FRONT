@@ -6,6 +6,7 @@ import { OrganizacionDiagram } from 'src/app/_DTO/OrganizacionDiagram';
 import { OrganizacionService } from 'src/app/_service/organizacion.service';
 import { PerfilService } from 'src/app/_service/perfil.service';
 import { environment } from 'src/environments/environment';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-search',
@@ -33,11 +34,10 @@ export class SearchComponent implements OnInit {
     .subscribe(
       {
         next : (response: any)=> {
-          debugger
-          this.createTable(response)
+          this.createTable(response.data)
         },
         error: (err: any)=>{
-
+          Swal.fire('AVISO', err.error, 'info');
         }
       }
     );

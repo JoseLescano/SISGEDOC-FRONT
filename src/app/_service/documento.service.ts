@@ -255,10 +255,11 @@ export class DocumentoService  extends GenericService<Documento> {
     return this.http.post(`${environment.HOST}documentos/archivarDocumento`, formData);
   }
 
-  archivarDocumentoForSuperAdm(codigoInterno:any, listaDecretos: any, usuario:any, observaciones:any){
+  archivarDocumentoForSuperAdm(codigoInterno:any, observaciones:any, fi: any, ff:any, usuario:any){
     let formData:FormData = new FormData();
     formData.append('codigoInterno', codigoInterno);
-    formData.append('listaDecretos', listaDecretos);
+    formData.append('fi', fi);
+    formData.append('ff', ff);
     formData.append('usuarioSolicitante', usuario);
     formData.append('observacion', observaciones);
     return this.http.post(`${environment.HOST}documentos/archivarDocumentoForSuperAdm`, formData);
