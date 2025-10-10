@@ -94,7 +94,6 @@ export class EstadisticaSAComponent implements OnInit {
                 this.documentoService.countStadisticForSuperADM(idSeleccionado).subscribe(
                   {
                     next : (response:any)=> {
-                      debugger;
                       this.countPendientes = response.PENDIENTES;
                       this.countArchivados = response.ARCHIVADOS;
                       this.countFirmar = response.PARA_FIRMA;
