@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Correspondencia } from 'src/app/_model/correspondencia';
@@ -20,15 +20,20 @@ import { Router } from '@angular/router';
   templateUrl: './entregar-correspondencia.component.html',
   styleUrls: ['./entregar-correspondencia.component.css']
 })
-export class EntregarCorrespondenciaComponent implements OnInit {
+export class EntregarCorrespondenciaComponent implements OnInit,AfterViewInit {
 
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   displayedColumns: string[] = ['select', 'Nro', 'Asunto','Documento', 'Origen', 'Destino', 'Fecha Registro', 'Folio'];
   dataSource: MatTableDataSource<Correspondencia> = new MatTableDataSource<any>();
   cargando: boolean;
   remitentes:Organizacion[] = [];
 
   form:FormGroup;
-  lista:any;
+
+  // Paginación
+  totalElements = 0;
+  pageSize = 20;
+  pageIndex = 0;
 
   destino : any;
   selection = new SelectionModel<Correspondencia>(true, []);
@@ -43,61 +48,63 @@ export class EntregarCorrespondenciaComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (this.codigoOrganizacion == '120210' ||  this.codigoOrganizacion == '12021001' || this.codigoOrganizacion == '12021002'|| this.codigoOrganizacion == '02'){
-      this.cargando = true;
-      if (this.codigoOrganizacion == '02'){
-        this.organizacionService.getEntregarCopere()
-          .subscribe(
-            {
-              next:(response:any)=> {
-                debugger
-                this.remitentes = response.data;
-              }
-            }
-          );
-      }else {
-        this.organizacionService.getWithCodigoCopere()
-        .subscribe(
-          {
-            next:(response:any)=> {
-              debugger
-              this.remitentes = response.data;
-            }
-          }
-        );
-      }
-      this.cargando = false;
+    if (['120210', '12021001', '12021002', '02'].includes(this.codigoOrganizacion)) {
+      this.cargarRemitentes();
     } else {
       this.router.navigate(['/principal/dashboard']);
       Swal.fire('LO SENTIMOS', 'USTED NO CUENTA CON LOS PERMISOS CORRESPONDIENTES', 'info');
     }
   }
 
-  buscarCorrespondencia(idOrganizacion: any){
+  ngAfterViewInit(): void {
+    // Se asocia el paginador cuando el componente ya está renderizado
+    this.dataSource.paginator = this.paginator;
+  }
+
+  cargarRemitentes() {
     this.cargando = true;
-    this.dataSource = new MatTableDataSource<Correspondencia>;
-    debugger
-    this.correspondenciaService.listEntregarByOP(idOrganizacion, this.codigoOrganizacion).subscribe(
-      {
-        next : (response: any)=> {
-          debugger
-          if (response != null){
-            this.destino = idOrganizacion;
-            this.cargando = false;
-            this.createTable(response.data);
-          } else {
-            this.cargando = false;
-            Swal.fire('SIN RESULTADOS', 'UNIDAD SIN CORRESPONDENCIA REGISTRADA', 'info');
+    const service = this.codigoOrganizacion === '02'
+      ? this.organizacionService.getEntregarCopere()
+      : this.organizacionService.getWithCodigoCopere();
+
+    service.subscribe({
+      next: (response: any) => {
+        this.remitentes = response.data;
+        this.cargando = false;
+      },
+      error: () => this.cargando = false
+    });
+  }
+
+  buscarCorrespondencia(idOrganizacion: any, page:any, size:any, sortField: string = 'codigo', sortDirection: string = 'desc') {
+    this.destino = idOrganizacion;
+    this.correspondenciaService.listEntregarByOP(idOrganizacion, this.codigoOrganizacion, page, size, 'codigo', 'desc')
+      .subscribe({
+        next: (response: any) => {
+          this.cargando = false;
+          if (response.data.totalElements>0){
+            this.dataSource = new MatTableDataSource<any>();
+            this.dataSource.data = response.data.content;
+            this.totalElements = response.data.totalElements;
+          }else {
+            this.dataSource.data = null;
+            this.totalElements = 0;
+            Swal.fire('AVISO', 'UNIDAD SIN CORRESPONDENCIA RESGISTRADA', 'info');
           }
         },
-        error: (err: any)=>{
-          debugger
+        error: (err: any) => {
           this.cargando = false;
-          Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
+          Swal.fire('Error', 'No se pudo obtener la correspondencia', 'error');
         }
-      }
-    )
+      });
+  }
 
+  onPaginateChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    if (this.pageSize>20)
+      this.buscarCorrespondencia(this.destino, this.pageIndex, this.pageSize, 'codigo','desc');
+    else this.buscarCorrespondencia(this.destino, this.pageIndex, this.pageSize);
   }
 
   isAllSelected() {
@@ -121,10 +128,6 @@ export class EntregarCorrespondenciaComponent implements OnInit {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.codigo + 1}`;
-  }
-
-  createTable(correspondencia: Correspondencia[]){
-    this.dataSource = new MatTableDataSource(correspondencia);
   }
 
   applyFilter(event: Event) {

@@ -21,8 +21,8 @@ export class CorrespondenciaService extends GenericService<Correspondencia> {
     return this.http.get<Correspondencia[]>(`${environment.HOST}correspondencias/findByOrganizacionDestino/${orgDestino}`);
   }
 
-  listEntregarByOP(orgDestino: any, orgOrigen: any){
-    return this.http.get<Correspondencia[]>(`${environment.HOST}correspondencias/listEntregarByOP/${orgDestino}/${orgOrigen}`);
+  listEntregarByOP(orgDestino: any, orgOrigen: any, p?: number, s?: number, sortField?: string, sortDir?: string){
+    return this.http.get<Correspondencia[]>(`${environment.HOST}correspondencias/listEntregarByOP/${orgDestino}/${orgOrigen}?page=${p}&size=${s}&sort=${sortField},${sortDir}`);
   }
 
   correspondenciaOP(correspondencia: CorrespondenciaOP){
