@@ -240,30 +240,31 @@ export class RespuestaComponent implements OnInit {
   generarPlantilla() {
     if (this.validarPlantilla()) {
       this.cargando = true;
-      this.getUltimoNumero().pipe(
-        switchMap(() => {
-          var tipoDocumento = this.form.get('tipoDocumento').value;
-          var asunto = this.form.get('asunto').value;
-          var destino = this.form.get('destinatarios').value;
-          var firmante = this.form.get('firmante').value;
-          var indicativo = this.form.get('indicativo').value;
-          var copiasInformativas = this.form.get('copiaInformativa').value;
-          var correlativo = this.form.get('nroCorrelativo').value;
+      this.getUltimoNumero()
+      // .pipe(
+      //   switchMap(() => {
+      //     var tipoDocumento = this.form.get('tipoDocumento').value;
+      //     var asunto = this.form.get('asunto').value;
+      //     var destino = this.form.get('destinatarios').value;
+      //     var firmante = this.form.get('firmante').value;
+      //     var indicativo = this.form.get('indicativo').value;
+      //     var copiasInformativas = this.form.get('copiaInformativa').value;
+      //     var correlativo = this.form.get('nroCorrelativo').value;
 
-          return this.documentoService.generarPlantillaWord(
-              tipoDocumento, asunto, destino, firmante.codigoInterno,
-              indicativo, correlativo, copiasInformativas
-          );
-        })
-      ).subscribe((response: any) => {
-        if (response.httpStatus === 'CREATED') {
-            this.downloadWord(response.data[0]);
-            this.cargando = false;
-        }
-      }, error => {
-        this.cargando = false;
-        Swal.fire('Lo sentimos', 'Se presentó un inconveniente en la generación del Word', 'info');
-      });
+      //     return this.documentoService.generarPlantillaWord(
+      //         tipoDocumento, asunto, destino, firmante.codigoInterno,
+      //         indicativo, correlativo, copiasInformativas
+      //     );
+      //   })
+      // ).subscribe((response: any) => {
+      //   if (response.httpStatus === 'CREATED') {
+      //       this.downloadWord(response.data[0]);
+      //       this.cargando = false;
+      //   }
+      // }, error => {
+      //   this.cargando = false;
+      //   Swal.fire('Lo sentimos', 'Se presentó un inconveniente en la generación del Word', 'info');
+      // });
     }
 }
 
@@ -271,18 +272,35 @@ export class RespuestaComponent implements OnInit {
     return document;
   }
 
+  // getUltimoNumero() {
+  //   var tipoDocumento = this.form.get('tipoDocumento').value;
+  //   var firmante = this.form.get('firmante').value;
+
+  //   if (tipoDocumento != null && firmante != null) {
+  //       return this.correlativoService.findClaseAndOrganizacion(tipoDocumento, firmante.codigoInterno)
+  //       .pipe(
+  //           switchMap((response: any) => {
+  //               var correlativo = response;
+  //               this.form.controls['nroCorrelativo'].setValue(correlativo.numero);
+  //               return of(true);  // Se devuelve un observable para indicar que el proceso ha terminado
+  //           })
+  //       );
+  //   } else {
+  //       return of(false);  // En caso de que tipoDocumento o firmante sean nulos, se devuelve un observable de false
+  //   }
+  // }
   getUltimoNumero() {
     var tipoDocumento = this.form.get('tipoDocumento').value;
     var firmante = this.form.get('firmante').value;
 
     if (tipoDocumento != null && firmante != null) {
-        return this.correlativoService.findClaseAndOrganizacion(tipoDocumento, firmante.codigoInterno).pipe(
-            switchMap((response: any) => {
+        return this.correlativoService.findClaseAndOrganizacion(tipoDocumento, firmante.codigoInterno)
+        .subscribe((response: any) => {
                 var correlativo = response;
+                this.cargando = false;
                 this.form.controls['nroCorrelativo'].setValue(correlativo.numero);
                 return of(true);  // Se devuelve un observable para indicar que el proceso ha terminado
-            })
-        );
+            });
     } else {
         return of(false);  // En caso de que tipoDocumento o firmante sean nulos, se devuelve un observable de false
     }

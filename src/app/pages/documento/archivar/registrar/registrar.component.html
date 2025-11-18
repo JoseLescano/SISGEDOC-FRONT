@@ -29,7 +29,8 @@
                 </mat-form-field>
                 <div class="input-group">
                   <label class="input-group-text" for="inputGroupFile01">Upload</label>
-                  <input type="file" class="form-control" id="inputGroupFile01" (change)="selectArchivoPrincipal($event)" accept="application/pdf">
+                  <!-- <input type="file" class="form-control" id="inputGroupFile01" (change)="selectArchivoPrincipal($event)" accept="application/pdf"> -->
+                  <input type="file" class="form-control" id="inputGroupFile01" [disabled]="true" accept="application/pdf">
                 </div>
                   <div class="col-md-12" style="text-align: right;">
                       <button mat-raised-button color="primary" style="margin-right: 5px;" (click)="archivarDocumento()" [disabled]="observaciones==''" >GUARDAR</button>
