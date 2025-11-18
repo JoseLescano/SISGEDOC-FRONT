@@ -1,3 +1,4 @@
+import { TrasladoUUComponent } from './organizacion/traslado-uu/traslado-uu.component';
 import { ConfigComponent } from './mi-perfil/config/config.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -226,6 +227,11 @@ const routes: Routes = [
   {
     path: 'estadisticaSA',
     component: EstadisticaSAComponent,
+    canActivate: [IsLoggedInGuard],
+  },
+  {
+    path: 'trasladarUU',
+    component: TrasladoUUComponent,
     canActivate: [IsLoggedInGuard],
   },
 

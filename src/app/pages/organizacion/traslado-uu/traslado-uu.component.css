@@ -1,0 +1,45 @@
+.dual-list-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.list-card {
+  width: 300px;
+  height: 480px;
+  overflow-y: auto;
+}
+
+mat-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .item-name {
+    font-weight: 600;
+  }
+
+  .item-category {
+    font-size: 13px;
+    color: gray;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .item-price {
+    font-weight: bold;
+    margin-left: auto;
+    margin-right: 0.5rem;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-top: 2rem;
+}

@@ -101,6 +101,19 @@ export class ExcelService {
     );
   }
 
+  exportCorrespondencia(fi: any, ff: any, organizacionRegistra: string): Observable<Blob> {
+    let formData : FormData = new FormData();
+    formData.append('fechaInicio', fi);
+    formData.append('fechaFin', ff);
+    formData.append('organizacionRegistra', organizacionRegistra);
+    const url = `${environment.HOST}correspondencias/exportExcel`;
+    return this.http.post(url, formData, { responseType: 'blob' }).pipe(
+      map((res: Blob) => {
+        return res;
+      })
+    );
+  }
+
 
 
 }

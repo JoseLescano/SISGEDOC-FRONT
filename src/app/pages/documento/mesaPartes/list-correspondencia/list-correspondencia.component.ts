@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'src/environments/environment';
 import { ReportCorrespondenciaComponent } from 'src/app/pages/report/report-correspondencia/report-correspondencia.component';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { ExcelService } from 'src/app/_service/excel.service';
 
 @Component({
   selector: 'app-list-correspondencia',
@@ -42,6 +43,7 @@ export class ListCorrespondenciaComponent implements OnInit, AfterViewInit {
   constructor(
     private correspondenciaService: CorrespondenciaService,
     public dialog: MatDialog,
+    private excelService: ExcelService
   ) {
     // Configurar debounce para el filtro
     this.filterSubject.pipe(
@@ -66,6 +68,37 @@ export class ListCorrespondenciaComponent implements OnInit, AfterViewInit {
     this.cargando = true;
     this.loadTable(this.pageIndex, this.pageSize);
 
+  }
+
+  exportExcel(){
+    let fi='';
+    let ff='';
+    if (this.range.value['start']!= null && this.range.value['end']!=null){
+      let codigoOrganizacion = sessionStorage.getItem(environment.codigoOrganizacion);
+      fi = environment.convertDateToStr(this.range.value['start']);
+      ff = environment.convertDateToStr(this.range.value['end']);
+
+      this.excelService.exportCorrespondencia(fi, ff, codigoOrganizacion)
+      .subscribe(
+        {
+          next : (blob: Blob) => {
+           this.descargarExporExcel(blob, "REPORTE DE DOCUMENTO ENVIADOS POR FECHA" );
+          }, error: err => {
+          this.cargando = false;
+          Swal.fire('Lo sentimos', err, 'warning');
+          }
+        }
+      );
+    }
+  }
+
+  descargarExporExcel(blob:any, nombreDescarga:any){
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${nombreDescarga}.xlsx`;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 
   loadTable(page:any, size:any, sortField: string = 'id', sortDirection: string = 'desc'){

@@ -180,11 +180,14 @@ export class AdmDocumentoComponent implements OnInit, AfterViewInit {
     this.cargandoArchivado = true;
     if (this.formArchivar.valid){
       let idsFormateados =  this.formArchivar.get('listaDecretos').value;
+      let fi =  environment.convertDateToStr(this.range.value['start']);
+      let ff = environment.convertDateToStr(this.range.value['end']);
+
       let observacion = this.formArchivar.get('observacion').value;
       this.cargandoArchivado = true;
       let usuario = this.persona.usuario_CHASQUI;
       this.documentoService.archivarDocumentoForSuperAdm(
-        this.campoIngresado, idsFormateados, usuario, observacion)
+        this.campoIngresado, observacion, fi, ff, usuario)
         .subscribe(
         {
           next : (response:any) => {

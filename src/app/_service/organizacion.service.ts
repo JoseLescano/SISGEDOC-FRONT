@@ -131,4 +131,8 @@ export class OrganizacionService extends GenericService<Organizacion> {
     return this.http.get(`${environment.HOST}organizaciones/getUnidadNucleo`);
   }
 
+  getInfo(organizacionOrigen:string, organziacionDestino: string){
+    return this.http.get(`${environment.HOST}organizaciones/getInfo/${organizacionOrigen}/${organziacionDestino}`);
+  }
+
 }

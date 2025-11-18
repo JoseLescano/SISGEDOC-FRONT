@@ -7,14 +7,14 @@
         </mat-card-header>
         <mat-card-content>
           <ng-select class="mt-2" placeholder="ENTREGAR A" [virtualScroll]=true
-          (change)="buscarCorrespondencia($event)" >
+          (change)="buscarCorrespondencia($event,0,20)" >
               <mat-option>SELECCIONE</mat-option>
               <ng-option *ngFor="let c of remitentes" [value]="c.codigoInterno" >{{c.acronimo}}</ng-option>
             </ng-select>
         </mat-card-content>
       </mat-card>
     </div>
-    <div class="col-sx-12 col-sm-12 col-md-12 col-lg-12" *ngIf="dataSource != null">
+    <div class="col-sx-12 col-sm-12 col-md-12 col-lg-12" *ngIf="totalElements>0">
       <mat-card class="m-2">
         <mat-card-header class="title-form">
             <mat-card-title >LISTAR DOCUMENTOS OFICINA POSTAL</mat-card-title>
@@ -28,7 +28,7 @@
                   </mat-form-field>
               </div>
             </div>
-            <div class="row mt-2" *ngIf="dataSource!=null">
+            <div class="row mt-2" >
                 <div class="col-12">
                     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
                       <ng-container matColumnDef="select">
@@ -89,6 +89,9 @@
                           (click)="selection.toggle(row)">
                       </tr>
                     </table>
+                    <mat-paginator [pageSizeOptions]="[20,50, 100]" [length]="totalElements" (page)="onPaginateChange($event)"
+                          [pageSize]="pageSize" aria-label="Select page of users" showFirstLastButtons>
+                    </mat-paginator>
                 </div>
             </div>
         </mat-card-content>
