@@ -16,7 +16,12 @@
             <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
             <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
         </mat-form-field>
-        <button style="margin-left: 5px;" mat-flat-button color="primary" (click)="buscarPorFechas()" >BUSCAR DOC. </button>
+        <button style="margin-left: 5px;" mat-mini-fab color="primary" matTooltip="Buscar" (click)="buscarPorFechas()" >
+          <i class="fas fa-search"></i>
+        </button>
+        <button style="margin-left: 5px; background: rgba(25, 135, 84); color: #fff; " mat-mini-fab  matTooltip="Exportar Excel" (click)="exportExcel()" >
+          <i class="far fa-file-excel"></i>
+        </button>
       </div>
     </mat-card-content>
     <mat-card-footer>

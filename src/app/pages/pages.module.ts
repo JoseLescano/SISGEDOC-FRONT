@@ -77,6 +77,7 @@ import { EstadisticaSAComponent } from './documento/estadistica-sa/estadistica-s
 import { EnviarDocumentoFacilitaComponent } from './facilita/enviar-documento-facilita/enviar-documento-facilita.component';
 import { ListRechazadosComponent } from './documento/devolver/list-rechazados/list-rechazados.component';
 import { ConfigComponent } from './mi-perfil/config/config.component';
+import { TrasladoUUComponent } from './organizacion/traslado-uu/traslado-uu.component';
 
 
 @NgModule({
@@ -162,6 +163,7 @@ import { ConfigComponent } from './mi-perfil/config/config.component';
     EnviarDocumentoFacilitaComponent,
     ListRechazadosComponent,
     ConfigComponent,
+    TrasladoUUComponent,
 
   ],
    exports:[
