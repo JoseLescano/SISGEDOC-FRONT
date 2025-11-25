@@ -119,25 +119,37 @@
                         </div>
 
                         <div class="row">
-
                           <div class="col"  >
                             <div class="wrapper" >
-                              <mat-label>DOCUMENTO PRINCIPAL
-                                <span *ngIf="selectedFiles == null || selectedFiles == ''">
-                                  <i class="fas fa-info-circle" style="font-size: 14px; color: #ea5d5d" ></i>
-                                </span>
-                              </mat-label>
-                              <div class="form">
-                                  <i class="fas fa-cloud-upload-alt"></i>
-                                  <p>Examinar para cargar archivo</p>
-                                  <input type="file" (change)="selectArchivoPrincipal($event)"
-                                    id="documentoPrincipal"
-                                    accept="application/msword, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
 
+                                <mat-label>DOCUMENTO PRINCIPAL
+                                  <span *ngIf="selectedFiles == null || selectedFiles == ''">
+                                    <i class="fas fa-info-circle" style="font-size: 14px; color: #ea5d5d" ></i>
+                                  </span>
+                                </mat-label>
+                                <div class="form">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Examinar para cargar archivo</p>
+                                    <input type="file" (change)="selectArchivoPrincipal($event)"
+                                      id="documentoPrincipal"
+                                      accept="application/msword, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+
+                                </div>
                               </div>
-                              <button  mat-flat-button type="button" color="primary" (click)="firmarDocumento()"
-                                class="form-control mt-2" *ngIf="selectedFiles != null && form.get('firmante').value!=null" >FIRMAR DOCUMENTO</button>
-                            </div>
+                          </div>
+                        </div>
+                        <div class="row" *ngIf="selectedFiles != null || selectedFiles != ''">
+                          <div class="col">
+                            <button  mat-flat-button type="button" color="accent" (click)="firmarDocumento()"
+                                class="form-control mt-2" *ngIf="selectedFiles != null && form.get('firmante').value!=null" >
+                                <i class="fas fa-key"></i> FIRMAR DOCUMENTO
+                            </button>
+                          </div>
+                          <div class="col">
+                            <button  mat-flat-button type="button" color="primary" (click)="convertirArchivoABase64(this.selectedFiles.item(0))"
+                                class="form-control mt-2"  *ngIf="selectedFiles != null && form.get('firmante').value!=null">
+                                <i class="fas fa-eye"></i> VER DOCUMENTO
+                            </button>
                           </div>
                         </div>
 

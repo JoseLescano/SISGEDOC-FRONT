@@ -11,7 +11,7 @@ import { OrganizacionService } from 'src/app/_service/organizacion.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 import { ModalFirmaPeruComponent } from '../modal-firma-peru/modal-firma-peru.component';
-import { finalize, of, switchMap } from 'rxjs';
+import { of, switchMap } from 'rxjs';
 import { FirmaPeruService } from 'src/app/_service/firma-peru.service';
 import { PrioridadService } from 'src/app/_service/prioridad.service';
 
@@ -454,7 +454,7 @@ export class CrearDocumentoComponent implements OnInit {
 
   abrirFirmaPeru(documento:any): void {
     const dialogRef = this.dialog.open(ModalFirmaPeruComponent,{
-      width: '90%',
+      width: '100%',
       height: '80%',
 
       data: { documento }
