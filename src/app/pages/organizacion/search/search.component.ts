@@ -37,7 +37,7 @@ export class SearchComponent implements OnInit {
           this.createTable(response.data)
         },
         error: (err: any)=>{
-          Swal.fire('AVISO', err.error, 'info');
+          Swal.fire('AVISO', err.message, "warning");
         }
       }
     );
