@@ -142,7 +142,6 @@ export class FormComponent implements OnInit {
     const iframe: any = document.getElementById(iframeId) as HTMLIFrameElement;
     iframe.contentWindow.location.replace(fileURL);
     var rf_file = new File([file], URL.createObjectURL(file), { type: 'application/pdf'});
-    let listFile = [rf_file];
     let list = new DataTransfer();
     list.items.add(rf_file);
     this.selectedFiles=list.files;

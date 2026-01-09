@@ -138,7 +138,7 @@
                               </div>
                           </div>
                         </div>
-                        <div class="row" *ngIf="selectedFiles != null || selectedFiles != ''">
+                        <div class="row" *ngIf="pdfBase64 != null || pdfBase64 != ''">
                           <div class="col">
                             <button  mat-flat-button type="button" color="accent" (click)="firmarDocumento()"
                                 class="form-control mt-2" *ngIf="selectedFiles != null && form.get('firmante').value!=null" >

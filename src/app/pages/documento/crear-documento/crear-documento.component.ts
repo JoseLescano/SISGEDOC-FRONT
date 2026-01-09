@@ -42,6 +42,9 @@ export class CrearDocumentoComponent implements OnInit {
   documentoWordTempl : any;
   prioridades : any = [];
 
+
+  pdfBase64: string = '';
+
   // =======================================================================================================
 
   constructor(
@@ -443,9 +446,11 @@ export class CrearDocumentoComponent implements OnInit {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-        const base64 = reader.result as string;
-        // Ahora abre el modal con el archivo codificado en base64
-        this.abrirFirmaPeru(base64);
+      this.pdfBase64 = reader.result as string;
+      // const base64 = reader.result as string;
+      // this.mostrarFirma = true;
+      // Ahora abre el modal con el archivo codificado en base64
+      this.abrirFirmaPeru(this.pdfBase64);
     };
     reader.onerror = error => {
         // console.log('Error: ', error);
@@ -455,7 +460,7 @@ export class CrearDocumentoComponent implements OnInit {
   abrirFirmaPeru(documento:any): void {
     const dialogRef = this.dialog.open(ModalFirmaPeruComponent,{
       width: '100%',
-      height: '80%',
+      height: '85%',
 
       data: { documento }
     });

@@ -77,8 +77,10 @@ export class FirmaPeruService {
   }
 
   public iniciarFirma(configuracion: string): Promise<void> {
+    debugger
     return new Promise((resolve, reject) => {
       if (!this.scriptLoaded) {
+        debugger
         reject('Los scripts de FirmaPeru no se han cargado completamente');
         return;
       }
@@ -89,6 +91,7 @@ export class FirmaPeruService {
       });
 
       const cancelSubscription = this.cancelCallback.subscribe(() => {
+        debugger
         reject('Firma cancelada');
         cancelSubscription.unsubscribe();
       });
