@@ -27,6 +27,7 @@ export class LoginService {
   ) { }
 
   login(jwtRequest: ILoginRequest): Observable<any> {
+    debugger
     jwtRequest.username =jwtRequest.username.toLowerCase();
     return this.http.post<any>(`${this.url}/ad`, jwtRequest);
   }

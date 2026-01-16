@@ -17,6 +17,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
       return next.handle(request).pipe(
         catchError(err => {
+          debugger
           let errorMessage = 'Ocurrió un error inesperado';
           switch (err.status) {
             case 204:
@@ -36,7 +37,8 @@ export class ErrorInterceptor implements HttpInterceptor {
               errorMessage = err.error?.message || err.error?.title || 'RECURSO NO EXISTE';
               break;
             case 400:
-              errorMessage = err.error?.message || err.error?.title || 'ERROR EN LA LOGICA DE NEGOCIO';
+              debugger
+              errorMessage = err.error?.message || err?.message || 'ERROR EN LA LOGICA DE NEGOCIO';
               break;
             case 500:
               errorMessage = 'ERROR INTERNO DE SERVIDOR';

@@ -3,7 +3,8 @@
     <mat-card-title >CREAR NUEVO DOCUMENTO</mat-card-title>
   </mat-card-header>
     <mat-card-content>
-        <form class="row g-3" [formGroup]="form" (ngSubmit)="operate()" novalidate >
+        <!-- <form class="row g-3" [formGroup]="form" (ngSubmit)="operate()" novalidate > -->
+        <form class="row g-3" [formGroup]="form"  novalidate >
             <div class="row" >
               <div class="col-sm-12 col-lg-2">
                 <div class="row">
@@ -46,9 +47,12 @@
                         <div class="col">
                           <button mat-flat-button color="primary" style="width: 100%; height: 50px; border-radius: 10px;"
                           (click)="generarPlantilla()" type="button" [disabled]="!pasoUnoValido" >
-                              <!-- <i class="far fa-file-word" style="font-size: 30px;"></i>  -->
                               GENERAR WORD
                           </button>
+                          <!-- <button mat-flat-button color="primary" style="width: 100%; height: 50px; border-radius: 10px;"
+                           type="button" [disabled]="true" >
+                              GENERAR WORD
+                          </button> -->
                       </div>
                       </div>
                     </mat-card-content>
@@ -121,7 +125,6 @@
                         <div class="row">
                           <div class="col"  >
                             <div class="wrapper" >
-
                                 <mat-label>DOCUMENTO PRINCIPAL
                                   <span *ngIf="selectedFiles == null || selectedFiles == ''">
                                     <i class="fas fa-info-circle" style="font-size: 14px; color: #ea5d5d" ></i>
@@ -157,7 +160,8 @@
 
                         <div class="row d-flex flex-row bd-highlight mt-3">
                           <div class="col">
-                            <button mat-flat-button type="submit" class="btn-opcion" color="primary" [disabled]="!pasoDosValido">GUARDAR DOCUMENTO</button>
+                            <!-- <button mat-flat-button type="submit" class="btn-opcion" color="primary" [disabled]="!pasoDosValido">GUARDAR DOCUMENTO</button> -->
+                            <button mat-flat-button type="submit" class="btn-opcion" color="primary" [disabled]="true">GUARDAR DOCUMENTO</button>
                             <button mat-flat-button color="warn" type="button" class="btn-opcion" (click)="limpiar()" >CANCELAR</button>
                           </div>
                         </div>
@@ -171,7 +175,9 @@
                           <div class="form">
                               <i class="fas fa-cloud-upload-alt"></i>
                               <p>Examinar para cargar archivo</p>
-                              <input type="file" (change)="selectAnexos($event)" id="anexos"
+                              <!-- <input type="file" (change)="selectAnexos($event)" id="anexos"
+                                  multiple /> -->
+                              <input type="file" [disabled]="true" id="anexos"
                                   multiple />
                           </div>
                           <div class="filewrapper" *ngIf="uploadedFiles.length > 0">

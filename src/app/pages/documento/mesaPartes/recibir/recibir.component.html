@@ -82,7 +82,9 @@
     </mat-card-content>
     <mat-card-actions align="end">
         <!-- <button mat-flat-button  class="btn-opcion" style="color: #fff; background: #198754; border-color: #198754; "  (click)="exportTable()"> <i class="fas fa-file-excel"></i> EXPORTAR A EXCEL</button> -->
-        <button mat-raised-button color="primary" routerLink="../registrar-documento" class="btn-opcion" >NUEVO REGISTRO FISICO</button>
-        <button mat-raised-button color="accent" routerLink="../envio-externo" class="btn-opcion">ENVIAR A DEPENDENCIA EXTERNA</button>
+        <!-- <button mat-raised-button color="primary" routerLink="../registrar-documento" class="btn-opcion" >NUEVO REGISTRO FISICO</button>
+        <button mat-raised-button color="accent" routerLink="../envio-externo" class="btn-opcion">ENVIAR A DEPENDENCIA EXTERNA</button> -->
+        <button mat-raised-button color="primary" [disabled]="true" class="btn-opcion" >NUEVO REGISTRO FISICO</button>
+        <button mat-raised-button color="accent" [disabled]="true" routerLink="../envio-externo" class="btn-opcion">ENVIAR A DEPENDENCIA EXTERNA</button>
     </mat-card-actions>
 </mat-card>

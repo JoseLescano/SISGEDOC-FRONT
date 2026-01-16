@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GenericService } from './generic.service';
 import { Correspondencia } from '../_model/correspondencia';
-import { Observable, Subject } from 'rxjs';
+import { catchError, Observable, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { CorrespondenciaOP } from '../_DTO/CorrespondenciaOP';
@@ -56,20 +56,38 @@ export class CorrespondenciaService extends GenericService<Correspondencia> {
     return this.http.post(`${environment.HOST}correspondencias/updateCorrespondencia/${correspondenciaId}`, correspondencia );
   }
 
-  entregaCorrespondencia(origen:any, usuarioRecibe:any,
-    contrasena:any, correspondencias:Correspondencia[], dniExterno?:any){
+  entregaCorrespondencia(origen: any, usuarioRecibe: any,
+    contrasena: any, correspondencias: Correspondencia[], dniExterno?: any) {
 
-    let formData:FormData = new FormData();
+    let formData: FormData = new FormData();
     formData.append('origen', origen);
-    formData.append('usuarioRecibe',usuarioRecibe);
+    formData.append('usuarioRecibe', usuarioRecibe);
     formData.append('contrasena', contrasena);
     formData.append('dniExterno', dniExterno);
     correspondencias.forEach(item => {
       formData.append('correspondencias', item.codigo.toString());
-    })
+    });
 
     return this.http.post(`${environment.HOST}correspondencias/entregaCorrespondencia`,
-    formData, { responseType: 'blob' });
+      formData, {
+        responseType: 'blob',
+        observe: 'response' // Importante: observar la respuesta completa
+      }).pipe(
+        catchError(async (error) => {
+          // Si el error tiene un blob, intentar parsearlo como JSON
+          if (error.error instanceof Blob) {
+            const text = await error.error.text();
+            try {
+              const errorObj = JSON.parse(text);
+              // Lanzar el error con el mensaje parseado
+              throw new Error(errorObj.mensaje || errorObj.message || 'Error desconocido');
+            } catch (e) {
+              throw new Error(text || 'Error al procesar la solicitud');
+            }
+          }
+          throw error;
+        })
+      );
   }
 
   searchByFechas(

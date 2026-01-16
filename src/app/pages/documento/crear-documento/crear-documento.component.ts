@@ -147,7 +147,7 @@ export class CrearDocumentoComponent implements OnInit {
       this.documentoar.organizacionOrigen = this.form.value['firmante'].codigoInterno;
 
       this.documentoar.clase = this.form.value['tipoDocumento'];
-      this.documentoar.nroOrden =  this.form.get('nroCorrelativo').value;;
+      this.documentoar.nroOrden =  this.form.get('nroCorrelativo').value;
       this.documentoar.indicativo =  this.form.value['indicativo'];
       this.documentoar.destinos = this.form.value['destinatarios'];
       this.documentoar.copiasInformativas = this.form.value['copiaInformativa'];
@@ -271,32 +271,34 @@ export class CrearDocumentoComponent implements OnInit {
   generarPlantilla() {
     if (this.validarPlantilla()) {
       this.cargando = true;
-      this.getUltimoNumero().pipe(
-        switchMap(() => {
-          var tipoDocumento = this.form.get('tipoDocumento').value;
-          var asunto = this.form.get('asunto').value;
-          var destino = this.form.get('destinatarios').value;
-          var firmante = this.form.get('firmante').value;
-          var indicativo = this.form.get('indicativo').value;
-          var copiasInformativas = this.form.get('copiaInformativa').value;
-          var correlativo = this.form.get('nroCorrelativo').value;
-          return this.documentoService.generarPlantillaWord(
-              tipoDocumento, asunto, destino, firmante.codigoInterno,
-              indicativo, correlativo, copiasInformativas
-          );
-        })
-      ).subscribe({
-        next: (response:any ) => {
-          if (response.httpStatus === 'CREATED') {
-              this.downloadWord(response.data[0]);
-              this.cargando = false;
-          }else {
-            this.cargando = false;
-          }
-        }, error: (err) => {
-          Swal.fire('LO SENTIMOS', err, 'info');
-        this.cargando = false;
-      }});
+      this.getUltimoNumero()
+      // .pipe(
+      //   switchMap(() => {
+      //     var tipoDocumento = this.form.get('tipoDocumento').value;
+      //     var asunto = this.form.get('asunto').value;
+      //     var destino = this.form.get('destinatarios').value;
+      //     var firmante = this.form.get('firmante').value;
+      //     var indicativo = this.form.get('indicativo').value;
+      //     var copiasInformativas = this.form.get('copiaInformativa').value;
+      //     var correlativo = this.form.get('nroCorrelativo').value;
+      //     return this.documentoService.generarPlantillaWord(
+      //         tipoDocumento, asunto, destino, firmante.codigoInterno,
+      //         indicativo, correlativo, copiasInformativas
+      //     );
+      //   })
+      // )
+      // .subscribe({
+      //   next: (response:any ) => {
+      //     if (response.httpStatus === 'CREATED') {
+      //         this.downloadWord(response.data[0]);
+      //         this.cargando = false;
+      //     }else {
+      //       this.cargando = false;
+      //     }
+      //   }, error: (err) => {
+      //     Swal.fire('LO SENTIMOS', err, 'info');
+      //   this.cargando = false;
+      // }});
     }
 }
 
@@ -304,18 +306,37 @@ export class CrearDocumentoComponent implements OnInit {
     return document;
   }
 
+  // getUltimoNumero() {
+  //   var tipoDocumento = this.form.get('tipoDocumento').value;
+  //   var firmante = this.form.get('firmante').value;
+
+  //   if (tipoDocumento != null && firmante != null) {
+  //       return this.correlativoService
+  //       .findClaseAndOrganizacion(tipoDocumento, firmante.codigoInterno)
+  //       .pipe(
+  //           switchMap((response: any) => {
+  //               var correlativo = response;
+  //               this.form.controls['nroCorrelativo'].setValue(correlativo.numero);
+  //               return of(true);  // Se devuelve un observable para indicar que el proceso ha terminado
+  //           })
+  //       );
+  //   } else {
+  //       return of(false);  // En caso de que tipoDocumento o firmante sean nulos, se devuelve un observable de false
+  //   }
+  // }
   getUltimoNumero() {
     var tipoDocumento = this.form.get('tipoDocumento').value;
     var firmante = this.form.get('firmante').value;
 
     if (tipoDocumento != null && firmante != null) {
-        return this.correlativoService.findClaseAndOrganizacion(tipoDocumento, firmante.codigoInterno).pipe(
-            switchMap((response: any) => {
+        return this.correlativoService
+        .findClaseAndOrganizacion(tipoDocumento, firmante.codigoInterno)
+        .subscribe((response: any) => {
                 var correlativo = response;
+                this.cargando = false;
                 this.form.controls['nroCorrelativo'].setValue(correlativo.numero);
                 return of(true);  // Se devuelve un observable para indicar que el proceso ha terminado
-            })
-        );
+            });
     } else {
         return of(false);  // En caso de que tipoDocumento o firmante sean nulos, se devuelve un observable de false
     }

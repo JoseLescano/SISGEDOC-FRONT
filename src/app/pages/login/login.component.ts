@@ -1,8 +1,5 @@
 import { ReCaptchaV3Service } from 'ng-recaptcha';
-import { JwtHelperService } from '@auth0/angular-jwt';
-import swal from 'sweetalert2'
-import { Component, OnInit } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { Component } from '@angular/core';
 import { LoginService, ILoginRequest } from 'src/app/_service/login.service';
 import Swal from 'sweetalert2';
 import { FormControl, FormGroup, Validators } from '@angular/forms';

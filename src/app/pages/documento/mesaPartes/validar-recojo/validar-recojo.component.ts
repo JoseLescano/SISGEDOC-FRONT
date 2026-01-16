@@ -1,4 +1,4 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -75,7 +75,8 @@ export class ValidarRecojoComponent implements OnInit {
         this.usuario, this.password,
         correspondencia).subscribe(
           {
-            next: (response) => {
+            next: (response:any) => {
+              debugger
                 Swal.fire('VALIDACION CORRECTA', "SE PROCEDERÁ A ENTREGAR LAS CORRESPONDENCIA", 'success');
                 const blob = new Blob([response], { type: 'application/pdf' });
                 const url = window.URL.createObjectURL(blob);
@@ -90,7 +91,8 @@ export class ValidarRecojoComponent implements OnInit {
               },
               error: (error: any) => {
                 this.cargando = false;
-                Swal.fire('LO SENTIMOS',  "SE PRESENTO UN INCONVENIENTE", 'info');
+                debugger
+                Swal.fire('AVISO',  error.message, 'info');
               }
           }
         );
@@ -107,9 +109,9 @@ export class ValidarRecojoComponent implements OnInit {
           '', '',
           correspondencia, this.dniIngresado).subscribe(
             {
-              next: (response) => {
+              next: (response: HttpResponse<Blob>) => {
                   Swal.fire('VALIDACION CORRECTA', "SE PROCEDERÁ A ENTREGAR LAS CORRESPONDENCIA", 'success');
-                  const blob = new Blob([response], { type: 'application/pdf' });
+                  const blob = new Blob([response.body], { type: 'application/pdf' });
                   const url = window.URL.createObjectURL(blob);
                   const a = document.createElement('a');
                   a.href = url;
@@ -131,8 +133,8 @@ export class ValidarRecojoComponent implements OnInit {
         }
       }
 
-  openPDF(response) {
-    const byteArray = this.convertListToByteArray(response);
+  openPDF(response:any) {
+    const byteArray = this.convertListToByteArray(response.body);
     const blob = new Blob([byteArray], { type: 'application/pdf' });
     const url = window.URL.createObjectURL(blob);
     window.open(url);
