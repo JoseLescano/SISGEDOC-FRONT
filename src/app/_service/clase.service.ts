@@ -28,4 +28,8 @@ export class ClaseService extends GenericService<Clase> {
     return this.http.get<Clase[]>(`${environment.HOST}clases/findForCrearDocumento`);
   }
 
+  findForMP(){
+    return this.http.get<Clase[]>(`${environment.HOST}clases/findForMP`);
+  }
+
 }

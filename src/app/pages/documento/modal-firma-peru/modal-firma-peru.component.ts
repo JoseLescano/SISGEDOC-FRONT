@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { DomSanitizer } from '@angular/platform-browser';
 import { DocumentoService } from 'src/app/_service/documento.service';
 
 @Component({
@@ -7,18 +8,19 @@ import { DocumentoService } from 'src/app/_service/documento.service';
   templateUrl: './modal-firma-peru.component.html',
   styleUrls: ['./modal-firma-peru.component.css']
 })
-export class ModalFirmaPeruComponent implements OnInit, AfterViewInit  {
+export class ModalFirmaPeruComponent implements OnInit, AfterViewInit {
 
   errorPDF: boolean = false;
   documento: any = '';
-  url_pdf : any = '';
+  url_pdf: any = '';
   @ViewChild('embeddedPage') iframe: ElementRef<HTMLIFrameElement>;
 
   constructor(
     public dialogRef: MatDialogRef<ModalFirmaPeruComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private elRef: ElementRef,
-    private documentoService:DocumentoService
+    private documentoService: DocumentoService,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
@@ -29,19 +31,26 @@ export class ModalFirmaPeruComponent implements OnInit, AfterViewInit  {
     this.crearDocumento(this.documento);
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 
   crearDocumento(base64: string) {
-    const byteArray = this.base64ToUint8Array(base64.split(',')[1]); // Split to remove the data URL prefix
-    const file = new Blob([byteArray], { type: 'application/pdf' });
-    const fileURL = URL.createObjectURL(file);
-    if (this.iframe && this.iframe.nativeElement) {
-      this.iframe.nativeElement.src = fileURL;
-    } else {
-      console.error('El iframe no se ha encontrado en el DOM');
+    let cleanBase64 = base64;
+    // ensure base64 isn't null or empty
+    if (!cleanBase64) return;
+
+    if (base64.includes(',')) {
+      cleanBase64 = base64.split(',')[1];
     }
+    const byteArray = this.base64ToUint8Array(cleanBase64); // Safe parse
+    const file = new Blob([byteArray as any], { type: 'application/pdf' });
+    const fileURL = URL.createObjectURL(file);
+
+    // Use DomSanitizer to trust the URL, otherwise Angular might block the iframe src
+    const safeURL = this.sanitizer.bypassSecurityTrustResourceUrl(fileURL);
+
+    this.url_pdf = safeURL;
   }
 
 

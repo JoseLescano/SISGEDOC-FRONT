@@ -49,8 +49,11 @@
               <!-- <button mat-flat-button  color="primary" class="mt-2"  (click)="openDialog(row.codigoInterno)" >
                 <i class="far fa-file-pdf" ></i> EDITAR
               </button> -->
-              <button mat-flat-button  color="accent" class="m-2" (click)="imprimirListaPersonal(row.codigoInterno,false)">
-                <i class="fas fa-info-circle"></i> VER USUARIOS
+              <button mat-flat-button  color="accent" class="m-2" (click)="verUsuarios(row.codigoInterno)">
+                <i class="fas fa-users"></i> VER USUARIOS
+              </button>
+              <button mat-icon-button color="primary" class="m-2" (click)="imprimirListaPersonal(row.codigoInterno,false)" title="Imprimir PDF">
+                <i class="fas fa-file-pdf"></i>
               </button>
               <!-- <button mat-flat-button  color="warn" class="mb-2" (click)="eliminar(row)" >
                 <i class="fas fa-trash"></i> ELIMINAR

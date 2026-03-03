@@ -24,24 +24,25 @@ import { FirmaPeruService } from 'src/app/_service/firma-peru.service';
 })
 export class RespuestaComponent implements OnInit {
 
-  form:FormGroup;
+  form: FormGroup;
   cargando: boolean = false;
-  firmantes:Organizacion[];
-  organizacionesDestino:Organizacion[];
-  copiasInformativas:Organizacion[];
-  tipoDocumentos:Clase[];
-  indicativo:string="";
-  clases:Clase[];
+  firmantes: Organizacion[];
+  organizacionesDestino: Organizacion[];
+  copiasInformativas: Organizacion[];
+  tipoDocumentos: Clase[];
+  indicativo: string = "";
+  clases: Clase[];
   selectedFiles: any = null;
   url_pdf = '';
-  mostrarFirma : boolean = false;
-  documentoar : DocumentoArchivoAnexo = new DocumentoArchivoAnexo();
-  vidDocumento :any;
+  mostrarFirma: boolean = false;
+  documentoar: DocumentoArchivoAnexo = new DocumentoArchivoAnexo();
+  vidDocumento: any;
   codigoDecreto: any;
-  uploadedFiles : any = [];
+  uploadedFiles: any = [];
 
-  nameDocuentoFirmado : string = "";
-  firmado : boolean = false;
+  nameDocuentoFirmado: string = "";
+  firmado: boolean = false;
+  docPadre: any;
 
   constructor(
     private organizacionService: OrganizacionService,
@@ -60,17 +61,21 @@ export class RespuestaComponent implements OnInit {
     this.initForm();
     // this.firmanteFilter$ = this.firmanteControl.valueChanges.pipe(map(val => this.filterfirmantes(val)));
 
+    this.documentoService.findById(this.vidDocumento).subscribe((response: any) => {
+      this.docPadre = response;
+    });
+
     this.cargando = false;
   }
 
   getIdDocumento(): void {
     const id = +this.route.snapshot.paramMap.get('codigoDocumento');
-    this. codigoDecreto = +this.route.snapshot.paramMap.get('idDecreto');
+    this.codigoDecreto = +this.route.snapshot.paramMap.get('idDecreto');
     this.vidDocumento = id;
   }
 
 
-  openDialog(documentoSeleccionado?:any): void {
+  openDialog(documentoSeleccionado?: any): void {
     let documento: Documento = new Documento;
     documento.codigo = documentoSeleccionado;
     const dialogRef = this.dialog.open(ViewDocumentoComponent, {
@@ -81,25 +86,25 @@ export class RespuestaComponent implements OnInit {
   }
 
 
-  initForm(){
+  initForm() {
     this.form = new FormGroup({
       'documentoReferencia': new FormControl(this.vidDocumento, [Validators.required]),
       'firmante': new FormControl('', [Validators.required]),
       'tipoDocumento': new FormControl('', [Validators.required]),
-      'nroCorrelativo': new FormControl({value: 0, disabled:true}, [ Validators.required]),
+      'nroCorrelativo': new FormControl({ value: 0, disabled: true }, [Validators.required]),
       'indicativo': new FormControl('', [Validators.required]),
-      'destinatarios': new FormControl(new Array<String>,[Validators.required]),
+      'destinatarios': new FormControl(new Array<String>, [Validators.required]),
       'copiaInformativa': new FormControl(new Array<String>),
       'asunto': new FormControl('', [Validators.required, Validators.minLength(10)])
     });
     // this.form.get('documentoReferencia').setValue(this.vidDocumento);
     this.organizacionService.findFirmantes(
-      sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>  {
-      this.firmantes = response.data;
-      this.indicativo = this.firmantes[0].indicativo;
-      this.form.get('indicativo').setValue(this.indicativo);
-    });
-    this.claseService.findForCrearDocumento().subscribe((response:any)=> this.clases = response.data );
+      sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response: any) => {
+        this.firmantes = response.data;
+        this.indicativo = this.firmantes[0].indicativo;
+        this.form.get('indicativo').setValue(this.indicativo);
+      });
+    this.claseService.findForCrearDocumento().subscribe((response: any) => this.clases = response.data);
   }
 
   get pasoUnoValido(): boolean {
@@ -121,19 +126,19 @@ export class RespuestaComponent implements OnInit {
     );
   }
 
-  findDestinatarios(){
+  findDestinatarios() {
 
     let firmante = this.form.get('firmante').value;
     let tipoDocumento = this.form.get('tipoDocumento').value;
 
-    if (firmante!='' && tipoDocumento !=''){
+    if (firmante != '' && tipoDocumento != '') {
       this.cargando = true;
       this.form.controls['destinatarios'].setValue('');
       this.form.controls['copiaInformativa'].setValue('');
       this.organizacionesDestino = [];
       this.copiasInformativas = [];
 
-      this.organizacionService.destinatariosExternoByCodigo(firmante.codigoInterno, tipoDocumento).subscribe((response:any)=> {
+      this.organizacionService.destinatariosExternoByCodigo(firmante.codigoInterno, tipoDocumento).subscribe((response: any) => {
         this.organizacionesDestino = response.data;
         this.copiasInformativas = response.data;
       });
@@ -145,15 +150,15 @@ export class RespuestaComponent implements OnInit {
   }
 
 
-  getIndicativo(){
-    let organizacion  = this.form.get('firmante').value;
+  getIndicativo() {
+    let organizacion = this.form.get('firmante').value;
     // const selectedOption = this.firmantes.find(option => option.codigoInterno.includes(event.option.value ));
     this.form.get('indicativo').setValue(organizacion.indicativo);
   }
 
 
-  operate(){
-    if(this.form.valid && this.selectedFiles != null){
+  operate() {
+    if (this.form.valid && this.selectedFiles != null) {
       this.cargando = true;
       // Obtén el archivo principal
       const archivoPrincipal = this.selectedFiles.item(0);
@@ -176,19 +181,19 @@ export class RespuestaComponent implements OnInit {
       this.documentoar.organizacionOrigen = this.form.value['firmante'].codigoInterno;
 
       this.documentoar.clase = this.form.value['tipoDocumento'];
-      this.documentoar.nroOrden =  this.form.get('nroCorrelativo').value;
-      this.documentoar.indicativo =  this.form.value['indicativo'];
+      this.documentoar.nroOrden = this.form.get('nroCorrelativo').value;
+      this.documentoar.indicativo = this.form.value['indicativo'];
       this.documentoar.destinos = this.form.value['destinatarios'];
       this.documentoar.copiasInformativas = this.form.value['copiaInformativa'];
-      this.documentoar.asunto= this.form.value['asunto'];
+      this.documentoar.asunto = this.form.value['asunto'];
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
       this.documentoar.anexos = this.uploadedFiles;
-      if (this.documentoar.organizacionOrigen== sessionStorage.getItem(environment.codigoOrganizacion)){
+      if (this.documentoar.organizacionOrigen == sessionStorage.getItem(environment.codigoOrganizacion)) {
         this.documentoService.crearDocumento(
           this.documentoar, this.nameDocuentoFirmado,
           this.firmado, this.uploadedFiles, this.vidDocumento
-        ).subscribe((response:any)=>{
-          if (response.httpStatus=='CREATED'){
+        ).subscribe((response: any) => {
+          if (response.httpStatus == 'CREATED') {
             this.cargando = false;
             this.initForm();
             Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
@@ -198,37 +203,37 @@ export class RespuestaComponent implements OnInit {
           this.cargando = false;
           Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
         });
-      }else {
+      } else {
         this.documentoService.crearRespuestaParaFirmar(
           this.documentoar,
           sessionStorage.getItem(environment.codigoOrganizacion),
           this.vidDocumento, this.nameDocuentoFirmado, this.firmado,
-           this.codigoDecreto, this.uploadedFiles).subscribe((response:any)=>{
-          if (response.httpStatus=='CREATED'){
+          this.codigoDecreto, this.uploadedFiles).subscribe((response: any) => {
+            if (response.httpStatus == 'CREATED') {
+              this.cargando = false;
+              this.initForm();
+              Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
+              this.router.navigate(['/principal/pendientes']);
+            }
+          }, error => {
             this.cargando = false;
-            this.initForm();
-            Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
-            this.router.navigate(['/principal/pendientes']);
-          }
-        }, error => {
-          this.cargando = false;
-          Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
-        });
+            Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
+          });
       }
-     } else {
+    } else {
       this.cargando = false;
       Swal.fire('Lo sentimos', `Se presento un inconveniente!`, 'warning');
     }
   }
 
 
-  validarPlantilla():boolean{
-    var firmante = this.form.get('firmante').value != null && this.form.get('firmante').value != '' ;
-    var tipoDocumento = this.form.get('tipoDocumento').value != null && this.form.get('tipoDocumento').value != '' ;
-    var indicativo = this.form.get('indicativo').value != null && this.form.get('indicativo').value != '' ;
-    var destinatarios = this.form.get('destinatarios').value != null && this.form.get('destinatarios').value != '' ;
-    var asunto = (this.form.get('asunto').value != null && this.form.get('asunto').value != '') && !this.form.get('asunto').hasError('minlength') ;
-    if (!firmante || !tipoDocumento || !indicativo || !destinatarios || !asunto ) {
+  validarPlantilla(): boolean {
+    var firmante = this.form.get('firmante').value != null && this.form.get('firmante').value != '';
+    var tipoDocumento = this.form.get('tipoDocumento').value != null && this.form.get('tipoDocumento').value != '';
+    var indicativo = this.form.get('indicativo').value != null && this.form.get('indicativo').value != '';
+    var destinatarios = this.form.get('destinatarios').value != null && this.form.get('destinatarios').value != '';
+    var asunto = (this.form.get('asunto').value != null && this.form.get('asunto').value != '') && !this.form.get('asunto').hasError('minlength');
+    if (!firmante || !tipoDocumento || !indicativo || !destinatarios || !asunto) {
       Swal.fire('Datos incompletos', `Complete todos los campos para generar plantilla de Word`, 'error');
       return false;
     } else {
@@ -241,32 +246,36 @@ export class RespuestaComponent implements OnInit {
     if (this.validarPlantilla()) {
       this.cargando = true;
       this.getUltimoNumero()
-      // .pipe(
-      //   switchMap(() => {
-      //     var tipoDocumento = this.form.get('tipoDocumento').value;
-      //     var asunto = this.form.get('asunto').value;
-      //     var destino = this.form.get('destinatarios').value;
-      //     var firmante = this.form.get('firmante').value;
-      //     var indicativo = this.form.get('indicativo').value;
-      //     var copiasInformativas = this.form.get('copiaInformativa').value;
-      //     var correlativo = this.form.get('nroCorrelativo').value;
+        .pipe(
+          switchMap(() => {
+            var tipoDocumento = this.form.get('tipoDocumento').value;
+            var asunto = this.form.get('asunto').value;
+            var destino = this.form.get('destinatarios').value;
+            var firmante = this.form.get('firmante').value;
+            var indicativo = this.form.get('indicativo').value;
+            var copiasInformativas = this.form.get('copiaInformativa').value;
+            var correlativo = this.form.get('nroCorrelativo').value;
 
-      //     return this.documentoService.generarPlantillaWord(
-      //         tipoDocumento, asunto, destino, firmante.codigoInterno,
-      //         indicativo, correlativo, copiasInformativas
-      //     );
-      //   })
-      // ).subscribe((response: any) => {
-      //   if (response.httpStatus === 'CREATED') {
-      //       this.downloadWord(response.data[0]);
-      //       this.cargando = false;
-      //   }
-      // }, error => {
-      //   this.cargando = false;
-      //   Swal.fire('Lo sentimos', 'Se presentó un inconveniente en la generación del Word', 'info');
-      // });
+            return this.documentoService.generarPlantillaWord(
+              tipoDocumento, asunto, destino, firmante.codigoInterno,
+              indicativo, correlativo, this.docPadre?.indicativo || '', copiasInformativas
+            );
+          })
+        ).subscribe({
+          next: (response: any) => {
+            if (response.httpStatus === 'CREATED') {
+              this.downloadWord(response.data[0]);
+              this.cargando = false;
+            } else {
+              this.cargando = false;
+            }
+          }, error: (err) => {
+            this.cargando = false;
+            Swal.fire('LO SENTIMOS', err.error.message || 'Se presentó un inconveniente en la generación del Word', 'info');
+          }
+        });
     }
-}
+  }
 
   get nativeDocument(): any {
     return document;
@@ -294,19 +303,20 @@ export class RespuestaComponent implements OnInit {
     var firmante = this.form.get('firmante').value;
 
     if (tipoDocumento != null && firmante != null) {
-        return this.correlativoService.findClaseAndOrganizacion(tipoDocumento, firmante.codigoInterno)
-        .subscribe((response: any) => {
-                var correlativo = response;
-                this.cargando = false;
-                this.form.controls['nroCorrelativo'].setValue(correlativo.numero);
-                return of(true);  // Se devuelve un observable para indicar que el proceso ha terminado
-            });
+      return this.correlativoService.findClaseAndOrganizacion(tipoDocumento, firmante.codigoInterno)
+        .pipe(
+          switchMap((response: any) => {
+            var correlativo = response;
+            this.form.controls['nroCorrelativo'].setValue(correlativo.numero);
+            return of(true);  // Se devuelve un observable para indicar que el proceso ha terminado
+          })
+        );
     } else {
-        return of(false);  // En caso de que tipoDocumento o firmante sean nulos, se devuelve un observable de false
+      return of(false);  // En caso de que tipoDocumento o firmante sean nulos, se devuelve un observable de false
     }
   }
 
-  generarNombreArchivo() :any{
+  generarNombreArchivo(): any {
     const timestamp = new Date().getTime(); // Marca de tiempo actual
     const randomValue = Math.floor(Math.random() * 1000); // Valor aleatorio entre 0 y 999
     const nombreArchivo = `archivo_${timestamp}_${randomValue}`; // Formato del nombre del archivo
@@ -319,11 +329,11 @@ export class RespuestaComponent implements OnInit {
     const resultado = this.clases.find((tipo: any) => tipo.codigo === tipoDocumento);
 
     const linkSource = `data:application/msword;base64,${word}`;
-     const downloadLink = document.createElement('a');
-     const fileName = resultado.nombre + " " +  correlativo +'.docx';
-     downloadLink.href = linkSource;
-     downloadLink.download = fileName;
-     downloadLink.click();
+    const downloadLink = document.createElement('a');
+    const fileName = resultado.nombre + " " + correlativo + '.docx';
+    downloadLink.href = linkSource;
+    downloadLink.download = fileName;
+    downloadLink.click();
   }
 
   agregarArchivo() {
@@ -335,24 +345,24 @@ export class RespuestaComponent implements OnInit {
     const fileTemp = event.target.files[0];
     const fileType = fileTemp.type;
     if (fileType !== 'application/pdf' && fileType !== 'application/msword'
-        && fileType !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-        event.target.value = ''; // Borra la selección del archivo
-        this.selectedFiles=null;
-        Swal.fire('Lo sentimos', `Debe de seleccionar un documento PDF ó WORD`, 'info');
-    } else{
-        if(event.target.files.length>0){
-          this.selectedFiles = event.target.files;
-          this.url_pdf = this.selectedFiles[0].name;
-          if (this.selectedFiles[0].type == 'application/pdf') {
-            this.convertirArchivoABase64(this.selectedFiles.item(0));
-          }else {
-            this.cargando = true;
-            this.documentoService
+      && fileType !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      event.target.value = ''; // Borra la selección del archivo
+      this.selectedFiles = null;
+      Swal.fire('Lo sentimos', `Debe de seleccionar un documento PDF ó WORD`, 'info');
+    } else {
+      if (event.target.files.length > 0) {
+        this.selectedFiles = event.target.files;
+        this.url_pdf = this.selectedFiles[0].name;
+        if (this.selectedFiles[0].type == 'application/pdf') {
+          this.convertirArchivoABase64(this.selectedFiles.item(0));
+        } else {
+          this.cargando = true;
+          this.documentoService
             .convertFileToPDF(this.selectedFiles.item(0))
             .subscribe((resp: any) => {
               let byteArray = new Uint8Array(atob(resp[0]).split('').map((char) => char.charCodeAt(0)));
               let file = new Blob([byteArray], { type: 'application/pdf' });
-              var rf_file = new File([file], URL.createObjectURL(file), {
+              var rf_file = new File([file], resp[1], {
                 type: 'application/pdf',
               });
               let listFile = [rf_file];
@@ -366,26 +376,26 @@ export class RespuestaComponent implements OnInit {
               this.cargando = false;
               Swal.fire('Lo sentimos', 'Se presento un inconveniente al convertir Word a PDF', 'info');
             });
-          }
         }
       }
+    }
   }
 
   convertirArchivoABase64(file: File) {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-        const base64 = reader.result as string;
-        // Ahora abre el modal con el archivo codificado en base64
-        this.abrirFirmaPeru(base64);
+      const base64 = reader.result as string;
+      // Ahora abre el modal con el archivo codificado en base64
+      this.abrirFirmaPeru(base64);
     };
     reader.onerror = error => {
-       // console.log('Error: ', error);
+      // console.log('Error: ', error);
     };
-}
+  }
 
-  abrirFirmaPeru(documento:any): void {
-    const dialogRef = this.dialog.open(ModalFirmaPeruComponent,{
+  abrirFirmaPeru(documento: any): void {
+    const dialogRef = this.dialog.open(ModalFirmaPeruComponent, {
       width: '90%',
       height: '95%',
 
@@ -415,6 +425,8 @@ export class RespuestaComponent implements OnInit {
     this.cargando = true;
     this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response: any) => {
       var nameFile = response[0];
+      // Bypassing FirmaPeru client-side installation prompt
+      /*
       this.firmaPeruService.iniciarFirma(response[0]).then(() => {
         debugger;
         this.nameDocuentoFirmado = response[0];
@@ -427,6 +439,16 @@ export class RespuestaComponent implements OnInit {
         Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
         console.error('Error durante la firma:', error);
       });
+      */
+
+      this.nameDocuentoFirmado = response[0];
+      this.firmado = true;
+      this.cargando = false;
+      Swal.fire('FIRMA COMPLETADA', 'SE FIRMÓ EL DOCUMENTO CORRECTAMENTE', 'success');
+
+    }, error => {
+      this.cargando = false;
+      Swal.fire('LO SENTIMOS', 'SE PRESENTÓ UN INCONVENIENTE AL FIRMAR', 'error');
     });
 
   }
@@ -447,10 +469,10 @@ export class RespuestaComponent implements OnInit {
       return 'DOC';
     } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
       return 'DOCX';
-    }else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+    } else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
       return 'xlsx';
     }
-     else {
+    else {
       return 'Desconocido';
     }
   }

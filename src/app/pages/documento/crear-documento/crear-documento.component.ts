@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DocumentoArchivoAnexo } from 'src/app/_DTO/DocumentoArchivoAnexo';
 import { Clase } from 'src/app/_model/clase';
 import { Organizacion } from 'src/app/_model/organizacion';
@@ -22,25 +22,26 @@ import { PrioridadService } from 'src/app/_service/prioridad.service';
 })
 export class CrearDocumentoComponent implements OnInit {
 
-  form:FormGroup;
+  form: FormGroup;
   cargando: boolean = false;
   // cargandoEncriptado: boolean = false;
-  cargandoPlantillaWord : boolean = false;
-  firmantes:Organizacion[];
-  organizacionesDestino:Organizacion[];
-  copiasInformativas:Organizacion[];
-  tipoDocumentos:Clase[];
-  indicativo:string="";
-  clases:Clase[];
+  cargandoPlantillaWord: boolean = false;
+  firmantes: Organizacion[];
+  organizacionesDestino: Organizacion[];
+  copiasInformativas: Organizacion[];
+  tipoDocumentos: Clase[];
+  indicativo: string = "";
+  clases: Clase[];
   selectedFiles: any = null;
   uploadedFiles: any = [];
   totalFileSize: number = 0;
   url_pdf = '';
-  mostrarFirma : boolean = false;
-  documentoar : DocumentoArchivoAnexo = new DocumentoArchivoAnexo();
-  resumen:String="";
-  documentoWordTempl : any;
-  prioridades : any = [];
+  mostrarFirma: boolean = false;
+  documentoar: DocumentoArchivoAnexo = new DocumentoArchivoAnexo();
+  resumen: String = "";
+  documentoWordTempl: any;
+  prioridades: any = [];
+  labelBotonAccion: string = 'GUARDAR DOCUMENTO';
 
 
   pdfBase64: string = '';
@@ -65,66 +66,78 @@ export class CrearDocumentoComponent implements OnInit {
 
   // =======================================================================================================
 
-  initForm(){
+  initForm() {
     this.cargando = true;
     this.form = new FormGroup({
       'firmante': new FormControl('', [Validators.required]),
       'tipoDocumento': new FormControl('', [Validators.required]),
-      'nroCorrelativo': new FormControl({value: 0, disabled:true}, [ Validators.required]),
+      'nroCorrelativo': new FormControl({ value: 0, disabled: true }, [Validators.required]),
       'indicativo': new FormControl('', [Validators.required, Validators.minLength(3)]),
-      'destinatarios': new FormControl(new Array<String>,[Validators.required]),
+      'destinatarios': new FormControl(new Array<String>, [Validators.required]),
       'copiaInformativa': new FormControl(new Array<String>),
       'asunto': new FormControl('', [Validators.required, Validators.minLength(10)]),
       'prioridad': new FormControl('', [Validators.required])
     });
 
-    this.organizacionService.findFirmantes(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=>  {
+    this.organizacionService.findFirmantes(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response: any) => {
       this.firmantes = response.data;
       this.indicativo = this.firmantes[0].indicativo;
       this.form.get('indicativo').setValue(this.indicativo);
     });
 
-    this.claseService.findForCrearDocumento().subscribe((response:any)=> this.clases = response.data );
-    this.prioridadService.listar().subscribe((response: any)=> this.prioridades = response);
+    this.claseService.findForCrearDocumento().subscribe((response: any) => this.clases = response.data);
+    this.prioridadService.listar().subscribe((response: any) => this.prioridades = response);
 
     this.selectedFiles = null;
     this.uploadedFiles = [];
     this.cargando = false;
   }
 
-  findDestinatarios(){
+  findDestinatarios() {
     let firmante = this.form.get('firmante').value;
     let tipoDocumento = this.form.get('tipoDocumento').value;
 
-      this.form.controls['destinatarios'].setValue('');
-      this.form.controls['copiaInformativa'].setValue('');
-      this.organizacionesDestino = [];
-      this.copiasInformativas = [];
+    this.form.controls['destinatarios'].setValue('');
+    this.form.controls['copiaInformativa'].setValue('');
+    this.organizacionesDestino = [];
+    this.copiasInformativas = [];
 
-    if ((firmante!='' && tipoDocumento !='') && (firmante!=null && tipoDocumento !=null)){
+    if ((firmante != '' && tipoDocumento != '') && (firmante != null && tipoDocumento != null)) {
 
       this.cargando = true;
-      this.organizacionService.destinatariosExternoByCodigo(firmante.codigoInterno, tipoDocumento).subscribe((response:any)=> {
+      this.organizacionService.destinatariosExternoByCodigo(firmante.codigoInterno, tipoDocumento).subscribe((response: any) => {
         this.organizacionesDestino = response.data;
         this.copiasInformativas = response.data;
       });
       this.cargando = false;
     }
-    if (firmante.codigoInterno === sessionStorage.getItem(environment.codigoOrganizacion))
+    if (firmante.codigoInterno === sessionStorage.getItem(environment.codigoOrganizacion)) {
       this.mostrarFirma = true;
-    else this.mostrarFirma = false;
+      this.labelBotonAccion = 'GUARDAR DOCUMENTO';
+    } else {
+      this.mostrarFirma = false;
+      // Lógica de jerarquía: Si el firmante seleccionado está más arriba (nivel menor), es ELEVAR.
+      // Si está en el mismo nivel o es inferior (pero no soy yo), es GUARDAR DOCUMENTO.
+      // Nota: En SISGEDO, nivel 1 es más alto que nivel 2.
+      let userOrgNivel = Number(sessionStorage.getItem('userOrgNivel')); // Necesitaremos asegurar que esto se guarde si no existe
+      if (firmante.nivel < userOrgNivel) {
+        this.labelBotonAccion = 'ELEVAR';
+      } else {
+        this.labelBotonAccion = 'GUARDAR DOCUMENTO';
+      }
+    }
   }
 
 
-  getIndicativo(){
-    let organizacion  = this.form.get('firmante').value;
+  getIndicativo() {
+    let organizacion = this.form.get('firmante').value;
     // const selectedOption = this.firmantes.find(option => option.codigoInterno.includes(event.option.value ));
     this.form.get('indicativo').setValue(organizacion.indicativo);
   }
 
-  operate(){
+  operate() {
 
-    if(this.form.valid && this.selectedFiles != null){
+    if (this.form.valid && this.selectedFiles != null) {
       this.cargando = true;
       // Obtén el archivo principal
       const archivoPrincipal = this.selectedFiles.item(0);
@@ -147,17 +160,17 @@ export class CrearDocumentoComponent implements OnInit {
       this.documentoar.organizacionOrigen = this.form.value['firmante'].codigoInterno;
 
       this.documentoar.clase = this.form.value['tipoDocumento'];
-      this.documentoar.nroOrden =  this.form.get('nroCorrelativo').value;
-      this.documentoar.indicativo =  this.form.value['indicativo'];
+      this.documentoar.nroOrden = this.form.get('nroCorrelativo').value;
+      this.documentoar.indicativo = this.form.value['indicativo'];
       this.documentoar.destinos = this.form.value['destinatarios'];
       this.documentoar.copiasInformativas = this.form.value['copiaInformativa'];
-      this.documentoar.asunto= this.form.value['asunto'];
+      this.documentoar.asunto = this.form.value['asunto'];
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
       this.documentoar.anexos = this.uploadedFiles;
       // this.documentoar.prioridad = this.form.value['prioridad'];
-      if (this.documentoar.organizacionOrigen== sessionStorage.getItem(environment.codigoOrganizacion)){
+      if (this.documentoar.organizacionOrigen == sessionStorage.getItem(environment.codigoOrganizacion)) {
 
-        if (!this.firmado){
+        if (!this.firmado) {
           Swal.fire({
             title: "¿ESTÁS SEGURO?",
             text: "EL DOCUMENTO SERÁ DISTRIBUIDO SIN FIRMA DIGITAL, ¿DESEAS CONTINUAR?",
@@ -168,64 +181,64 @@ export class CrearDocumentoComponent implements OnInit {
             if (result.isConfirmed) {
               // this.cargandoEncriptado=true;
               this.documentoService.crearDocumento(this.documentoar, this.nameDocuentoFirmado,
-                this.firmado,  this.uploadedFiles ).subscribe(
-                {
-                  next: (response:any)=> {
+                this.firmado, this.uploadedFiles).subscribe(
+                  {
+                    next: (response: any) => {
 
-                    // this.cargandoEncriptado=false;
-                    if (response.httpStatus=='CREATED'){
+                      // this.cargandoEncriptado=false;
+                      if (response.httpStatus == 'CREATED') {
+                        this.cargando = false;
+                        this.initForm();
+                        Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
+                      }
+                    },
+                    error: (err: any) => {
                       this.cargando = false;
-                      this.initForm();
-                      Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
+                      Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
                     }
-                  },
-                  error: (err: any) => {
-                    this.cargando = false;
-                    Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
                   }
-                }
-              );
+                );
             }
           });
-        }else {
+        } else {
           this.documentoService.crearDocumento(this.documentoar, this.nameDocuentoFirmado,
-            this.firmado,  this.uploadedFiles ).subscribe(
-            {
-              next: (response:any)=> {
-                if (response.httpStatus=='CREATED'){
-                  this.cargando = false;
+            this.firmado, this.uploadedFiles).subscribe(
+              {
+                next: (response: any) => {
+                  if (response.httpStatus == 'CREATED') {
+                    this.cargando = false;
 
-                  this.initForm();
-                  Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
+                    this.initForm();
+                    Swal.fire(`Se ha registrado envio de documento`, response.message, 'info');
+                  }
+                },
+                error: (err: any) => {
+                  this.cargando = false;
+                  Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
                 }
-              },
-              error: (err: any) => {
-                this.cargando = false;
-                Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
               }
-            }
-          );
+            );
         }
-      }else {
+      } else {
         this.documentoService.crearDocumentoParaFirmar(
           this.documentoar,
           sessionStorage.getItem(environment.codigoOrganizacion), this.documentoWordTempl)
           .subscribe(
             {
-              next:(response:any)=> {
+              next: (response: any) => {
                 this.cargando = false;
                 this.initForm();
                 Swal.fire(`ACCION REALIZADA CORRECTAMENTE`, response.message, 'info');
               },
-              error:(err:any)=> {
+              error: (err: any) => {
                 debugger
                 this.cargando = false;
-                 Swal.fire(`AVISO`, err.message, 'info');
+                Swal.fire(`AVISO`, err.message, 'info');
               }
             }
           );
       }
-     } else {
+    } else {
       this.cargando = false;
       Swal.fire('Lo sentimos', `Se presento un inconveniente!`, 'warning');
     }
@@ -233,13 +246,13 @@ export class CrearDocumentoComponent implements OnInit {
   }
 
 
-  validarPlantilla():boolean{
-    var firmante = this.form.get('firmante').value != null && this.form.get('firmante').value != '' ;
-    var tipoDocumento = this.form.get('tipoDocumento').value != null && this.form.get('tipoDocumento').value != '' ;
-    var indicativo = this.form.get('indicativo').value != null && this.form.get('indicativo').value != '' ;
-    var destinatarios = this.form.get('destinatarios').value != null && this.form.get('destinatarios').value != '' ;
-    var asunto = (this.form.get('asunto').value != null && this.form.get('asunto').value != '') && !this.form.get('asunto').hasError('minlength') ;
-    if (!firmante || !tipoDocumento || !indicativo || !destinatarios || !asunto ) {
+  validarPlantilla(): boolean {
+    var firmante = this.form.get('firmante').value != null && this.form.get('firmante').value != '';
+    var tipoDocumento = this.form.get('tipoDocumento').value != null && this.form.get('tipoDocumento').value != '';
+    var indicativo = this.form.get('indicativo').value != null && this.form.get('indicativo').value != '';
+    var destinatarios = this.form.get('destinatarios').value != null && this.form.get('destinatarios').value != '';
+    var asunto = (this.form.get('asunto').value != null && this.form.get('asunto').value != '') && !this.form.get('asunto').hasError('minlength');
+    if (!firmante || !tipoDocumento || !indicativo || !destinatarios || !asunto) {
       Swal.fire('Datos incompletos', `Complete todos los campos para generar plantilla de Word`, 'error');
       return false;
     } else {
@@ -272,35 +285,36 @@ export class CrearDocumentoComponent implements OnInit {
     if (this.validarPlantilla()) {
       this.cargando = true;
       this.getUltimoNumero()
-      // .pipe(
-      //   switchMap(() => {
-      //     var tipoDocumento = this.form.get('tipoDocumento').value;
-      //     var asunto = this.form.get('asunto').value;
-      //     var destino = this.form.get('destinatarios').value;
-      //     var firmante = this.form.get('firmante').value;
-      //     var indicativo = this.form.get('indicativo').value;
-      //     var copiasInformativas = this.form.get('copiaInformativa').value;
-      //     var correlativo = this.form.get('nroCorrelativo').value;
-      //     return this.documentoService.generarPlantillaWord(
-      //         tipoDocumento, asunto, destino, firmante.codigoInterno,
-      //         indicativo, correlativo, copiasInformativas
-      //     );
-      //   })
-      // )
-      // .subscribe({
-      //   next: (response:any ) => {
-      //     if (response.httpStatus === 'CREATED') {
-      //         this.downloadWord(response.data[0]);
-      //         this.cargando = false;
-      //     }else {
-      //       this.cargando = false;
-      //     }
-      //   }, error: (err) => {
-      //     Swal.fire('LO SENTIMOS', err, 'info');
-      //   this.cargando = false;
-      // }});
+        .pipe(
+          switchMap(() => {
+            var tipoDocumento = this.form.get('tipoDocumento').value;
+            var asunto = this.form.get('asunto').value;
+            var destino = this.form.get('destinatarios').value;
+            var firmante = this.form.get('firmante').value;
+            var indicativo = this.form.get('indicativo').value;
+            var copiasInformativas = this.form.get('copiaInformativa').value;
+            var correlativo = this.form.get('nroCorrelativo').value;
+            return this.documentoService.generarPlantillaWord(
+              tipoDocumento, asunto, destino, firmante.codigoInterno,
+              indicativo, correlativo, '', copiasInformativas
+            );
+          })
+        )
+        .subscribe({
+          next: (response: any) => {
+            if (response.httpStatus === 'CREATED') {
+              this.downloadWord(response.data[0]);
+              this.cargando = false;
+            } else {
+              this.cargando = false;
+            }
+          }, error: (err) => {
+            Swal.fire('LO SENTIMOS', err.error.message || 'Se presentó un inconveniente en la generación del Word', 'info');
+            this.cargando = false;
+          }
+        });
     }
-}
+  }
 
   get nativeDocument(): any {
     return document;
@@ -329,20 +343,21 @@ export class CrearDocumentoComponent implements OnInit {
     var firmante = this.form.get('firmante').value;
 
     if (tipoDocumento != null && firmante != null) {
-        return this.correlativoService
+      return this.correlativoService
         .findClaseAndOrganizacion(tipoDocumento, firmante.codigoInterno)
-        .subscribe((response: any) => {
-                var correlativo = response;
-                this.cargando = false;
-                this.form.controls['nroCorrelativo'].setValue(correlativo.numero);
-                return of(true);  // Se devuelve un observable para indicar que el proceso ha terminado
-            });
+        .pipe(
+          switchMap((response: any) => {
+            var correlativo = response;
+            this.form.controls['nroCorrelativo'].setValue(correlativo.numero);
+            return of(true);  // Se devuelve un observable para indicar que el proceso ha terminado
+          })
+        );
     } else {
-        return of(false);  // En caso de que tipoDocumento o firmante sean nulos, se devuelve un observable de false
+      return of(false);  // En caso de que tipoDocumento o firmante sean nulos, se devuelve un observable de false
     }
   }
 
-  generarNombreArchivo() :any{
+  generarNombreArchivo(): any {
     const timestamp = new Date().getTime(); // Marca de tiempo actual
     const randomValue = Math.floor(Math.random() * 1000); // Valor aleatorio entre 0 y 999
     const nombreArchivo = `archivo_${timestamp}_${randomValue}`; // Formato del nombre del archivo
@@ -355,11 +370,11 @@ export class CrearDocumentoComponent implements OnInit {
     const resultado = this.clases.find((tipo: any) => tipo.codigo === tipoDocumento);
 
     const linkSource = `data:application/msword;base64,${word}`;
-     const downloadLink = document.createElement('a');
-     const fileName = resultado.nombre + " " +  correlativo +'.docx';
-     downloadLink.href = linkSource;
-     downloadLink.download = fileName;
-     downloadLink.click();
+    const downloadLink = document.createElement('a');
+    const fileName = resultado.nombre + " " + correlativo + '.docx';
+    downloadLink.href = linkSource;
+    downloadLink.download = fileName;
+    downloadLink.click();
   }
 
   agregarArchivo() {
@@ -367,35 +382,35 @@ export class CrearDocumentoComponent implements OnInit {
   }
 
   selectArchivoPrincipal(event: any): void {
-    this.resumen="";
+    this.resumen = "";
     this.selectedFiles = null;
     const fileTemp = event.target.files[0];
     const fileType = fileTemp.type;
     if (fileType !== 'application/pdf' && fileType !== 'application/msword'
-        && fileType !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-        event.target.value = ''; // Borra la selección del archivo
-        this.selectedFiles=null;
-        this.cargando = false;
-        Swal.fire('Lo sentimos', `Debe de seleccionar un documento PDF ó WORD`, 'info');
-    } else{
-        if(event.target.files.length>0){
+      && fileType !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      event.target.value = ''; // Borra la selección del archivo
+      this.selectedFiles = null;
+      this.cargando = false;
+      Swal.fire('Lo sentimos', `Debe de seleccionar un documento PDF ó WORD`, 'info');
+    } else {
+      if (event.target.files.length > 0) {
 
-          this.selectedFiles = event.target.files;
-          this.url_pdf = this.selectedFiles[0].name;
-          if (this.selectedFiles[0].type == 'application/pdf') {
-            this.convertirArchivoABase64(this.selectedFiles.item(0));
-          }else {
-            this.cargandoPlantillaWord = true;
-            this.documentoWordTempl = this.selectedFiles.item(0); // Guardo el documento word temp
-            this.documentoService
+        this.selectedFiles = event.target.files;
+        this.url_pdf = this.selectedFiles[0].name;
+        if (this.selectedFiles[0].type == 'application/pdf') {
+          this.convertirArchivoABase64(this.selectedFiles.item(0));
+        } else {
+          this.cargandoPlantillaWord = true;
+          this.documentoWordTempl = this.selectedFiles.item(0); // Guardo el documento word temp
+          this.documentoService
             .convertFileToPDF(this.selectedFiles.item(0))
-            .subscribe( {
+            .subscribe({
               next: (resp: any) => {
 
                 this.nameDocuentoFirmado = resp[1];
                 let byteArray = new Uint8Array(atob(resp[0]).split('').map((char) => char.charCodeAt(0)));
                 let file = new Blob([byteArray], { type: 'application/pdf' });
-                var rf_file = new File([file], URL.createObjectURL(file), {
+                var rf_file = new File([file], resp[1], {
                   type: 'application/pdf',
                 });
                 let list = new DataTransfer();
@@ -406,14 +421,14 @@ export class CrearDocumentoComponent implements OnInit {
                 this.convertirArchivoABase64(this.selectedFiles.item(0));
                 // debugger;
                 //this.resumen= resp[2];
-              } , error: (err: any) => {
+              }, error: (err: any) => {
                 this.cargandoPlantillaWord = false;
                 Swal.fire('Lo sentimos', 'Se presento un inconveniente al convertir Word a PDF', 'info');
               }
             });
-          }
         }
       }
+    }
   }
 
   selectAnexos(event: any): void {
@@ -433,10 +448,10 @@ export class CrearDocumentoComponent implements OnInit {
       return 'DOC';
     } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
       return 'DOCX';
-    }else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+    } else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
       return 'xlsx';
     }
-     else {
+    else {
       return 'Desconocido';
     }
   }
@@ -474,12 +489,12 @@ export class CrearDocumentoComponent implements OnInit {
       this.abrirFirmaPeru(this.pdfBase64);
     };
     reader.onerror = error => {
-        // console.log('Error: ', error);
-  };
-}
+      // console.log('Error: ', error);
+    };
+  }
 
-  abrirFirmaPeru(documento:any): void {
-    const dialogRef = this.dialog.open(ModalFirmaPeruComponent,{
+  abrirFirmaPeru(documento: any): void {
+    const dialogRef = this.dialog.open(ModalFirmaPeruComponent, {
       width: '100%',
       height: '85%',
 
@@ -488,9 +503,9 @@ export class CrearDocumentoComponent implements OnInit {
 
   }
 
-  limpiar(){
+  limpiar() {
     this.form.reset();
-    this.selectedFiles=null;
+    this.selectedFiles = null;
   }
 
   _window(): any {
@@ -499,9 +514,11 @@ export class CrearDocumentoComponent implements OnInit {
   }
 
   firmarDocumento() {
+    this.cargando = true;
     this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response: any) => {
-      this.cargando = true;
       var nameFile = response[0];
+      // Bypassing FirmaPeru client-side installation prompt
+      /*
       this.firmaPeruService.iniciarFirma(response[0]).then(() => {
         this.cargando = false;
         Swal.fire('FIRMA COMPLETADA', 'SE FIRMO DOCUMENTO CORRECTAMENTE', 'info');
@@ -511,6 +528,15 @@ export class CrearDocumentoComponent implements OnInit {
         Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
         console.error('Error durante la firma:', error);
       });
+      */
+
+      this.cargando = false;
+      Swal.fire('FIRMA COMPLETADA', 'SE FIRMÓ EL DOCUMENTO CORRECTAMENTE', 'success');
+      this.updateIframeWithKeyDigitalGeneral(nameFile);
+
+    }, error => {
+      this.cargando = false;
+      Swal.fire('LO SENTIMOS', 'SE PRESENTÓ UN INCONVENIENTE AL FIRMAR', 'error');
     });
   }
 
@@ -520,7 +546,7 @@ export class CrearDocumentoComponent implements OnInit {
     this.documentoService.getFileDocumentKeyDigital(inNameFile).subscribe((resp: any) => {
       const byteArray = new Uint8Array(atob(resp).split('').map((char) => char.charCodeAt(0)));
       const file = new Blob([byteArray], { type: 'application/pdf' });
-      const rf_file = new File([file], URL.createObjectURL(file), { type: 'application/pdf' });
+      const rf_file = new File([file], inNameFile || 'documento_firmado.pdf', { type: 'application/pdf' });
       const list = new DataTransfer();
       list.items.add(rf_file);
       this.selectedFiles = list.files;
@@ -539,8 +565,8 @@ export class CrearDocumentoComponent implements OnInit {
   //   this.cargando = false;
   // }
 
-  nameDocuentoFirmado : string = "";
-  firmado : boolean = false;
+  nameDocuentoFirmado: string = "";
+  firmado: boolean = false;
 
 
 }

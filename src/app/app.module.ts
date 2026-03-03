@@ -51,11 +51,11 @@ export function tokenGetter() {
     MatInputModule,
     JwtModule.forRoot({
       config: {
-      tokenGetter: tokenGetter,
-      allowedDomains: ["localhost:8080"],
-      //allowedDomains: ["sisgedo.ejercito.mil.pe",  "backend-balanceo-1.ejercito.mil.pe", "backend-balanceo-2.ejercito.mil.pe"],
-      disallowedRoutes: ["http://localhost:8080/login/forget"]
-      //disallowedRoutes: ["https://sisgedo.ejercito.mil.pe/login/forget"],
+        tokenGetter: tokenGetter,
+        allowedDomains: ["localhost:8081"],
+        //allowedDomains: ["sisgedo.ejercito.mil.pe",  "backend-balanceo-1.ejercito.mil.pe", "backend-balanceo-2.ejercito.mil.pe"],
+        disallowedRoutes: ["http://localhost:8081/back-sisgedo/login/forget"]
+        //disallowedRoutes: ["https://sisgedo.ejercito.mil.pe/login/forget"],
       },
     }),
 
@@ -64,7 +64,7 @@ export function tokenGetter() {
   providers: [DocumentoService, ClaseService, OrganizacionService,
     {
       provide: RECAPTCHA_SETTINGS,
-      useValue: {  siteKey: environment.recaptcha.siteKey,} as RecaptchaSettings,
+      useValue: { siteKey: environment.recaptcha.siteKey, } as RecaptchaSettings,
     },
     {
       provide: RECAPTCHA_V3_SITE_KEY,
@@ -76,7 +76,7 @@ export function tokenGetter() {
     {
       provide: LocationStrategy, useClass: HashLocationStrategy
     },
-    {provide: OverlayContainer, useClass: FullscreenOverlayContainer}
+    { provide: OverlayContainer, useClass: FullscreenOverlayContainer }
   ],
 
   bootstrap: [AppComponent]

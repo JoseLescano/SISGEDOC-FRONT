@@ -14,11 +14,11 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 })
 export class EstadisticaSAComponent implements OnInit {
 
-  cargandoNucleo : boolean;
+  cargandoNucleo: boolean;
   documentoBandejaBySuperAdm: boolean;
   barChart: Chart;
   barChartHorizontal: Chart;
-  type : any = 'bar';
+  type: any = 'bar';
   mostrarDetalleGrafica: boolean = false;
   nucleos: Organizacion[] = [];
   nucleoSeleccionado: Organizacion = null;
@@ -27,10 +27,10 @@ export class EstadisticaSAComponent implements OnInit {
   unidades: Organizacion[] = [];
   unidadSeleccionada: Organizacion = null;
 
-  countPendientes:number=0;
-  countFirmar:number=0;
-  countArchivados:number=0;
-  countRemitidos: number= 0;
+  countPendientes: number = 0;
+  countFirmar: number = 0;
+  countArchivados: number = 0;
+  countRemitidos: number = 0;
 
   constructor(
     private documentoService: DocumentoService,
@@ -44,7 +44,7 @@ export class EstadisticaSAComponent implements OnInit {
 
   verNucleo() {
     this.cargandoNucleo = true;
-    this.organizacionService.getUnidadNucleo().subscribe((response:any)=> {
+    this.organizacionService.getUnidadNucleo().subscribe((response: any) => {
       this.nucleos = response.data;
     }, error => {
       Swal.fire('LO SENTIMOS', 'Error en la carga de nucleos', 'info');
@@ -54,46 +54,32 @@ export class EstadisticaSAComponent implements OnInit {
       next: (response: any) => {
         this.cargandoNucleo = false;
         let etiquetas = response.map(x => x.etiqueta);
-        let valores = response.map(x => x.valor);
         let ids = response.map(x => x.codigo);
         this.barChart = new Chart('canvas', {
           type: 'bar',
           data: {
             labels: etiquetas,
-            datasets: [{
-              label: 'DOCUMENTOS EN BANDEJA DE NUCLEOS',
-              data: valores,
-              backgroundColor: [
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(201, 203, 207, 0.2)',
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 205, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-              ],
-              borderColor: [
-                'rgb(54, 162, 235)',
-                'rgb(153, 102, 255)',
-                'rgb(201, 203, 207)',
-                'rgb(255, 99, 132)',
-                'rgb(255, 159, 64)',
-                'rgb(255, 205, 86)',
-                'rgb(75, 192, 192)',
-              ],
-              borderWidth: 1
-            }],
+            datasets: [
+              { label: 'Pendientes', data: response.map(x => x.pendientes), backgroundColor: 'rgba(54, 162, 235, 0.8)' },
+              { label: 'Por Firmar', data: response.map(x => x.firmar), backgroundColor: 'rgba(153, 102, 255, 0.8)' },
+              { label: 'Archivados', data: response.map(x => x.archivados), backgroundColor: 'rgba(201, 203, 207, 0.8)' },
+              { label: 'Remitidos', data: response.map(x => x.remitidos), backgroundColor: 'rgba(255, 99, 132, 0.8)' }
+            ],
           },
           options: {
             aspectRatio: 2.5,
             responsive: true,
+            scales: {
+              x: { stacked: true },
+              y: { stacked: true }
+            },
             onClick: (event, elements) => {
               if (elements.length > 0) {
                 const index = elements[0].index;
                 let idSeleccionado = ids[index];
                 this.documentoService.countStadisticForSuperADM(idSeleccionado).subscribe(
                   {
-                    next : (response:any)=> {
+                    next: (response: any) => {
                       this.countPendientes = response.PENDIENTES;
                       this.countArchivados = response.ARCHIVADOS;
                       this.countFirmar = response.PARA_FIRMA;
@@ -105,16 +91,15 @@ export class EstadisticaSAComponent implements OnInit {
             },
             plugins: {
               datalabels: {
-                anchor: 'end',
-                align: 'end',
-                formatter: function(value) {
-                  return 'Total: ' + value;
+                anchor: 'center',
+                align: 'center',
+                color: '#fff',
+                formatter: function (value) {
+                  return value > 0 ? value : '';
                 },
                 font: {
                   weight: 'bold'
-                },
-                offset: -5,
-
+                }
               }
             }
           },
@@ -132,7 +117,7 @@ export class EstadisticaSAComponent implements OnInit {
     }
   }
 
-  mostrarGraficaDetalle(id: string, uu:string) {
+  mostrarGraficaDetalle(id: string, uu: string) {
     this.documentoBandejaBySuperAdm = true;
     //
     this.documentoService.getDocumentoBandejaBySuperAdm(id).subscribe({
@@ -144,42 +129,40 @@ export class EstadisticaSAComponent implements OnInit {
         }
 
         let etiquetas = response.map(x => x.etiqueta);
-        let valores = response.map(x => x.valor);
-        let ids = response.map(x => x.codigo);
         this.barChartHorizontal = new Chart('canvasHorizontal', {
 
           type: 'bar',
           data: {
             labels: etiquetas,
-            datasets: [{
-              indexAxis: 'y',
-              label: `DOCUMENTOS EN BANDEJA DE LAS UU - ${uu}`,
-              data: valores,
-              backgroundColor: [
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(201, 203, 207, 0.2)',
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 205, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-              ],
-              borderColor: [
-                'rgb(54, 162, 235)',
-                'rgb(153, 102, 255)',
-                'rgb(201, 203, 207)',
-                'rgb(255, 99, 132)',
-                'rgb(255, 159, 64)',
-                'rgb(255, 205, 86)',
-                'rgb(75, 192, 192)',
-              ],
-              borderWidth: 1
-            }],
+            datasets: [
+              { indexAxis: 'y', label: 'Pendientes', data: response.map(x => x.pendientes), backgroundColor: 'rgba(54, 162, 235, 0.8)' },
+              { indexAxis: 'y', label: 'Por Firmar', data: response.map(x => x.firmar), backgroundColor: 'rgba(153, 102, 255, 0.8)' },
+              { indexAxis: 'y', label: 'Archivados', data: response.map(x => x.archivados), backgroundColor: 'rgba(201, 203, 207, 0.8)' },
+              { indexAxis: 'y', label: 'Remitidos', data: response.map(x => x.remitidos), backgroundColor: 'rgba(255, 99, 132, 0.8)' }
+            ],
           },
           options: {
             aspectRatio: 2.5,
             responsive: true,
-          }
+            scales: {
+              x: { stacked: true },
+              y: { stacked: true }
+            },
+            plugins: {
+              datalabels: {
+                anchor: 'center',
+                align: 'center',
+                color: '#fff',
+                formatter: function (value) {
+                  return value > 0 ? value : '';
+                },
+                font: {
+                  weight: 'bold'
+                }
+              }
+            }
+          },
+          plugins: [ChartDataLabels]
         });
       },
       error: (err: any) => {
@@ -190,45 +173,45 @@ export class EstadisticaSAComponent implements OnInit {
     this.documentoBandejaBySuperAdm = false;
   }
 
-  getChildren(){
+  getChildren() {
     this.mostrarDetalleGrafica = false;
     this.brigadas = [];
     this.brigadaSeleccionada = null;
     this.unidades = [];
     this.unidadSeleccionada = null;
-    this.organizacionService.getChildrenByCodigo(this.nucleoSeleccionado.codigoInterno).subscribe((response:any)=> {
+    this.organizacionService.getChildrenByCodigo(this.nucleoSeleccionado.codigoInterno).subscribe((response: any) => {
       this.brigadas = response.data;
     });
     this.mostrarDetalle();
   }
 
-  getUnidad(){
+  getUnidad() {
     this.unidades = [];
     this.unidadSeleccionada = null;
-    this.organizacionService.getChildrenByCodigo(this.brigadaSeleccionada.codigoInterno).subscribe((response:any)=> {
+    this.organizacionService.getChildrenByCodigo(this.brigadaSeleccionada.codigoInterno).subscribe((response: any) => {
       this.unidades = response.data;
     });
     this.mostrarDetalle();
   }
 
-  mostrarDetalle(){
+  mostrarDetalle() {
     this.mostrarDetalleGrafica = true;
-    if (this.unidadSeleccionada!= null){
+    if (this.unidadSeleccionada != null) {
       this.mostrarGraficaDetalle(this.unidadSeleccionada.codigoInterno, this.unidadSeleccionada.acronimo);
-    } else  if(this.brigadaSeleccionada!= null){
+    } else if (this.brigadaSeleccionada != null) {
       this.mostrarGraficaDetalle(this.brigadaSeleccionada.codigoInterno, this.brigadaSeleccionada.acronimo);
-    }else {
+    } else {
       this.mostrarGraficaDetalle(this.nucleoSeleccionado.codigoInterno, this.nucleoSeleccionado.acronimo);
     }
   }
 
-  exportSuperAdm(){
-    this.excelService.exportSuperAdm(this.nucleoSeleccionado.codigoInterno).subscribe((response:any)=> {
-      this.descargarExporExcel(response, "REPORTE" );
+  exportSuperAdm() {
+    this.excelService.exportSuperAdm(this.nucleoSeleccionado.codigoInterno).subscribe((response: any) => {
+      this.descargarExporExcel(response, "REPORTE");
     })
   }
 
-  descargarExporExcel(blob:any, nombreDescarga:any){
+  descargarExporExcel(blob: any, nombreDescarga: any) {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;

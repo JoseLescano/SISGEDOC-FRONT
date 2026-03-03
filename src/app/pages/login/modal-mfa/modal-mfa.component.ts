@@ -19,7 +19,7 @@ export class ModalMfaComponent implements OnInit, OnDestroy {
   @Output() cerrarDialogo = new EventEmitter<void>();
   status: string;
   secretImageUri: any;
-  authResponse: string ="";
+  authResponse: string = "";
   otpCode = '';
   showProgressBar: boolean = false;
   intentos: number = 0;
@@ -40,11 +40,11 @@ export class ModalMfaComponent implements OnInit, OnDestroy {
     if (this.data.response.status == "0") {
       this.status = "0"
       this.saveTwoFactor();
-    }else {
+    } else {
       this.status = "1"
     }
 
-   this.startDialogCloseTimer();
+    this.startDialogCloseTimer();
 
   }
 
@@ -97,7 +97,8 @@ export class ModalMfaComponent implements OnInit, OnDestroy {
     this.cd.detectChanges();
     const verifyRequest: any = {
       cip: this.data.response.cip,
-      code: this.otpCode
+      code: this.otpCode,
+      secret: this.data.response.secret
     };
 
     this.loginService.verifyCode(verifyRequest).subscribe({
@@ -111,14 +112,15 @@ export class ModalMfaComponent implements OnInit, OnDestroy {
           const decodedToken = helper.decodeToken(token);
           const username = decodedToken.sub;
           const perfil = decodedToken.perfil;
-          sessionStorage.setItem(environment.rol, perfil.rol.codigo );
+          sessionStorage.setItem(environment.rol, perfil.rol.codigo);
           sessionStorage.setItem(environment.codigoOrganizacion, perfil.organizacion.codigoInterno);
-          sessionStorage.setItem(environment.cargoSeleccionado, perfil.nombre + " - " +  perfil.organizacion.acronimo);
+          sessionStorage.setItem('userOrgNivel', perfil.organizacion.nivel);
+          sessionStorage.setItem(environment.cargoSeleccionado, perfil.nombre + " - " + perfil.organizacion.acronimo);
           sessionStorage.setItem(environment.nombreOrganizacion, perfil.organizacion.acronimo);
           this.router.navigate(['/principal/dashboard']).then(() => {
-           location.reload();
+            location.reload();
           });
-          Swal.fire('Bienvenido al SISGEDO','', 'success');
+          Swal.fire('Bienvenido al SISGEDO', '', 'success');
         } else {
           console.error('No access_token in response');
         }

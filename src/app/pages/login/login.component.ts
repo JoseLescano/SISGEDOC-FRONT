@@ -6,6 +6,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalMfaComponent } from './modal-mfa/modal-mfa.component';
 import { Router } from '@angular/router';
+import { ModalRecoveryComponent } from './modal-recovery/modal-recovery.component';
 
 
 @Component({
@@ -13,10 +14,10 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent{
+export class LoginComponent {
 
   error: string;
- message: string;
+  message: string;
   _formulario: FormGroup;
   username: string;
   fullname: string;
@@ -33,7 +34,7 @@ export class LoginComponent{
     private recaptchaV3Service: ReCaptchaV3Service,
     public dialog: MatDialog,
     private loginService: LoginService,
-     private router: Router,
+    private router: Router,
   ) {
     this._formulario = new FormGroup({
       username: new FormControl("", Validators.required),
@@ -42,13 +43,13 @@ export class LoginComponent{
   }
 
   login() {
-     if (this._formulario.invalid) {
-       if (this._formulario.get("username").invalid) this.username_aux = true;
-       if (this._formulario.get("password").invalid) this.password_aux = true;
-       Swal.fire('LO SENTIMOS', 'INGRESE USUARIO Y/O CONTRASEÑA PARA PODER INGRESAR', 'info');
-       return;
-     }
-     this.executeReCaptcha('login_action');
+    if (this._formulario.invalid) {
+      if (this._formulario.get("username").invalid) this.username_aux = true;
+      if (this._formulario.get("password").invalid) this.password_aux = true;
+      Swal.fire('LO SENTIMOS', 'INGRESE USUARIO Y/O CONTRASEÑA PARA PODER INGRESAR', 'info');
+      return;
+    }
+    this.executeReCaptcha('login_action');
   }
 
   executeReCaptcha(action: string): void {
@@ -73,10 +74,10 @@ export class LoginComponent{
       password: this.password,
       token: this.recaptchaToken
     };
-    this.loginService.login(jwtRequest).subscribe( {
-      next : (response)=> {
+    this.loginService.login(jwtRequest).subscribe({
+      next: (response) => {
         this.openModalMfaStatus0(this.username, response);
-      },  error : (err:any) => {
+      }, error: (err: any) => {
         Swal.fire('AVISO', err.message, 'info');
       }
     });
@@ -89,6 +90,13 @@ export class LoginComponent{
     });
     dialogRef.componentInstance.cerrarDialogo.subscribe(() => {
       dialogRef.close();
+    });
+  }
+
+  openRecoveryModal(): void {
+    this.dialog.open(ModalRecoveryComponent, {
+      width: '400px',
+      disableClose: true
     });
   }
 

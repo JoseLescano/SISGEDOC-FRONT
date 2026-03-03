@@ -1,0 +1,39 @@
+<div class="recovery-backdrop">
+  <div class="recovery-card">
+    <div class="recovery-header">
+      <span class="recovery-icon">🔑</span>
+      <h2>Recuperar Contraseña</h2>
+      <p>Ingresa tus datos para verificar tu identidad</p>
+    </div>
+
+    <form class="recovery-form" (ngSubmit)="recuperar()">
+      <div class="form-group">
+        <label>CIP</label>
+        <input type="text" [(ngModel)]="cip" name="cip"
+               placeholder="Ej: 328765300" maxlength="20" required />
+      </div>
+
+      <div class="form-group">
+        <label>DNI</label>
+        <input type="text" [(ngModel)]="dni" name="dni"
+               placeholder="Ej: 44211072" maxlength="8" required />
+      </div>
+
+      <div class="form-group">
+        <label>Correo Electrónico (Chasqui)</label>
+        <input type="email" [(ngModel)]="correo" name="correo"
+               placeholder="Ej: jlescanos@ejercito.mil.pe" required />
+      </div>
+
+      <div class="recovery-actions">
+        <button type="submit" class="btn-recover" [disabled]="cargando">
+          <span *ngIf="!cargando">Recuperar Contraseña</span>
+          <span *ngIf="cargando">Enviando...</span>
+        </button>
+        <button type="button" class="btn-cancel" (click)="cerrar()">Cancelar</button>
+      </div>
+    </form>
+
+    <mat-progress-bar mode="indeterminate" *ngIf="cargando" style="margin-top:8px;"></mat-progress-bar>
+  </div>
+</div>

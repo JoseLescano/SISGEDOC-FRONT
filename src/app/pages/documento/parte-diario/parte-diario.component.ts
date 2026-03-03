@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewDocumentoComponent } from '../view-documento/view-documento.component';
-import {MatPaginator, PageEvent} from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { SeguimientoComponent } from '../../report/seguimiento/seguimiento.component';
 import { TimelineComponent } from '../../report/timeline/timeline.component';
 
@@ -19,7 +19,7 @@ import { TimelineComponent } from '../../report/timeline/timeline.component';
 })
 export class ParteDiarioComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['Nro', 'Asunto', 'Origen','Destino', 'FechaDoc', 'Documento',  'Acciones'];
+  displayedColumns: string[] = ['Nro', 'Asunto', 'Origen', 'Destino', 'FechaDoc', 'Documento', 'Acciones'];
   dataSource: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -29,34 +29,35 @@ export class ParteDiarioComponent implements OnInit, AfterViewInit {
   pageSize = 20;
   pageIndex = 0;
   totalElements: number = 0;
-  documentoSeleccionado:Documento;
+  documentoSeleccionado: Documento;
 
 
   constructor(private documentoService: DocumentoService,
-              private route: ActivatedRoute,
-              private router: Router,
-              public dialog: MatDialog) { }
+    private route: ActivatedRoute,
+    private router: Router,
+    public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.cargando = true;
     this.loadTable(this.pageIndex, this.pageSize);
   }
 
-  loadTable(page:any, size:any, sortField: string = 'codigo', sortDirection: string = 'desc'){
+  loadTable(page: any, size: any, sortField: string = 'codigo', sortDirection: string = 'desc') {
     this.documentoService.findParaParte(
-      sessionStorage.getItem(environment.codigoOrganizacion),page, size, sortField, sortDirection )
+      sessionStorage.getItem(environment.codigoOrganizacion), page, size, sortField, sortDirection)
       .subscribe(
-      {
-        next : (data: any) => {
-        this.totalElements = data.totalElements;
-        this.createTable(data.content);
-        this.cargando = false;
-        }, error: err => {
-        this.cargando = false;
-        Swal.fire('Lo sentimos', err, 'warning');
+        {
+          next: (data: any) => {
+            this.totalElements = data.totalElements;
+            this.createTable(data.content);
+            this.cargando = false;
+          }, error: err => {
+            this.cargando = false;
+            const msg = err.error?.message || err.message || err.statusText || err;
+            Swal.fire('Lo sentimos', 'Error al cargar los documentos para firma: ' + msg, 'error');
+          }
         }
-      }
-    );
+      );
   }
 
   createTable(documentos: any[]) {
@@ -66,7 +67,7 @@ export class ParteDiarioComponent implements OnInit, AfterViewInit {
       this.dataSource.sort = this.sort;
 
       this.dataSource.sortingDataAccessor = (item, property) => {
-        switch(property) {
+        switch (property) {
           case 'Nro': return item.codigo;
           case 'Asunto': return item.asunto.toLowerCase();
           case 'FechaDoc': return item.fechaDocumento;
@@ -84,12 +85,12 @@ export class ParteDiarioComponent implements OnInit, AfterViewInit {
   showMore(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    if (this.pageSize>20)
-      this.loadTable(this.pageIndex, this.pageSize, 'codigo','desc');
+    if (this.pageSize > 20)
+      this.loadTable(this.pageIndex, this.pageSize, 'codigo', 'desc');
     else this.loadTable(this.pageIndex, this.pageSize);
   }
 
-  viewTimeline(vidDocumento: any){
+  viewTimeline(vidDocumento: any) {
     const dialogRef = this.dialog.open(TimelineComponent, {
       width: '60%',
       height: '95%',
@@ -106,13 +107,15 @@ export class ParteDiarioComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.sort.sortChange.subscribe((sort: Sort) => {
-      this.pageIndex = 0; // Reinicia a la primera página si cambia el orden
-      this.loadTable(this.pageIndex, this.pageSize, sort.active, sort.direction);
-    });
+    if (this.sort) {
+      this.sort.sortChange.subscribe((sort: Sort) => {
+        this.pageIndex = 0; // Reinicia a la primera página si cambia el orden
+        this.loadTable(this.pageIndex, this.pageSize, sort.active, sort.direction);
+      });
+    }
   }
 
-  verDocumento(documentoSeleccionado?:any): void {
+  verDocumento(documentoSeleccionado?: any): void {
     const dialogRef = this.dialog.open(ViewDocumentoComponent, {
       width: '60%',
       height: '95%',
@@ -120,7 +123,7 @@ export class ParteDiarioComponent implements OnInit, AfterViewInit {
     });
   }
 
-  viewSeguimiento(documentoSeleccionado?:any): void {
+  viewSeguimiento(documentoSeleccionado?: any): void {
     const dialogRef = this.dialog.open(SeguimientoComponent, {
       width: '60%',
       height: '95%',

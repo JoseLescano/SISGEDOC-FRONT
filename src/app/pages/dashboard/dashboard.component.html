@@ -1,45 +1,45 @@
-
 <div class="container loader" *ngIf="cargando"></div>
 <div class="widget-container " style="cursor: pointer;"
-  *ngIf="!cargando && (codigoRol=='000' || codigoRol=='002')">
+  *ngIf="!cargando && (codigoRol=='000' || codigoRol=='002' || codigoRol=='SAD' || codigoRol=='ADM' || codigoRol=='JSE' || codigoRol=='JNA' || codigoRol=='JAC')">
   <div class="widget yellow" (click)="viewCorregir()">
-      <div class="icon">
-        <i class="fas fa-exclamation-triangle"></i>
-      </div>
-      <div class="value">
-        <div class="top">{{corregir}}</div>
-        <div class="bottom">POR CORREGIR</div>
-      </div>
+    <div class="icon">
+      <i class="fas fa-exclamation-triangle"></i>
     </div>
-    <div class="widget blue" (click)="viewDevueltos()">
-      <div class="icon">
-        <i class="fas fa-undo-alt"></i>
-      </div>
-      <div class="value">
-        <div class="top">{{devueltos}}</div>
-        <div class="bottom">DEVUELTOS</div>
-      </div>
+    <div class="value">
+      <div class="top">{{corregir}}</div>
+      <div class="bottom">POR CORREGIR</div>
     </div>
-    <div class="widget green" (click)="viewParteDiario()">
-      <div class="icon">
-        <i class="fas fa-file-contract"></i>
-      </div>
-      <div class="value">
-        <div class="top">{{parte}}</div>
-        <div class="bottom">PARA FIRMAR</div>
-      </div>
+  </div>
+  <div class="widget blue" (click)="viewDevueltos()">
+    <div class="icon">
+      <i class="fas fa-undo-alt"></i>
     </div>
-    <div class="widget red" (click)="viewPendientes()">
-      <div class="icon">
-        <i class="fas fa-envelope"></i>
-      </div>
-      <div class="value" >
-        <div class="top">{{pendientes}}</div>
-        <div class="bottom">PENDIENTES</div>
-      </div>
+    <div class="value">
+      <div class="top">{{devueltos}}</div>
+      <div class="bottom">DEVUELTOS</div>
     </div>
+  </div>
+  <div class="widget green" (click)="viewParteDiario()">
+    <div class="icon">
+      <i class="fas fa-file-contract"></i>
+    </div>
+    <div class="value">
+      <div class="top">{{parte}}</div>
+      <div class="bottom">PARA FIRMAR</div>
+    </div>
+  </div>
+  <div class="widget red" (click)="viewPendientes()">
+    <div class="icon">
+      <i class="fas fa-envelope"></i>
+    </div>
+    <div class="value">
+      <div class="top">{{pendientes}}</div>
+      <div class="bottom">PENDIENTES</div>
+    </div>
+  </div>
 
 </div>
-<app-pendiente *ngIf="codigoRol=='000' || codigoRol=='002'"></app-pendiente>
-<app-recibir *ngIf="codigoRol=='001'"></app-recibir>
+<app-pendiente
+  *ngIf="codigoRol=='000' || codigoRol=='002' || codigoRol=='SAD' || codigoRol=='ADM' || codigoRol=='JSE' || codigoRol=='JNA' || codigoRol=='JAC'"></app-pendiente>
+<app-recibir *ngIf="codigoRol=='001' || codigoRol=='MPA'"></app-recibir>
 <app-esquema *ngIf="codigoRol=='004'"></app-esquema>

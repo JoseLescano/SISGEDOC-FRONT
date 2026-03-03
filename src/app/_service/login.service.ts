@@ -8,7 +8,7 @@ import { Observable, catchError } from 'rxjs';
 export interface ILoginRequest {
   username: string;
   password: string;
-  token:string;
+  token: string;
 }
 interface Token {
   token: string
@@ -19,7 +19,7 @@ interface Token {
 })
 export class LoginService {
 
-  private url : string = environment.HOST+'login';
+  private url: string = environment.HOST + 'login';
 
   constructor(
     private http: HttpClient,
@@ -28,7 +28,7 @@ export class LoginService {
 
   login(jwtRequest: ILoginRequest): Observable<any> {
     debugger
-    jwtRequest.username =jwtRequest.username.toLowerCase();
+    jwtRequest.username = jwtRequest.username.toLowerCase();
     return this.http.post<any>(`${this.url}/ad`, jwtRequest);
   }
 
@@ -37,7 +37,7 @@ export class LoginService {
     this.router.navigate(['/login']);
   }
 
-  isLogged(){
+  isLogged() {
     const token = sessionStorage.getItem(environment.TOKEN_NAME);
     return token != null;
   }
@@ -48,8 +48,12 @@ export class LoginService {
   }
 
   key_recaptcha(token: string) {
-    const body: Token = {token};
+    const body: Token = { token };
     return this.http.post((`${this.url}/captcha`), body);
+  }
+
+  recoverPassword(data: { cip: string; dni: string; correo: string }): Observable<any> {
+    return this.http.post<any>(`${this.url}/recover-password`, data);
   }
 
 }

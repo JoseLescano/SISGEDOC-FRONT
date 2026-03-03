@@ -20,33 +20,33 @@ import { FirmaPeruService } from 'src/app/_service/firma-peru.service';
 })
 export class FormComponent implements OnInit {
 
-  documento:Documento;
-  documentoRespuesta : Documento = null ;
-  errorPDF : boolean = false;
-  errorPDFReferencia : boolean = false;
-  anexos:Anexo[]=[]; // de respuesta o documento remitido
+  documento: Documento;
+  documentoRespuesta: Documento = null;
+  errorPDF: boolean = false;
+  errorPDFReferencia: boolean = false;
+  anexos: Anexo[] = []; // de respuesta o documento remitido
   anexosRespuesta: Anexo[] = [];
   selectedFiles: any;
   selectedRespuesta: any;
-  url_pdf : any;
-  cargando : boolean = false;
+  url_pdf: any;
+  cargando: boolean = false;
   idDocumento: number;
-  idDecreto : number;
-  cambioPDF : boolean = false;
+  idDecreto: number;
+  cambioPDF: boolean = false;
 
   mostrarRespuesta: boolean = false;
   mostrarDistribuir: boolean = false;
   organizacionLogueada: string = "";
-  existeWord : number = 0;
-  descargo:boolean = false;
+  existeWord: number = 0;
+  descargo: boolean = false;
   isFirmado: boolean = false;
-  nameDocumentoFirmado : string = "";
+  nameDocumentoFirmado: string = "";
 
   displayedColumns: string[] = ['icono', 'info', 'acciones'];
 
 
   constructor(
-    private documentoService:DocumentoService,
+    private documentoService: DocumentoService,
     private route: ActivatedRoute,
     private documentoRespuestaService: DocumentoRespuestaService,
     private anexoService: AnexoService,
@@ -61,53 +61,53 @@ export class FormComponent implements OnInit {
     this.idDecreto = +this.route.snapshot.paramMap.get('idDecreto');
     this.idDocumento = id;
 
-    this.documentoService.findById(this.idDocumento).pipe(switchMap((response:any)=> {
+    this.documentoService.findById(this.idDocumento).pipe(switchMap((response: any) => {
 
       this.documento = response.data;
       this.organizacionLogueada = sessionStorage.getItem(environment.codigoOrganizacion);
-      this.documentoService.existByDocumento(this.idDocumento).subscribe((response: any )=> {
+      this.documentoService.existByDocumento(this.idDocumento).subscribe((response: any) => {
         this.existeWord = response;
       });
       this.findAnexosByDocumento();
       return this.documentoService.findRespuestaByVidParent(this.idDocumento, this.idDecreto);
-      })).subscribe((responseDocumentoPadre: any)=>{
-        debugger;
-      if (responseDocumentoPadre!=null){
+    })).subscribe((responseDocumentoPadre: any) => {
+      debugger;
+      if (responseDocumentoPadre != null) {
 
         this.documentoRespuesta = new Documento();
-        this.documentoRespuesta = {...responseDocumentoPadre};
+        this.documentoRespuesta = { ...responseDocumentoPadre };
         this.mostrarRespuesta = true;
         debugger;
-        if (this.documentoRespuesta.organizacionOrigen.codigoInterno==this.organizacionLogueada){
+        if (this.documentoRespuesta.organizacionOrigen.codigoInterno == this.organizacionLogueada) {
           this.mostrarDistribuir = true;
         }
-        this.documentoService.viewPDF(this.idDocumento).pipe(switchMap((viewDocumento:any)=> {
+        this.documentoService.viewPDF(this.idDocumento).pipe(switchMap((viewDocumento: any) => {
           this.crearDocumento(viewDocumento.data, 'documentoReferencia');
-          this.anexoService.findByDocumento(this.documentoRespuesta.codigo).subscribe((response:any)=> {
+          this.anexoService.findByDocumento(this.documentoRespuesta.codigo).subscribe((response: any) => {
 
             this.anexosRespuesta = response.data;
           }, error => {
             Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR ANEXOS!`, 'warning');
           });
-          return this.documentoService.viewPDF(this.documentoRespuesta.codigo, this.documentoRespuesta.tipoOrganizacion =='R'? '1': '0');
+          return this.documentoService.viewPDF(this.documentoRespuesta.codigo, this.documentoRespuesta.tipoOrganizacion == 'R' ? '1' : '0');
 
-        })).subscribe((responseRespuesta:any)=> {
+        })).subscribe((responseRespuesta: any) => {
           this.crearDocumento(responseRespuesta.data, 'documentoRespuesta');
-        }, (error:any) => {
+        }, (error: any) => {
           this.errorPDF = true;
           this.cargando = false;
           Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR PDF!`, 'warning');
         });
       } else {
 
-        if (this.documento.organizacionOrigen.codigoInterno==this.organizacionLogueada){
+        if (this.documento.organizacionOrigen.codigoInterno == this.organizacionLogueada) {
           this.mostrarDistribuir = true;
           this.mostrarRespuesta = true;
         }
-        this.documentoService.viewPDF(this.documento.codigo).subscribe((response:any)=> {
+        this.documentoService.viewPDF(this.documento.codigo).subscribe((response: any) => {
 
           this.crearDocumento(response.data, 'documentoRespuesta');
-        }, (error:any) => {
+        }, (error: any) => {
           this.errorPDF = true;
           this.cargando = false;
           Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR PDF!`, 'warning');
@@ -116,19 +116,19 @@ export class FormComponent implements OnInit {
     });
   }
 
-  descargarWordDocumento(){
+  descargarWordDocumento() {
     this.documentoService.downloadWord(this.idDocumento).subscribe({
-      next : (response:any)=> {
+      next: (response: any) => {
         this.downloadWord(response);
         this.descargo = true;
-      }, error : (err)=> {
+      }, error: (err) => {
         Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE PARA DESCARGAR DOCUMENTO WORD', 'info')
       }
     })
   }
 
-  findAnexosByDocumento(){
-    this.anexoService.findByDocumento(this.documento.codigo).subscribe((response:any)=> {
+  findAnexosByDocumento() {
+    this.anexoService.findByDocumento(this.documento.codigo).subscribe((response: any) => {
       this.anexos = response.data;
     }, error => {
       Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR ANEXOS!`, 'warning');
@@ -141,10 +141,10 @@ export class FormComponent implements OnInit {
     const fileURL = URL.createObjectURL(file);
     const iframe: any = document.getElementById(iframeId) as HTMLIFrameElement;
     iframe.contentWindow.location.replace(fileURL);
-    var rf_file = new File([file], URL.createObjectURL(file), { type: 'application/pdf'});
+    var rf_file = new File([file], URL.createObjectURL(file), { type: 'application/pdf' });
     let list = new DataTransfer();
     list.items.add(rf_file);
-    this.selectedFiles=list.files;
+    this.selectedFiles = list.files;
     this.url_pdf = this.selectedFiles[0].name;
 
   }
@@ -154,42 +154,42 @@ export class FormComponent implements OnInit {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-        const base64 = reader.result as string;
+      const base64 = reader.result as string;
     };
     reader.onerror = error => {
-        //console.log('Error: ', error);
+      //console.log('Error: ', error);
     };
   }
 
-  descargarAnexo(anexo:Anexo){
+  descargarAnexo(anexo: Anexo) {
     this.anexoService.descargarAnexo(anexo).subscribe((resp: any) => {
-        if (resp == null){
-            Swal.fire('Lo sentimos', `Archivo no disponible y/o no se encuentra`, 'error');
-        } else {
+      if (resp == null) {
+        Swal.fire('Lo sentimos', `Archivo no disponible y/o no se encuentra`, 'error');
+      } else {
 
-          let extension=anexo.url.split('.').pop();
-          extension=extension.toUpperCase();
+        let extension = anexo.url.split('.').pop();
+        extension = extension.toUpperCase();
 
-          if(extension=="PDF" ){
-            this.downloadPDF(resp[0]);
-          }
-
-          if(extension=="DOC" || extension=="DOCX"){
-            this.downloadWord(resp[0]);
-          }
-
-          if(extension=="XLSX" ||  extension=="XLS"){
-            this.downloadExcel(resp[0]);
-          }
-
-          if(extension=="PPT" ||  extension=="PPTX"){
-            this.downloadPPT(resp[0]);
-          }
-
-          if(extension=="RAR" || extension=="rar" ||  extension=="ZIP"){
-            this.downloadRar(resp[0]);
-          }
+        if (extension == "PDF") {
+          this.downloadPDF(resp[0]);
         }
+
+        if (extension == "DOC" || extension == "DOCX") {
+          this.downloadWord(resp[0]);
+        }
+
+        if (extension == "XLSX" || extension == "XLS") {
+          this.downloadExcel(resp[0]);
+        }
+
+        if (extension == "PPT" || extension == "PPTX") {
+          this.downloadPPT(resp[0]);
+        }
+
+        if (extension == "RAR" || extension == "rar" || extension == "ZIP") {
+          this.downloadRar(resp[0]);
+        }
+      }
     }, error => {
       Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN DESCARGAR ANEXO!`, 'warning');
     });
@@ -198,7 +198,7 @@ export class FormComponent implements OnInit {
   downloadPDF(pdf: any) {
     const linkSource = `data:application/pdf;base64,${pdf}`;
     const downloadLink = document.createElement('a');
-    const fileName = this.generarNombreArchivo()+'.pdf';
+    const fileName = this.generarNombreArchivo() + '.pdf';
     downloadLink.href = linkSource;
     downloadLink.download = fileName;
     downloadLink.click();
@@ -206,7 +206,7 @@ export class FormComponent implements OnInit {
   downloadPPT(ppt: any) {
     const linkSource = `data:application/vnd.openxmlformats-officedocument.presentationml.presentation;base64,${ppt}`;
     const downloadLink = document.createElement('a');
-    const fileName = this.generarNombreArchivo()+'.pptx';
+    const fileName = this.generarNombreArchivo() + '.pptx';
     downloadLink.href = linkSource;
     downloadLink.download = fileName;
     downloadLink.click();
@@ -215,13 +215,13 @@ export class FormComponent implements OnInit {
   downloadExcel(excel: any) {
     const linkSource = `data:application/vnd.ms-excel;base64,${excel}`;
     const downloadLink = document.createElement('a');
-    const fileName = this.generarNombreArchivo()+'.xlsx';
+    const fileName = this.generarNombreArchivo() + '.xlsx';
     downloadLink.href = linkSource;
     downloadLink.download = fileName;
     downloadLink.click();
   }
 
-  generarNombreArchivo() :any{
+  generarNombreArchivo(): any {
     const timestamp = new Date().getTime(); // Marca de tiempo actual
     const randomValue = Math.floor(Math.random() * 1000); // Valor aleatorio entre 0 y 999
     const nombreArchivo = `archivo_${timestamp}_${randomValue}`; // Formato del nombre del archivo
@@ -233,15 +233,15 @@ export class FormComponent implements OnInit {
     const byteCharacters = atob(rar);
     const byteNumbers = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
     const byteArray = new Uint8Array(byteNumbers);
-    const blob:any = new Blob([byteArray], { type: 'application/x-rar-compressed' });
+    const blob: any = new Blob([byteArray], { type: 'application/x-rar-compressed' });
 
     // Crear un enlace temporal y descargar el archivo
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
-    link.download =  this.generarNombreArchivo()+'.rar';
+    link.download = this.generarNombreArchivo() + '.rar';
 
     // Simular un clic en el enlace para descargar el archivo
     link.click();
@@ -249,19 +249,19 @@ export class FormComponent implements OnInit {
 
 
   downloadWord(word: any) {
-     const linkSource = `data:application/msword;base64,${word}`;
-     const downloadLink = document.createElement('a');
-     const fileName = this.generarNombreArchivo()+'.docx';
-     downloadLink.href = linkSource;
-     downloadLink.download = fileName;
-     downloadLink.click();
+    const linkSource = `data:application/msword;base64,${word}`;
+    const downloadLink = document.createElement('a');
+    const fileName = this.generarNombreArchivo() + '.docx';
+    downloadLink.href = linkSource;
+    downloadLink.download = fileName;
+    downloadLink.click();
   }
 
-  close(){
+  close() {
     //
   }
 
-  elevarDocumento(){
+  elevarDocumento() {
     Swal.fire({
       title: "¿ESTÁS SEGURO?",
       text: "EL DOCUMENTO SERÁ ELEVADO PARA EL ESCALON SUPERIOR",
@@ -270,48 +270,48 @@ export class FormComponent implements OnInit {
       confirmButtonText: "SÍ, DESEO CONTINUAR"
     }).then((result) => {
       if (result.isConfirmed) {
-        if (this.documentoRespuesta==null){ // SIN REFERENCIA
+        if (this.documentoRespuesta == null) { // SIN REFERENCIA
 
           this.decretoService.elevarDocumento(
             this.documento.codigo,
             sessionStorage.getItem(environment.codigoOrganizacion),
             this.idDecreto,
-            this.cambioPDF?this.nameDocumentoFirmado:'',0)
-          .subscribe((response:any)=> {
-            if (response.httpStatus=='CREATED'){
-              Swal.fire('DOCUMENTO ELEVADO', response.message, 'info');
-              this.router.navigate(['/principal/parte-diario']);
-            }else {
-              Swal.fire('LO SENTIMOS', response.message, 'warning');
-            }
-          }, (error: any) => {
-            Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE EN LA ELEVACION DEL DOCUMENTO', 'warning');
-          });
+            this.cambioPDF ? this.nameDocumentoFirmado : '', 0)
+            .subscribe((response: any) => {
+              if (response.httpStatus == 'CREATED') {
+                Swal.fire('DOCUMENTO ELEVADO', response.message, 'info');
+                this.router.navigate(['/principal/parte-diario']);
+              } else {
+                Swal.fire('LO SENTIMOS', response.message, 'warning');
+              }
+            }, (error: any) => {
+              Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE EN LA ELEVACION DEL DOCUMENTO', 'warning');
+            });
 
-        }else { // DOCUMENTO CON REFERENCIA
+        } else { // DOCUMENTO CON REFERENCIA
           this.decretoService.elevarDocumento(
             this.documento.codigo,
             sessionStorage.getItem(environment.codigoOrganizacion),
             this.idDecreto,
-            this.cambioPDF?this.nameDocumentoFirmado:'',
-            this.documentoRespuesta.codigo )
-          .subscribe((response:any)=> {
-            if (response.httpStatus=='CREATED'){
-              Swal.fire('DOCUMENTO ELEVADO', response.message, 'info');
-              this.router.navigate(['/principal/parte-diario']);
-            }else {
-              Swal.fire('LO SENTIMOS', response.message, 'warning');
-            }
-          }, (error:any)=> {
-            Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE EN LA ELEVACION DEL DOCUMENTO', 'warning');
-          });
+            this.cambioPDF ? this.nameDocumentoFirmado : '',
+            this.documentoRespuesta.codigo)
+            .subscribe((response: any) => {
+              if (response.httpStatus == 'CREATED') {
+                Swal.fire('DOCUMENTO ELEVADO', response.message, 'info');
+                this.router.navigate(['/principal/parte-diario']);
+              } else {
+                Swal.fire('LO SENTIMOS', response.message, 'warning');
+              }
+            }, (error: any) => {
+              Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE EN LA ELEVACION DEL DOCUMENTO', 'warning');
+            });
         }
       }
     });
 
   }
 
-  distribuirDocumento(){
+  distribuirDocumento() {
     this.cargando = true;
     this.decretoService.distrubirDocumento(
       this.documento.codigo,
@@ -319,27 +319,27 @@ export class FormComponent implements OnInit {
       this.nameDocumentoFirmado,
       this.isFirmado,
       this.idDecreto,
-      this.cambioPDF?this.selectedFiles[0]:'undefined')
-    .subscribe(
-      {
-        next : (response:any)=> {
-          if (response.httpStatus=='CREATED'){
+      this.cambioPDF ? this.selectedFiles[0] : 'undefined')
+      .subscribe(
+        {
+          next: (response: any) => {
+            if (response.httpStatus == 'CREATED') {
+              this.cargando = false;
+              Swal.fire("ACCION REALIZADA", response.message, "success");
+              this.router.navigate(['/principal/parte-diario']);
+            } else {
+              this.cargando = false;
+              Swal.fire("LO SENTIMOS", response.message, "warning");
+            }
+          },
+          error: (err: any) => {
             this.cargando = false;
-            Swal.fire("ACCION REALIZADA", response.message, "success");
-            this.router.navigate(['/principal/parte-diario']);
-          }else {
-            this.cargando = false;
-            Swal.fire("LO SENTIMOS", response.message, "warning");
+            Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE", "warning");
           }
-        },
-        error: (err: any) => {
-          this.cargando = false;
-          Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE", "warning");
-        }
-      });
+        });
   }
 
-  distribuirRespuesta(){
+  distribuirRespuesta() {
     this.cargando = true;
     this.decretoService.distrubirRespuestaDocumento(
       this.documentoRespuesta.codigo,
@@ -347,32 +347,32 @@ export class FormComponent implements OnInit {
       this.nameDocumentoFirmado,
       this.isFirmado,
       this.documento.codigo,
-      this.documentoRespuesta.tipoOrganizacion =='R'? '1': '0',
+      this.documentoRespuesta.tipoOrganizacion == 'R' ? '1' : '0',
       this.idDecreto,
-      this.cambioPDF?this.selectedFiles:'undefined')
-    .subscribe(
-      {
-        next: (response:any)=> {
-          if (response.httpStatus=='CREATED'){
+      this.cambioPDF ? this.selectedFiles : 'undefined')
+      .subscribe(
+        {
+          next: (response: any) => {
+            if (response.httpStatus == 'CREATED') {
+              this.cargando = false;
+              Swal.fire("ACCION REALIZADA", response.message, "success");
+              this.router.navigate(['/principal/parte-diario']);
+            } else {
+              this.cargando = false;
+              Swal.fire("LO SENTIMOS", response.message, "warning");
+            }
+          },
+          error: (err: any) => {
             this.cargando = false;
-            Swal.fire("ACCION REALIZADA", response.message, "success");
-            this.router.navigate(['/principal/parte-diario']);
-          } else {
-            this.cargando = false;
-            Swal.fire("LO SENTIMOS", response.message, "warning");
+            Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE", "warning");
           }
-        },
-        error : (err: any)=> {
-          this.cargando = false;
-          Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE", "warning");
         }
-      }
-    );
+      );
   }
 
-  distribuir(){
-    if (this.documentoRespuesta!=null){
-      if (!this.isFirmado){
+  distribuir() {
+    if (this.documentoRespuesta != null) {
+      if (!this.isFirmado) {
         Swal.fire({
           title: "¿ESTÁS SEGURO?",
           text: "EL DOCUMENTO SERÁ DISTRIBUIDO SIN FIRMA DIGITAL, ¿DESEAS CONTINUAR?",
@@ -385,13 +385,13 @@ export class FormComponent implements OnInit {
             //this.distribuirDocumento();
           }
         }
-       );
-      }else {
+        );
+      } else {
         this.distribuirRespuesta();
         //this.distribuirDocumento();
       }
-    }else {
-      if (!this.isFirmado){
+    } else {
+      if (!this.isFirmado) {
         Swal.fire({
           title: "¿ESTÁS SEGURO?",
           text: "EL DOCUMENTO SERÁ DISTRIBUIDO SIN FIRMA DIGITAL, ¿DESEAS CONTINUAR?",
@@ -403,7 +403,7 @@ export class FormComponent implements OnInit {
             this.distribuirDocumento();
           }
         });
-      }else {
+      } else {
         this.distribuirDocumento();
       }
     }
@@ -413,23 +413,33 @@ export class FormComponent implements OnInit {
     return window;
   }
 
-  firmarDocumento(){
-     this.cargando = true;
-     this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response: any) => {
-       var nameFile = response[0];
-       this.firmaPeruService.iniciarFirma(response[0]).then(() => {
-         this.cargando = false;
-         Swal.fire('FIRMA COMPLETADA', 'SE FIRMO DOCUMENTO CORRECTAMENTE, SE ACTUALIZARÁ DOCUMENTO', 'info');
-         this.updateIframeWithKeyDigitalGeneral(nameFile);
-       }).catch((error) => {
-         this.cargando = false;
-         Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
-         console.error('Error durante la firma:', error);
-       });
-     }, error => {
-       this.cargando = false;
-       Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
-     });
+  firmarDocumento() {
+    this.cargando = true;
+    this.documentoService.firmarDocumento(this.selectedFiles[0]).subscribe((response: any) => {
+      var nameFile = response[0];
+
+      // Se comenta FirmaPeru para usar firma con imagen en backend
+      /*
+      this.firmaPeruService.iniciarFirma(response[0]).then(() => {
+        this.cargando = false;
+        Swal.fire('FIRMA COMPLETADA', 'SE FIRMO DOCUMENTO CORRECTAMENTE, SE ACTUALIZARÁ DOCUMENTO', 'info');
+        this.updateIframeWithKeyDigitalGeneral(nameFile);
+      }).catch((error) => {
+        this.cargando = false;
+        Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
+        console.error('Error durante la firma:', error);
+      });
+      */
+
+      // Nuevo flujo: La firma con imagen ya se realizó en el backend
+      this.cargando = false;
+      Swal.fire('FIRMA COMPLETADA', 'SE FIRMO DOCUMENTO CON IMAGEN CORRECTAMENTE', 'success');
+      this.updateIframeWithKeyDigitalGeneral(nameFile);
+
+    }, error => {
+      this.cargando = false;
+      Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
+    });
   }
 
   updateIframeWithKeyDigitalGeneral(inNameFile: any) {
@@ -437,11 +447,11 @@ export class FormComponent implements OnInit {
     this.cargando = true;
     this.documentoService
       .getFileDocumentKeyDigital(inNameFile)
-      .subscribe((resp:any) => {
+      .subscribe((resp: any) => {
         this.isFirmado = true;
         this.cargando = false;
-        this.nameDocumentoFirmado= inNameFile;
-        this.crearDocumento(resp,'documentoRespuesta');
+        this.nameDocumentoFirmado = inNameFile;
+        this.crearDocumento(resp, 'documentoRespuesta');
       }, error => {
         this.cargando = false;
         Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');
@@ -462,20 +472,20 @@ export class FormComponent implements OnInit {
     const fileTemp = event.target.files[0];
     const fileType = fileTemp.type;
     if (fileType !== 'application/pdf' && fileType !== 'application/msword'
-        && fileType !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-        event.target.value = ''; // Borra la selección del archivo
-        this.selectedFiles=null;
-        Swal.fire('Lo sentimos', `Debe de seleccionar un documento PDF ó WORD`, 'info');
-    } else{
-        if(event.target.files.length>0){
-          this.selectedFiles = event.target.files;
-          this.url_pdf = this.selectedFiles[0].name;
-          if (this.selectedFiles[0].type == 'application/pdf') {
-            this.fileInIframe(this.selectedFiles[0], 'documentoRespuesta');
-            this.cargando = false;
-          }else {
-            this.cargando = true;
-            this.documentoService
+      && fileType !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      event.target.value = ''; // Borra la selección del archivo
+      this.selectedFiles = null;
+      Swal.fire('Lo sentimos', `Debe de seleccionar un documento PDF ó WORD`, 'info');
+    } else {
+      if (event.target.files.length > 0) {
+        this.selectedFiles = event.target.files;
+        this.url_pdf = this.selectedFiles[0].name;
+        if (this.selectedFiles[0].type == 'application/pdf') {
+          this.fileInIframe(this.selectedFiles[0], 'documentoRespuesta');
+          this.cargando = false;
+        } else {
+          this.cargando = true;
+          this.documentoService
             .convertFileToPDF(this.selectedFiles.item(0))
             .subscribe((resp: any) => {
               this.crearDocumento(resp, 'documentoRespuesta');
@@ -484,12 +494,12 @@ export class FormComponent implements OnInit {
               this.cargando = false;
               Swal.fire('Lo sentimos', 'Se presento un inconveniente al convertir Word a PDF', 'info');
             });
-          }
         }
       }
+    }
   }
 
-  updateDocumento(){
+  updateDocumento() {
     this.documentoService
       .convertFileToPDF(this.selectedFiles.item(0))
       .subscribe((resp: any) => {
@@ -511,10 +521,10 @@ export class FormComponent implements OnInit {
       });
   }
 
-  fileInIframe(file:any,idFrame:any){
+  fileInIframe(file: any, idFrame: any) {
     let fileURL = URL.createObjectURL(file);
     this.url_pdf = fileURL;
-    let iframe: any = document.getElementById(''+idFrame) as HTMLIFrameElement;
+    let iframe: any = document.getElementById('' + idFrame) as HTMLIFrameElement;
     iframe.contentWindow.location.replace(fileURL);
   }
 

@@ -1,5 +1,7 @@
 <div class="col-12 m-2 full-height-70">
-  <mat-card *ngIf="codigoRol=='000' || codigoRol == '002'" class="mat-card-70">
+  <mat-card
+    *ngIf="codigoRol=='000' || codigoRol == '002' || codigoRol=='SAD' || codigoRol=='ADM' || codigoRol=='JSE' || codigoRol=='JNA' || codigoRol=='JAC'"
+    class="mat-card-70">
     <mat-card-header class="title-form">
       <mat-card-title>GRAFICA DE DOCUMENTO EN BANDEJA</mat-card-title>
     </mat-card-header>
@@ -9,7 +11,9 @@
   </mat-card>
 </div>
 <div class="col-12 m-2 full-height-70">
-  <mat-card *ngIf="codigoRol=='000' || codigoRol == '002'" class="mat-card-70">
+  <mat-card
+    *ngIf="codigoRol=='000' || codigoRol == '002' || codigoRol=='SAD' || codigoRol=='ADM' || codigoRol=='JSE' || codigoRol=='JNA' || codigoRol=='JAC'"
+    class="mat-card-70">
     <mat-card-header class="title-form">
       <mat-card-title>DECRETOS REALIZADOS - ÚLTIMOS 15 DÍAS</mat-card-title>
     </mat-card-header>

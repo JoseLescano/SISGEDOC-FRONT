@@ -7,6 +7,8 @@ import { OrganizacionService } from 'src/app/_service/organizacion.service';
 import { PerfilService } from 'src/app/_service/perfil.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
+import { MatDialog } from '@angular/material/dialog';
+import { ViewUsariosComponent } from '../view-usarios/view-usarios.component';
 
 @Component({
   selector: 'app-search',
@@ -15,7 +17,7 @@ import Swal from 'sweetalert2';
 })
 export class SearchComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'Acronimo', 'Nombre completo', 'Cargo', 'Acciones'];
+  displayedColumns: string[] = ['Acronimo', 'Nombre completo', 'Cargo', 'Acciones'];
   dataSource: MatTableDataSource<OrganizacionDiagram>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -24,63 +26,70 @@ export class SearchComponent implements OnInit {
   cargando: boolean;
 
   constructor(
-    private organizacionService:OrganizacionService,
-    private perfilService: PerfilService
+    private organizacionService: OrganizacionService,
+    private perfilService: PerfilService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
     this.organizacionService.findForDiagrama(
       sessionStorage.getItem(environment.codigoOrganizacion))
-    .subscribe(
+      .subscribe(
+        {
+          next: (response: any) => {
+            this.createTable(response.data)
+          },
+          error: (err: any) => {
+            Swal.fire('AVISO', err.message, "warning");
+          }
+        }
+      );
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  verUsuarios(codigoInterno: string) {
+    this.dialog.open(ViewUsariosComponent, {
+      width: '900px',
+      data: codigoInterno
+    });
+  }
+
+  imprimirListaPersonal(codigo: any, todo: any) {
+    this.perfilService.listPersonal(todo ? sessionStorage.getItem(environment.codigoOrganizacion) : codigo, todo).subscribe(
       {
-        next : (response: any)=> {
-          this.createTable(response.data)
+        next: (data: any) => {
+          const blob = new Blob([data], { type: 'application/pdf' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'ListaPersona.pdf';
+          a.click();
+          window.URL.revokeObjectURL(url);
         },
-        error: (err: any)=>{
-          Swal.fire('AVISO', err.message, "warning");
+        error: (err: any) => {
+
         }
       }
     );
   }
 
-   ngAfterViewInit() {
-      setTimeout(() => {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      });
-    }
-
-    applyFilter(event: Event) {
-      const filterValue = (event.target as HTMLInputElement).value;
-      this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    }
-
-    imprimirListaPersonal(codigo:any, todo:any){
-      this.perfilService.listPersonal(todo?sessionStorage.getItem(environment.codigoOrganizacion):codigo,todo).subscribe(
-        {
-          next: (data:any)=> {
-            const blob = new Blob([data], { type: 'application/pdf' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'ListaPersona.pdf';
-            a.click();
-            window.URL.revokeObjectURL(url);
-          },
-          error:(err:any)=> {
-
-          }
-        }
-      );
-    }
-
-    createTable(organizacion: OrganizacionDiagram[]){
-      this.dataSource = new MatTableDataSource(organizacion);
-      setTimeout(() => {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      });
-    }
+  createTable(organizacion: OrganizacionDiagram[]) {
+    this.dataSource = new MatTableDataSource(organizacion);
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
+  }
 
 }

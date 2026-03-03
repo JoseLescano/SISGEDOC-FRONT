@@ -1,25 +1,25 @@
 <style>
   body {
-      background-image: url('assets/2.jpg');
-      background-size: cover;
-      height: 100vh;
-      display: flex;
-      justify-content: right;
-      align-items: right;
+    background-image: url('assets/2.jpg');
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    justify-content: right;
+    align-items: right;
 
   }
-
 </style>
 <nav class="social">
   <ul>
     <li><a href="https://drive.google.com/drive/folders/1crF8Z-FmOCRRKrHJ9AxAXUYEgThYi1py?usp=drive_link"
-      target="_blank">VIDEOS TUTORIAL<i class="far fa-file-video"></i></a></li>
-  <li><a href="https://heyzine.com/flip-book/0adfd359cf.html"
-    target="_blank">MANUAL TUTORIAL<i class="fas fa-file-pdf"></i></a></li>
+        target="_blank">VIDEOS TUTORIAL<i class="far fa-file-video"></i></a></li>
+    <li><a href="https://heyzine.com/flip-book/0adfd359cf.html" target="_blank">MANUAL TUTORIAL<i
+          class="fas fa-file-pdf"></i></a></li>
     <!-- <li><a href="https://chrome.google.com/webstore/detail/windows-remix-clickonce-h/dgpgholdldjjbcmpeckiephjigdpikan"
       target="_blank">COMPL. FIRMA PERÚ<i class="fas fa-puzzle-piece"></i></a></li> -->
-    </ul>
+  </ul>
 </nav>
+
 <body>
 
 
@@ -27,40 +27,41 @@
   <h2 style="margin-top: 6%; margin-left: 5%; font-size: 50px; font-weight: 700; color: white;  display: flex;
       justify-content: left; line-height: 60px;" class="permanent-marker-regular">
 
-      SISTEMA DE GESTIÓN DOCUMENTARIO DEL EJÉRCITO
+    SISTEMA DE GESTIÓN DOCUMENTARIO DEL EJÉRCITO
   </h2>
 
   <div class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
-      <mat-card class="box ">
-          <div style="width: 100%;text-align: center; ">
-            <p style="margin: 0px; font-size: 60px; color: white; margin-bottom: 5px; " class="permanent-marker-regular">SISGEDO</p>
+    <mat-card class="box ">
+      <div style="width: 100%;text-align: center; ">
+        <p style="margin: 0px; font-size: 54px; color: white; margin-bottom: 5px; " class="permanent-marker-regular">
+          SISGEDOC</p>
+
+      </div>
+
+      <br>
+      <form class="form-group" style="margin-top: 20px; padding: 0px;" [formGroup]="_formulario" (ngSubmit)="login()"
+        #loginForm="ngForm">
+        <mat-card-content style="padding: 0px;">
+          <div>
 
           </div>
-
-        <br>
-        <form class="form-group"  style="margin-top: 20px; padding: 0px;" [formGroup]="_formulario" (ngSubmit)="login()" #loginForm="ngForm">
-          <mat-card-content style="padding: 0px;">
-            <div>
-
-            </div>
-              <input matInput type="text" name="username" formControlName="username"
-                     placeholder="Usuario Chasqui" [(ngModel)]="username" class="username" (input)="convertirAMayusculas()" maxlength="60" />
-              <input matInput type="password" formControlName="password" name="password"
-                     placeholder="Contraseña" [(ngModel)]="password" class="password" required minlength="8"
-                     maxlength="30" />
-            <button id="login" type="submit" class="custom-button" style="margin-top: 10px;">Iniciar Sesión
-              <i class="fa fa-sign-in" aria-hidden="true"></i>
-            </button>
-          </mat-card-content>
-        </form>
-        <div style="width: 100%; text-align: center;">
-          <a mat-button style="color: white;" href="https://ws.ejercito.mil.pe/app-chasqui/">¿Has olvidado la contraseña?</a>
-        </div>
-        <mat-progress-bar class="mat-progress-buffer-custom" *ngIf="loading" mode="indeterminate"></mat-progress-bar>
-      </mat-card>
+          <input matInput type="text" name="username" formControlName="username" placeholder="Usuario Chasqui"
+            [(ngModel)]="username" class="username" (input)="convertirAMayusculas()" maxlength="60" />
+          <input matInput type="password" formControlName="password" name="password" placeholder="Contraseña"
+            [(ngModel)]="password" class="password" required minlength="8" maxlength="30" />
+          <button id="login" type="submit" class="custom-button" style="margin-top: 10px;">Iniciar Sesión
+            <i class="fa fa-sign-in" aria-hidden="true"></i>
+          </button>
+        </mat-card-content>
+      </form>
+      <div style="width: 100%; text-align: center;">
+        <button mat-button type="button" style="color: white;" (click)="openRecoveryModal()">¿Has olvidado la
+          contraseña?</button>
+      </div>
+      <mat-progress-bar class="mat-progress-buffer-custom" *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+    </mat-card>
 
 
   </div>
 
 </body>
-

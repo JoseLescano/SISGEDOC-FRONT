@@ -40,6 +40,7 @@ import { ViewUsariosComponent } from './organizacion/view-usarios/view-usarios.c
 import { ValidarRecojoComponent } from './documento/mesaPartes/validar-recojo/validar-recojo.component';
 import { RespuestaComponent } from './documento/respuesta/respuesta.component';
 import { ModalMfaComponent } from './login/modal-mfa/modal-mfa.component';
+import { ModalRecoveryComponent } from './login/modal-recovery/modal-recovery.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { SeguimientoComponent } from './report/seguimiento/seguimiento.component';
 import { Not403Component } from './not403/not403.component';
@@ -128,6 +129,7 @@ import { TrasladoUUComponent } from './organizacion/traslado-uu/traslado-uu.comp
     ValidarRecojoComponent,
     RespuestaComponent,
     ModalMfaComponent,
+    ModalRecoveryComponent,
     SidenavComponent,
     SeguimientoComponent,
     Not403Component,
@@ -166,7 +168,7 @@ import { TrasladoUUComponent } from './organizacion/traslado-uu/traslado-uu.comp
     TrasladoUUComponent,
 
   ],
-   exports:[
+  exports: [
 
   ]
 })

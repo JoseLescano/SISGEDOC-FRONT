@@ -20,7 +20,7 @@ import Swal from 'sweetalert2';
 })
 export class RegistrarMPComponent implements OnInit {
 
-  listaTipoOrganizacion : any = [
+  listaTipoOrganizacion: any = [
     {
       nombre: "INTERNA",
       codigo: "I"
@@ -31,20 +31,26 @@ export class RegistrarMPComponent implements OnInit {
     }
   ];
 
-  firstFormGroup : FormGroup;
-  secondFormGroup : FormGroup;
+  unidadesInternasValidas: string[] = [
+    'COPERE', 'COEDE', 'COSALE', 'COLOGE', 'COADNE', 'COGAE', 'IGE',
+    'CG II DE', 'CG III DE', 'CG I DE', 'CG IV DE', 'CG V DE',
+    'COREMOVE', 'JAPE', 'SJATSO', 'SJAO', 'SJAPCE', 'SJAT'
+  ];
+
+  firstFormGroup: FormGroup;
+  secondFormGroup: FormGroup;
   cargando: boolean;
 
-  remitentes:Organizacion[] = [];
-  clases:Clase[];
-  prioridades : any;
+  remitentes: Organizacion[] = [];
+  clases: Clase[];
+  prioridades: any;
   selectedFiles: any = null;
   url_pdf = '';
   archivoPDF: any;
-  documento:Documento = new Documento();
-  organizacionesDestino:Organizacion[];
-  copiasInformativas:Organizacion[];
-  documentoar : DocumentoArchivoAnexo = new DocumentoArchivoAnexo();
+  documento: Documento = new Documento();
+  organizacionesDestino: Organizacion[];
+  copiasInformativas: Organizacion[];
+  documentoar: DocumentoArchivoAnexo = new DocumentoArchivoAnexo();
 
   uploadedFiles: any = [];
   totalFileSize: number = 0;
@@ -52,43 +58,43 @@ export class RegistrarMPComponent implements OnInit {
   // =========================================================================================
 
   constructor(private organizacionService: OrganizacionService,
-            private claseService: ClaseService,
-            private prioridadService: PrioridadService,
-            private documentoService:DocumentoService,
-            private router: Router,
-            private formBuilder: FormBuilder,
-            // private zipService: ZipService
+    private claseService: ClaseService,
+    private prioridadService: PrioridadService,
+    private documentoService: DocumentoService,
+    private router: Router,
+    private formBuilder: FormBuilder,
+    // private zipService: ZipService
   ) {
 
-   }
+  }
 
   ngOnInit(): void {
     this.cargando = true;
     this.initForm();
-    this.organizacionService.getRemitentesInterno().subscribe((response:any)=>{
+    this.organizacionService.getRemitentesInterno().subscribe((response: any) => {
       this.remitentes = response.data;
     });
-    this.claseService.listar().subscribe((response:any)=> this.clases = response.data );
-    this.prioridadService.listar().subscribe(data=> this.prioridades = data);
-    this.organizacionService.getChildrenByCodigo(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=> {
+    this.claseService.listar().subscribe((response: any) => this.clases = response.data);
+    this.prioridadService.listar().subscribe(data => this.prioridades = data);
+    this.organizacionService.getChildrenByCodigo(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response: any) => {
       this.organizacionesDestino = response.data;
       this.copiasInformativas = response.data;
     });
     this.cargando = false;
   }
 
-  initForm(){
+  initForm() {
     this.firstFormGroup = this.formBuilder.group({
-      'tipoOrganizacion':  new FormControl('', [Validators.required]),
-      'organizacionRemitente':  new FormControl('', [Validators.required]),
-      'tipoDocumento':  new FormControl('', [Validators.required]),
-      'nroDocumento':  new FormControl('', [Validators.required]),
-      'indicativo':  new FormControl('', [Validators.required]),
-      'remitente':  new FormControl('', [Validators.required]),
-      'prioridad':  new FormControl('', [Validators.required]),
-      'fechaDocumento':  new FormControl('', [Validators.required]),
-      'folio':  new FormControl('', [Validators.required]),
-      'asunto':  new FormControl('', [Validators.required]),
+      'tipoOrganizacion': new FormControl('', [Validators.required]),
+      'organizacionRemitente': new FormControl('', [Validators.required]),
+      'tipoDocumento': new FormControl('', [Validators.required]),
+      'nroDocumento': new FormControl('', [Validators.required]),
+      'indicativo': new FormControl('', [Validators.required]),
+      'remitente': new FormControl('', [Validators.required]),
+      'prioridad': new FormControl('', [Validators.required]),
+      'fechaDocumento': new FormControl('', [Validators.required]),
+      'folio': new FormControl('', [Validators.required]),
+      'asunto': new FormControl('', [Validators.required]),
 
 
     });
@@ -100,46 +106,48 @@ export class RegistrarMPComponent implements OnInit {
   }
 
 
-  getOrganizaciones(tipo:any){
+  getOrganizaciones(tipo: any) {
     this.cargando = true;
-    let tipoOrganizaciones  = this.firstFormGroup.get('tipoOrganizacion').value;
+    let tipoOrganizaciones = this.firstFormGroup.get('tipoOrganizacion').value;
     this.remitentes = [];
-    if (tipoOrganizaciones == 'E'){
-      this.organizacionService.getAllExternas().subscribe((response:any)=>{
+    if (tipoOrganizaciones == 'E') {
+      this.organizacionService.getAllExternas().subscribe((response: any) => {
         this.remitentes = response.data;
       });
     } else {
-      this.organizacionService.getRemitentesInterno().subscribe((response:any)=>{
-        this.remitentes = response.data;
+      this.organizacionService.getRemitentesInterno().subscribe((response: any) => {
+        this.remitentes = response.data.filter((org: any) =>
+          this.unidadesInternasValidas.includes(org.acronimo)
+        );
       });
     }
     this.cargando = false;
 
   }
 
-  operate(){
-    if (this.firstFormGroup.valid){
+  operate() {
+    if (this.firstFormGroup.valid) {
       this.documentoar.tipoOrganizacion = this.firstFormGroup.value['tipoOrganizacion'];
       this.documentoar.organizacionOrigen = this.firstFormGroup.value['organizacionRemitente'];
       this.documentoar.clase = this.firstFormGroup.value['tipoDocumento'];
-      this.documentoar.nroOrden =  this.firstFormGroup.value['nroDocumento'];
-      this.documentoar.indicativo =  this.firstFormGroup.value['indicativo'];
-      this.documentoar.claveIndicativo= this.firstFormGroup.value['remitente'];
+      this.documentoar.nroOrden = this.firstFormGroup.value['nroDocumento'];
+      this.documentoar.indicativo = this.firstFormGroup.value['indicativo'];
+      this.documentoar.claveIndicativo = this.firstFormGroup.value['remitente'];
       this.documentoar.prioridad = this.firstFormGroup.value['prioridad'];
-      this.documentoar.fechaDocumento= this.firstFormGroup.value['fechaDocumento'];
+      this.documentoar.fechaDocumento = this.firstFormGroup.value['fechaDocumento'];
       this.documentoar.folio = this.firstFormGroup.value['folio'];
-      this.documentoar.asunto= this.firstFormGroup.value['asunto'];
+      this.documentoar.asunto = this.firstFormGroup.value['asunto'];
       this.documentoar.destinos = this.secondFormGroup.value['destinos'];
       this.documentoar.archivoPrincipal = this.selectedFiles.item(0);
-      this.documentoar.organizacionPartida = sessionStorage.getItem(environment.codigoOrganizacion);  
+      this.documentoar.organizacionPartida = sessionStorage.getItem(environment.codigoOrganizacion);
       this.documentoar.anexos = this.uploadedFiles;
       this.documentoService.recibirDocumentoMP(this.documentoar).subscribe({
-        next: (response:any) =>{
-         if (response.httpStatus=='CREATED'){
-          this.initForm();
-          Swal.fire(`Se ha registrado documento`, response.message, 'info');
-          this.router.navigate(['/principal/recibir-documento']);
-         }
+        next: (response: any) => {
+          if (response.httpStatus == 'CREATED') {
+            this.initForm();
+            Swal.fire(`Se ha registrado documento`, response.message, 'info');
+            this.router.navigate(['/principal/recibir-documento']);
+          }
         }, error: (err: any) => {
           Swal.fire('Lo sentimos', `No se ha registrado documento`, 'info');
         }
@@ -157,55 +165,55 @@ export class RegistrarMPComponent implements OnInit {
     this.nativeDocument.getElementById('btnFileUpload213').click();
   }
 
-  fileInIframe(file:any,idFrame:any){
+  fileInIframe(file: any, idFrame: any) {
     let fileURL = URL.createObjectURL(file);
     this.url_pdf = fileURL;
-    let iframe: any = document.getElementById(''+idFrame) as HTMLIFrameElement;
+    let iframe: any = document.getElementById('' + idFrame) as HTMLIFrameElement;
     iframe.contentWindow.location.replace(fileURL);
   }
 
   selectArchivoPrincipal(event: any): void {
     const fileTemp = event.target.files[0];
-      const fileType = fileTemp.type;
-      if (fileType !== 'application/pdf') {
-        event.target.value = ''; // Borra la selección del archivo
-        this.selectedFiles=null;
-        Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
-      }else{
-        if(event.target.files.length>0){
-          this.selectedFiles = event.target.files;
-          this.url_pdf = this.selectedFiles[0].name;
-          this.selectedFiles = event.target.files;
-          environment.cantidadPaginasPDF(this.selectedFiles[0],
-            (cpages:any)=>{
-              this.firstFormGroup.controls['folio'].setValue(cpages);
-              //this.firstFormGroup.controls['archivoPDF'].setValue(this.selectedFiles.item(0));
-            }
-          );
+    const fileType = fileTemp.type;
+    if (fileType !== 'application/pdf') {
+      event.target.value = ''; // Borra la selección del archivo
+      this.selectedFiles = null;
+      Swal.fire('Lo sentimos', `Se presento un inconveniente en la consulta`, 'warning');
+    } else {
+      if (event.target.files.length > 0) {
+        this.selectedFiles = event.target.files;
+        this.url_pdf = this.selectedFiles[0].name;
+        this.selectedFiles = event.target.files;
+        environment.cantidadPaginasPDF(this.selectedFiles[0],
+          (cpages: any) => {
+            this.firstFormGroup.controls['folio'].setValue(cpages);
+            //this.firstFormGroup.controls['archivoPDF'].setValue(this.selectedFiles.item(0));
+          }
+        );
 
-          this.fileInIframe(this.selectedFiles[0],"documentoPrincipal");
-          let byteArray = new Uint8Array(
-            atob(this.selectedFiles[0])
-              .split('')
-              .map((char) => char.charCodeAt(0))
-          );
-          let file = new Blob([byteArray], { type: 'application/pdf' });
-            var rf_file = new File([file], URL.createObjectURL(file), {
-              type: 'application/pdf',
-            });
-          let list = new DataTransfer();
-          list.items.add(rf_file);
-          this.selectedFiles = list.files;
-        }
+        this.fileInIframe(this.selectedFiles[0], "documentoPrincipal");
+        let byteArray = new Uint8Array(
+          atob(this.selectedFiles[0])
+            .split('')
+            .map((char) => char.charCodeAt(0))
+        );
+        let file = new Blob([byteArray], { type: 'application/pdf' });
+        var rf_file = new File([file], URL.createObjectURL(file), {
+          type: 'application/pdf',
+        });
+        let list = new DataTransfer();
+        list.items.add(rf_file);
+        this.selectedFiles = list.files;
       }
+    }
   }
 
   selectAnexos(event: any): void {
     let files = event.target.files;
-     for (let i = 0; i < files.length; i++) {
-       this.uploadedFiles.push(files[i]);
-     }
-     this.calculateTotalFileSize();
+    for (let i = 0; i < files.length; i++) {
+      this.uploadedFiles.push(files[i]);
+    }
+    this.calculateTotalFileSize();
   }
 
 
@@ -218,10 +226,10 @@ export class RegistrarMPComponent implements OnInit {
       return 'DOC';
     } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
       return 'DOCX';
-    }else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+    } else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
       return 'xlsx';
     }
-     else {
+    else {
       return 'Desconocido';
     }
   }

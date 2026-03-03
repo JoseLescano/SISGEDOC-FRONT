@@ -94,7 +94,7 @@ export class RegistroCorrespondenciaComponent implements OnInit {
       : this.organizacionService.getWithCodigoCopere();
 
     const remitentesObs = this.organizacionService.getWithCodigoCopere();
-    const clasesObs = this.claseService.listar();
+    const clasesObs = this.claseService.findForMP();
 
     // Ejecutar todas las llamadas en paralelo
     forkJoin({
