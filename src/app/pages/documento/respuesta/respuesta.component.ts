@@ -441,16 +441,28 @@ export class RespuestaComponent implements OnInit {
       });
       */
 
-      this.nameDocuentoFirmado = response[0];
-      this.firmado = true;
       this.cargando = false;
       Swal.fire('FIRMA COMPLETADA', 'SE FIRMÓ EL DOCUMENTO CORRECTAMENTE', 'success');
+      this.updateIframeWithKeyDigitalGeneral(nameFile);
 
     }, error => {
       this.cargando = false;
       Swal.fire('LO SENTIMOS', 'SE PRESENTÓ UN INCONVENIENTE AL FIRMAR', 'error');
     });
 
+  }
+
+  updateIframeWithKeyDigitalGeneral(inNameFile: any) {
+    this.nameDocuentoFirmado = inNameFile;
+    this.firmado = true;
+    this.documentoService.getFileDocumentKeyDigital(inNameFile).subscribe((resp: any) => {
+      const byteArray = new Uint8Array(atob(resp).split('').map((char) => char.charCodeAt(0)));
+      const file = new Blob([byteArray], { type: 'application/pdf' });
+      const rf_file = new File([file], inNameFile || 'documento_firmado.pdf', { type: 'application/pdf' });
+      const list = new DataTransfer();
+      list.items.add(rf_file);
+      this.selectedFiles = list.files;
+    });
   }
 
   selectAnexos(event: any): void {
