@@ -1,4 +1,4 @@
-import  Swal  from 'sweetalert2';
+import Swal from 'sweetalert2';
 import { DecretoService } from 'src/app/_service/decreto.service';
 import { DocumentoService } from 'src/app/_service/documento.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -18,16 +18,16 @@ import { DecretoDTO } from 'src/app/_DTO/DecretoDTO';
 export class RegistrarDerivacionComponent implements OnInit {
 
   url_pdf: any;
-  vidDocumento:any;
-  observaciones : any = '';
-  errorPDF : boolean = false;
-  destinos:Organizacion[] = [];
+  vidDocumento: any;
+  observaciones: any = '';
+  errorPDF: boolean = false;
+  destinos: Organizacion[] = [];
   cargando: boolean = false;
-  form:FormGroup;
+  form: FormGroup;
   codigoDecreto: any;
 
   constructor(
-    private documentoService:DocumentoService,
+    private documentoService: DocumentoService,
     private decretoService: DecretoService,
     private organizacionService: OrganizacionService,
     private route: ActivatedRoute,
@@ -39,7 +39,7 @@ export class RegistrarDerivacionComponent implements OnInit {
     this.initForm();
   }
 
-  initForm(){
+  initForm() {
     this.cargando = true;
     this.getIdDocumento();
     this.getOrganizacion();
@@ -58,9 +58,13 @@ export class RegistrarDerivacionComponent implements OnInit {
     this.viewDocumento(id);
   }
 
-  viewDocumento(vidDocumento: any){
-    this.documentoService.viewPDF(vidDocumento).subscribe((response: any)=>{
-      this.crearDocumento(response.data);
+  viewDocumento(vidDocumento: any) {
+    this.documentoService.viewPDF(vidDocumento).subscribe((response: any) => {
+      if (response && response.data) {
+        this.crearDocumento(response.data);
+      } else {
+        this.errorPDF = true;
+      }
       this.errorPDF = false;
     }, error => {
       this.errorPDF = true;
@@ -68,7 +72,8 @@ export class RegistrarDerivacionComponent implements OnInit {
     });
   }
 
-  crearDocumento(resp: any){
+  crearDocumento(resp: any) {
+    if (!resp || resp.length === 0) return;
     let byteArray = new Uint8Array(
       atob(resp[0])
         .split('')
@@ -77,30 +82,30 @@ export class RegistrarDerivacionComponent implements OnInit {
     let file = new Blob([byteArray], { type: 'application/pdf' });
     let fileURL = URL.createObjectURL(file);
     this.url_pdf = fileURL;
-    let iframe:any = this.elRef.nativeElement.querySelector('iframe')as HTMLIFrameElement;
+    let iframe: any = this.elRef.nativeElement.querySelector('iframe') as HTMLIFrameElement;
     iframe.contentWindow.location.replace(fileURL);
 
   }
 
-  getOrganizacion(){
-    this.organizacionService.findForDerivacion(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response:any)=> {
+  getOrganizacion() {
+    this.organizacionService.findForDerivacion(sessionStorage.getItem(environment.codigoOrganizacion)).subscribe((response: any) => {
       this.destinos = response.data;
     });
   }
 
-  operate(){
-    if (this.form.valid){
+  operate() {
+    if (this.form.valid) {
       this.cargando = true;
       let documento: any = this.vidDocumento;
       let origen = sessionStorage.getItem(environment.codigoOrganizacion);
       let destino = this.form.value['destino'];
       let observacion = this.form.value['observacion'];
-      this.decretoService.derivarDocumento(documento, origen, destino, observacion, this.codigoDecreto).subscribe((response:any)=>{
-        if(response.httpStatus == 'CREATED'){
+      this.decretoService.derivarDocumento(documento, origen, destino, observacion, this.codigoDecreto).subscribe((response: any) => {
+        if (response.httpStatus == 'CREATED') {
           this.cargando = false;
           Swal.fire('OPERACION REALIZADA', response.message, 'info');
           this.router.navigate(['/principal/pendientes']);
-        }else {
+        } else {
           this.cargando = false;
           Swal.fire('LO SENTIMOS', response.message, 'info');
         }

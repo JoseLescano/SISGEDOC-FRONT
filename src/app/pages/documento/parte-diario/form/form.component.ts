@@ -464,10 +464,15 @@ export class FormComponent implements OnInit {
     this.documentoService
       .getFileDocumentKeyDigital(inNameFile)
       .subscribe((resp: any) => {
-        this.isFirmado = true;
-        this.cargando = false;
-        this.nameDocumentoFirmado = inNameFile;
-        this.crearDocumento(resp, 'documentoRespuesta');
+        if (resp) {
+          this.isFirmado = true;
+          this.cargando = false;
+          this.nameDocumentoFirmado = inNameFile;
+          this.crearDocumento(resp, 'documentoRespuesta');
+        } else {
+          this.cargando = false;
+          this.errorPDF = true;
+        }
       }, error => {
         this.cargando = false;
         Swal.fire('LO SENTIMOS', 'SE PRESENTO UN INCONVENIENTE', 'info');

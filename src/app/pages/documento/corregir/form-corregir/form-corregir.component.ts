@@ -18,28 +18,28 @@ import Swal from 'sweetalert2';
 export class FormCorregirComponent implements OnInit {
 
   url_pdf: any;
-  vidDocumento:any;
-  observaciones : any = '';
+  vidDocumento: any;
+  observaciones: any = '';
   selectedFiles: any;
-  errorPDF : boolean = false;
+  errorPDF: boolean = false;
   correciones: CorrecionDTO[] = [];
-  cambioPDF : boolean = false;
-  decretoId:any=0;
-  cargando : boolean = false;
-  decreto : any = '';
+  cambioPDF: boolean = false;
+  decretoId: any = 0;
+  cargando: boolean = false;
+  decreto: any = '';
   formCorregir!: FormGroup;
   formEnviar!: FormGroup;
 
   constructor(
-    private documentoService:DocumentoService,
-    private decretoService:DecretoService,
+    private documentoService: DocumentoService,
+    private decretoService: DecretoService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private router: Router,
     private correcionService: CorrecionService,
-    private respuesta : DocumentoRespuestaService) {
+    private respuesta: DocumentoRespuestaService) {
 
-    }
+  }
 
   ngOnInit(): void {
     this.inicializarFormulario();
@@ -49,7 +49,7 @@ export class FormCorregirComponent implements OnInit {
 
   inicializarFormulario(): void {
     this.formCorregir = this.fb.group({
-      observaciones: ['', [Validators.required, Validators.minLength(5) ]],
+      observaciones: ['', [Validators.required, Validators.minLength(5)]],
       archivo: [null, Validators.required]
     });
   }
@@ -62,23 +62,23 @@ export class FormCorregirComponent implements OnInit {
     });
   }
 
-  findByIdDecreto(){
+  findByIdDecreto() {
     this.decretoService.listarPorId(this.decretoId)
-    .subscribe(
-      {
-        next:(response:any)=> {
-          console.log(response)
-          debugger
-          this.decreto = response;
-          // Solo se crea si vidReferencia no es vacío o nulo
-          if (this.decreto.vidReferencia || this.decreto.estado.codigo!=20) {
-            this.inicializarFormularioEnviar();
+      .subscribe(
+        {
+          next: (response: any) => {
+            console.log(response)
+            debugger
+            this.decreto = response;
+            // Solo se crea si vidReferencia no es vacío o nulo
+            if (this.decreto.vidReferencia || this.decreto.estado.codigo != 20) {
+              this.inicializarFormularioEnviar();
+            }
+          }, error: (err: any) => {
+            console.log(err);
           }
-        },error :(err:any)=> {
-          console.log(err);
         }
-      }
-    );;
+      );;
   }
 
   getIdDocumento(): void {
@@ -86,14 +86,18 @@ export class FormCorregirComponent implements OnInit {
     this.decretoId = +this.route.snapshot.paramMap.get('idDecreto');
     this.vidDocumento = id;
     this.viewDocumento(id);
-    this.correcionService.findByDecreto(this.decretoId).subscribe((response:any)=> {
+    this.correcionService.findByDecreto(this.decretoId).subscribe((response: any) => {
       this.correciones = response;
     })
   }
 
-  viewDocumento(decreto: any){
-    this.respuesta.viewPDFByDecreto(this.decretoId).subscribe((response: any)=>{
-      this.crearDocumento(response.data, 'embeddedPage');
+  viewDocumento(decreto: any) {
+    this.respuesta.viewPDFByDecreto(this.decretoId).subscribe((response: any) => {
+      if (response && response.data) {
+        this.crearDocumento(response.data, 'embeddedPage');
+      } else {
+        this.errorPDF = true;
+      }
       this.errorPDF = false;
     }, error => {
       this.errorPDF = true;
@@ -102,16 +106,17 @@ export class FormCorregirComponent implements OnInit {
   }
 
   crearDocumento(resp: any, iframeId: string) {
+    if (!resp || resp.length === 0) return;
     const byteArray = new Uint8Array(atob(resp[0]).split('').map((char) => char.charCodeAt(0)));
     const file = new Blob([byteArray], { type: 'application/pdf' });
     const fileURL = URL.createObjectURL(file);
     const iframe: any = document.getElementById(iframeId) as HTMLIFrameElement;
     iframe.contentWindow.location.replace(fileURL);
-    var rf_file = new File([file], URL.createObjectURL(file), { type: 'application/pdf'});
+    var rf_file = new File([file], URL.createObjectURL(file), { type: 'application/pdf' });
     let listFile = [rf_file];
     let list = new DataTransfer();
     list.items.add(rf_file);
-    this.selectedFiles=list.files;
+    this.selectedFiles = list.files;
     this.url_pdf = this.selectedFiles[0].name;
 
   }
@@ -145,7 +150,7 @@ export class FormCorregirComponent implements OnInit {
     const fileType = fileTemp?.type;
 
     if (!fileTemp || (
-        fileType !== 'application/pdf'
+      fileType !== 'application/pdf'
     )) {
       event.target.value = '';
       this.selectedFiles = null;
@@ -174,7 +179,7 @@ export class FormCorregirComponent implements OnInit {
     }
   }
 
-  updateDocumento(){
+  updateDocumento() {
     this.documentoService
       .convertFileToPDF(this.selectedFiles.item(0))
       .subscribe((resp: any) => {
@@ -196,10 +201,10 @@ export class FormCorregirComponent implements OnInit {
       });
   }
 
-  fileInIframe(file:any,idFrame:any){
+  fileInIframe(file: any, idFrame: any) {
     let fileURL = URL.createObjectURL(file);
     this.url_pdf = fileURL;
-    let iframe: any = document.getElementById(''+idFrame) as HTMLIFrameElement;
+    let iframe: any = document.getElementById('' + idFrame) as HTMLIFrameElement;
     iframe.contentWindow.location.replace(fileURL);
   }
 
@@ -207,10 +212,10 @@ export class FormCorregirComponent implements OnInit {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-        const base64 = reader.result as string;
+      const base64 = reader.result as string;
     };
     reader.onerror = error => {
-        // console.log('Error: ', error);
+      // console.log('Error: ', error);
     };
   }
 
@@ -218,25 +223,25 @@ export class FormCorregirComponent implements OnInit {
     if (this.formEnviar.valid) {
       const observacion = this.formEnviar.get('observacionesEnviar')!.value;
       this.correcionService.registrarCorrecion(this.vidDocumento, this.decretoId, observacion)
-      .pipe(switchMap((response: any) => {
-        debugger
-        Swal.fire('ACCION REALIZADA', response.message, 'success');
-        this.documentoService.setDocumentoCambio(response.data);
-        this.router.navigate(['/principal/documentos-corregir']);
-        this.cargando = false;
-        return this.documentoService.findForCorregir(sessionStorage.getItem(environment.codigoOrganizacion));
-      }))
-      .subscribe({
-        next: (data: any) => {
-          this.documentoService.setDocumentoCambio(data);
-        },
-        error: (err: any) => {
+        .pipe(switchMap((response: any) => {
           debugger
+          Swal.fire('ACCION REALIZADA', response.message, 'success');
+          this.documentoService.setDocumentoCambio(response.data);
+          this.router.navigate(['/principal/documentos-corregir']);
           this.cargando = false;
-          console.error('Error al registrar corrección:', err);
-          Swal.fire('Error', err.message || 'Ocurrió un error al registrar la corrección', 'error');
-        }
-      });
+          return this.documentoService.findForCorregir(sessionStorage.getItem(environment.codigoOrganizacion));
+        }))
+        .subscribe({
+          next: (data: any) => {
+            this.documentoService.setDocumentoCambio(data);
+          },
+          error: (err: any) => {
+            debugger
+            this.cargando = false;
+            console.error('Error al registrar corrección:', err);
+            Swal.fire('Error', err.message || 'Ocurrió un error al registrar la corrección', 'error');
+          }
+        });
     } else {
       this.formEnviar.markAllAsTouched();
     }

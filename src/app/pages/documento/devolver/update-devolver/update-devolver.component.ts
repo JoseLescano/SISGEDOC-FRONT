@@ -15,17 +15,17 @@ import Swal from 'sweetalert2';
 })
 export class UpdateDevolverComponent implements OnInit {
 
-  form:FormGroup;
+  form: FormGroup;
   url_pdf: any;
-  vidDocumento:any;
+  vidDocumento: any;
   codigoDecreto: any;
-  observaciones : any = '';
-  errorPDF : boolean = false;
-  cargando : boolean = false;
+  observaciones: any = '';
+  errorPDF: boolean = false;
+  cargando: boolean = false;
   destinos: OrganizacionDiagram[] = [];
 
   constructor(
-    private documentoService:DocumentoService,
+    private documentoService: DocumentoService,
     private decretoService: DecretoService,
     private organizacionService: OrganizacionService,
     private route: ActivatedRoute,
@@ -39,12 +39,12 @@ export class UpdateDevolverComponent implements OnInit {
     this.findByDevolver();
   }
 
-  initForm(){
+  initForm() {
     this.cargando = true;
     this.form = new FormGroup({
       'idDocumento': new FormControl(this.vidDocumento, [Validators.required]),
       'idDecreto': new FormControl(this.codigoDecreto, [Validators.required]),
-       'destino': new FormControl([], [Validators.required]),
+      'destino': new FormControl([], [Validators.required]),
       'descripcion': new FormControl('', [Validators.minLength(10)])
     })
   }
@@ -56,10 +56,14 @@ export class UpdateDevolverComponent implements OnInit {
     this.viewDocumento(id);
   }
 
-  viewDocumento(vidDocumento: any){
+  viewDocumento(vidDocumento: any) {
     this.cargando = true;
-    this.documentoService.viewPDF(vidDocumento).subscribe((response: any)=>{
-      this.crearDocumento(response.data);
+    this.documentoService.viewPDF(vidDocumento).subscribe((response: any) => {
+      if (response && response.data) {
+        this.crearDocumento(response.data);
+      } else {
+        this.errorPDF = true;
+      }
 
       this.cargando = false;
       this.errorPDF = false;
@@ -70,7 +74,8 @@ export class UpdateDevolverComponent implements OnInit {
     });
   }
 
-  crearDocumento(resp: any){
+  crearDocumento(resp: any) {
+    if (!resp || resp.length === 0) return;
     let byteArray = new Uint8Array(
       atob(resp[0])
         .split('')
@@ -79,43 +84,43 @@ export class UpdateDevolverComponent implements OnInit {
     let file = new Blob([byteArray], { type: 'application/pdf' });
     let fileURL = URL.createObjectURL(file);
     this.url_pdf = fileURL;
-    let iframe:any = this.elRef.nativeElement.querySelector('iframe')as HTMLIFrameElement;
+    let iframe: any = this.elRef.nativeElement.querySelector('iframe') as HTMLIFrameElement;
     iframe.contentWindow.location.replace(fileURL);
 
   }
 
-  findByDevolver(){
+  findByDevolver() {
     this.organizacionService.destinatariosExternoByDecreto(sessionStorage.getItem(environment.codigoOrganizacion), this.codigoDecreto).subscribe({
-      next: (response:any)=> {
+      next: (response: any) => {
         debugger
         this.destinos = response.data;
       }
     })
   }
 
-  actualizarDocumento(){
-    if (this.form.valid ){
+  actualizarDocumento() {
+    if (this.form.valid) {
       this.cargando = true;
       let observacion = this.form.controls['descripcion'].value;
       let destino = this.form.controls['destino'].value;
 
       this.decretoService.actualizarDocumento(
         observacion,
-         this.codigoDecreto, destino
-        ).subscribe((response:any)=>{
-        if(response.httpStatus == 'CREATED'){
+        this.codigoDecreto, destino
+      ).subscribe((response: any) => {
+        if (response.httpStatus == 'CREATED') {
           this.cargando = false;
           this.router.navigate(['/principal/dashboard']);
-          Swal.fire('ACCION REALIZADA',response.message, 'info')
-        }else {
+          Swal.fire('ACCION REALIZADA', response.message, 'info')
+        } else {
           this.cargando = false;
           Swal.fire('LO SENTIMOS', response.message, 'info');
         }
-      }, (error:any)=> {
+      }, (error: any) => {
         this.cargando = false;
         Swal.fire('Lo sentimos!', `No podemos devolver documento`, 'info');
       });
-    }else {
+    } else {
       this.cargando = false;
       Swal.fire('Lo sentimos!', `Debe de ingresar una observación para continuar con el registro`, 'info');
     }

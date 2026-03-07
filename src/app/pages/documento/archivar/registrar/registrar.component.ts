@@ -13,14 +13,14 @@ import Swal from 'sweetalert2';
 export class RegistrarComponent implements OnInit {
 
   url_pdf: any;
-  vidDocumento:any;
+  vidDocumento: any;
   codigoDecreto: any;
-  observaciones : any = '';
+  observaciones: any = '';
   selectedFiles: any;
-  errorPDF : boolean = false;
+  errorPDF: boolean = false;
 
-  constructor( 
-    private documentoService:DocumentoService,
+  constructor(
+    private documentoService: DocumentoService,
     private route: ActivatedRoute,
     private elRef: ElementRef,
     private router: Router) { }
@@ -36,9 +36,13 @@ export class RegistrarComponent implements OnInit {
     this.viewDocumento(id);
   }
 
-  viewDocumento(vidDocumento: any){
-    this.documentoService.viewPDF(vidDocumento).subscribe((response: any)=>{
-      this.crearDocumento(response.data);
+  viewDocumento(vidDocumento: any) {
+    this.documentoService.viewPDF(vidDocumento).subscribe((response: any) => {
+      if (response && response.data) {
+        this.crearDocumento(response.data);
+      } else {
+        this.errorPDF = true;
+      }
       this.errorPDF = false;
     }, error => {
       this.errorPDF = true;
@@ -46,67 +50,68 @@ export class RegistrarComponent implements OnInit {
     });
   }
 
-  crearDocumento(resp: any){
+  crearDocumento(resp: any) {
+    if (!resp || resp.length === 0) return;
     let byteArray = new Uint8Array(
       atob(resp[0])
         .split('')
         .map((char) => char.charCodeAt(0))
-    );    
+    );
     let file = new Blob([byteArray], { type: 'application/pdf' });
     let fileURL = URL.createObjectURL(file);
     this.url_pdf = fileURL;
-    let iframe:any = this.elRef.nativeElement.querySelector('iframe')as HTMLIFrameElement;
+    let iframe: any = this.elRef.nativeElement.querySelector('iframe') as HTMLIFrameElement;
     iframe.contentWindow.location.replace(fileURL);
-    
+
   }
 
-  archivarDocumento(){
-    
-    if (this.observaciones != '' && this.observaciones != null){
+  archivarDocumento() {
+
+    if (this.observaciones != '' && this.observaciones != null) {
       this.documentoService.archivarDocumento(this.vidDocumento, sessionStorage.getItem(environment.codigoOrganizacion),
-         this.observaciones, this.codigoDecreto, this.selectedFiles == null? '':  this.selectedFiles.item(0)).subscribe((response: any)=> {
-         if (response.httpStatus=='OK'){
-           Swal.fire(response.message, `Se archivo documento correctamente`, 'info');
-           this.router.navigate(['/principal/pendientes']);
-         }else {
-           Swal.fire(response.message, `Se presento un inconveniente para archivar documento`, 'info');
-         }
-       }, (error:any)=> {
-         Swal.fire('Lo sentimos!', `No podemos archivar documento`, 'info');
-       });
-    }else {
+        this.observaciones, this.codigoDecreto, this.selectedFiles == null ? '' : this.selectedFiles.item(0)).subscribe((response: any) => {
+          if (response.httpStatus == 'OK') {
+            Swal.fire(response.message, `Se archivo documento correctamente`, 'info');
+            this.router.navigate(['/principal/pendientes']);
+          } else {
+            Swal.fire(response.message, `Se presento un inconveniente para archivar documento`, 'info');
+          }
+        }, (error: any) => {
+          Swal.fire('Lo sentimos!', `No podemos archivar documento`, 'info');
+        });
+    } else {
       Swal.fire('Lo sentimos!', `Debe de ingresar una observación para continuar con el registro`, 'info');
     }
-     
+
   }
 
   selectArchivoPrincipal(event: any): void {
     const fileTemp = event.target.files[0];
-      const fileType = fileTemp.type;
-      if (fileType !== 'application/pdf') {
-        event.target.value = ''; // Borra la selección del archivo
-        this.selectedFiles=null;
-        alert("Seleccione solo archivo PDF");
-      }else{
-        if(event.target.files.length>0){
-          this.selectedFiles = event.target.files;
-          this.url_pdf = this.selectedFiles[0].name;
-          this.selectedFiles = event.target.files;
-          let byteArray = new Uint8Array(
-            atob(this.selectedFiles[0])
-              .split('')
-              .map((char) => char.charCodeAt(0))
-          );
-          let file = new Blob([byteArray], { type: 'application/pdf' });
-            var rf_file = new File([file], URL.createObjectURL(file), {
-              type: 'application/pdf',
-            });
-            let list = new DataTransfer();
-            list.items.add(rf_file);
-            this.selectedFiles = list.files;
-        }
-      }   
+    const fileType = fileTemp.type;
+    if (fileType !== 'application/pdf') {
+      event.target.value = ''; // Borra la selección del archivo
+      this.selectedFiles = null;
+      alert("Seleccione solo archivo PDF");
+    } else {
+      if (event.target.files.length > 0) {
+        this.selectedFiles = event.target.files;
+        this.url_pdf = this.selectedFiles[0].name;
+        this.selectedFiles = event.target.files;
+        let byteArray = new Uint8Array(
+          atob(this.selectedFiles[0])
+            .split('')
+            .map((char) => char.charCodeAt(0))
+        );
+        let file = new Blob([byteArray], { type: 'application/pdf' });
+        var rf_file = new File([file], URL.createObjectURL(file), {
+          type: 'application/pdf',
+        });
+        let list = new DataTransfer();
+        list.items.add(rf_file);
+        this.selectedFiles = list.files;
+      }
     }
+  }
 
 
 }
