@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { DocumentoService } from 'src/app/_service/documento.service';
 
 @Component({
@@ -12,7 +12,7 @@ export class ModalFirmaPeruComponent implements OnInit, AfterViewInit {
 
   errorPDF: boolean = false;
   documento: any = '';
-  url_pdf: any = '';
+  url_pdf: SafeResourceUrl | null = null;
   @ViewChild('embeddedPage') iframe: ElementRef<HTMLIFrameElement>;
 
   constructor(
@@ -28,7 +28,10 @@ export class ModalFirmaPeruComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.crearDocumento(this.documento);
+    // Avoid NG0100: wrap in setTimeout to ensure Change Detection has finished
+    setTimeout(() => {
+      this.crearDocumento(this.documento);
+    }, 0);
   }
 
   close() {
@@ -47,7 +50,7 @@ export class ModalFirmaPeruComponent implements OnInit, AfterViewInit {
     const file = new Blob([byteArray as any], { type: 'application/pdf' });
     const fileURL = URL.createObjectURL(file);
 
-    // Use DomSanitizer to trust the URL, otherwise Angular might block the iframe src
+    // Use DomSanitizer to trust the URL, otherwise Angular might block the iframe src (NG0904)
     const safeURL = this.sanitizer.bypassSecurityTrustResourceUrl(fileURL);
 
     this.url_pdf = safeURL;

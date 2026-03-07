@@ -456,6 +456,7 @@ export class RespuestaComponent implements OnInit {
     this.nameDocuentoFirmado = inNameFile;
     this.firmado = true;
     this.documentoService.getFileDocumentKeyDigital(inNameFile).subscribe((resp: any) => {
+      if (!resp) return;
       const byteArray = new Uint8Array(atob(resp).split('').map((char) => char.charCodeAt(0)));
       const file = new Blob([byteArray], { type: 'application/pdf' });
       const rf_file = new File([file], inNameFile || 'documento_firmado.pdf', { type: 'application/pdf' });

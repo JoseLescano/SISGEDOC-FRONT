@@ -1,4 +1,5 @@
 import { Component, ElementRef, Inject, OnInit } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, switchMap } from 'rxjs';
@@ -29,6 +30,8 @@ export class FormComponent implements OnInit {
   selectedFiles: any;
   selectedRespuesta: any;
   url_pdf: any;
+  safeUrlRespuesta: SafeResourceUrl | null = null;
+  safeUrlReferencia: SafeResourceUrl | null = null;
   cargando: boolean = false;
   idDocumento: number;
   idDecreto: number;
@@ -53,7 +56,8 @@ export class FormComponent implements OnInit {
     private decretoService: DecretoService,
     private router: Router,
     public dialog: MatDialog,
-    private firmaPeruService: FirmaPeruService
+    private firmaPeruService: FirmaPeruService,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
@@ -129,19 +133,31 @@ export class FormComponent implements OnInit {
 
   findAnexosByDocumento() {
     this.anexoService.findByDocumento(this.documento.codigo).subscribe((response: any) => {
-      this.anexos = response.data;
+      if (response && response.data) {
+        this.anexos = response.data;
+      }
     }, error => {
       Swal.fire('LO SENTIMOS', `SE PRESENTO UN INCONVENIENTE EN CARGAR ANEXOS!`, 'warning');
     });
   }
 
   crearDocumento(resp: any, iframeId: string) {
+    if (!resp || resp.length === 0 || !resp[0]) {
+      this.errorPDF = true;
+      return;
+    }
     const byteArray = new Uint8Array(atob(resp[0]).split('').map((char) => char.charCodeAt(0)));
     const file = new Blob([byteArray], { type: 'application/pdf' });
     const fileURL = URL.createObjectURL(file);
-    const iframe: any = document.getElementById(iframeId) as HTMLIFrameElement;
-    iframe.contentWindow.location.replace(fileURL);
-    var rf_file = new File([file], URL.createObjectURL(file), { type: 'application/pdf' });
+    const safeURL = this.sanitizer.bypassSecurityTrustResourceUrl(fileURL);
+
+    if (iframeId === 'documentoRespuesta') {
+      this.safeUrlRespuesta = safeURL;
+    } else if (iframeId === 'documentoReferencia') {
+      this.safeUrlReferencia = safeURL;
+    }
+
+    var rf_file = new File([file], fileURL, { type: 'application/pdf' });
     let list = new DataTransfer();
     list.items.add(rf_file);
     this.selectedFiles = list.files;

@@ -1,4 +1,5 @@
 import { Component, ElementRef, Inject, OnInit } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { DocumentoService } from 'src/app/_service/documento.service';
@@ -18,6 +19,7 @@ import { DecretoService } from 'src/app/_service/decreto.service';
 })
 export class AccionesComponent implements OnInit {
   url_pdf: any;
+  safeUrl: SafeResourceUrl | null = null;
   idDocumento: any;
   codigoDecreto: any;
   errorPDF: boolean = false;
@@ -31,8 +33,9 @@ export class AccionesComponent implements OnInit {
     private route: ActivatedRoute,
     public dialog: MatDialog,
     private anexoService: AnexoService,
-    private decretoService: DecretoService
-  ) {}
+    private decretoService: DecretoService,
+    private sanitizer: DomSanitizer
+  ) { }
 
   ngOnInit(): void {
     this.getIdDocumento();
@@ -77,14 +80,18 @@ export class AccionesComponent implements OnInit {
   viewDocumento(vidDocumento: any) {
     this.documentoService.viewPDF(vidDocumento).subscribe({
       next: (response: any) => {
-        this.crearDocumento(response.data);
+        if (response && response.data) {
+          this.crearDocumento(response.data);
+        } else {
+          this.errorPDF = true;
+        }
         this.documentoService
           .registrarVisualizacion(
             vidDocumento,
             sessionStorage.getItem(environment.codigoOrganizacion)
           )
           .subscribe(
-            (response: any) => {},
+            (response: any) => { },
             (error) => {
               Swal.fire(
                 'LO SENTIMOS',
@@ -116,6 +123,10 @@ export class AccionesComponent implements OnInit {
   }
 
   crearDocumento(resp: any) {
+    if (!resp || resp.length === 0 || !resp[0]) {
+      this.errorPDF = true;
+      return;
+    }
     let byteArray = new Uint8Array(
       atob(resp[0])
         .split('')
@@ -123,17 +134,16 @@ export class AccionesComponent implements OnInit {
     );
     let file = new Blob([byteArray], { type: 'application/pdf' });
     let fileURL = URL.createObjectURL(file);
+    this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(fileURL);
     this.url_pdf = fileURL;
-    let iframe: any = this.elRef.nativeElement.querySelector(
-      'iframe'
-    ) as HTMLIFrameElement;
-    iframe.contentWindow.location.replace(fileURL);
   }
 
   findAnexosByDocumento() {
     this.anexoService.findByDocumento(this.idDocumento).subscribe(
       (response: any) => {
-        this.anexos = response.data;
+        if (response && response.data) {
+          this.anexos = response.data;
+        }
       },
       (error) => {
         Swal.fire(

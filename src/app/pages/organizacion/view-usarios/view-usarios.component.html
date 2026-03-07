@@ -60,7 +60,7 @@
         </div>
         <mat-card-actions align="end">
           <button mat-flat-button color="primary" class="btn-opcion"  type="submit" [disabled]="form.invalid" >GUARDAR</button>
-          <button mat-flat-button color="accent" type="button" class="btn-opcion">LIMPIAR</button>
+          <button mat-flat-button color="accent" type="button" (click)="limpiar()" class="btn-opcion">LIMPIAR</button>
           <button mat-flat-button color="warn" type="button" (click)="close()" class="btn-opcion" >CANCELAR</button>
       </mat-card-actions>
       </form>

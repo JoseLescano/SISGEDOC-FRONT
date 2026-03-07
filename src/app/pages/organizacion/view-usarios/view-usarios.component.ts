@@ -30,7 +30,7 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
   campoIngresado: any = '';
   persona: Persona = new Persona();
   nombreCompleado: string = '';
-  form : FormGroup;
+  form: FormGroup;
 
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -40,7 +40,7 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
 
   constructor(
     private matDialog: MatDialogRef<ViewUsariosComponent>,
-    private perfilService:PerfilService,
+    private perfilService: PerfilService,
     @Inject(MAT_DIALOG_DATA) private data: any,
     private personaService: PersonaService,
     private rolService: RoleService,
@@ -50,20 +50,20 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.organizacionService.findByCodigoInterno(this.data).pipe(switchMap((response:any)=> {
+    this.organizacionService.findByCodigoInterno(this.data).pipe(switchMap((response: any) => {
       this.organizacionSeleccionada = response.data;
       this.form.get('codigoOrganizacion').setValue(this.organizacionSeleccionada.codigoInterno);
-      this.rolService.findForUsuario().subscribe((responseRoles:any)=>{
+      this.rolService.findForUsuario().subscribe((responseRoles: any) => {
         this.roles = responseRoles;
       });
       return this.perfilService.findByOrganizacion(this.data);
-    })).subscribe((responsePerfil:any)=> {
+    })).subscribe((responsePerfil: any) => {
       this.createTable(responsePerfil);
     });
 
   }
 
-  initForm(){
+  initForm() {
     this.form = new FormGroup({
       'codigo': new FormControl(0),
       'codigoOrganizacion': new FormControl('', [Validators.required]),
@@ -74,19 +74,33 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
     })
   }
 
-  buscarPersona(){
+  limpiar() {
+    this.form.reset({
+      codigo: 0,
+      codigoOrganizacion: this.organizacionSeleccionada.codigoInterno,
+      nroDocumento: '',
+      usuario: '',
+      codigoRol: '',
+      puesto: ''
+    });
+    this.nombreCompleado = '';
+    this.persona = new Persona();
+    this.campoIngresado = '';
+  }
+
+  buscarPersona() {
     debugger
     this.cargando = true;
     let nroDcumento = this.form.value['nroDocumento'];
     let usuario = this.form.value['usuario'];
-    this.personaService.findByCampo(nroDcumento==''? usuario:nroDcumento).subscribe((data:any)=>{
+    this.personaService.findByCampo(nroDcumento == '' ? usuario : nroDcumento).subscribe((data: any) => {
       this.persona = data;
-      this.nombreCompleado = this.persona.grado_LARGA + ' '+ this.persona.arma_LARGA + ' '+  this.persona.apellidos+  ' ' + this.persona.nombres;
+      this.nombreCompleado = this.persona.grado_LARGA + ' ' + this.persona.arma_LARGA + ' ' + this.persona.apellidos + ' ' + this.persona.nombres;
       this.form.get('usuario').setValue(this.persona.usuario_CHASQUI);
-      this.cargando=false;
-    }, (error: any)=> {
+      this.cargando = false;
+    }, (error: any) => {
       this.persona = null;
-      this.cargando=false;
+      this.cargando = false;
       Swal.fire('Sin resultados', `No se encuentra información`, 'info');
     })
   }
@@ -101,18 +115,18 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  createTable(Perfil: Perfil[]){
+  createTable(Perfil: Perfil[]) {
     this.dataSource = new MatTableDataSource(Perfil);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
-  close(){
+  close() {
     this.matDialog.close();
   }
 
-  operate(){
-    if (this.form.valid){
+  operate() {
+    if (this.form.valid) {
       let codigoOrganizacion = this.form.value['codigoOrganizacion'];
       let usuario = this.form.value['usuario'];
       let rol = this.form.value['codigoRol'];
@@ -120,20 +134,20 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
       let codigo = this.form.value['codigo'];
       debugger
       this.perfilService.registrarPerfil(codigoOrganizacion, usuario,
-        puesto, rol.codigo, codigo== '' ? 0:codigo).subscribe(
+        puesto, rol.codigo, codigo == '' ? 0 : codigo).subscribe(
           {
-            next: (response: any)=> {
-                Swal.fire('OPERACION REALIZADA', response.message, 'success');
-                this.perfilService.findByOrganizacion(codigoOrganizacion).subscribe((response:any)=>{
-                  this.createTable(response);
-                 });
-            }, error: (err: any)=> {
+            next: (response: any) => {
+              Swal.fire('OPERACION REALIZADA', response.message, 'success');
+              this.perfilService.findByOrganizacion(codigoOrganizacion).subscribe((response: any) => {
+                this.createTable(response);
+              });
+            }, error: (err: any) => {
               debugger
               Swal.fire('AVISO', err.message, 'warning');
             }
           }
-      );
-    }else {
+        );
+    } else {
       Swal.fire('AVISO', 'INGRESE LOS DATOS REQUERIDOS', 'info');
     }
   }
@@ -151,7 +165,7 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
     return role1 && role2 ? role1.codigo === role2.codigo : role1 === role2;
   }
 
-  eliminar(codigo:any){
+  eliminar(codigo: any) {
     Swal.fire({
       title: '¿Está seguro?',
       text: "No podrás revertir esto!",
@@ -162,9 +176,9 @@ export class ViewUsariosComponent implements OnInit, AfterViewInit {
       confirmButtonText: 'Sí, bórralo.'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.perfilService.eliminarPerfil(codigo).pipe(switchMap((response:any)=> {
+        this.perfilService.eliminarPerfil(codigo).pipe(switchMap((response: any) => {
           return this.perfilService.findByOrganizacion(this.data);
-        })).subscribe((responsePerfil:any)=> {
+        })).subscribe((responsePerfil: any) => {
           Swal.fire('ELIMINACIÓN CORRECTA', 'SE HA ELIIMINADO PERFIL DEL USUARIO CORRECTAMENTE', 'info');
           this.createTable(responsePerfil);
         });

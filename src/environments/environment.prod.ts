@@ -2,8 +2,9 @@ import * as moment from "moment";
 
 export const environment = {
   production: true,
-  HOST: 'http://localhost:8081/back-sisgedo/',
+  HOST: 'https://sisgedoc-backend-debjgvc7affyfycg.brazilsouth-01.azurewebsites.net/back-sisgedo/',
   //HOST: 'https://sisgedo.ejercito.mil.pe/back-sisgedo/',
+  //HOST: 'http://localhost:8081/back-sisgedo/',
   codigoOrganizacion: '3302010102',
   TOKEN_AUTH_USERNAME: '', // almacena usuario del token
   TOKEN_NAME: 'access_token', // token completo
