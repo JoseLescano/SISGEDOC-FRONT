@@ -2,8 +2,8 @@ import * as moment from "moment";
 
 export const environment = {
   production: true,
+  HOST: 'https://sisgedoc-backend-debjgvc7affyfycg.brazilsouth-01.azurewebsites.net/',
   //HOST: 'https://sisgedoc-backend-debjgvc7affyfycg.brazilsouth-01.azurewebsites.net/back-sisgedo/',
-  HOST: 'https://sisgedoc-backend-debjgvc7affyfycg.brazilsouth-01.azurewebsites.net',
 
   codigoOrganizacion: '3302010102',
   TOKEN_AUTH_USERNAME: '', // almacena usuario del token
