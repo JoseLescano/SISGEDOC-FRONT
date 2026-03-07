@@ -120,7 +120,7 @@ export class ModalMfaComponent implements OnInit, OnDestroy {
           this.router.navigate(['/principal/dashboard']).then(() => {
             location.reload();
           });
-          Swal.fire('Bienvenido al SISGEDO', '', 'success');
+          Swal.fire('Bienvenido al SISGEDOC 2026', '', 'success');
         } else {
           console.error('No access_token in response');
         }
