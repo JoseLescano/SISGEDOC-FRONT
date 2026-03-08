@@ -23,7 +23,7 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 export class ViewDecretadoComponent implements OnInit, AfterViewInit {
 
   columnasDefault: string[] = ['Prioridad', 'Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'Decretado a.', 'Acciones'];
-  columnasFueraTiempo: string[] = ['Prioridad', 'Nro', 'Asunto', 'Documento', 'Origen', 'Decretado a.', 'Fecha Decreto', 'Limite', 'Progreso', 'Fecha Respuesta', 'Estado Plazo',  'Acciones'];
+  columnasFueraTiempo: string[] = ['Prioridad', 'Nro', 'Asunto', 'Documento', 'Origen', 'Decretado a.', 'Fecha Decreto', 'Limite', 'Progreso', 'Fecha Respuesta', 'Estado Plazo', 'Acciones'];
 
   displayedColumns: string[] = [];
   dataSource: MatTableDataSource<any>;
@@ -36,8 +36,8 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
   pageIndex = 0;
   totalElements: number = 0;
 
-  modoBusqueda: 'rango' | 'dia'|'fueraTiempo' = 'rango'; // por defecto 'rango'
-  verGrafica:boolean = false;
+  modoBusqueda: 'rango' | 'dia' | 'fueraTiempo' = 'rango'; // por defecto 'rango'
+  verGrafica: boolean = false;
 
   cargandoDescarga: boolean = false;
   range = new FormGroup({
@@ -78,10 +78,12 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.sort.sortChange.subscribe((sort: Sort) => {
-      this.pageIndex = 0; // Reinicia a la primera página si cambia el orden
-      this.loadTable(this.pageIndex, this.pageSize, sort.active, sort.direction);
-    });
+    if (this.sort) {
+      this.sort.sortChange.subscribe((sort: Sort) => {
+        this.pageIndex = 0; // Reinicia a la primera página si cambia el orden
+        this.loadTable(this.pageIndex, this.pageSize, sort.active, sort.direction);
+      });
+    }
   }
 
   // Método modificado para filtrado del servidor
@@ -92,12 +94,12 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
   }
 
   loadTable(page: number, size: number, sortField: string = 'codigo', sortDirection: string = 'desc') {
-    let fi='';
-    let ff='';
+    let fi = '';
+    let ff = '';
     let codigoOrganizacion = sessionStorage.getItem(environment.codigoOrganizacion);
     if (this.modoBusqueda === 'rango') {
       this.verGrafica = false;
-      if (this.range.value['start']!= null && this.range.value['end']!=null){
+      if (this.range.value['start'] != null && this.range.value['end'] != null) {
         fi = environment.convertDateToStr(this.range.value['start']);
         ff = environment.convertDateToStr(this.range.value['end']);
       }
@@ -132,9 +134,9 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
           Swal.fire('LO SENTIMOS', 'Se presentó un inconveniente en la consulta', 'warning');
         }
       });
-    }else {
+    } else {
       this.verGrafica = false;
-      if (this.rangeFueraTiempo.value['start']!= null && this.rangeFueraTiempo.value['end']!=null){
+      if (this.rangeFueraTiempo.value['start'] != null && this.rangeFueraTiempo.value['end'] != null) {
         fi = environment.convertDateToStr(this.rangeFueraTiempo.value['start']);
         ff = environment.convertDateToStr(this.rangeFueraTiempo.value['end']);
       }
@@ -162,18 +164,18 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
       this.dataSource.sort = this.sort;
 
       this.dataSource.sortingDataAccessor = (item, property) => {
-      debugger
-      switch(property) {
-        case 'Nro': return item.codigo;
-        case 'Asunto': return item.asunto.toLowerCase();
-        case 'FechaDoc': return item.fechaDocumento;
-        case 'Documento': return item.clase + ' Nro. ' + item.nroOrden;
-        case 'Origen': return item.remitente.toLowerCase();
-        case 'Destino': return item.destinatario.toLowerCase();
-        case 'Prioridad': return item.prioridad.toLowerCase();
-        // Añade más casos según tus columnas
-        default: return item[property];
-      }
+        debugger
+        switch (property) {
+          case 'Nro': return item.codigo;
+          case 'Asunto': return item.asunto.toLowerCase();
+          case 'FechaDoc': return item.fechaDocumento;
+          case 'Documento': return item.clase + ' Nro. ' + item.nroOrden;
+          case 'Origen': return item.remitente.toLowerCase();
+          case 'Destino': return item.destinatario.toLowerCase();
+          case 'Prioridad': return item.prioridad.toLowerCase();
+          // Añade más casos según tus columnas
+          default: return item[property];
+        }
       };
     });
   }
@@ -182,12 +184,12 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
     debugger
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    if (this.pageSize>20)
-      this.loadTable(this.pageIndex, this.pageSize, 'codigo','desc');
+    if (this.pageSize > 20)
+      this.loadTable(this.pageIndex, this.pageSize, 'codigo', 'desc');
     else this.loadTable(this.pageIndex, this.pageSize);
   }
 
-  viewTimeline(vidDocumento: any){
+  viewTimeline(vidDocumento: any) {
     const dialogRef = this.dialog.open(TimelineComponent, {
       width: '60%',
       height: '95%',
@@ -200,7 +202,7 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
     this.displayedColumns = this.columnasDefault;
     this.pageIndex = 0;
     this.pageSize = 20;
-    if (this.range.value['start']!= null && this.range.value['end']!=null){
+    if (this.range.value['start'] != null && this.range.value['end'] != null) {
       this.cargando = true;
       this.loadTable(this.pageIndex, this.pageSize);
     } else {
@@ -213,7 +215,7 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
     this.displayedColumns = this.columnasFueraTiempo;
     this.pageIndex = 0;
     this.pageSize = 20;
-    if (this.rangeFueraTiempo.value['start']!= null && this.rangeFueraTiempo.value['end']!=null){
+    if (this.rangeFueraTiempo.value['start'] != null && this.rangeFueraTiempo.value['end'] != null) {
       this.cargando = true;
       this.loadTable(this.pageIndex, this.pageSize);
     } else {
@@ -242,31 +244,31 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
     let ff = '';
     let data;
     let codigoOrganizacion = sessionStorage.getItem(environment.codigoOrganizacion);
-    if (this.rangeFueraTiempo.value['start']!= null && this.rangeFueraTiempo.value['end']!=null){
-        fi = environment.convertDateToStr(this.rangeFueraTiempo.value['start']);
-        ff = environment.convertDateToStr(this.rangeFueraTiempo.value['end']);
+    if (this.rangeFueraTiempo.value['start'] != null && this.rangeFueraTiempo.value['end'] != null) {
+      fi = environment.convertDateToStr(this.rangeFueraTiempo.value['start']);
+      ff = environment.convertDateToStr(this.rangeFueraTiempo.value['end']);
     }
-    this.documentoService.documentoFueraTiempo(codigoOrganizacion, fi,ff)
-    .subscribe(
-      {
-        next:(response: any)=> {
-          data = response;
-          const estados = {
-            'FUERA DE PLAZO SIN RESPUESTA': 0,
-            'FUERA DE PLAZO CON RESPUESTA': 0,
-            'DENTRO DE PLAZO CON RESPUESTA': 0
-          };
+    this.documentoService.documentoFueraTiempo(codigoOrganizacion, fi, ff)
+      .subscribe(
+        {
+          next: (response: any) => {
+            data = response;
+            const estados = {
+              'FUERA DE PLAZO SIN RESPUESTA': 0,
+              'FUERA DE PLAZO CON RESPUESTA': 0,
+              'DENTRO DE PLAZO CON RESPUESTA': 0
+            };
 
-          data.forEach((doc: any) => {
-            estados[doc.estadoPlazo] = (estados[doc.estadoPlazo] || 0) + 1;
-          });
+            data.forEach((doc: any) => {
+              estados[doc.estadoPlazo] = (estados[doc.estadoPlazo] || 0) + 1;
+            });
 
-          this.generarGrafico(estados);
-        }, error : (err:any)=> {
-          console.log(err)
+            this.generarGrafico(estados);
+          }, error: (err: any) => {
+            console.log(err)
+          }
         }
-      }
-    );
+      );
   }
 
   generarGrafico(estados: any): void {
@@ -340,11 +342,11 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
     return new Date(2000 + anio, mes - 1, dia); // Ajustar si viene con yy
   }
 
-  imprimir(){
-    if (this.range.value['start']!= null && this.range.value['end']!=null){
+  imprimir() {
+    if (this.range.value['start'] != null && this.range.value['end'] != null) {
       this.cargandoDescarga = true;
-      let data : any = {
-        fechaInicio:  environment.convertDateToStr(this.range.value['start']),
+      let data: any = {
+        fechaInicio: environment.convertDateToStr(this.range.value['start']),
         fechaFin: environment.convertDateToStr(this.range.value['end']),
         codigoOrganizacion: sessionStorage.getItem(environment.codigoOrganizacion)
       }
@@ -366,43 +368,43 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
   }
 
   downloadExcel(): void {
-    if (this.range.value['start']!= null && this.range.value['end']!=null){
+    if (this.range.value['start'] != null && this.range.value['end'] != null) {
       this.cargandoDescarga = true;
       this.excelService.downloadDecretadosByFechas(
         sessionStorage.getItem(environment.codigoOrganizacion),
         environment.convertDateToStr(this.range.value['start']),
         environment.convertDateToStr(this.range.value['end']),
-    ).subscribe((blob: Blob) => {
-        this.descargarExporExcel(blob, "REPORTE DE DOCUMENTO DECRETADOS ENTRE FECHAS " );
+      ).subscribe((blob: Blob) => {
+        this.descargarExporExcel(blob, "REPORTE DE DOCUMENTO DECRETADOS ENTRE FECHAS ");
         this.cargandoDescarga = false;
       }, error => {
         this.cargandoDescarga = false;
         Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE CON LA DESCARGA DEL EXCEL", "info")
       });
-    }else {
+    } else {
       Swal.fire('LO SENTIMOS', 'INGRESE RANGO DE FECHA', 'info');
     }
   }
 
   downloadForDay(): void {
-    if(this.fechaSeleccionada != null){
+    if (this.fechaSeleccionada != null) {
       this.cargandoDescarga = true;
       this.excelService.downloadDecretadosForDay(
         sessionStorage.getItem(environment.codigoOrganizacion),
         environment.convertDateToStr(this.fechaSeleccionada)
       ).subscribe((blob: Blob) => {
-          this.descargarExporExcel(blob, "REPORTE DE DOCUMENTO DECRETADOS POR DÍA " );
-          this.cargandoDescarga = false;
+        this.descargarExporExcel(blob, "REPORTE DE DOCUMENTO DECRETADOS POR DÍA ");
+        this.cargandoDescarga = false;
       }, error => {
-          this.cargandoDescarga = false;
-          Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE CON LA DESCARGA DEL EXCEL", "info")
+        this.cargandoDescarga = false;
+        Swal.fire("LO SENTIMOS", "SE PRESENTO UN INCONVENIENTE CON LA DESCARGA DEL EXCEL", "info")
       });
-    }else {
+    } else {
       Swal.fire('LO SENTIMOS', 'INGRESE FECHA DE BUSQUEDA', 'info');
     }
   }
 
-  descargarExporExcel(blob:any, nombreDescarga:any){
+  descargarExporExcel(blob: any, nombreDescarga: any) {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -411,7 +413,7 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
     window.URL.revokeObjectURL(url);
   }
 
-  openDialog(documentoSeleccionado?:any): void {
+  openDialog(documentoSeleccionado?: any): void {
     const dialogRef = this.dialog.open(ViewDocumentoComponent, {
       width: '60%',
       height: '95%',
@@ -419,7 +421,7 @@ export class ViewDecretadoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  viewSeguimiento(documentoSeleccionado?:any): void {
+  viewSeguimiento(documentoSeleccionado?: any): void {
     const dialogRef = this.dialog.open(SeguimientoComponent, {
       width: '60%',
       height: '95%',

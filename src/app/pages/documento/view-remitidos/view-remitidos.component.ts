@@ -21,7 +21,7 @@ import { TimelineComponent } from '../../report/timeline/timeline.component';
 })
 export class ViewRemitidosComponent implements OnInit {
 
-  displayedColumns: string[] = ['Nro', 'Asunto', 'Origen','Destino', 'FechaDoc', 'Documento',  'Acciones'];
+  displayedColumns: string[] = ['Nro', 'Asunto', 'Origen', 'Destino', 'FechaDoc', 'Documento', 'Acciones'];
   dataSource: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -56,72 +56,74 @@ export class ViewRemitidosComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.sort.sortChange.subscribe((sort: Sort) => {
-      this.pageIndex = 0; // Reinicia a la primera página si cambia el orden
-      this.loadTable(this.pageIndex, this.pageSize, sort.active, sort.direction);
-    });
+    if (this.sort) {
+      this.sort.sortChange.subscribe((sort: Sort) => {
+        this.pageIndex = 0; // Reinicia a la primera página si cambia el orden
+        this.loadTable(this.pageIndex, this.pageSize, sort.active, sort.direction);
+      });
+    }
   }
 
   // =======================================================================================================
 
-  loadTable(title:any, page:any, size:any, sortField: string = 'codigo', sortDirection: string = 'desc'){
+  loadTable(title: any, page: any, size: any, sortField: string = 'codigo', sortDirection: string = 'desc') {
     debugger
-    if (this.range.value['start']!= null && this.range.value['end']!=null){
+    if (this.range.value['start'] != null && this.range.value['end'] != null) {
       this.documentoService.findRemitidos(
-      sessionStorage.getItem(environment.codigoOrganizacion), page, size, sortField, sortDirection,
-      environment.convertDateToStr(this.range.value['start']),
-      environment.convertDateToStr(this.range.value['end']))
-      .subscribe(
-      {
-        next : (data: any) => {
-        this.totalElements = data.totalElements;
-        this.createTable(data.content);
-        this.cargando = false;
-        }, error: err => {
-        this.cargando = false;
-        Swal.fire('Lo sentimos', err, 'warning');
-        }
-      });
-    }else {
+        sessionStorage.getItem(environment.codigoOrganizacion), page, size, sortField, sortDirection,
+        environment.convertDateToStr(this.range.value['start']),
+        environment.convertDateToStr(this.range.value['end']))
+        .subscribe(
+          {
+            next: (data: any) => {
+              this.totalElements = data.totalElements;
+              this.createTable(data.content);
+              this.cargando = false;
+            }, error: err => {
+              this.cargando = false;
+              Swal.fire('Lo sentimos', err, 'warning');
+            }
+          });
+    } else {
       this.documentoService.findRemitidos(
-      sessionStorage.getItem(environment.codigoOrganizacion),page, size, sortField, sortDirection )
-      .subscribe(
-      {
-        next : (data: any) => {
-        this.totalElements = data.totalElements;
-        this.createTable(data.content);
-        if (title != null)
-          Swal.fire('AVISO', title, 'success');
-        this.cargando = false;
-        }, error: err => {
-        this.cargando = false;
-        Swal.fire('Lo sentimos', err, 'warning');
-        }
-      }
-    );
+        sessionStorage.getItem(environment.codigoOrganizacion), page, size, sortField, sortDirection)
+        .subscribe(
+          {
+            next: (data: any) => {
+              this.totalElements = data.totalElements;
+              this.createTable(data.content);
+              if (title != null)
+                Swal.fire('AVISO', title, 'success');
+              this.cargando = false;
+            }, error: err => {
+              this.cargando = false;
+              Swal.fire('Lo sentimos', err, 'warning');
+            }
+          }
+        );
     }
 
   }
 
-  buscarFechas(){
+  buscarFechas() {
     this.cargando = true;
-    if (this.range.value['start']!= null && this.range.value['end']!=null){
+    if (this.range.value['start'] != null && this.range.value['end'] != null) {
       this.documentoService.findRemitidos(
-      sessionStorage.getItem(environment.codigoOrganizacion), 0, 20, 'codigo', 'desc',
-      environment.convertDateToStr(this.range.value['start']),
-      environment.convertDateToStr(this.range.value['end']))
-      .subscribe(
-      {
-        next : (data: any) => {
-        this.totalElements = data.totalElements;
-        this.createTable(data.content);
-        Swal.fire('AVISO', 'DOCUMENTO ENCONTRADOS', 'success');
-        this.cargando = false;
-        }, error: err => {
-        this.cargando = false;
-        Swal.fire('Lo sentimos', err, 'warning');
-        }
-      });
+        sessionStorage.getItem(environment.codigoOrganizacion), 0, 20, 'codigo', 'desc',
+        environment.convertDateToStr(this.range.value['start']),
+        environment.convertDateToStr(this.range.value['end']))
+        .subscribe(
+          {
+            next: (data: any) => {
+              this.totalElements = data.totalElements;
+              this.createTable(data.content);
+              Swal.fire('AVISO', 'DOCUMENTO ENCONTRADOS', 'success');
+              this.cargando = false;
+            }, error: err => {
+              this.cargando = false;
+              Swal.fire('Lo sentimos', err, 'warning');
+            }
+          });
     }
   }
 
@@ -132,17 +134,17 @@ export class ViewRemitidosComponent implements OnInit {
       this.dataSource.sort = this.sort;
 
       this.dataSource.sortingDataAccessor = (item, property) => {
-      switch(property) {
-        case 'Nro': return item.codigo;
-        case 'Asunto': return item.asunto.toLowerCase();
-        case 'FechaDoc': return item.fechaDocumento;
-        case 'Documento': return item.clase + ' Nro. ' + item.nroOrden;
-        case 'Origen': return item.remitente.toLowerCase();
-        case 'Destino': return item.destinatario.toLowerCase();
-        case 'Prioridad': return item.prioridad.toLowerCase();
-        // Añade más casos según tus columnas
-        default: return item[property];
-      }
+        switch (property) {
+          case 'Nro': return item.codigo;
+          case 'Asunto': return item.asunto.toLowerCase();
+          case 'FechaDoc': return item.fechaDocumento;
+          case 'Documento': return item.clase + ' Nro. ' + item.nroOrden;
+          case 'Origen': return item.remitente.toLowerCase();
+          case 'Destino': return item.destinatario.toLowerCase();
+          case 'Prioridad': return item.prioridad.toLowerCase();
+          // Añade más casos según tus columnas
+          default: return item[property];
+        }
       };
     });
   }
@@ -150,9 +152,9 @@ export class ViewRemitidosComponent implements OnInit {
   showMore(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    if (this.pageSize>20)
-      this.loadTable(null,this.pageIndex, this.pageSize, 'codigo','desc');
-    else this.loadTable(null,this.pageIndex, this.pageSize);
+    if (this.pageSize > 20)
+      this.loadTable(null, this.pageIndex, this.pageSize, 'codigo', 'desc');
+    else this.loadTable(null, this.pageIndex, this.pageSize);
   }
 
   applyFilter(event: Event) {
@@ -160,7 +162,7 @@ export class ViewRemitidosComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  verDocumento(documentoSeleccionado?:any): void {
+  verDocumento(documentoSeleccionado?: any): void {
     const dialogRef = this.dialog.open(ViewDocumentoComponent, {
       width: '60%',
       height: '95%',
@@ -168,25 +170,25 @@ export class ViewRemitidosComponent implements OnInit {
     });
   }
 
-  VerRespuesta(codigoPadre:any, copdigoDecreto: any): void {
-    let documento : Documento = new Documento();
-    this.documentoService.verDocumentoRespuesta(codigoPadre,copdigoDecreto).subscribe(
+  VerRespuesta(codigoPadre: any, copdigoDecreto: any): void {
+    let documento: Documento = new Documento();
+    this.documentoService.verDocumentoRespuesta(codigoPadre, copdigoDecreto).subscribe(
       {
-        next : (response: any)=> {
-          documento = {...response}
+        next: (response: any) => {
+          documento = { ...response }
           const dialogRef = this.dialog.open(ViewDocumentoComponent, {
             width: '60%',
             height: '95%',
             data: documento,
-        });
-      },
-      error : (err: any)=> {
-        Swal.fire('LO SENTIMOS', 'NO PODEMOS CARGAR DOCUMENTOS PDF', 'error');
-      }
-    })
+          });
+        },
+        error: (err: any) => {
+          Swal.fire('LO SENTIMOS', 'NO PODEMOS CARGAR DOCUMENTOS PDF', 'error');
+        }
+      })
   }
 
-  viewSeguimiento(documentoSeleccionado?:any): void {
+  viewSeguimiento(documentoSeleccionado?: any): void {
     const dialogRef = this.dialog.open(SeguimientoComponent, {
       width: '60%',
       height: '95%',
@@ -194,7 +196,7 @@ export class ViewRemitidosComponent implements OnInit {
     });
   }
 
-  viewTimeline(vidDocumento: any){
+  viewTimeline(vidDocumento: any) {
     const dialogRef = this.dialog.open(TimelineComponent, {
       width: '60%',
       height: '95%',

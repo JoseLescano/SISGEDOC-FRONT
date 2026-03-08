@@ -21,7 +21,7 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 })
 export class PendienteComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['Acciones', 'Nro',  'Asunto', 'Documento', 'Origen', 'FechaDoc','Prioridad'];
+  displayedColumns: string[] = ['Acciones', 'Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc', 'Prioridad'];
   dataSource: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -37,8 +37,8 @@ export class PendienteComponent implements OnInit, AfterViewInit {
   private filterSubject = new Subject<string>();
 
   constructor(private documentoService: DocumentoService,
-              public dialog: MatDialog,
-            private excelService: ExcelService,) {
+    public dialog: MatDialog,
+    private excelService: ExcelService,) {
     // Configurar debounce para el filtro (esperar 500ms después de que el usuario deje de escribir)
     this.filterSubject.pipe(
       debounceTime(500),
@@ -57,18 +57,20 @@ export class PendienteComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.sort.sortChange.subscribe((sort: Sort) => {
-      this.pageIndex = 0; // Reinicia a la primera página si cambia el orden
-      this.loadTable(this.pageIndex, this.pageSize, sort.active, sort.direction);
-    });
+    if (this.sort) {
+      this.sort.sortChange.subscribe((sort: Sort) => {
+        this.pageIndex = 0; // Reinicia a la primera página si cambia el orden
+        this.loadTable(this.pageIndex, this.pageSize, sort.active, sort.direction);
+      });
+    }
   }
 
-  loadTable(page:any, size:any, sortField: string = 'codigo', sortDirection: string = 'desc'){
+  loadTable(page: any, size: any, sortField: string = 'codigo', sortDirection: string = 'desc') {
     this.documentoService.paginacionDocumento(
-      sessionStorage.getItem(environment.codigoOrganizacion),page, size, sortField, sortDirection, this.filterValue )
+      sessionStorage.getItem(environment.codigoOrganizacion), page, size, sortField, sortDirection, this.filterValue)
       .subscribe(
         {
-          next : (data: any) => {
+          next: (data: any) => {
             this.totalElements = data.totalElements;
             this.createTable(data.content);
             this.cargando = false;
@@ -77,14 +79,14 @@ export class PendienteComponent implements OnInit, AfterViewInit {
             Swal.fire('Lo sentimos', err, 'warning');
           }
         }
-    );
+      );
   }
 
   showMore(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    if (this.pageSize>20)
-      this.loadTable(this.pageIndex, this.pageSize, 'codigo','desc');
+    if (this.pageSize > 20)
+      this.loadTable(this.pageIndex, this.pageSize, 'codigo', 'desc');
     else this.loadTable(this.pageIndex, this.pageSize);
   }
 
@@ -93,13 +95,13 @@ export class PendienteComponent implements OnInit, AfterViewInit {
     this.excelService.downloadPendientes(
       sessionStorage.getItem(environment.codigoOrganizacion))
       .subscribe((blob: Blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `documentos_pendientes.xlsx`;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `documentos_pendientes.xlsx`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
   }
 
   // Método modificado para filtrado del servidor
@@ -124,7 +126,7 @@ export class PendienteComponent implements OnInit, AfterViewInit {
       this.dataSource.sort = this.sort;
 
       this.dataSource.sortingDataAccessor = (item, property) => {
-        switch(property) {
+        switch (property) {
           case 'Nro': return item.codigo;
           case 'Asunto': return item.asunto.toLowerCase();
           case 'FechaDoc': return item.fechaDocumento;
