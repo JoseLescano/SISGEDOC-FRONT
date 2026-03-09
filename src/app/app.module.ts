@@ -52,7 +52,7 @@ export function tokenGetter() {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        allowedDomains: ["localhost:8081"],
+        allowedDomains: ["localhost:8081", "m01uqeikta.execute-api.us-east-1.amazonaws.com"],
         //allowedDomains: ["sisgedo.ejercito.mil.pe",  "backend-balanceo-1.ejercito.mil.pe", "backend-balanceo-2.ejercito.mil.pe"],
         disallowedRoutes: ["http://localhost:8081/back-sisgedo/login/forget"]
         //disallowedRoutes: ["https://sisgedo.ejercito.mil.pe/login/forget"],
@@ -69,6 +69,9 @@ export function tokenGetter() {
     {
       provide: RECAPTCHA_V3_SITE_KEY,
       useValue: environment.recaptcha.siteKeyV3,
+    },
+    {
+      provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true
     },
     {
       provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true
