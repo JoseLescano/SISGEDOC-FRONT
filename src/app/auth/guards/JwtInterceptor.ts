@@ -8,32 +8,25 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-    constructor(private loginService: LoginService) { }
+  constructor(private loginService: LoginService) { }
 
-    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
+    const helper = new JwtHelperService();
+    let token = sessionStorage.getItem(environment.TOKEN_NAME);
+    if (token != null) {
       const helper = new JwtHelperService();
-      let token = sessionStorage.getItem(environment.TOKEN_NAME);
-      if (token==null){
-        this.loginService.logout();
-        return null;
-      }else {
-        const decodedToken = helper.decodeToken(token);
-        const username = decodedToken.sub;
-        const isApiUrl = request.url.startsWith(environment.HOST);
-        if (!helper.isTokenExpired(token) && isApiUrl) {
-            request = request.clone({
-                setHeaders: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-        }else {
-          this.loginService.logout();
-        }
-        return next.handle(request);
+      if (!helper.isTokenExpired(token) && request.url.startsWith(environment.HOST)) {
+        request = request.clone({
+          setHeaders: {
+            Authorization: `Bearer ${token}`
+          }
+        });
       }
-
-
-
     }
+    return next.handle(request);
+
+
+
+  }
 }

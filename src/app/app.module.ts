@@ -71,9 +71,6 @@ export function tokenGetter() {
       useValue: environment.recaptcha.siteKeyV3,
     },
     {
-      provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true
-    },
-    {
       provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true
     },
     {
