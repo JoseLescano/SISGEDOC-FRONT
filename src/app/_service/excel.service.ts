@@ -28,7 +28,7 @@ export class ExcelService {
   }
 
   downloadPendientes(codigoInterno: string): Observable<Blob> {
-    let formData : FormData = new FormData();
+    let formData: FormData = new FormData();
     formData.append('codigoInterno', codigoInterno);
     const url = `${environment.HOST}documentos/exportPendientesExcel`;
     return this.http.post(url, formData, { responseType: 'blob' }).pipe(
@@ -38,8 +38,19 @@ export class ExcelService {
     );
   }
 
-  downloadDecretadosByFechas(codigoInterno: string, fi: any, ff:any): Observable<Blob> {
-    let formData : FormData = new FormData();
+  downloadDevueltos(codigoInterno: string): Observable<Blob> {
+    let formData: FormData = new FormData();
+    formData.append('codigoInterno', codigoInterno);
+    const url = `${environment.HOST}documentos/exportDevueltosExcel`;
+    return this.http.post(url, formData, { responseType: 'blob' }).pipe(
+      map((res: Blob) => {
+        return res;
+      })
+    );
+  }
+
+  downloadDecretadosByFechas(codigoInterno: string, fi: any, ff: any): Observable<Blob> {
+    let formData: FormData = new FormData();
     formData.append('codigoInterno', codigoInterno);
     formData.append('fi', fi);
     formData.append('ff', ff);
@@ -52,7 +63,7 @@ export class ExcelService {
   }
 
   downloadDecretadosForDay(codigoInterno: string, fi: any): Observable<Blob> {
-    let formData : FormData = new FormData();
+    let formData: FormData = new FormData();
     formData.append('codigoInterno', codigoInterno);
     formData.append('fecha', fi);
     const url = `${environment.HOST}documentos/exportDecretadosForDayExcel`;
@@ -64,8 +75,8 @@ export class ExcelService {
   }
 
 
-  exportEnviadosExcel(codigoInterno: string, fi: any, ff?:any): Observable<Blob> {
-    let formData : FormData = new FormData();
+  exportEnviadosExcel(codigoInterno: string, fi: any, ff?: any): Observable<Blob> {
+    let formData: FormData = new FormData();
     formData.append('codigoInterno', codigoInterno);
     formData.append('fi', fi);
     formData.append('ff', ff);
@@ -77,8 +88,8 @@ export class ExcelService {
     );
   }
 
-  exportRegistradosExcel(codigoInterno: string, fi: any, ff?:any): Observable<Blob> {
-    let formData : FormData = new FormData();
+  exportRegistradosExcel(codigoInterno: string, fi: any, ff?: any): Observable<Blob> {
+    let formData: FormData = new FormData();
     formData.append('codigoInterno', codigoInterno);
     formData.append('fi', fi);
     formData.append('ff', ff);
@@ -91,7 +102,7 @@ export class ExcelService {
   }
 
   exportSuperAdm(codigoInterno: string): Observable<Blob> {
-    let formData : FormData = new FormData();
+    let formData: FormData = new FormData();
     formData.append('codigoOrganizacion', codigoInterno);
     const url = `${environment.HOST}documentos/exportSuperAdm`;
     return this.http.post(url, formData, { responseType: 'blob' }).pipe(
@@ -102,7 +113,7 @@ export class ExcelService {
   }
 
   exportCorrespondencia(fi: any, ff: any, organizacionRegistra: string): Observable<Blob> {
-    let formData : FormData = new FormData();
+    let formData: FormData = new FormData();
     formData.append('fechaInicio', fi);
     formData.append('fechaFin', ff);
     formData.append('organizacionRegistra', organizacionRegistra);

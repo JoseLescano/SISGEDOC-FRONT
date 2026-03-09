@@ -20,7 +20,7 @@ import { TimelineComponent } from 'src/app/pages/report/timeline/timeline.compon
 })
 export class ListDevolverComponent implements OnInit {
 
-  displayedColumns: string[] = ['Nro',  'Asunto', 'Documento', 'Origen', 'FechaDoc.','Prioridad', 'Acciones'];
+  displayedColumns: string[] = ['Nro', 'Asunto', 'Documento', 'Origen', 'FechaDoc.', 'Prioridad', 'Acciones'];
   dataSource: MatTableDataSource<Documento> = new MatTableDataSource<Documento>();
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
@@ -46,16 +46,16 @@ export class ListDevolverComponent implements OnInit {
   }
 
   downloadExcel(): void {
-    this.excelService.downloadPendientes(
+    this.excelService.downloadDevueltos(
       sessionStorage.getItem(environment.codigoOrganizacion))
       .subscribe((blob: Blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `documentos_pendientes.xlsx`;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `documentos_devueltos.xlsx`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
   }
 
   ngAfterViewInit() {
@@ -90,7 +90,7 @@ export class ListDevolverComponent implements OnInit {
     }
   }
 
-  openDialog(documentoSeleccionado?:any): void {
+  openDialog(documentoSeleccionado?: any): void {
     const dialogRef = this.dialog.open(ViewDocumentoComponent, {
       width: '60%',
       height: '95%',
@@ -98,7 +98,7 @@ export class ListDevolverComponent implements OnInit {
     });
   }
 
-  viewSeguimiento(documentoSeleccionado?:any): void {
+  viewSeguimiento(documentoSeleccionado?: any): void {
     const dialogRef = this.dialog.open(SeguimientoComponent, {
       width: '60%',
       height: '95%',
@@ -106,7 +106,7 @@ export class ListDevolverComponent implements OnInit {
     });
   }
 
-  viewTimeline(vidDocumento: any){
+  viewTimeline(vidDocumento: any) {
     const dialogRef = this.dialog.open(TimelineComponent, {
       width: '60%',
       height: '95%',
