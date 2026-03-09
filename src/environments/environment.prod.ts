@@ -10,8 +10,8 @@ export const environment = {
   cargoSeleccionado: '',
   nombreOrganizacion: '',
   recaptcha: {
-    siteKey: '6LfQ7FcqAAAAABb385jo3379ntK79MCEzXKQz6og',
-    siteKeyV3: '6LfQ7FcqAAAAABb385jo3379ntK79MCEzXKQz6og',
+    siteKey: '6LdEIYUsAAAAAM60iIDs8EnR57BVJ8tID_3HNCQA',
+    siteKeyV3: '6LdEIYUsAAAAAM60iIDs8EnR57BVJ8tID_3HNCQA',
   },
 
   rol: '002',
