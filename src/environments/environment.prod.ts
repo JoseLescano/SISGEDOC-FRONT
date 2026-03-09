@@ -2,7 +2,7 @@ import * as moment from "moment";
 
 export const environment = {
   production: true,
-  HOST: 'https://m01uqeikta.execute-api.us-east-1.amazonaws.com/',
+  HOST: 'https://Sisgedoc-prod-env.eba-xg3vi9tj.us-east-1.elasticbeanstalk.com/',
   codigoOrganizacion: '3302010102',
   TOKEN_AUTH_USERNAME: '', // almacena usuario del token
   TOKEN_NAME: 'access_token', // token completo
