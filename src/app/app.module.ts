@@ -24,6 +24,12 @@ import { CdkMenuModule } from '@angular/cdk/menu';
 import { MatInputModule } from '@angular/material/input';
 import { ErrorInterceptor } from './auth/guards/ErrorInterceptor';
 
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es-PE';
+import { LOCALE_ID } from '@angular/core';
+
+registerLocaleData(localeEs);
+
 export function tokenGetter() {
   return sessionStorage.getItem("access_token");
 }
@@ -76,7 +82,8 @@ export function tokenGetter() {
     {
       provide: LocationStrategy, useClass: HashLocationStrategy
     },
-    { provide: OverlayContainer, useClass: FullscreenOverlayContainer }
+    { provide: OverlayContainer, useClass: FullscreenOverlayContainer },
+    { provide: LOCALE_ID, useValue: 'es-PE' }
   ],
 
   bootstrap: [AppComponent]
